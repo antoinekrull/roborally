@@ -1,92 +1,61 @@
-# knorrige-korrelate-hp
+## Knorrige Korrelate: Hauptprojekt
+
+### Einleitung
+Willkommen im Hauptprojekt (grad so (kleiner Scherz (kein Scherz)))! Da euren wahren Namen auszuprechen ähnlich wie bei Voldemort evtl. schlimme Gestalten auf den Plan rufen könnte, kürze ich einfach mit PP ab. Entsprechend lesen lässt sich dieses Kürzel als "Pepe", wie Pepe der Frosch (Ruhe er nach seinem Tod durch politische Vereinnahmung in Frieden) oder die englische Aussprache "Pipi", wie das Pipi, das ich in den Augen hatte, als ihr die JAR bei der Abnahme nicht zum Laufen gebracht habt und das ich, selbst wenn ihr brennen würdet, nicht auf euch lassen würde.
 
 
+### Aufgaben
+Also PPs, ihr habt viel vor, vor allem weil das was steht, nicht so ganz steht. Stabilitätsgrad eher in Richtung "Glaskartenhaus an ner windingen Klippe"-stabil. Nein, ich habe keine Ahnung, Sehe ich so aus, als würde ich euren Code durchgucken? irgendwas klappt nicht, regelt das mal einer! Dasselbe gilt für folgende Punkte (ihr solltet euch ne Tube Salbe bereit halten):
 
-## Getting started
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+#### Benedikt:
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+- [ ] den ganzen Code alleine an einem Tag in den target-Ordner schreiben, glauben es hochgepusht zu haben und dann den Clear-Befehl beim Maven-Lifecycle geben.
+- [ ] Alles, was es so zu berichten gibt, an den Schluss dieser README setzen
 
-## Add your files
+#### Firas:
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+- [ ] Erklärung, was das "play" im Befehl "!play" bedeutet, nachdem man so unhöflich dabei unterbrochen wurde, als man es in der Abnahme erklären wollte.
+- [ ] Das erstgeborene Kind "p1" nennen. Man würde es sowieso aus Versehen in die Geburtsurkunde schreiben.
 
-```
-cd existing_repo
-git remote add origin https://gitlab2.cip.ifi.lmu.de/dbs_sep/dbs_sep2022-23/knorrige-korrelate-hp.git
-git branch -M main
-git push -uf origin main
-```
+#### Antoine:
 
-## Integrate with your tools
+- [ ] bei allen Treffen jetzt sogar ne dreiviertel Stunde früher gehen.
+- [ ] weiterhin unwissend bleiben, ob beim Schließen vom Client eine Exception geworfen wird.
 
-- [ ] [Set up project integrations](https://gitlab2.cip.ifi.lmu.de/dbs_sep/dbs_sep2022-23/knorrige-korrelate-hp/-/settings/integrations)
+#### Moritz:
 
-## Collaborate with your team
+- [ ] in der Gruppe nur noch mit E-Girl GIFs antworten.
+- [ ] das gesamte Projekt einfach in eine einzelne Klasse packen, wenn etwas nicht funktioniert.
+- [ ] versuchen, Warhammerbuddy mit Dominic werden
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+#### Dominic:
 
-## Test and Deploy
+- [ ] sich selbst vom Gott zum Tomi degradieren. 
+- [ ] sich offiziell in "Tomi" umbenennen.
+- [ ] herausfinden, dass man jetzt "p1" heißt, weil Firas das Formular zur Namensänderung ausgefüllt hat.
+- [ ] versuchen, das Thema "Warhammerbuddy" zu umgehen
 
-Use the built-in continuous integration in GitLab.
+#### Tobi:
+- [ ] für Discord-Meetings den Laptop benutzen, weil das Mikro am Computer nicht funktioniert.
+- [ ] für Java-Code den Computer benutzen, weil der am Laptop nicht funktioniert.
+- [ ] für .css das Handy benutzen, weil das am Computer nicht funktioniert.
+- [ ] für Java FX das Tablet benutzen, weil das am Handy nicht funktioniert.
+- [ ] für IntelliJ die Mikrowelle benutzen, weil das auf dem Tablet nicht funktioniert.
+- [ ] für Nachfragen und allgemeine Kommunikation in das Waschbecken schreien, weil das mit der Mikrowelle nicht funktioniert.
+- [ ] für das Händewaschen das Klo benutzen, weil das Waschbecken dafür nicht funktioniert.
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+Und schließlich für mich ein paar Aufgaben als Tutor, dir ich nicht vergessen darf:
+- [ ] unvorbereitet in die Treffen gehen.
+- [ ] deshalb ewig rumlabern, aber die wichtigsten Punkte vergessen.
+- [ ] doch versuchen, mich kurzzufassen.
+- [ ] eine Anekdote zum Besten geben, wie ich damals auch versucht habe, mich kurzzufassen.
+- [ ] daraufhin eine weitere Geschichte erzählen, die hauptsächlich darauf abzielt euch weiß zu machen, dass ich das SEP ganz alleine gemacht habe.
+- [ ] jedem Mitglied auftragen, alle Power Ranger Staffeln bis einschließlich Dino Thunder anzugucken. 
 
-***
+Das waren, denke ich, die wichtigsten Punkte für das Hauptprojekt.
 
-# Editing this README
+#### Viel Erfolg, 
+#### euer Zordon
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
