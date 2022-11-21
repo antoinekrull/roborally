@@ -1,4 +1,114 @@
 package game.player;
 
+import communication.Message;
+import game.card.Card;
+import server.ServerMain;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+/**
+ * @author Moritz, Dominic, Antoine
+ * @version 1.0
+ */
 public class Player {
+
+    private String username;
+    private int affectionScore;
+    private boolean isTargetable;
+    private boolean isPlaying;
+    private boolean isOutOfRound;
+    private ArrayList<Card> hand;
+
+    public ServerMain.Server server;
+    private LinkedList<Card> personalDiscardPile;
+
+    public Player(String username, ServerMain.Server server) {
+        this.username = username;
+        this.hand = new ArrayList<Card>();
+        this.isOutOfRound = false;
+        this.isPlaying = false;
+        this.isTargetable = true;
+        this.server = server;
+        this.personalDiscardPile = new LinkedList<Card>();
+        this.affectionScore = 0;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    public int getAffectionScore() {
+        return affectionScore;
+    }
+    public void setAffectionScore(int affectionScore) {
+        this.affectionScore = affectionScore;
+    }
+    public boolean isTargetable() {
+        return isTargetable;
+    }
+    public void setTargetable(boolean targetable) {
+        isTargetable = targetable;
+    }
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+    public void setPlaying(boolean playing) {
+        isPlaying = playing;
+    }
+    public boolean isOutOfRound() {
+        return isOutOfRound;
+    }
+    public void setOutOfRound(boolean outOfRound) {
+        isOutOfRound = outOfRound;
+    }
+    public ArrayList<Card> getHand() {
+        return hand;
+    }
+    public void setHand(ArrayList<Card> hand) {
+        this.hand = hand;
+    }
+    public int getPersonalDiscardPileSize() {
+        return personalDiscardPile.size();
+    }
+    public void increaseAffectionScore() {
+        affectionScore++;
+    }
+
+    public Card getTopCardFromPersonalDiscardPile() {
+        Card topCard = personalDiscardPile.get(personalDiscardPile.size());
+        return topCard;
+    }
+    //discards specific card from hand and returns value
+    public Card discard(int index) {
+        Card discardedCard = hand.get(index);
+        personalDiscardPile.add(discardedCard);
+        hand.remove(index);
+        return discardedCard;
+    }
+    public void addCardToHand(Card addedCard) {
+        hand.add(addedCard);
+    }
+    public void drawCard(Card drawnCard) {
+        hand.add(drawnCard);
+        sendMessageToPlayer("You drew " + drawnCard.getCardName());
+        System.out.println(drawnCard.getCardName());
+    }
+    public void sendMessageToPlayer(String input){
+        for (ServerMain.Server.HandleClient client: this.server.getClients()){
+            if (client.getUsername().equals(this.username)){
+                client.writeTo(this.username, new Message("Server", input));
+            }
+        }
+    }
+    public Card getCard() {
+        return hand.get(0);
+    }
+
+    public Card getCard(int index) {
+        return hand.get(index);
+    }
+
 }
