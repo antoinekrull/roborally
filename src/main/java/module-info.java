@@ -10,4 +10,7 @@ module com.example.knorrigekorrelatehp {
 
     opens server to javafx.graphics;
     exports server;
+
+    opens client to javafx.graphics;
+    exports client;
 }
