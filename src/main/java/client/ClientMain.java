@@ -1,5 +1,6 @@
 package client;
 
+import helloworld.HelloApplication;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,7 +21,7 @@ public class ClientMain extends Application {
     int port = 3000;
 
     //Link to fxml file
-    URL url = getClass().getResource("/chat/chatgui/login.fxml");
+    URL url = getClass().getResource("login.fxml");
     public LoginScreen controller;
 
 
