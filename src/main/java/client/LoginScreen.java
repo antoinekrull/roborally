@@ -66,7 +66,7 @@ public class LoginScreen implements Initializable{
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/chat/chatgui/chat.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("chat.fxml"));
 
                 Scene scene = null;
                 try {
