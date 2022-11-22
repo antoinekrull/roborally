@@ -2,6 +2,7 @@ package game.player;
 
 import communication.Message;
 import game.card.Card;
+import server.HandleClient;
 import server.ServerMain;
 
 import java.util.ArrayList;
@@ -97,7 +98,7 @@ public class Player {
         System.out.println(drawnCard.getCardName());
     }
     public void sendMessageToPlayer(String input){
-        for (ServerMain.Server.HandleClient client: this.server.getClients()){
+        for (HandleClient client: this.server.getClients()){
             if (client.getUsername().equals(this.username)){
                 client.writeTo(this.username, new Message("Server", input));
             }
