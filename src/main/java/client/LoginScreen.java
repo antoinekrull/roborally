@@ -74,7 +74,7 @@ public class LoginScreen implements Initializable{
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                scene.getStylesheets().add(ClientMain.class.getResource("/chat/chatgui/styles.css").toExternalForm());
+                //scene.getStylesheets().add(ClientMain.class.getResource("/chat/chatgui/styles.css").toExternalForm());
                 stage = (Stage) nicknameTextfield.getScene().getWindow();
                 Controller controller = loader.getController();
                 controller.getClient(client);
