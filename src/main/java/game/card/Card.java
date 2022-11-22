@@ -14,8 +14,6 @@ public abstract class Card {
 
     private String cardEffect;
 
-    private CardType NONE;
-
     public String getCardName() {
         return cardName;
     }

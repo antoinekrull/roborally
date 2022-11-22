@@ -7,4 +7,7 @@ module com.example.knorrigekorrelatehp {
 
     opens helloworld to javafx.fxml;
     exports helloworld;
+
+    opens server to javafx.graphics;
+    exports server;
 }
