@@ -46,7 +46,11 @@ public class PlayerList {
     }
 
     public void remove(String username) {
-        //TODO: implement this
+        for(int i = 0; i < playerList.size(); i++) {
+            if(playerList.get(i).getUsername().equals(username)) {
+                playerList.remove(i);
+            }
+        }
     }
 
     public void add(Player player) {

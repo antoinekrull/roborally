@@ -2,20 +2,13 @@ package server;
 
 import communication.JsonSerializer;
 import communication.Message;
-import communication.MessageType;
-import game.card.Deck;
-import game.player.Player;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -26,7 +19,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class ServerMain extends Application {
     int port;
-//TODO: Seperate server and HandleClient classes
+
     @Override
     public void start(Stage primaryStage) {
 
@@ -47,13 +40,6 @@ public class ServerMain extends Application {
         //Network Communication
         protected final ArrayList<HandleClient> CLIENTS = new ArrayList<>();
         public final LinkedBlockingQueue<String> messages;
-        public boolean isRunning = false;
-        int turnCount = 0;
-        int winningScore = 0;
-        public Deck sessionDeck;
-        public Deck publicDiscardPile;
-
-        public Player currentPlayer;
 
         Server self = this;
 

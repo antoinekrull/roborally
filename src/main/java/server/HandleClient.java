@@ -13,7 +13,7 @@ import java.net.Socket;
 import java.util.List;
 
 public class HandleClient implements Runnable{
-//TODO: HandleClient class
+
     private DataInputStream in = null;
     private DataOutputStream out = null;
     public String address;
