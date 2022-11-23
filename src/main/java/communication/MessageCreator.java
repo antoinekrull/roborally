@@ -31,40 +31,40 @@ package communication;
          * @param userInput Client's command to the server as input
          * @return Message Processed client input sent to server.
          */
-        public Message generateMessage(String username, String userInput) {
-            Message generatedMessage = new Message();
-            generatedMessage.setUsername(username);
+        public ConcreteMessage generateMessage(String username, String userInput) {
+            ConcreteMessage generatedConcreteMessage = new ConcreteMessage();
+            generatedConcreteMessage.setUsername(username);
             if(userInput.startsWith(escapeCharacter)) {
                 userInput = userInput.substring(1);
                 if(userInput.startsWith(directMessage)) {
                     userInput = userInput.substring(3);
                     String target = userInput.substring(0, userInput.indexOf(" "));
                     userInput = userInput.substring(target.length()+1);
-                    generatedMessage.setTarget(target);
-                    generatedMessage.setMessage(userInput);
-                    generatedMessage.setMessageType(MessageType.DIRECT_MESSAGE);
+                    generatedConcreteMessage.setTarget(target);
+                    generatedConcreteMessage.setMessage(userInput);
+                    generatedConcreteMessage.setMessageType(MessageType.DIRECT_MESSAGE);
                     //cuts of substring to fully wrap the play order into message
                     //syntax for order should look like this !play cardName (<- this may change) targetPlayer guessedInt
                 } else if (userInput.startsWith(playCard)) {
                     String[] splitInput = userInput.split(" "); //result looks like {"!play", "cardName", "targetName", "guessedInt"}
-                    generatedMessage.setTarget(splitInput[2]);
-                    generatedMessage.setPlayedCard(Integer.parseInt(splitInput[1]));
+                    generatedConcreteMessage.setTarget(splitInput[2]);
+                    generatedConcreteMessage.setPlayedCard(Integer.parseInt(splitInput[1]));
                     //TODO: Set target and set int, fix bug
-                    generatedMessage.setMessageType(MessageType.GAME_MESSAGE);
+                    generatedConcreteMessage.setMessageType(MessageType.GAME_MESSAGE);
                 } else if (userInput.startsWith(joinSession)) {
-                    generatedMessage.setMessageType(MessageType.JOIN_SESSION);
+                    generatedConcreteMessage.setMessageType(MessageType.JOIN_SESSION);
                 } else if (userInput.startsWith(leaveSession)) {
-                    generatedMessage.setMessageType(MessageType.LEAVE_SESSION);
+                    generatedConcreteMessage.setMessageType(MessageType.LEAVE_SESSION);
                 } else if (userInput.startsWith(startGame)) {
-                    generatedMessage.setMessageType(MessageType.START_GAME);
+                    generatedConcreteMessage.setMessageType(MessageType.START_GAME);
                 } else {
-                    generatedMessage.setMessageType(MessageType.INVALID_COMMAND);
+                    generatedConcreteMessage.setMessageType(MessageType.INVALID_COMMAND);
                 }
             } else {
-                generatedMessage.setMessageType(MessageType.GROUP_CHAT);
-                generatedMessage.setMessage(userInput);
+                generatedConcreteMessage.setMessageType(MessageType.GROUP_CHAT);
+                generatedConcreteMessage.setMessage(userInput);
             }
-            return generatedMessage;
+            return generatedConcreteMessage;
         }
     }
 
