@@ -5,4 +5,8 @@ package game.board;
  * @version 1.0
  */
 public abstract class Tile {
+    public boolean isDanger;
+    public boolean isBlocking;
+
+    public void applyEffect(){}
 }
