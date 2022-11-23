@@ -48,9 +48,9 @@ public class ClientMain extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        LoginScreen controller = loader.getController();
+        LoginScreen loginScreen = loader.getController();
         try {
-            client = new Client(address, port, controller);
+            client = new Client(address, port, loginScreen);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error creating Client");
@@ -60,7 +60,7 @@ public class ClientMain extends Application {
                 client.sendMessageToServer("bye");
             }
         });
-        controller.getClient(client);
+        loginScreen.getClient(client);
 
     }
     public void logout(Stage stage){
