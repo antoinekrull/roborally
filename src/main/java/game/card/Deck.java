@@ -25,8 +25,7 @@ public class Deck {
         Collections.shuffle(deck);
     }
     public Card popCardFromDeck() {
-        Card drawnCard = deck.pop();
-        return drawnCard;
+        return deck.pop();
     }
     public int getSize() {
         return deck.size();
