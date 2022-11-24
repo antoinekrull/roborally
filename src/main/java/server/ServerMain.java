@@ -40,13 +40,6 @@ public class ServerMain extends Application {
         //Network Communication
         protected final ArrayList<HandleClient> CLIENTS = new ArrayList<>();
         public final LinkedBlockingQueue<String> messages;
-        public boolean isRunning = false;
-        int turnCount = 0;
-        int winningScore = 0;
-        public Deck sessionDeck;
-        public Deck publicDiscardPile;
-
-        public Player currentPlayer;
 
         Server self = this;
 
@@ -71,6 +64,7 @@ public class ServerMain extends Application {
 
                             //handle multithreading for clients
                             HandleClient client = new HandleClient(socket.getRemoteSocketAddress().toString(), socket.getPort(), socket, self);
+                            client.setUsername("");
                             synchronized (CLIENTS) {
                                 CLIENTS.add(client);
                             }

@@ -10,6 +10,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 public class HandleClient implements Runnable{
@@ -39,15 +40,16 @@ public class HandleClient implements Runnable{
                     new BufferedInputStream(socket.getInputStream()));
             this.out = new DataOutputStream(socket.getOutputStream());
         } catch (Exception e) {
-            System.out.println("Error here " + e.getMessage());
+            System.out.println("Error here 1" + e.getMessage());
+
         }
     }
 
-    public boolean containsName(final List<HandleClient> list, final String name) {
+    public boolean containsName(final ArrayList<HandleClient> list, final String name) {
         if (list.size() > 0) {
-            for (int i = 0; i < list.size() - 1; i++) {
+            for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).getUsername().equals(name)) {
-                    return true;
+                        return true;
                 }
             }
         }
@@ -58,7 +60,7 @@ public class HandleClient implements Runnable{
         try {
             this.out.writeUTF(JsonSerializer.serializeJson(concreteMessage));
         } catch (IOException e) {
-            System.out.println("Error here " + e.getMessage());
+            System.out.println("Error here 2" + e.getMessage());
         }
     }
 
@@ -107,7 +109,7 @@ public class HandleClient implements Runnable{
         access.setUsername("Server");
         access.setMessage("The username " + username + " is already taken, choose another one");
         writeTo(username, access);
-        setUsername(null);
+        setUsername("");
     }
 
     @Override
@@ -117,7 +119,7 @@ public class HandleClient implements Runnable{
 
     public void setUsername(String username) {
         this.username = username;
-    }
+}
 
     public String getUsername() {
         return this.username;
@@ -128,15 +130,15 @@ public class HandleClient implements Runnable{
      */
     public void run() {
         try {
-            String username = null;
+            String username ="";
 
-            while (username == null) {
+            while (username == "") {
                 username = JsonSerializer.deserializeJson(in.readUTF(), ConcreteMessage.class).getUsername();
                 if (!containsName(server.CLIENTS, username)) {
                     grantAccess(username);
                 } else {
                     denyAccess(username);
-                    username = null;
+                    username = "";
                 }
             }
             if (this.username.isBlank()) {
