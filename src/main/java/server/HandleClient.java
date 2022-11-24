@@ -11,7 +11,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 
 public class HandleClient implements Runnable{
 
@@ -69,7 +68,6 @@ public class HandleClient implements Runnable{
      * @param username The targeted client.
      * @param concreteMessage  Message the server send to the client.
      */
-    //TODO: Prints multiple times, can sometimes crash threads
     public void writeTo(String username, ConcreteMessage concreteMessage) {
         try {
             for (server.HandleClient client : server.CLIENTS) {
@@ -202,7 +200,6 @@ public class HandleClient implements Runnable{
 
             try {
                 String goodbyeMessage = "Server:  Hasta la vista " + this.username;
-                //may not work since player not only identified by his username
                 server.players.remove(username);
                 server.messages.put(goodbyeMessage);
             } catch (InterruptedException e) {
