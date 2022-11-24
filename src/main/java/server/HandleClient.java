@@ -39,7 +39,7 @@ public class HandleClient implements Runnable{
                     new BufferedInputStream(socket.getInputStream()));
             this.out = new DataOutputStream(socket.getOutputStream());
         } catch (Exception e) {
-            System.out.println("Error here " + e.getMessage());
+            System.out.println("Error in HandleClient constructor " + e.getMessage());
         }
     }
 
@@ -58,7 +58,7 @@ public class HandleClient implements Runnable{
         try {
             this.out.writeUTF(JsonSerializer.serializeJson(concreteMessage));
         } catch (IOException e) {
-            System.out.println("Error here " + e.getMessage());
+            System.out.println("Error in write method " + e.getMessage());
         }
     }
 

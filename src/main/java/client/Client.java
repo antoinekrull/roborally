@@ -51,11 +51,9 @@ public class Client {
             System.out.println("error " + e.getMessage());
         }
 
-
         ReadMessagesFromServer server = new ReadMessagesFromServer(socket);
         new Thread(server).start();
     }
-
 
     public void sendUsernameToServer(String username) {
         try {
@@ -69,8 +67,6 @@ public class Client {
         this.username=username;
     }
 
-
-
     private class ReadMessagesFromServer implements Runnable {
         DataInputStream in = null;
         DataOutputStream out = null;
@@ -82,10 +78,8 @@ public class Client {
 
         public void run() {
             try {
-                in = new DataInputStream(
-                        new BufferedInputStream(socket.getInputStream()));
+                in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
                 out = new DataOutputStream(socket.getOutputStream());
-
 
                 while (socket.isConnected()) {
                     try {
@@ -172,10 +166,6 @@ public class Client {
         accessible = state;
         readMessageToClientChat();
     }
-
-
-
-
 }
 
 
