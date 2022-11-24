@@ -1,6 +1,5 @@
 package client;
 
-import helloworld.HelloApplication;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
