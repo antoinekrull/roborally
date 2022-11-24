@@ -1,6 +1,5 @@
 package client;
 
-
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -41,7 +40,6 @@ public class ClientMain extends Application {
             loader = new FXMLLoader(url);
             root = loader.load();
             Scene login = new Scene(root, 600, 520);
-            //login.getStylesheets().add("/chat/chatgui/styles.css");
             primaryStage.setScene(login);
             primaryStage.show();
 
@@ -57,7 +55,7 @@ public class ClientMain extends Application {
         }
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             public void handle(WindowEvent we) {
-                client.sendMessageToServer("bye");
+                logout(primaryStage);
             }
         });
         loginScreen.getClient(client);

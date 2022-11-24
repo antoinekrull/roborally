@@ -1,10 +1,11 @@
 package server;
 
+import communication.JsonSerializer;
+import communication.Message;
 import communication.ConcreteMessage;
-import game.card.Deck;
-import game.player.Player;
 import javafx.application.Application;
 import javafx.stage.Stage;
+
 
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -19,7 +20,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class ServerMain extends Application {
     int port;
-//TODO: Seperate server and HandleClient classes
+
     @Override
     public void start(Stage primaryStage) {
 
@@ -40,7 +41,6 @@ public class ServerMain extends Application {
         //Network Communication
         protected final ArrayList<HandleClient> CLIENTS = new ArrayList<>();
         public final LinkedBlockingQueue<String> messages;
-
         Server self = this;
 
         /**
@@ -48,18 +48,16 @@ public class ServerMain extends Application {
          *
          * @param port Port where the server listens to.
          */
+
         public Server(int port) {
             this.messages = new LinkedBlockingQueue<>();
-        //TODO: Fix Client issues in server
 
             Thread acceptClients = new Thread() {
-
                 public void run() {
                     try {
                         server = new ServerSocket(port);
 
                         while (true) {
-
                             socket = server.accept();
 
                             //handle multithreading for clients
@@ -96,11 +94,9 @@ public class ServerMain extends Application {
         }
 
 
-        //TODO: think about thread writing to clients, probably multiple times the same output
         public List<HandleClient> getClients() {
             return this.CLIENTS;
         }
-
 
     }
     public static void main(String[] args) {

@@ -11,10 +11,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 
 public class HandleClient implements Runnable{
-//TODO: HandleClient class
+
     private DataInputStream in = null;
     private DataOutputStream out = null;
     public String address;
@@ -40,8 +39,7 @@ public class HandleClient implements Runnable{
                     new BufferedInputStream(socket.getInputStream()));
             this.out = new DataOutputStream(socket.getOutputStream());
         } catch (Exception e) {
-            System.out.println("Error here 1" + e.getMessage());
-
+            System.out.println("Error in HandleClient constructor " + e.getMessage());
         }
     }
 
@@ -60,7 +58,7 @@ public class HandleClient implements Runnable{
         try {
             this.out.writeUTF(JsonSerializer.serializeJson(concreteMessage));
         } catch (IOException e) {
-            System.out.println("Error here 2" + e.getMessage());
+            System.out.println("Error in write method " + e.getMessage());
         }
     }
 
@@ -70,7 +68,6 @@ public class HandleClient implements Runnable{
      * @param username The targeted client.
      * @param concreteMessage  Message the server send to the client.
      */
-    //TODO: Prints multiple times, can sometimes crash threads
     public void writeTo(String username, ConcreteMessage concreteMessage) {
         try {
             for (server.HandleClient client : server.CLIENTS) {
@@ -141,25 +138,19 @@ public class HandleClient implements Runnable{
                     username = "";
                 }
             }
-            if (this.username.isBlank()) {
-                //TODO: Review this part of the code
-                out.writeUTF(JsonSerializer.serializeJson(new ConcreteMessage("", "Connection Accepted"
-                        + "\nWelcome " + username + "\nNOTE: SINCE YOU HAVEN'T PROVIDED AN USERNAME, " +
-                        "YOU'RE IN MODE READ ONLY.")));
-            } else {
                 // Thread needs to sleep so that the chat form can load and the user sees his welcome message
                 Thread.sleep(1000);
                 //welcome message to server
-                String message = "Welcome " + this.username;
+                String message = this.username +  " has entered the chat";
                 try {
                     server.messages.put(message);
                 } catch (InterruptedException e) {
                     System.out.println(e.getMessage());
                 }
-            }
+
 
             String line = "";
-            while (!line.equals("bye")) {
+            while (socket.isConnected()) {
                 ConcreteMessage incomingConcreteMessage = JsonSerializer.deserializeJson(this.in.readUTF(), ConcreteMessage.class);
                 try {
                     if (incomingConcreteMessage.getMessageType() == MessageType.GROUP_CHAT) {
@@ -193,35 +184,25 @@ public class HandleClient implements Runnable{
                                         "All other players left, please restart"));
                             }
                         }
-                    }
+                    } else if (incomingConcreteMessage.getMessageType() == MessageType.USER_LOGOUT) {
+                        String goodbyeMessage = "Server: " + this.username + " has left the chat!";
+                        //may not work since player not only identified by his username
+                        server.players.remove(username);
+                        server.messages.put(goodbyeMessage);
 
+                        server.CLIENTS.remove(this);
+                        this.in.close();
+                        this.out.close();
+                        socket.close();
+
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     System.out.println(this.username);
                 }
             }
-
-            try {
-                String goodbyeMessage = "Server:  Hasta la vista " + this.username;
-                //may not work since player not only identified by his username
-                server.players.remove(username);
-                server.messages.put(goodbyeMessage);
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            }
-
-            try {
-                Thread.sleep(2000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            server.CLIENTS.remove(this);
-            this.in.close();
-            this.out.close();
-            socket.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Client disconnected");
         }
     }
 }
