@@ -16,6 +16,8 @@ public enum MessageType {
     GROUP_CHAT,
     START_GAME,
     INVALID_COMMAND,
-    USERNAME_COMMAND
+    USERNAME_COMMAND,
+    USER_LOGOUT
+
 }
 

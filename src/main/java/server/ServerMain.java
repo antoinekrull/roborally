@@ -50,7 +50,6 @@ public class ServerMain extends Application {
          */
         public Server(int port) {
             this.messages = new LinkedBlockingQueue<>();
-        //TODO: Fix Client issues in server
 
             Thread acceptClients = new Thread() {
 
@@ -95,7 +94,6 @@ public class ServerMain extends Application {
         }
 
 
-        //TODO: think about thread writing to clients, probably multiple times the same output
         public List<HandleClient> getClients() {
             return this.CLIENTS;
         }

@@ -154,7 +154,7 @@ public class HandleClient implements Runnable{
             }
 
             String line = "";
-            while (!line.equals("bye")) {
+            while (socket.isConnected()) {
                 ConcreteMessage incomingConcreteMessage = JsonSerializer.deserializeJson(this.in.readUTF(), ConcreteMessage.class);
                 try {
                     if (incomingConcreteMessage.getMessageType() == MessageType.GROUP_CHAT) {
@@ -188,35 +188,25 @@ public class HandleClient implements Runnable{
                                         "All other players left, please restart"));
                             }
                         }
-                    }
+                    } else if (incomingConcreteMessage.getMessageType() == MessageType.USER_LOGOUT) {
+                        String goodbyeMessage = "Server: " + this.username + " has left the chat!";
+                        //may not work since player not only identified by his username
+                        server.players.remove(username);
+                        server.messages.put(goodbyeMessage);
 
+                        server.CLIENTS.remove(this);
+                        this.in.close();
+                        this.out.close();
+                        socket.close();
+
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     System.out.println(this.username);
                 }
             }
-
-            try {
-                String goodbyeMessage = "Server:  Hasta la vista " + this.username;
-                //may not work since player not only identified by his username
-                server.players.remove(username);
-                server.messages.put(goodbyeMessage);
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            }
-
-            try {
-                Thread.sleep(2000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            server.CLIENTS.remove(this);
-            this.in.close();
-            this.out.close();
-            socket.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("Client disconnected");
         }
     }
 }

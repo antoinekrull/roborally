@@ -127,35 +127,27 @@ public class Client {
     }
 
     public void sendMessageToServer(String messageToServer) {
-        if (messageToServer.equals("bye")) {
-            try {
-                //TODO: Rework generateMessage method
-                out.writeUTF(JsonSerializer.serializeJson(messageCreator.generateMessage(username, messageToServer)));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            closeApplication();
-        }
-        else {
-            try {
-                out.writeUTF(JsonSerializer.serializeJson(messageCreator.generateMessage(username, messageToServer)));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            out.writeUTF(JsonSerializer.serializeJson(messageCreator.generateMessage(username, messageToServer)));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     public void closeApplication() {
+        ConcreteMessage bye = new ConcreteMessage(username, "Bye");
+        bye.setMessageType(MessageType.USER_LOGOUT);
         try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
+            out.writeUTF(JsonSerializer.serializeJson(bye));
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
         try {
+            Thread.sleep(100);
             in.close();
             out.close();
             System.exit(0);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

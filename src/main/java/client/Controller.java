@@ -104,7 +104,8 @@ public class Controller implements Initializable {
         this.client = client;
     }
     public void exit(){
-        client.sendMessageToServer("bye");
+        client.closeApplication();
+        System.out.println("tschüss");
     }
     public void setUsername(String username) {
         this.username = username;
