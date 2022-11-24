@@ -48,6 +48,7 @@ public class ServerMain extends Application {
          *
          * @param port Port where the server listens to.
          */
+
         public Server(int port) {
             this.messages = new LinkedBlockingQueue<>();
 
