@@ -52,7 +52,6 @@ public class ServerMain extends Application {
             this.messages = new LinkedBlockingQueue<>();
 
             Thread acceptClients = new Thread() {
-
                 public void run() {
                     try {
                         server = new ServerSocket(port);
@@ -97,7 +96,6 @@ public class ServerMain extends Application {
         public List<HandleClient> getClients() {
             return this.CLIENTS;
         }
-
 
     }
     public static void main(String[] args) {
