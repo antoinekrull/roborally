@@ -53,7 +53,6 @@ public class ServerMain extends Application {
         //TODO: Fix Client issues in server
 
             Thread acceptClients = new Thread() {
-
                 public void run() {
                     try {
                         server = new ServerSocket(port);
