@@ -43,7 +43,6 @@ public class ServerMain extends Application {
         //Network Communication
         protected final ArrayList<HandleClient> CLIENTS = new ArrayList<>();
         public final LinkedBlockingQueue<String> messages;
-
         Server self = this;
 
         /**
