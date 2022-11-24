@@ -62,7 +62,6 @@ public class ServerMain extends Application {
                         server = new ServerSocket(port);
 
                         while (true) {
-
                             socket = server.accept();
 
                             //handle multithreading for clients
