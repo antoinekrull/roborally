@@ -3,8 +3,6 @@ package server;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.ConcreteMessage;
-import game.card.Deck;
-import game.player.Player;
 import javafx.application.Application;
 import javafx.stage.Stage;
 

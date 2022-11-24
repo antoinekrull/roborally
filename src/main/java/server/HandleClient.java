@@ -5,10 +5,7 @@ import communication.ConcreteMessage;
 import communication.MessageType;
 import game.player.Player;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +66,6 @@ public class HandleClient implements Runnable{
      * @param username The targeted client.
      * @param concreteMessage  Message the server send to the client.
      */
-    //TODO: Prints multiple times, can sometimes crash threads
     public void writeTo(String username, ConcreteMessage concreteMessage) {
         try {
             for (server.HandleClient client : server.CLIENTS) {
