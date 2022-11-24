@@ -10,7 +10,6 @@ package communication;
  */
 public enum MessageType {
     DIRECT_MESSAGE,
-    GAME_MESSAGE,
     JOIN_SESSION,
     LEAVE_SESSION,
     GROUP_CHAT,
