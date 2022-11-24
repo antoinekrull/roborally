@@ -1,27 +1,16 @@
 package communication;
 
-    import static java.lang.Integer.parseInt;
-
     /**
      * This class is used for communication between the server and the client by processing the client's input
      */
+
     public class MessageCreator {
-    //TODO: Reowrk message creator
+    //TODO: Rework message creator
         private final String escapeCharacter = "!";
-
         private String directMessage = "dm";
-
         private String joinSession = "join";
-
         private String leaveSession = "quit";
-
         private String startGame = "start";
-
-        public int readCommand(String command) {
-            int commandNumber = 0;
-
-            return commandNumber;
-        }
 
         /**
          * Takes input from the client, processes it depending on the input (defined command or his username) and sends the processed data to the server.
@@ -30,6 +19,7 @@ package communication;
          * @param userInput Client's command to the server as input
          * @return Message Processed client input sent to server.
          */
+
         public ConcreteMessage generateMessage(String username, String userInput) {
             ConcreteMessage generatedConcreteMessage = new ConcreteMessage();
             generatedConcreteMessage.setUsername(username);
