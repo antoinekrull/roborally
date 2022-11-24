@@ -67,6 +67,7 @@ public class ServerMain extends Application {
 
                             //handle multithreading for clients
                             HandleClient client = new HandleClient(socket.getRemoteSocketAddress().toString(), socket.getPort(), socket, self);
+                            client.setUsername("");
                             synchronized (CLIENTS) {
                                 CLIENTS.add(client);
                             }
