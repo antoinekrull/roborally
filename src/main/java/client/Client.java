@@ -136,7 +136,7 @@ public class Client {
         if (messageToServer.equals("bye")) {
             try {
                 //TODO: Rework generateMessage method
-                //out.writeUTF(JsonSerializer.serializeJson(messageCreator.generateMessage(username, messageToServer)));
+                out.writeUTF(JsonSerializer.serializeJson(messageCreator.generateMessage(username, messageToServer)));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -144,7 +144,7 @@ public class Client {
         }
         else {
             try {
-                //out.writeUTF(JsonSerializer.serializeJson(messageCreator.generateMessage(username, messageToServer)));
+                out.writeUTF(JsonSerializer.serializeJson(messageCreator.generateMessage(username, messageToServer)));
             } catch (Exception e) {
                 e.printStackTrace();
             }
