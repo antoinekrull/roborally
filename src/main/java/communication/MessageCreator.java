@@ -10,7 +10,6 @@ package communication;
         private final String escapeCharacter = "!";
 
         private String directMessage = "dm";
-        private String playCard = "play";
 
         private String joinSession = "join";
 
@@ -43,14 +42,6 @@ package communication;
                     generatedConcreteMessage.setTarget(target);
                     generatedConcreteMessage.setMessage(userInput);
                     generatedConcreteMessage.setMessageType(MessageType.DIRECT_MESSAGE);
-                    //cuts of substring to fully wrap the play order into message
-                    //syntax for order should look like this !play cardName (<- this may change) targetPlayer guessedInt
-                } else if (userInput.startsWith(playCard)) {
-                    String[] splitInput = userInput.split(" "); //result looks like {"!play", "cardName", "targetName", "guessedInt"}
-                    generatedConcreteMessage.setTarget(splitInput[2]);
-                    generatedConcreteMessage.setPlayedCard(Integer.parseInt(splitInput[1]));
-                    //TODO: Set target and set int, fix bug
-                    generatedConcreteMessage.setMessageType(MessageType.GAME_MESSAGE);
                 } else if (userInput.startsWith(joinSession)) {
                     generatedConcreteMessage.setMessageType(MessageType.JOIN_SESSION);
                 } else if (userInput.startsWith(leaveSession)) {
