@@ -138,22 +138,16 @@ public class HandleClient implements Runnable{
                     username = "";
                 }
             }
-            if (this.username.isBlank()) {
-                //TODO: Review this part of the code
-                out.writeUTF(JsonSerializer.serializeJson(new ConcreteMessage("", "Connection Accepted"
-                        + "\nWelcome " + username + "\nNOTE: SINCE YOU HAVEN'T PROVIDED AN USERNAME, " +
-                        "YOU'RE IN MODE READ ONLY.")));
-            } else {
                 // Thread needs to sleep so that the chat form can load and the user sees his welcome message
                 Thread.sleep(1000);
                 //welcome message to server
-                String message = "Welcome " + this.username;
+                String message = this.username +  " has entered the chat";
                 try {
                     server.messages.put(message);
                 } catch (InterruptedException e) {
                     System.out.println(e.getMessage());
                 }
-            }
+
 
             String line = "";
             while (socket.isConnected()) {

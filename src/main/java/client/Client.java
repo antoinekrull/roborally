@@ -48,7 +48,8 @@ public class Client {
             out = new DataOutputStream(socket.getOutputStream());
 
         } catch (Exception e) {
-            System.out.println("error " + e.getMessage());
+            loginController.setMessage("Couldn't connect to server");
+            //TODO: create error message to close window because there is no connection to server
         }
 
         ReadMessagesFromServer server = new ReadMessagesFromServer(socket);
@@ -77,34 +78,38 @@ public class Client {
         }
 
         public void run() {
-            try {
-                in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-                out = new DataOutputStream(socket.getOutputStream());
-
-                while (socket.isConnected()) {
-                    try {
-                        ConcreteMessage concreteMessage = JsonSerializer.deserializeJson(in.readUTF(), ConcreteMessage.class);
-                        if (concreteMessage.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
-                            if (concreteMessage.getMessage().equals("accepted")) {
-                                loginController.goToChat(username);
+            if (socket!=null) {
+                try {
+                    in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+                    out = new DataOutputStream(socket.getOutputStream());
+                    while (socket.isConnected()) {
+                        try {
+                            ConcreteMessage concreteMessage = JsonSerializer.deserializeJson(in.readUTF(), ConcreteMessage.class);
+                            if (concreteMessage.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
+                                if (concreteMessage.getMessage().equals("accepted")) {
+                                    loginController.goToChat(username);
+                                } else {
+                                    setUsername("");
+                                    loginController.setMessage(concreteMessage.getMessage());
+                                }
                             }
-                            else {
-                                setUsername("");
-                                loginController.setMessage(concreteMessage.getMessage());
+                            if (accessible && !concreteMessage.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
+                                MESSAGES.put(concreteMessage.getMessage());
                             }
-                        }
-                        if (accessible&&!concreteMessage.getMessageType().equals(MessageType.USERNAME_COMMAND)){
-                            MESSAGES.put(concreteMessage.getMessage());
-                        }
 
-                    } catch (IOException | InterruptedException e) {
-                        //e.printStackTrace();
+                        } catch (IOException | InterruptedException e) {
+                            //e.printStackTrace();
+                        }
                     }
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
                 }
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
+            }else {
+                loginController.setMessage("Couldn't connect to server");
             }
+
         }
+
     }
 
     public void readMessageToClientChat() {
