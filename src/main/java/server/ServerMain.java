@@ -3,8 +3,6 @@ package server;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.ConcreteMessage;
-import game.card.Deck;
-import game.player.Player;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -43,7 +41,6 @@ public class ServerMain extends Application {
         //Network Communication
         protected final ArrayList<HandleClient> CLIENTS = new ArrayList<>();
         public final LinkedBlockingQueue<String> messages;
-
         Server self = this;
 
         /**
@@ -98,12 +95,9 @@ public class ServerMain extends Application {
             writeMessages.start();
         }
 
-
-        //TODO: think about thread writing to clients, probably multiple times the same output
         public List<HandleClient> getClients() {
             return this.CLIENTS;
         }
-
 
     }
     public static void main(String[] args) {
