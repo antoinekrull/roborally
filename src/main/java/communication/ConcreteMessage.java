@@ -10,10 +10,8 @@ public class ConcreteMessage extends Message{
     private String message;
     private String target;
     private MessageType messageType = MessageType.GROUP_CHAT;
-    private int playedCard = 0;
     public ConcreteMessage(){}
-    public ConcreteMessage(String username, String message
-    ){
+    public ConcreteMessage(String username, String message){
         this.username = username;
         this.message = message;
     }
@@ -30,7 +28,6 @@ public class ConcreteMessage extends Message{
     public String getMessage() {
         return message;
     }
-
     public void setTarget(String newTarget) {
         target = newTarget;
     }
@@ -39,11 +36,4 @@ public class ConcreteMessage extends Message{
     }
     public void setMessageType(MessageType messageType){ this.messageType = messageType; }
     public MessageType getMessageType(){ return this.messageType; }
-
-    public void setPlayedCard(int cardPosition) {
-        playedCard = cardPosition;
-    }
-    public int getPlayedCard() {
-        return playedCard;
-    }
 }
