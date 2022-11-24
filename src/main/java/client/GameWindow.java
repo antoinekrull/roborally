@@ -16,7 +16,7 @@ public class GameWindow extends Application {
   public void start(Stage primaryStage) throws IOException {
     FXMLLoader loader = new FXMLLoader(GameWindow.class.getResource("gamewindow.fxml"));
 
-    Scene scene = new Scene(loader.load(), 900, 500);
+    Scene scene = new Scene(loader.load(), 1650, 900);
     primaryStage.setScene(scene);
     primaryStage.show();
 
