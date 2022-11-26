@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -69,10 +69,7 @@
                            <image>
                               <Image url="@../textures/roborally_spam.jpg" />
                            </image></ImageView>
-                        <Label text="Tim: Scheiße">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin></Label>
+                        <TextArea prefHeight="200.0" prefWidth="200.0" text="Tim: Nice!&#10;Emma: Spiel endlich!&#10; - Erik's turn -" />
                      </children>
                      <GridPane.margin>
                         <Insets left="20.0" />
