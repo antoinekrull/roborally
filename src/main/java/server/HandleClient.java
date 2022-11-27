@@ -169,16 +169,16 @@ public class HandleClient implements Runnable{
                                     "Invalid username, try again"));
                         }
                     } else if (incomingConcreteMessage.getMessageType() == MessageType.JOIN_SESSION) {
-                        if (server.players.playerIsInList(incomingConcreteMessage.getUsername())) {
+                        if (server.players.containsKey(incomingConcreteMessage.getUsername())) {
                             server.messages.put(incomingConcreteMessage.getUsername() + " already in gamesession");
                         } else {
-                            server.players.add(new Player(incomingConcreteMessage.getUsername(), server));
+                            server.players.put(incomingConcreteMessage.getUsername(), new Player(incomingConcreteMessage.getUsername(), server));
                             server.messages.put(incomingConcreteMessage.getUsername() + " joined the gamesession");
                         }
                     } else if (incomingConcreteMessage.getMessageType() == MessageType.LEAVE_SESSION) {
-                        server.players.remove(server.players.getPlayerFromList(incomingConcreteMessage.getUsername()).getUsername());
-                        if (server.players.playerIsInList(incomingConcreteMessage.getUsername())) {
-                            server.activePlayers.remove(server.players.getPlayerFromList(incomingConcreteMessage.getUsername()).getUsername());
+                        server.players.remove(server.players.get(incomingConcreteMessage.getUsername()).getUsername());
+                        if (server.players.containsKey(incomingConcreteMessage.getUsername())) {
+                            server.activePlayers.remove(server.players.get(incomingConcreteMessage.getUsername()).getUsername());
                             if (server.activePlayers.size() == 1) {
                                 writeTo(server.activePlayers.get(0).getUsername(), new ConcreteMessage("Server",
                                         "All other players left, please restart"));

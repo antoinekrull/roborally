@@ -29,5 +29,6 @@ public abstract class Card {
     public void setCardEffect(String newCardEffect) {
         this.cardEffect = newCardEffect;
     }
+    public void applyEffect(String cardName){}
 }
 
