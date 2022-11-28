@@ -3,6 +3,7 @@ package server;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.ConcreteMessage;
+import game.player.Player;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -10,6 +11,7 @@ import javafx.stage.Stage;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -36,8 +38,8 @@ public class ServerMain extends Application {
 
         protected Socket socket = null;
         protected ServerSocket server = null;
-        public PlayerList players = new PlayerList();
-        protected PlayerList activePlayers = new PlayerList();
+        public HashMap<String, Player> players = new HashMap<>();
+        protected HashMap<String, Player> activePlayers = new HashMap<>();
         //Network Communication
         protected final ArrayList<HandleClient> CLIENTS = new ArrayList<>();
         public final LinkedBlockingQueue<String> messages;
