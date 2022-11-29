@@ -17,6 +17,7 @@ public class GameWindow extends Application {
     FXMLLoader loader = new FXMLLoader(GameWindow.class.getResource("gamewindow.fxml"));
 
     Scene scene = new Scene(loader.load(), 1650, 900);
+    primaryStage.setFullScreen(true);
     primaryStage.setScene(scene);
     primaryStage.show();
 
