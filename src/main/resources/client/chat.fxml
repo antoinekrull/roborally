@@ -3,13 +3,15 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
@@ -17,43 +19,52 @@
     <bottom>
         <HBox spacing="20.0" BorderPane.alignment="CENTER">
             <children>
-                <HBox fx:id="chatSendHBox" alignment="CENTER" prefHeight="34.0" prefWidth="202.0" spacing="20.0" HBox.hgrow="ALWAYS">
-                    <children>
-                        <TextField fx:id="chatTextfield" focusTraversable="false" onAction="#onEnter" prefHeight="30.0" prefWidth="388.0" promptText="Type here..." HBox.hgrow="ALWAYS">
-                            <font>
-                                <Font name="Hiragino Sans W2" size="13.0" />
-                            </font>
-                        </TextField>
-                        <Button fx:id="buttonSend" mnemonicParsing="false" onAction="#onEnter" prefHeight="26.0" prefWidth="55.0">
-                            <opaqueInsets>
-                                <Insets />
-                            </opaqueInsets>
-                            <graphic>
-                                <Label fx:id="sendLabel">
-                                    <font>
-                                        <Font name="Hiragino Sans W2" size="11.0" />
-                                    </font>
-                                    <graphic>
-                                        <ImageView fitHeight="18.0" fitWidth="24.0">
-                                            <image>
-                                                <Image url="@Send_Image.png" />
-                                            </image>
-                                        </ImageView>
-                                    </graphic>
-                                </Label>
-                            </graphic>
-                        </Button>
-                    </children>
-                    <HBox.margin>
-                        <Insets bottom="30.0" />
-                    </HBox.margin>
-                    <padding>
-                        <Insets left="10.0" right="10.0" />
-                    </padding>
-                </HBox>
+            <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
+               <HBox.margin>
+                  <Insets bottom="30.0" />
+               </HBox.margin>
+               <children>
+                      <HBox fx:id="chatSendHBox" alignment="CENTER" prefHeight="34.0" prefWidth="202.0" spacing="20.0">
+                          <children>
+                              <TextField fx:id="chatTextfield" focusTraversable="false" onAction="#onEnter" prefHeight="30.0" prefWidth="388.0" promptText="Type here..." HBox.hgrow="ALWAYS">
+                                  <font>
+                                      <Font name="Hiragino Sans W2" size="13.0" />
+                                  </font>
+                              </TextField>
+                              <Button fx:id="buttonSend" mnemonicParsing="false" onAction="#onEnter" prefHeight="26.0" prefWidth="55.0">
+                                  <opaqueInsets>
+                                      <Insets />
+                                  </opaqueInsets>
+                                  <graphic>
+                                      <Label fx:id="sendLabel">
+                                          <font>
+                                              <Font name="Hiragino Sans W2" size="11.0" />
+                                          </font>
+                                          <graphic>
+                                              <ImageView fitHeight="18.0" fitWidth="24.0">
+                                                  <image>
+                                                      <Image url="@Send_Image.png" />
+                                                  </image>
+                                              </ImageView>
+                                          </graphic>
+                                      </Label>
+                                  </graphic>
+                              </Button>
+                          </children>
+                          <padding>
+                              <Insets left="10.0" right="10.0" />
+                          </padding>
+                      </HBox>
+                  <Button mnemonicParsing="false" text="Join Game-Session">
+                     <VBox.margin>
+                        <Insets top="20.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
             </children>
             <BorderPane.margin>
-                <Insets left="50.0" right="50.0" top="20.0" />
+                <Insets left="40.0" right="40.0" />
             </BorderPane.margin>
         </HBox>
     </bottom>
@@ -73,26 +84,17 @@
     <top>
         <VBox alignment="CENTER" BorderPane.alignment="CENTER">
             <children>
-                <Pane>
-                    <children>
-                        <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exit">
-                            <graphic>
-                                <Label>
-                                    <graphic>
-                                        <ImageView fx:id="logoutButton" fitHeight="15.0" fitWidth="16.0">
-                                            <image>
-                                                <Image url="@Power_Button.png" />
-                                            </image>
-                                        </ImageView>
-                                    </graphic></Label>
-                            </graphic>
-                        </Button>
-                    </children>
-                    <VBox.margin>
-                        <Insets left="50.0" top="17.0" />
-                    </VBox.margin>
-                </Pane>
-                <Label fx:id="chatLabel" alignment="CENTER" text="Chat" VBox.vgrow="ALWAYS">
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="Options">
+                  <items>
+                    <MenuItem mnemonicParsing="false" text="Exit" />
+                        <MenuItem mnemonicParsing="false" text="Help" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+                <Label fx:id="chatLabel" alignment="CENTER" text="Lobby" VBox.vgrow="ALWAYS">
                     <font>
                         <Font name="Hiragino Sans W3" size="24.0" />
                     </font>
