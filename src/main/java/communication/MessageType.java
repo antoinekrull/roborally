@@ -1,22 +1,53 @@
 package communication;
 
 /**
- * @author Antoine, Moritz
+ * @author Antoine, Firas, Moritz
  * @version 1.0
  */
 
 /**
- * Serves to categorize messages so that the server can process them accordingly.
+ * Serves to categorize messages so that the server/client can process them accordingly.
  */
 public enum MessageType {
-    DIRECT_MESSAGE,
-    JOIN_SESSION,
-    LEAVE_SESSION,
-    GROUP_CHAT,
-    START_GAME,
-    INVALID_COMMAND,
-    USERNAME_COMMAND,
-    USER_LOGOUT
-
-}
+    HelloClient,
+    Alive,
+    HelloServer,
+    Welcome,
+    PlayerValues,
+    PlayerAdded,
+    SetStatus,
+    PlayerStatus,
+    SelectMap,
+    MapSelected,
+    GameStarted,
+    SendChat,
+    ReceivedChat,
+    Error,
+    PlayCard,
+    CardPlayed,
+    CurrentPlayer,
+    ActivePhase,
+    SetStartingPoint,
+    StartingPointTaken,
+    YourCards,
+    NotYourCards,
+    ShuffleCoding,
+    SelectedCard,
+    CardSelected,
+    SelectionFinished,
+    TimerStarted,
+    TimerEnded,
+    CardsYouGotNow,
+    CurrentCards,
+    ReplaceCard,
+    Movement,
+    PlayerTurning,
+    Animation,
+    Reboot,
+    RebootDirection,
+    Energy,
+    CheckPointReached,
+    GameFinished,
+    Sample
+    }
 
