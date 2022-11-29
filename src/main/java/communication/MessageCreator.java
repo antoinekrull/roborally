@@ -241,15 +241,5 @@ package communication;
             messageBody.setClientID(clientID);
             return new Message(MessageType.GameFinished, messageBody);
         }
-
-
-
-        /**
-         * Takes input from the client, processes it depending on the input (defined command or his username) and sends the processed data to the server.
-         *
-         * @param username Client's username as input.
-         * @param userInput Client's command to the server as input
-         * @return Message Processed client input sent to server.
-         */
     }
 
