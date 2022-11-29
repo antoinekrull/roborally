@@ -3,7 +3,8 @@ package communication;
 /**
  * @author Antoine, Firas
  * @version 1.0
- * Serves to hold all possible message information. The needed attributes are set depending on the MessageType.
+ * Serves to hold all possible message (beside cardsInHand attribute, resolved by the child classes) information.
+ * The needed attributes are set depending on the MessageType.
  */
 public class MessageBody {
 
