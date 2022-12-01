@@ -9,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -87,6 +89,10 @@ public class LoginScreen implements Initializable{
 
             }
         });
+    }
+    public void closeButtonAction() {
+        System.out.println("Byeeeeeeeeeeeeeeeeeeeeeeeeee");
+        client.closeApplication();
     }
 }
 

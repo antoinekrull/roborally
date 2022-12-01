@@ -1,6 +1,6 @@
 package game.player;
 
-import communication.Message;
+import communication.ConcreteMessage;
 import game.card.Card;
 import server.HandleClient;
 import server.ServerMain;
@@ -15,8 +15,7 @@ import java.util.LinkedList;
 public class Player {
 
     private String username;
-    private int affectionScore;
-    private boolean isTargetable;
+    private int score;
     private boolean isPlaying;
     private boolean isOutOfRound;
     private ArrayList<Card> hand;
@@ -29,10 +28,9 @@ public class Player {
         this.hand = new ArrayList<Card>();
         this.isOutOfRound = false;
         this.isPlaying = false;
-        this.isTargetable = true;
         this.server = server;
         this.personalDiscardPile = new LinkedList<Card>();
-        this.affectionScore = 0;
+        this.score = 0;
     }
 
     public String getUsername() {
@@ -41,17 +39,11 @@ public class Player {
     public void setUsername(String username) {
         this.username = username;
     }
-    public int getAffectionScore() {
-        return affectionScore;
+    public int getScore() {
+        return score;
     }
-    public void setAffectionScore(int affectionScore) {
-        this.affectionScore = affectionScore;
-    }
-    public boolean isTargetable() {
-        return isTargetable;
-    }
-    public void setTargetable(boolean targetable) {
-        isTargetable = targetable;
+    public void setScore(int score) {
+        this.score = score;
     }
     public boolean isPlaying() {
         return isPlaying;
@@ -74,15 +66,14 @@ public class Player {
     public int getPersonalDiscardPileSize() {
         return personalDiscardPile.size();
     }
-    public void increaseAffectionScore() {
-        affectionScore++;
+    public void increaseScore() {
+        score++;
     }
 
     public Card getTopCardFromPersonalDiscardPile() {
         Card topCard = personalDiscardPile.get(personalDiscardPile.size());
         return topCard;
     }
-    //discards specific card from hand and returns value
     public Card discard(int index) {
         Card discardedCard = hand.get(index);
         personalDiscardPile.add(discardedCard);
@@ -94,15 +85,6 @@ public class Player {
     }
     public void drawCard(Card drawnCard) {
         hand.add(drawnCard);
-        sendMessageToPlayer("You drew " + drawnCard.getCardName());
-        System.out.println(drawnCard.getCardName());
-    }
-    public void sendMessageToPlayer(String input){
-        for (HandleClient client: this.server.getClients()){
-            if (client.getUsername().equals(this.username)){
-                client.writeTo(this.username, new Message("Server", input));
-            }
-        }
     }
     public Card getCard() {
         return hand.get(0);

@@ -1,7 +1,7 @@
 package server;
 
 import communication.JsonSerializer;
-import communication.Message;
+import communication.ConcreteMessage;
 import communication.MessageType;
 import game.player.Player;
 
@@ -10,10 +10,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.List;
+import java.util.ArrayList;
 
 public class HandleClient implements Runnable{
-//TODO: HandleClient class
+
     private DataInputStream in = null;
     private DataOutputStream out = null;
     public String address;
@@ -39,26 +39,26 @@ public class HandleClient implements Runnable{
                     new BufferedInputStream(socket.getInputStream()));
             this.out = new DataOutputStream(socket.getOutputStream());
         } catch (Exception e) {
-            System.out.println("Error here " + e.getMessage());
+            System.out.println("Error in HandleClient constructor " + e.getMessage());
         }
     }
 
-    public boolean containsName(final List<HandleClient> list, final String name) {
+    public boolean containsName(final ArrayList<HandleClient> list, final String name) {
         if (list.size() > 0) {
-            for (int i = 0; i < list.size() - 1; i++) {
+            for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).getUsername().equals(name)) {
-                    return true;
+                        return true;
                 }
             }
         }
         return false;
     }
 
-    public void write(Message message) {
+    public void write(ConcreteMessage concreteMessage) {
         try {
-            this.out.writeUTF(JsonSerializer.serializeJson(message));
+            this.out.writeUTF(JsonSerializer.serializeJson(concreteMessage));
         } catch (IOException e) {
-            System.out.println("Error here " + e.getMessage());
+            System.out.println("Error in write method " + e.getMessage());
         }
     }
 
@@ -66,14 +66,13 @@ public class HandleClient implements Runnable{
      * Server can write to a specific client.
      *
      * @param username The targeted client.
-     * @param message  Message the server send to the client.
+     * @param concreteMessage  Message the server send to the client.
      */
-    //TODO: Prints multiple times, can sometimes crash threads
-    public void writeTo(String username, Message message) {
+    public void writeTo(String username, ConcreteMessage concreteMessage) {
         try {
             for (server.HandleClient client : server.CLIENTS) {
                 if (client.getUsername().equals(username)) {
-                    client.out.writeUTF(JsonSerializer.serializeJson(message));
+                    client.out.writeUTF(JsonSerializer.serializeJson(concreteMessage));
                 }
             }
         } catch (Exception e) {
@@ -88,7 +87,7 @@ public class HandleClient implements Runnable{
      */
     public void grantAccess(String username) {
         setUsername(username);
-        Message access = new Message();
+        ConcreteMessage access = new ConcreteMessage();
         access.setMessageType(MessageType.USERNAME_COMMAND);
         access.setUsername("Server");
         access.setMessage("accepted");
@@ -102,12 +101,12 @@ public class HandleClient implements Runnable{
      */
     public void denyAccess(String username) {
         setUsername(username);
-        Message access = new Message();
+        ConcreteMessage access = new ConcreteMessage();
         access.setMessageType(MessageType.USERNAME_COMMAND);
         access.setUsername("Server");
         access.setMessage("The username " + username + " is already taken, choose another one");
         writeTo(username, access);
-        setUsername(null);
+        setUsername("");
     }
 
     @Override
@@ -117,7 +116,7 @@ public class HandleClient implements Runnable{
 
     public void setUsername(String username) {
         this.username = username;
-    }
+}
 
     public String getUsername() {
         return this.username;
@@ -128,98 +127,82 @@ public class HandleClient implements Runnable{
      */
     public void run() {
         try {
-            String username = null;
+            String username ="";
 
-            while (username == null) {
-                username = JsonSerializer.deserializeJson(in.readUTF(), Message.class).getUsername();
+            while (username == "") {
+                username = JsonSerializer.deserializeJson(in.readUTF(), ConcreteMessage.class).getUsername();
                 if (!containsName(server.CLIENTS, username)) {
                     grantAccess(username);
                 } else {
                     denyAccess(username);
-                    username = null;
+                    username = "";
                 }
             }
-            if (this.username.isBlank()) {
-                //TODO: Review this part of the code
-                out.writeUTF(JsonSerializer.serializeJson(new Message("", "Connection Accepted"
-                        + "\nWelcome " + username + "\nNOTE: SINCE YOU HAVEN'T PROVIDED AN USERNAME, " +
-                        "YOU'RE IN MODE READ ONLY.")));
-            } else {
                 // Thread needs to sleep so that the chat form can load and the user sees his welcome message
                 Thread.sleep(1000);
                 //welcome message to server
-                String message = "Welcome " + this.username;
+                String message = this.username +  " has entered the chat";
                 try {
                     server.messages.put(message);
                 } catch (InterruptedException e) {
                     System.out.println(e.getMessage());
                 }
-            }
+
 
             String line = "";
-            while (!line.equals("bye")) {
-                Message incomingMessage = JsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
+            while (socket.isConnected()) {
+                ConcreteMessage incomingConcreteMessage = JsonSerializer.deserializeJson(this.in.readUTF(), ConcreteMessage.class);
                 try {
-                    if (incomingMessage.getMessageType() == MessageType.GROUP_CHAT) {
-                        line = incomingMessage.getMessage();
+                    if (incomingConcreteMessage.getMessageType() == MessageType.GROUP_CHAT) {
+                        line = incomingConcreteMessage.getMessage();
                         String line_formatted = this.username + ":  " + line;
 
                         if (!this.username.isBlank()) {
                             server.messages.put(line_formatted);
                             //print to server
                         }
-                    } else if (incomingMessage.getMessageType() == MessageType.DIRECT_MESSAGE) {
-                        if (containsName(server.CLIENTS, incomingMessage.getTarget())) {
-                            writeTo(incomingMessage.getTarget(), incomingMessage);
+                    } else if (incomingConcreteMessage.getMessageType() == MessageType.DIRECT_MESSAGE) {
+                        if (containsName(server.CLIENTS, incomingConcreteMessage.getTarget())) {
+                            writeTo(incomingConcreteMessage.getTarget(), incomingConcreteMessage);
                         } else {
-                            writeTo(incomingMessage.getUsername(), new Message("Server",
+                            writeTo(incomingConcreteMessage.getUsername(), new ConcreteMessage("Server",
                                     "Invalid username, try again"));
                         }
-                    } else if (incomingMessage.getMessageType() == MessageType.JOIN_SESSION) {
-                        if (server.players.playerIsInList(incomingMessage.getUsername())) {
-                            server.messages.put(incomingMessage.getUsername() + " already in gamesession");
+                    } else if (incomingConcreteMessage.getMessageType() == MessageType.JOIN_SESSION) {
+                        if (server.players.containsKey(incomingConcreteMessage.getUsername())) {
+                            server.messages.put(incomingConcreteMessage.getUsername() + " already in gamesession");
                         } else {
-                            server.players.add(new Player(incomingMessage.getUsername(), server));
-                            server.messages.put(incomingMessage.getUsername() + " joined the gamesession");
+                            server.players.put(incomingConcreteMessage.getUsername(), new Player(incomingConcreteMessage.getUsername(), server));
+                            server.messages.put(incomingConcreteMessage.getUsername() + " joined the gamesession");
                         }
-                    } else if (incomingMessage.getMessageType() == MessageType.LEAVE_SESSION) {
-                        server.players.remove(server.players.getPlayerFromList(incomingMessage.getUsername()).getUsername());
-                        if (server.players.playerIsInList(incomingMessage.getUsername())) {
-                            server.activePlayers.remove(server.players.getPlayerFromList(incomingMessage.getUsername()).getUsername());
+                    } else if (incomingConcreteMessage.getMessageType() == MessageType.LEAVE_SESSION) {
+                        server.players.remove(server.players.get(incomingConcreteMessage.getUsername()).getUsername());
+                        if (server.players.containsKey(incomingConcreteMessage.getUsername())) {
+                            server.activePlayers.remove(server.players.get(incomingConcreteMessage.getUsername()).getUsername());
                             if (server.activePlayers.size() == 1) {
-                                writeTo(server.activePlayers.get(0).getUsername(), new Message("Server",
+                                writeTo(server.activePlayers.get(0).getUsername(), new ConcreteMessage("Server",
                                         "All other players left, please restart"));
                             }
                         }
-                    }
+                    } else if (incomingConcreteMessage.getMessageType() == MessageType.USER_LOGOUT) {
+                        String goodbyeMessage = "Server: " + this.username + " has left the chat!";
+                        //may not work since player not only identified by his username
+                        server.players.remove(username);
+                        server.messages.put(goodbyeMessage);
 
+                        server.CLIENTS.remove(this);
+                        this.in.close();
+                        this.out.close();
+                        socket.close();
+
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     System.out.println(this.username);
                 }
             }
-
-            try {
-                String goodbyeMessage = "Server:  Hasta la vista " + this.username;
-                //may not work since player not only identified by his username
-                server.players.remove(username);
-                server.messages.put(goodbyeMessage);
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            }
-
-            try {
-                Thread.sleep(2000);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            server.CLIENTS.remove(this);
-            this.in.close();
-            this.out.close();
-            socket.close();
         } catch (Exception e) {
-            System.out.println("Error :" + e.getMessage());
+            System.out.println("Client disconnected");
         }
     }
 }

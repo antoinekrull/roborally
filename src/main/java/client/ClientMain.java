@@ -1,11 +1,12 @@
 package client;
 
-import helloworld.HelloApplication;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.net.URL;
 
@@ -39,22 +40,26 @@ public class ClientMain extends Application {
             loader = new FXMLLoader(url);
             root = loader.load();
             Scene login = new Scene(root, 600, 520);
-            //login.getStylesheets().add("/chat/chatgui/styles.css");
+            login.getStylesheets().add("/chat/chatgui/styles.css");
             primaryStage.setScene(login);
             primaryStage.show();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        LoginScreen controller = loader.getController();
+        LoginScreen loginScreen = loader.getController();
         try {
-            client = new Client(address, port, controller);
+            client = new Client(address, port, loginScreen);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error creating Client");
         }
-        primaryStage.setOnCloseRequest(windowEvent -> logout(primaryStage));
-        controller.getClient(client);
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                logout(primaryStage);
+            }
+        });
+        loginScreen.getClient(client);
 
     }
     public void logout(Stage stage){

@@ -5,9 +5,6 @@ module com.example.knorrigekorrelatehp {
     requires org.controlsfx.controls;
     requires com.fasterxml.jackson.databind;
 
-    opens helloworld to javafx.fxml;
-    exports helloworld;
-
     opens server to javafx.graphics;
     exports server;
 
