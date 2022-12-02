@@ -2,6 +2,7 @@ package game.player;
 
 import communication.ConcreteMessage;
 import game.card.Card;
+import game.robot.Robot;
 import server.HandleClient;
 import server.ServerMain;
 
@@ -19,9 +20,9 @@ public class Player {
     private boolean isPlaying;
     private boolean isOutOfRound;
     private ArrayList<Card> hand;
-
     public ServerMain.Server server;
     private LinkedList<Card> personalDiscardPile;
+    private Robot robot;
 
     public Player(String username, ServerMain.Server server) {
         this.username = username;
@@ -68,6 +69,12 @@ public class Player {
     }
     public void increaseScore() {
         score++;
+    }
+    public void setRobot(Robot robot) {
+        this.robot = robot;
+    }
+    public Robot getRobot() {
+        return robot;
     }
 
     public Card getTopCardFromPersonalDiscardPile() {

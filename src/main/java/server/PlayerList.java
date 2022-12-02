@@ -1,6 +1,7 @@
 package server;
 
 import game.player.Player;
+import game.robot.Robot;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,21 @@ public class PlayerList {
         return answer;
     }
 
+    public boolean playerIsInList(Robot robot) {
+        int indexOfPlayer = -1;
+        boolean answer = false;
+        for (int i = 0; i < playerList.size(); i++) {
+            if (playerList.get(i).getRobot().equals(robot)) {
+                indexOfPlayer = i;
+                break;
+            }
+        }
+        if (indexOfPlayer > -1) {
+            answer = true;
+        }
+        return answer;
+    }
+
     /**
      * Returns player from the list when his username is used.
      *
@@ -45,9 +61,28 @@ public class PlayerList {
         return null;
     }
 
+    public Player getPlayerFromList(Robot robot) {
+        Player player;
+        for(int i = 0; i < playerList.size(); i++) {
+            if (playerList.get(i).getRobot().equals(robot)) {
+                player = playerList.get(i);
+                return player;
+            }
+        }
+        return null;
+    }
+
+
     public void remove(String username) {
         for(int i = 0; i < playerList.size(); i++) {
             if(playerList.get(i).getUsername().equals(username)) {
+                playerList.remove(i);
+            }
+        }
+    }
+    public void remove(Robot robot) {
+        for(int i = 0; i < playerList.size(); i++) {
+            if(playerList.get(i).getRobot().equals(robot)) {
                 playerList.remove(i);
             }
         }
