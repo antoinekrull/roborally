@@ -22,7 +22,7 @@ public class ClientMain extends Application {
     int port = 3000;
 
     //Link to fxml file
-    URL url = getClass().getResource("login.fxml");
+    URL url = getClass().getResource("mainmenu.fxml");
     public LoginScreen controller;
 
 
