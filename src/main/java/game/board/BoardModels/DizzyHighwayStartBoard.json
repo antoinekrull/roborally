@@ -1,111 +1,235 @@
 {
-  [ //feld
-    [//x0
-      [//y0
+  "gameMap":
+  [
+    [
+      [
         {
           "type": "Empty",
-          "isOnBoard": "tbd"
+          "isOnBoard": "Start A"
         }
       ],
-      [//y1
+      [
         {
           "type": "Empty",
-          "isOnBoard": "tbd"
+          "isOnBoard": "Start A"
         }
       ],
-      [//y2
+      [
         {
           "type": "Empty",
-          "isOnBoard": "tbd"
+          "isOnBoard": "Start A"
         }
       ],
-      [//y3
+      [
         {
           "type": "StartPoint",
-          "isOnBoard": "tbd"
+          "isOnBoard": "Start A"
         }
       ],
-      [//y4
+      [
         {
           "type": "Empty",
-          "isOnBoard": "tbd"
+          "isOnBoard": "Start A"
         }
       ],
-      [//y5
+      [
         {
           "type": "tbd",
-          "isOnBoard": "tbd"
+          "isOnBoard": "Start A"
         }
       ],
-      [//y6
+      [
         {
           "type": "StartPoint",
-          "isOnBoard": "tbd"
+          "isOnBoard": "Start A"
         }
       ],
-      [//y7
+      [
         {
           "type": "StartPoint",
-          "isOnBoard": "tbd"
+          "isOnBoard": "Start A"
         }
       ],
-      [//y8
+      [
         {
           "type": "StartPoint",
-          "isOnBoard": "tbd"
+          "isOnBoard": "Start A"
         }
       ],
-      [//y9
+      [
         {
           "type": "StartPoint",
-          "isOnBoard": "tbd"
+          "isOnBoard": "Start A"
         }
       ]
     ],
-    [//x1
-      [//y0
+    [
+      [
         {
           "type": "Empty",
-          "isOnBoard": "tbd"
+          "isOnBoard": "Start A"
         }
       ],
-      [//y1
+      [
         {
           "type": "StartPoint",
-          "isOnBoard": "tbd"
+          "isOnBoard": "Start A"
         }
       ],
-      [//y2
+      [
         [
           {
             "type": "Wall",
-            "isOnBoard": "tbd",
+            "isOnBoard": "Start A",
             "orientations": [
               "bottom"
             ]
           },
           {
             "type": "Empty",
-            "isOnBoard": "tbd"
+            "isOnBoard": "Start A"
           }
         ]
       ],
-      [//y3
+      [
         {
           "type": "Empty",
-          "isOnBoard": "tbd"
+          "isOnBoard": "Start A"
         }
       ],
-      [//y4
+      [
         {
           "type": "StartPoint",
-          "isOnBoard": "tbd"
+          "isOnBoard": "Start A"
         }
       ],
-      [//y5
+      [
         {
           "type": "StartPoint",
-          "isOnBoard": "tbd"
+          "isOnBoard": "Start A"
+        }
+      ],
+      [
+        {
+          "type": "Empty",
+          "isOnBoard": "Start A"
+        }
+      ],
+      [
+        [
+          {
+            "type": "Wall",
+            "isOnBoard": "Start A",
+            "orientations": [
+              "top"
+            ]
+          },
+          {
+            "type": "Empty",
+            "isOnBoard": "Start A"
+          }
+        ]
+      ],
+      [
+        {
+          "type": "StartPoint",
+          "isOnBoard": "Start A"
+        }
+      ],
+      [
+        {
+          "type": "Empty",
+          "isOnBoard": "Start A"
+        }
+      ]
+    ],
+    [
+      [
+        {
+          "type": "ConveyorBelt",
+          "isOnBoard": "Start A",
+          "speed": 1,
+          "orientations": [
+            "right",
+            "left"
+            ]
+        }
+      ],
+      [
+        {
+          "type": "Empty",
+          "isOnBoard": "Start A"
+        }
+      ],
+      [
+        {
+          "type": "Empty",
+          "isOnBoard": "Start A"
+        }
+      ],
+      [
+        {
+          "type": "Empty",
+          "isOnBoard": "Start A"
+        }
+      ],
+      [
+        [
+          {
+            "type": "Wall",
+            "isOnBoard": "Start A",
+            "orientations": [
+              "right"
+            ]
+          },
+          {
+            "type": "Empty",
+            "isOnBoard": "Start A"
+          }
+        ]
+      ],
+      [
+        [
+          {
+            "type": "Wall",
+            "isOnBoard": "Start A",
+            "orientations": [
+              "right"
+            ]
+          },
+          {
+            "type": "Empty",
+            "isOnBoard": "Start A"
+          }
+        ]
+      ],
+      [
+        {
+          "type": "Empty",
+          "isOnBoard": "Start A"
+        }
+      ],
+      [
+        {
+          "type": "Empty",
+          "isOnBoard": "Start A"
+        }
+      ],
+      [
+        {
+          "type": "Empty",
+          "isOnBoard": "Start A"
+        }
+      ],
+      [
+        {
+          "type": "ConveyorBelt",
+          "isOnBoard": "Start A",
+          "speed": 1,
+          "orientations": [
+            "right",
+            "left"
+          ]
         }
       ]
     ]
