@@ -17,6 +17,7 @@ public class Player {
 
     private String username;
     private int score;
+    private int id;
     private boolean isPlaying;
     private boolean isOutOfRound;
     private ArrayList<Card> hand;
@@ -76,7 +77,6 @@ public class Player {
     public Robot getRobot() {
         return robot;
     }
-
     public Card getTopCardFromPersonalDiscardPile() {
         Card topCard = personalDiscardPile.get(personalDiscardPile.size());
         return topCard;
@@ -96,9 +96,13 @@ public class Player {
     public Card getCard() {
         return hand.get(0);
     }
-
     public Card getCard(int index) {
         return hand.get(index);
     }
-
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
 }

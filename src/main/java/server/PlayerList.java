@@ -44,6 +44,21 @@ public class PlayerList {
         return answer;
     }
 
+    public boolean playerIsInList(int id) {
+        int indexOfPlayer = -1;
+        boolean answer = false;
+        for (int i = 0; i < playerList.size(); i++) {
+            if (playerList.get(i).getId() == id) {
+                indexOfPlayer = i;
+                break;
+            }
+        }
+        if (indexOfPlayer > -1) {
+            answer = true;
+        }
+        return answer;
+    }
+
     /**
      * Returns player from the list when his username is used.
      *
@@ -72,6 +87,17 @@ public class PlayerList {
         return null;
     }
 
+    public Player getPlayerFromList(int id) {
+        Player player;
+        for(int i = 0; i < playerList.size(); i++) {
+            if (playerList.get(i).getId() == id) {
+                player = playerList.get(i);
+                return player;
+            }
+        }
+        return null;
+    }
+
 
     public void remove(String username) {
         for(int i = 0; i < playerList.size(); i++) {
@@ -83,6 +109,14 @@ public class PlayerList {
     public void remove(Robot robot) {
         for(int i = 0; i < playerList.size(); i++) {
             if(playerList.get(i).getRobot().equals(robot)) {
+                playerList.remove(i);
+            }
+        }
+    }
+
+    public void remove(int id) {
+        for(int i = 0; i < playerList.size(); i++) {
+            if(playerList.get(i).getId() == id) {
                 playerList.remove(i);
             }
         }
