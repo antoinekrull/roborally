@@ -1,7 +1,7 @@
 package client;
 
 import communication.JsonSerializer;
-import communication.ConcreteMessage;
+import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 
@@ -58,7 +58,7 @@ public class Client {
 
     public void sendUsernameToServer(String username) {
         try {
-            out.writeUTF(JsonSerializer.serializeJson(new ConcreteMessage(username, username)));
+            out.writeUTF(JsonSerializer.serializeJson(new Message(username, username)));
             setUsername(username);
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,17 +84,20 @@ public class Client {
                     out = new DataOutputStream(socket.getOutputStream());
                     while (socket.isConnected()) {
                         try {
-                            ConcreteMessage concreteMessage = JsonSerializer.deserializeJson(in.readUTF(), ConcreteMessage.class);
-                            if (concreteMessage.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
-                                if (concreteMessage.getMessage().equals("accepted")) {
+                            Message message = JsonSerializer.deserializeJson(in.readUTF(), Message.class);
+                            if(message.getMessageType().equals(MessageType.Alive)){
+                                sendAliveMessage();
+                            }
+                            if (message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
+                                if (message.getMessage().equals("accepted")) {
                                     loginController.goToChat(username);
                                 } else {
                                     setUsername("");
-                                    loginController.setMessage(concreteMessage.getMessage());
+                                    loginController.setMessage(message.getMessage());
                                 }
                             }
-                            if (accessible && !concreteMessage.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
-                                MESSAGES.put(concreteMessage.getMessage());
+                            if (accessible && !message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
+                                MESSAGES.put(message.getMessage());
                             }
 
                         } catch (IOException | InterruptedException e) {
@@ -130,23 +133,19 @@ public class Client {
             }
         }).start();
     }
+    public void sendAliveMessage(){
+        sendMessageToServer(messageCreator.generateAliveMessage());
+    }
 
-    public void sendMessageToServer(String messageToServer) {
+    public void sendMessageToServer(Message message) {
         try {
-            out.writeUTF(JsonSerializer.serializeJson(messageCreator.generateMessage(username, messageToServer)));
+            out.writeUTF(JsonSerializer.serializeJson(message));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void closeApplication() {
-        ConcreteMessage bye = new ConcreteMessage(username, "Bye");
-        bye.setMessageType(MessageType.USER_LOGOUT);
-        try {
-            out.writeUTF(JsonSerializer.serializeJson(bye));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         try {
             Thread.sleep(100);
             in.close();

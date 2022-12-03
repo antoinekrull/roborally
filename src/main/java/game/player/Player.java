@@ -1,6 +1,5 @@
 package game.player;
 
-import communication.ConcreteMessage;
 import game.card.Card;
 import game.robot.Robot;
 import server.HandleClient;
