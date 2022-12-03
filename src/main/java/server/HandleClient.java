@@ -11,6 +11,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class HandleClient implements Runnable{
 
@@ -57,6 +60,17 @@ public class HandleClient implements Runnable{
         return false;
     }
 
+    public boolean containsId(final ArrayList<HandleClient> list, final int id) {
+        if (list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getClientID() == id) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void write(Message message) {
         try {
             this.out.writeUTF(JsonSerializer.serializeJson(message));
@@ -71,10 +85,23 @@ public class HandleClient implements Runnable{
      * @param username The targeted client.
      * @param message  Message the server send to the client.
      */
+    //Old implementation, can be deleted after test of new method with id
     public void writeTo(String username, Message message) {
         try {
             for (server.HandleClient client : server.CLIENTS) {
                 if (client.getUsername().equals(username)) {
+                    client.out.writeUTF(JsonSerializer.serializeJson(message));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void writeTo(int id, Message message) {
+        try {
+            for (server.HandleClient client : server.CLIENTS) {
+                if (client.getClientID() == id) {
                     client.out.writeUTF(JsonSerializer.serializeJson(message));
                 }
             }
@@ -88,6 +115,7 @@ public class HandleClient implements Runnable{
      *
      * @param username Client who is connecting.
      */
+    /*
     public void grantAccess(String username) {
         setUsername(username);
         Message access = new Message();
@@ -96,12 +124,13 @@ public class HandleClient implements Runnable{
         access.setMessageBody().setMessage("accepted");
         writeTo(username, access);
     }
-
+    */
     /**
      * Send info to client when username is already taken.
      *
-     * @param username Client who tries to log in.
+     /* @param username Client who tries to log in.
      */
+    /*
     public void denyAccess(String username) {
         setUsername(username);
         Message access = new Message();
@@ -111,6 +140,7 @@ public class HandleClient implements Runnable{
         writeTo(username, access);
         setUsername("");
     }
+     */
 
     @Override
     public String toString() {
@@ -129,6 +159,16 @@ public class HandleClient implements Runnable{
      * Runs the server and game logic.
      */
     public void run() {
+        alive = true;
+
+        Runnable helloRunnable = new Runnable() {
+            public void run() {
+                //writeToSelf
+            }
+        };
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(helloRunnable, 5, 5, TimeUnit.SECONDS);
+
         try {
             String username ="";
 
@@ -136,14 +176,15 @@ public class HandleClient implements Runnable{
                 if(JsonSerializer.deserializeJson(in.readUTF(), Message.class).getMessageType() == MessageType.PlayerValues) {
                     username = JsonSerializer.deserializeJson(in.readUTF(), Message.class).getMessageBody().getName();
                     if (!containsName(server.CLIENTS, username)) {
-                        grantAccess(username);
+                        //grantAccess(username);
                     } else {
-                        denyAccess(username);
+                        //denyAccess(username);
                         username = "";
                     }
                 }
             }
-                // Thread needs to sleep so that the chat form can load and the user sees his welcome message
+
+                //Thread needs to sleep so that the chat form can load and the user sees his welcome message
                 Thread.sleep(1000);
                 //welcome message to server
                 String message = this.username +  " has entered the chat";
@@ -153,9 +194,8 @@ public class HandleClient implements Runnable{
                     System.out.println(e.getMessage());
                 }
 
-
             String line = "";
-            while (socket.isConnected()) {
+            while (alive) {
                 Message incomingMessage = JsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
                 try {
                     if (incomingMessage.getMessageType() == MessageType.SendChat && incomingMessage.getMessageBody().getTo() == -1) {
@@ -164,32 +204,25 @@ public class HandleClient implements Runnable{
 
                         if (!this.username.isBlank()) {
                             server.messages.put(line_formatted);
-                            //print to server
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.SendChat) {
-                        if (containsName(server.CLIENTS, incomingMessage.getMessageBody().getTo())) {
+                        if (containsId(server.CLIENTS, incomingMessage.getMessageBody().getTo())) {
                             writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);
-                        } else {
-                            writeTo(incomingMessage.getMessageBody().getTo(), new Message("Server",
-                                    "Invalid username, try again"));
                         }
-                    } else if (incomingMessage.getMessageType() == MessageType.USER_LOGOUT) {
-                        String goodbyeMessage = "Server: " + this.username + " has left the chat!";
-                        //may not work since player not only identified by his username
-                        server.players.remove(username);
-                        server.messages.put(goodbyeMessage);
-
-                        server.CLIENTS.remove(this);
-                        this.in.close();
-                        this.out.close();
-                        socket.close();
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     System.out.println(this.username);
                 }
             }
+            String goodbyeMessage = "Server: " + this.username + " has left the chat!";
+            server.players.remove(username);
+            server.messages.put(goodbyeMessage);
+
+            server.CLIENTS.remove(this);
+            this.in.close();
+            this.out.close();
+            socket.close();
         } catch (Exception e) {
             System.out.println("Client disconnected");
         }
