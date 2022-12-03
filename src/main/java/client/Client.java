@@ -115,19 +115,19 @@ public class Client {
                                 otherPlayersStatus.add(new Pair<>(message.getMessageBody().getClientID(),
                                         message.getMessageBody().isReady()));
                             }
-                            if (message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
-                                if (message.getMessage().equals("accepted")) {
-                                    loginController.goToChat(name);
-                                } else {
-                                    setName("");
-                                    loginController.setMessage(message.getMessage());
-                                }
-                            }
-                            if (accessible && !message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
-                                MESSAGES.put(message.getMessage());
-                            }
+                            //if (message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
+                            //    if (message.getMessage().equals("accepted")) {
+                            //        loginController.goToChat(name);
+                            //    } else {
+                            //        setName("");
+                            //        loginController.setMessage(message.getMessage());
+                            //    }
+                            //}
+                            //if (accessible && !message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
+                            //    MESSAGES.put(message.getMessage());
+                            //}
 
-                        } catch (IOException | InterruptedException e) {
+                        } catch (Exception) {
                             //e.printStackTrace();
                         }
                     }
