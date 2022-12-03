@@ -79,25 +79,6 @@ public class HandleClient implements Runnable{
         }
     }
 
-    /**
-     * Server can write to a specific client.
-     *
-     * @param username The targeted client.
-     * @param message  Message the server send to the client.
-     */
-    //Old implementation, can be deleted after test of new method with id
-    public void writeTo(String username, Message message) {
-        try {
-            for (server.HandleClient client : server.CLIENTS) {
-                if (client.getUsername().equals(username)) {
-                    client.out.writeUTF(JsonSerializer.serializeJson(message));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void writeTo(int id, Message message) {
         try {
             for (server.HandleClient client : server.CLIENTS) {
@@ -163,7 +144,7 @@ public class HandleClient implements Runnable{
 
         Runnable helloRunnable = new Runnable() {
             public void run() {
-                //writeToSelf
+                System.out.println("Test 5 seconds");
             }
         };
         ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
