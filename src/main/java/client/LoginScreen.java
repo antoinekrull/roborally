@@ -46,7 +46,8 @@ public class LoginScreen implements Initializable{
             setMessage("You have to choose a username");
         }
         else {
-            client.sendUsernameToServer(nicknameTextfield.getText());
+            //not the real method, just for testing purpose
+            client.sendPlayerValuesMessage(nicknameTextfield.getText(), 0);
             nicknameTextfield.clear();
         }
     }
