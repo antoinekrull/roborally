@@ -1,0 +1,113 @@
+{
+  [ //feld
+    [//x0
+      [//y0
+        {
+          "type": "Empty",
+          "isOnBoard": "tbd"
+        }
+      ],
+      [//y1
+        {
+          "type": "Empty",
+          "isOnBoard": "tbd"
+        }
+      ],
+      [//y2
+        {
+          "type": "Empty",
+          "isOnBoard": "tbd"
+        }
+      ],
+      [//y3
+        {
+          "type": "StartPoint",
+          "isOnBoard": "tbd"
+        }
+      ],
+      [//y4
+        {
+          "type": "Empty",
+          "isOnBoard": "tbd"
+        }
+      ],
+      [//y5
+        {
+          "type": "tbd",
+          "isOnBoard": "tbd"
+        }
+      ],
+      [//y6
+        {
+          "type": "StartPoint",
+          "isOnBoard": "tbd"
+        }
+      ],
+      [//y7
+        {
+          "type": "StartPoint",
+          "isOnBoard": "tbd"
+        }
+      ],
+      [//y8
+        {
+          "type": "StartPoint",
+          "isOnBoard": "tbd"
+        }
+      ],
+      [//y9
+        {
+          "type": "StartPoint",
+          "isOnBoard": "tbd"
+        }
+      ]
+    ],
+    [//x1
+      [//y0
+        {
+          "type": "Empty",
+          "isOnBoard": "tbd"
+        }
+      ],
+      [//y1
+        {
+          "type": "StartPoint",
+          "isOnBoard": "tbd"
+        }
+      ],
+      [//y2
+        [
+          {
+            "type": "Wall",
+            "isOnBoard": "tbd",
+            "orientations": [
+              "bottom"
+            ]
+          },
+          {
+            "type": "Empty",
+            "isOnBoard": "tbd"
+          }
+        ]
+      ],
+      [//y3
+        {
+          "type": "Empty",
+          "isOnBoard": "tbd"
+        }
+      ],
+      [//y4
+        {
+          "type": "StartPoint",
+          "isOnBoard": "tbd"
+        }
+      ],
+      [//y5
+        {
+          "type": "StartPoint",
+          "isOnBoard": "tbd"
+        }
+      ]
+    ]
+  ]
+}
