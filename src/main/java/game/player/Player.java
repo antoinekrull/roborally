@@ -1,8 +1,6 @@
 package game.player;
 
-import communication.ConcreteMessage;
 import game.card.Card;
-import server.HandleClient;
 import server.ServerMain;
 
 import java.util.ArrayList;
