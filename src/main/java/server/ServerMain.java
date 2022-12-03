@@ -1,6 +1,7 @@
 package server;
 
 import communication.Message;
+import communication.ConcreteMessage;
 import game.player.Player;
 import javafx.application.Application;
 import javafx.stage.Stage;
