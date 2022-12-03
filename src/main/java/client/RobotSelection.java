@@ -12,7 +12,7 @@ public class RobotSelection {
     }
 
     public void test() {
-        System.out.println("NANIBERGER");
+        System.out.println("this robot is clickable");
     }
     public void onEnter() {
         String messageToSend = nicknameTextfield.getText();
