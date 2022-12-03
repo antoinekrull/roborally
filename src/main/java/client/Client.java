@@ -127,8 +127,8 @@ public class Client {
                             //    MESSAGES.put(message.getMessage());
                             //}
 
-                        } catch (Exception) {
-                            //e.printStackTrace();
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                 } catch (IOException e) {
