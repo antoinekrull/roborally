@@ -71,10 +71,23 @@ public class HandleClient implements Runnable{
      * @param username The targeted client.
      * @param message  Message the server send to the client.
      */
+    //Old implementation, can be deleted after test of new method with id
     public void writeTo(String username, Message message) {
         try {
             for (server.HandleClient client : server.CLIENTS) {
                 if (client.getUsername().equals(username)) {
+                    client.out.writeUTF(JsonSerializer.serializeJson(message));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void writeTo(int id, Message message) {
+        try {
+            for (server.HandleClient client : server.CLIENTS) {
+                if (client.getClientID() == id) {
                     client.out.writeUTF(JsonSerializer.serializeJson(message));
                 }
             }
@@ -88,6 +101,7 @@ public class HandleClient implements Runnable{
      *
      * @param username Client who is connecting.
      */
+
     public void grantAccess(String username) {
         setUsername(username);
         Message access = new Message();
@@ -100,7 +114,7 @@ public class HandleClient implements Runnable{
     /**
      * Send info to client when username is already taken.
      *
-     * @param username Client who tries to log in.
+     /* @param username Client who tries to log in.
      */
     public void denyAccess(String username) {
         setUsername(username);
@@ -129,6 +143,7 @@ public class HandleClient implements Runnable{
      * Runs the server and game logic.
      */
     public void run() {
+        alive = true;
         try {
             String username ="";
 
@@ -153,9 +168,8 @@ public class HandleClient implements Runnable{
                     System.out.println(e.getMessage());
                 }
 
-
             String line = "";
-            while (socket.isConnected()) {
+            while (alive) {
                 Message incomingMessage = JsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
                 try {
                     if (incomingMessage.getMessageType() == MessageType.SendChat && incomingMessage.getMessageBody().getTo() == -1) {
