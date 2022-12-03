@@ -1,7 +1,6 @@
 package server;
 
-import communication.Message;
-import communication.ConcreteMessage;
+import communication.MessageCreator;
 import game.player.Player;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -42,6 +41,8 @@ public class ServerMain extends Application {
         //Network Communication
         protected final ArrayList<HandleClient> CLIENTS = new ArrayList<>();
         public final LinkedBlockingQueue<String> messages;
+
+        MessageCreator messageCreator = new MessageCreator();
         Server self = this;
 
         /**
@@ -83,7 +84,7 @@ public class ServerMain extends Application {
                         try {
                             String message = messages.take();
                             for (HandleClient client : CLIENTS) {
-                                client.write(new Message(client.getUsername(), "> " + message));
+                                client.write(messageCreator.generateSendChatMessage(message));
                             }
                         } catch (Exception e) {
                             System.out.println("Error is it here " + e.getMessage());

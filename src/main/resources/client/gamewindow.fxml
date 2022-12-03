@@ -101,7 +101,7 @@
                                                       <Font name="Hiragino Sans W2" size="13.0" />
                                                    </font>
                                                 </TextField>
-                                                <Button fx:id="buttonSend" mnemonicParsing="false" prefHeight="26.0" prefWidth="55.0" onAction="#onEnter">
+                                                <Button fx:id="buttonSend" mnemonicParsing="false" onAction="#onEnter" prefHeight="26.0" prefWidth="55.0">
                                                    <opaqueInsets>
                                                       <Insets />
                                                    </opaqueInsets>

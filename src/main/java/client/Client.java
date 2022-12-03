@@ -10,7 +10,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import org.javatuples.Pair;
+import org.javatuples.Triplet;
+import org.javatuples.Tuple;
 
 /**
  * @author Antoine, Dominik, Tobias
@@ -30,10 +35,17 @@ public class Client {
     private DataOutputStream out = null;
     private final LinkedBlockingQueue<String> MESSAGES;
     MessageCreator messageCreator;
-    private String username = "";
+    private String name = "";
     private final LoginScreen loginController;
     private Controller chatController;
     private boolean accessible = false;
+
+    private String protocolVersion = "Version 0.1";
+    private String group = "KnorrigeKorrelate";
+    private boolean isAI = false;
+    private int clientID;
+    private ArrayList<Triplet<Integer, String, Integer>> otherPlayers = new ArrayList<>();
+    private ArrayList<Pair<Integer, Boolean>> otherPlayersStatus = new ArrayList<>();
 
     public Client(String address, int port, LoginScreen controller) {
 
@@ -59,13 +71,13 @@ public class Client {
     public void sendUsernameToServer(String username) {
         try {
             out.writeUTF(JsonSerializer.serializeJson(new Message(username, username)));
-            setUsername(username);
+            setName(username);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    public void setUsername(String username) {
-        this.username=username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     private class ReadMessagesFromServer implements Runnable {
@@ -88,11 +100,26 @@ public class Client {
                             if(message.getMessageType().equals(MessageType.Alive)){
                                 sendAliveMessage();
                             }
+                            if(message.getMessageType().equals(MessageType.HelloClient)){
+                                sendHelloServerMessage(group, isAI, protocolVersion);
+                            }
+                            if(message.getMessageType().equals(MessageType.Welcome)){
+                                clientID = message.getMessageBody().getClientID();
+                            }
+                            if(message.getMessageType().equals(MessageType.PlayerAdded)){
+                                otherPlayers.add(new Triplet<>(message.getMessageBody().getClientID(),
+                                        message.getMessageBody().getName(),
+                                        message.getMessageBody().getFigure()));
+                            }
+                            if(message.getMessageType().equals(MessageType.PlayerStatus)){
+                                otherPlayersStatus.add(new Pair<>(message.getMessageBody().getClientID(),
+                                        message.getMessageBody().isReady()));
+                            }
                             if (message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
                                 if (message.getMessage().equals("accepted")) {
-                                    loginController.goToChat(username);
+                                    loginController.goToChat(name);
                                 } else {
-                                    setUsername("");
+                                    setName("");
                                     loginController.setMessage(message.getMessage());
                                 }
                             }
@@ -133,8 +160,24 @@ public class Client {
             }
         }).start();
     }
+    //maybe are these methods redundant, but they are kept until everything is implemented for them to be there
     public void sendAliveMessage(){
         sendMessageToServer(messageCreator.generateAliveMessage());
+    }
+    public void sendHelloServerMessage(String group, boolean isAI, String protocolVersion){
+        sendMessageToServer(messageCreator.generateHelloServerMessage(group, isAI, protocolVersion));
+    }
+    public void sendPlayerValuesMessage(String name, int figure){
+        sendMessageToServer(messageCreator.generatePlayerValuesMessage(name, figure));
+    }
+    public void sendSetStatusMessage(boolean ready){
+        sendMessageToServer(messageCreator.generateSetStatusMessage(ready));
+    }
+    public void sendPrivateMessage(String message, int clientID){
+        sendMessageToServer(messageCreator.generateSendChatMessage(message, clientID));
+    }
+    public void sendGroupMessage(String message){
+        sendMessageToServer(messageCreator.generateSendChatMessage(message));
     }
 
     public void sendMessageToServer(Message message) {
