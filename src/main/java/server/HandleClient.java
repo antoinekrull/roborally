@@ -1,7 +1,7 @@
 package server;
 
 import communication.JsonSerializer;
-import communication.ConcreteMessage;
+import communication.Message;
 import communication.MessageType;
 import game.player.Player;
 
@@ -54,9 +54,9 @@ public class HandleClient implements Runnable{
         return false;
     }
 
-    public void write(ConcreteMessage concreteMessage) {
+    public void write(Message message) {
         try {
-            this.out.writeUTF(JsonSerializer.serializeJson(concreteMessage));
+            this.out.writeUTF(JsonSerializer.serializeJson(message));
         } catch (IOException e) {
             System.out.println("Error in write method " + e.getMessage());
         }
@@ -66,13 +66,13 @@ public class HandleClient implements Runnable{
      * Server can write to a specific client.
      *
      * @param username The targeted client.
-     * @param concreteMessage  Message the server send to the client.
+     * @param message  Message the server send to the client.
      */
-    public void writeTo(String username, ConcreteMessage concreteMessage) {
+    public void writeTo(String username, Message message) {
         try {
             for (server.HandleClient client : server.CLIENTS) {
                 if (client.getUsername().equals(username)) {
-                    client.out.writeUTF(JsonSerializer.serializeJson(concreteMessage));
+                    client.out.writeUTF(JsonSerializer.serializeJson(message));
                 }
             }
         } catch (Exception e) {
@@ -87,7 +87,7 @@ public class HandleClient implements Runnable{
      */
     public void grantAccess(String username) {
         setUsername(username);
-        ConcreteMessage access = new ConcreteMessage();
+        Message access = new Message();
         access.setMessageType(MessageType.USERNAME_COMMAND);
         access.setUsername("Server");
         access.setMessage("accepted");
@@ -101,7 +101,7 @@ public class HandleClient implements Runnable{
      */
     public void denyAccess(String username) {
         setUsername(username);
-        ConcreteMessage access = new ConcreteMessage();
+        Message access = new Message();
         access.setMessageType(MessageType.USERNAME_COMMAND);
         access.setUsername("Server");
         access.setMessage("The username " + username + " is already taken, choose another one");
@@ -130,7 +130,7 @@ public class HandleClient implements Runnable{
             String username ="";
 
             while (username == "") {
-                username = JsonSerializer.deserializeJson(in.readUTF(), ConcreteMessage.class).getUsername();
+                username = JsonSerializer.deserializeJson(in.readUTF(), Message.class).getUsername();
                 if (!containsName(server.CLIENTS, username)) {
                     grantAccess(username);
                 } else {
@@ -151,40 +151,40 @@ public class HandleClient implements Runnable{
 
             String line = "";
             while (socket.isConnected()) {
-                ConcreteMessage incomingConcreteMessage = JsonSerializer.deserializeJson(this.in.readUTF(), ConcreteMessage.class);
+                Message incomingMessage = JsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
                 try {
-                    if (incomingConcreteMessage.getMessageType() == MessageType.GROUP_CHAT) {
-                        line = incomingConcreteMessage.getMessage();
+                    if (incomingMessage.getMessageType() == MessageType.GROUP_CHAT) {
+                        line = incomingMessage.getMessage();
                         String line_formatted = this.username + ":  " + line;
 
                         if (!this.username.isBlank()) {
                             server.messages.put(line_formatted);
                             //print to server
                         }
-                    } else if (incomingConcreteMessage.getMessageType() == MessageType.DIRECT_MESSAGE) {
-                        if (containsName(server.CLIENTS, incomingConcreteMessage.getTarget())) {
-                            writeTo(incomingConcreteMessage.getTarget(), incomingConcreteMessage);
+                    } else if (incomingMessage.getMessageType() == MessageType.DIRECT_MESSAGE) {
+                        if (containsName(server.CLIENTS, incomingMessage.getTarget())) {
+                            writeTo(incomingMessage.getTarget(), incomingMessage);
                         } else {
-                            writeTo(incomingConcreteMessage.getUsername(), new ConcreteMessage("Server",
+                            writeTo(incomingMessage.getUsername(), new Message("Server",
                                     "Invalid username, try again"));
                         }
-                    } else if (incomingConcreteMessage.getMessageType() == MessageType.JOIN_SESSION) {
-                        if (server.players.containsKey(incomingConcreteMessage.getUsername())) {
-                            server.messages.put(incomingConcreteMessage.getUsername() + " already in gamesession");
+                    } else if (incomingMessage.getMessageType() == MessageType.JOIN_SESSION) {
+                        if (server.players.containsKey(incomingMessage.getUsername())) {
+                            server.messages.put(incomingMessage.getUsername() + " already in gamesession");
                         } else {
-                            server.players.put(incomingConcreteMessage.getUsername(), new Player(incomingConcreteMessage.getUsername(), server));
-                            server.messages.put(incomingConcreteMessage.getUsername() + " joined the gamesession");
+                            server.players.put(incomingMessage.getUsername(), new Player(incomingMessage.getUsername(), server));
+                            server.messages.put(incomingMessage.getUsername() + " joined the gamesession");
                         }
-                    } else if (incomingConcreteMessage.getMessageType() == MessageType.LEAVE_SESSION) {
-                        server.players.remove(server.players.get(incomingConcreteMessage.getUsername()).getUsername());
-                        if (server.players.containsKey(incomingConcreteMessage.getUsername())) {
-                            server.activePlayers.remove(server.players.get(incomingConcreteMessage.getUsername()).getUsername());
+                    } else if (incomingMessage.getMessageType() == MessageType.LEAVE_SESSION) {
+                        server.players.remove(server.players.get(incomingMessage.getUsername()).getUsername());
+                        if (server.players.containsKey(incomingMessage.getUsername())) {
+                            server.activePlayers.remove(server.players.get(incomingMessage.getUsername()).getUsername());
                             if (server.activePlayers.size() == 1) {
-                                writeTo(server.activePlayers.get(0).getUsername(), new ConcreteMessage("Server",
+                                writeTo(server.activePlayers.get(0).getUsername(), new Message("Server",
                                         "All other players left, please restart"));
                             }
                         }
-                    } else if (incomingConcreteMessage.getMessageType() == MessageType.USER_LOGOUT) {
+                    } else if (incomingMessage.getMessageType() == MessageType.USER_LOGOUT) {
                         String goodbyeMessage = "Server: " + this.username + " has left the chat!";
                         //may not work since player not only identified by his username
                         server.players.remove(username);
