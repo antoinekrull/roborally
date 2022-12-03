@@ -68,14 +68,14 @@ public class Client {
         new Thread(server).start();
     }
 
-    public void sendUsernameToServer(String username) {
-        try {
-            out.writeUTF(JsonSerializer.serializeJson(new Message(username, username)));
-            setName(username);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    //public void sendUsernameToServer(String username) {
+    //    try {
+    //        out.writeUTF(JsonSerializer.serializeJson(new Message(username, username)));
+    //        setName(username);
+    //    } catch (Exception e) {
+    //        e.printStackTrace();
+    //    }
+    //}
     public void setName(String name) {
         this.name = name;
     }
