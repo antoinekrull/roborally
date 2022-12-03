@@ -8,8 +8,8 @@ public class ConveyorBeltTile extends Tile{
     public int velocity;
     public Direction direction;
     public ConveyorBeltTile(int velocity, Direction direction) {
-        this.isDanger = true;
-        this.isBlocking = true;
+        this.isDanger = false;
+        this.isBlocking = false;
         this.velocity = velocity;
         this.direction = direction;
     }

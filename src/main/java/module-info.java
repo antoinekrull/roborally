@@ -1,9 +1,11 @@
 module com.example.knorrigekorrelatehp {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.media;
 
     requires org.controlsfx.controls;
     requires com.fasterxml.jackson.databind;
+    requires javatuples;
 
     opens server to javafx.graphics;
     exports server;
