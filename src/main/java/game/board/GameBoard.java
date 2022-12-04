@@ -20,20 +20,15 @@ public class GameBoard extends Board{
         try {
             // create object mapper instance
             ObjectMapper objectMapper = new ObjectMapper();
+            for(int x = 0; x <= 10; x++){
+                for(int y = 0; y <= 10; y++){
+                    objectMapper.readValue((String) JsonMap, Tile.class);
 
-            objectMapper.readValue((String) JsonMap, Tile.class);
-
+                    //board[x][y] = JsonMap.getValue();
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        //Iterator<String> iterator = JsonMap.iterator();
-        for(int x = 0; x <= 10; x++){
-            for(int y = 0; y <= 10; y++){
-
-                //board[x][y] = JsonMap.getValue();
-            }
-        }
     }
-
 }
