@@ -1,20 +1,33 @@
 package game.board;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.BufferedReader;
-import java.text.CharacterIterator;
-import java.text.StringCharacterIterator;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
- * @author Antoine
+ * @author Antoine, Moritz
  * @version 1.0
  */
 public class GameBoard extends Board{
 
-    public void createBoard(JSONPObject JsonMap) {
+    public void createBoard(Object JsonMap) {
+        int i;
+        ArrayList<String> list = new ArrayList<String>();
+        try {
+            // create object mapper instance
+            ObjectMapper objectMapper = new ObjectMapper();
 
+            objectMapper.readValue((String) JsonMap, Tile.class);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //Iterator<String> iterator = JsonMap.iterator();
         for(int x = 0; x <= 10; x++){
             for(int y = 0; y <= 10; y++){
 
