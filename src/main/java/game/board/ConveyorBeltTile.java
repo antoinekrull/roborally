@@ -1,9 +1,8 @@
 package game.board;
 
 import game.robot.Robot;
-
 /**
- * @author Antoine
+ * @author Antoine, Firas
  * @version 1.0
  */
 public class ConveyorBeltTile extends Tile{

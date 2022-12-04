@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * @author Moritz, Dominic, Antoine
+ * @author Moritz, Dominic, Antoine, Firas
  * @version 1.0
  */
 public class Player {
@@ -22,6 +22,15 @@ public class Player {
 
     public ServerMain.Server server;
     private LinkedList<Card> personalDiscardPile;
+    private int energyCubes;
+
+    public int getEnergyCubes() {
+        return energyCubes;
+    }
+
+    public void setEnergyCubes(int energyCubes) {
+        this.energyCubes = energyCubes;
+    }
 
     public Player(String username, ServerMain.Server server) {
         this.username = username;
