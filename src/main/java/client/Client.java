@@ -15,7 +15,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
-import org.javatuples.Tuple;
 
 /**
  * @author Antoine, Dominik, Tobias
@@ -36,7 +35,7 @@ public class Client {
     private final LinkedBlockingQueue<String> MESSAGES;
     MessageCreator messageCreator;
     private String name = "";
-    private final LoginScreen loginController;
+    private final MainMenu loginController;
     private Controller chatController;
     private boolean accessible = false;
 
@@ -47,7 +46,7 @@ public class Client {
     private ArrayList<Triplet<Integer, String, Integer>> otherPlayers = new ArrayList<>();
     private ArrayList<Pair<Integer, Boolean>> otherPlayersStatus = new ArrayList<>();
 
-    public Client(String address, int port, LoginScreen controller) {
+    public Client(String address, int port, MainMenu controller) {
 
         this.MESSAGES = new LinkedBlockingQueue<>();
         this.loginController = controller;
