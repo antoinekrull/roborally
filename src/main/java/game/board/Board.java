@@ -12,3 +12,5 @@ public abstract class Board {
     public void loadBoard(){}
     public void setTile(int colum, int row, Tile tile){}
 }
+
+

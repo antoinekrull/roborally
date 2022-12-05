@@ -1,30 +1,36 @@
 package game.board;
 
-import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 /**
  * @author Antoine, Moritz
  * @version 1.0
  */
 public class GameBoard extends Board{
+    ObjectMapper objectMapper = new ObjectMapper();
 
-    public void createBoard(Object JsonMap) {
-        int i;
-        ArrayList<String> list = new ArrayList<String>();
+    public HashMap convertJson(Object JsonMap) throws JsonProcessingException {
+        HashMap<String, String> convertedMap = new HashMap<String, String>();
+        convertedMap = objectMapper.readValue((String)JsonMap, HashMap.class);
+        return convertedMap;
+    }
+
+    public void createBoard(HashMap<String, String> jsonMap) {
+        var entrySet = jsonMap.entrySet();
         try {
-            // create object mapper instance
-            ObjectMapper objectMapper = new ObjectMapper();
             for(int x = 0; x <= 10; x++){
                 for(int y = 0; y <= 10; y++){
-                    objectMapper.readValue((String) JsonMap, Tile.class);
+                    for(var entry: entrySet) {
+                        if(entry.getKey().equals("type"));
+                            //TODO: Implement constructor for TileType using String as input
 
-                    //board[x][y] = JsonMap.getValue();
+                            //    setTile(x, y, Tile(entry.getValue()));
+                    }
                 }
             }
         } catch (Exception e) {
