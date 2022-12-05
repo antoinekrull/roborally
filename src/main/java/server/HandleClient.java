@@ -143,6 +143,7 @@ public class HandleClient implements Runnable{
         alive = true;
 
         Runnable helloRunnable = new Runnable() {
+            //TODO: Implement alive communications
             public void run() {
                 System.out.println("Test 5 seconds");
             }

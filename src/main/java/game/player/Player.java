@@ -18,12 +18,18 @@ public class Player {
     private int score;
     private int id;
     private boolean isPlaying;
+    private boolean isReady;
     private boolean isOutOfRound;
     private ArrayList<Card> hand;
     public ServerMain.Server server;
     private LinkedList<Card> personalDiscardPile;
     private Robot robot;
     private int energyCubes;
+
+    public Player(String username, Robot robot) {
+        this.username = username;
+        this.robot = robot;
+    }
 
     public int getEnergyCubes() {
         return energyCubes;
@@ -112,5 +118,13 @@ public class Player {
     }
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isReady() {
+        return isReady;
+    }
+
+    public void setReady(boolean ready) {
+        isReady = ready;
     }
 }
