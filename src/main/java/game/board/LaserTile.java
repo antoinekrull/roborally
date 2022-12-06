@@ -8,24 +8,13 @@ import game.robot.Robot;
  */
 public class LaserTile extends Tile{
     private Direction los;
-
     public int getRebootTileIndex() {
         return rebootTileIndex;
     }
-
     public void setRebootTileIndex(int rebootTileIndex) {
         this.rebootTileIndex = rebootTileIndex;
     }
-
     private int rebootTileIndex;
-
-    public Direction getLos() {
-        return los;
-    }
-
-    public void setLos(Direction los) {
-        this.los = los;
-    }
 
     public LaserTile(Direction los) {
         this.isDanger = true;
@@ -33,8 +22,16 @@ public class LaserTile extends Tile{
         setLos(los);
     }
 
+    public Direction getLos() {
+        return los;
+    }
+    public void setLos(Direction los) {this.los = los;}
     @Override
     public void applyEffect(Robot robot) throws Exception {
         robot.reboot(this.getRebootTileIndex());
     }
+    public void fireLaser() {
+        
+    }
+
 }
