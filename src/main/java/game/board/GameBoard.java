@@ -15,7 +15,7 @@ import java.util.Iterator;
 public class GameBoard extends Board{
 
     public void createBoard(Object jsonMap) throws JsonProcessingException {
-        HashMap<String, String> convertedMap = JsonSerializer.convertJsonToHashMap(jsonMap);
+        HashMap<String, String> convertedMap = JsonSerializer.deserializeJson(jsonMap.toString(), HashMap.class);
         var entrySet = convertedMap.entrySet();
         try {
             Direction[] directions = new Direction[4];
