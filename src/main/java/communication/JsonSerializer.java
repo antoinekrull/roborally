@@ -27,10 +27,5 @@ public class JsonSerializer {
             throw new RuntimeException(e);
         }
     }
-
-    public static HashMap convertJsonToHashMap(Object JsonMap) throws JsonProcessingException {
-        HashMap<String, String> convertedMap = objectMapper.readValue((String)JsonMap, HashMap.class);
-        return convertedMap;
-    }
 }
 
