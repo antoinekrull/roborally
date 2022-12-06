@@ -15,6 +15,6 @@ public class EnergySpaceTile extends Tile{
 
     @Override
     public void applyEffect(Robot robot) throws Exception {
-        robot.getOwner().setEnergyCubes(robot.getOwner().getEnergyCubes() + 1);
+        robot.setEnergyCubes(robot.getEnergyCubes() + 1);
     }
 }
