@@ -13,16 +13,16 @@ public class RebootTile extends Tile {
 
     public RebootTile(Direction direction){
         this.isRebootTile = true;
-        this.isDanger = false;
-        this.isBlocking = false;
+        setDanger(false);
+        setBlocking(false);
         this.direction = direction;
         setRebootTileIndex(rebootTileIndex++);
     }
 
     public RebootTile(){
         this.isRebootTile = true;
-        this.isDanger = false;
-        this.isBlocking = false;
+        setDanger(false);
+        setBlocking(false);
         setRebootTileIndex(rebootTileIndex++);
     }
 

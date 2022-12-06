@@ -9,8 +9,8 @@ import game.robot.Robot;
 public class EnergySpaceTile extends Tile{
 
     public EnergySpaceTile() {
-        this.isDanger = false;
-        this.isBlocking = false;
+        setBlocking(false);
+        setDanger(false);
     }
 
     @Override

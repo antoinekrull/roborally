@@ -17,8 +17,8 @@ public class WallTile extends Tile{
 
     private Direction[] blockedDirections;
     public WallTile(Direction[] blockedDirections) {
-        this.isDanger = false;
-        this.isBlocking = true;
+        setDanger(false);
+        setBlocking(true);
         setBlockedDirections(blockedDirections);
     }
 

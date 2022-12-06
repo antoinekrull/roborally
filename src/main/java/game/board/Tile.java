@@ -7,10 +7,21 @@ import game.robot.Robot;
  * @version 1.0
  */
 public abstract class Tile {
-    //TODO: make this private (moritz)
-    public boolean isDanger;
-    public boolean isBlocking;
+    private boolean isDanger;
+    private boolean isBlocking;
     private int[][] position;
 
+    public boolean isDanger() {
+        return isDanger;
+    }
+    public void setDanger(boolean danger) {
+        isDanger = danger;
+    }
+    public boolean isBlocking() {
+        return isBlocking;
+    }
+    public void setBlocking(boolean blocking) {
+        isBlocking = blocking;
+    }
     public void applyEffect(Robot robot) throws Exception{}
 }

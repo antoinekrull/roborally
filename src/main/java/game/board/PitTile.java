@@ -17,8 +17,8 @@ public class PitTile extends Tile{
     private int rebootTileIndex;
 
     public PitTile() {
-        this.isDanger = true;
-        this.isBlocking = false;
+        setDanger(true);
+        setBlocking(false);
     }
 
     @Override

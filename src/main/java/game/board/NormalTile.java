@@ -9,8 +9,8 @@ import game.robot.Robot;
 public class NormalTile extends Tile{
 
     public NormalTile() {
-        this.isDanger = false;
-        this.isBlocking = false;
+        setDanger(false);
+        setBlocking(false);
     }
 
     @Override

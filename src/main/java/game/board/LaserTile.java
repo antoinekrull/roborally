@@ -17,8 +17,8 @@ public class LaserTile extends Tile{
     private int rebootTileIndex;
 
     public LaserTile(Direction los) {
-        this.isDanger = true;
-        this.isBlocking = false;
+        setDanger(true);
+        setBlocking(false);
         setLos(los);
     }
 
