@@ -19,6 +19,13 @@ public class RebootTile extends Tile {
         setRebootTileIndex(rebootTileIndex++);
     }
 
+    public RebootTile(){
+        this.isRebootTile = true;
+        this.isDanger = false;
+        this.isBlocking = false;
+        setRebootTileIndex(rebootTileIndex++);
+    }
+
     public void setRebootTileIndex(int rebootTileIndex) {
         this.rebootTileIndex = rebootTileIndex;
     }
