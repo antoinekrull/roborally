@@ -1,27 +1,38 @@
 package game.player;
 
-import communication.ConcreteMessage;
 import game.card.Card;
+import game.robot.Robot;
 import server.HandleClient;
 import server.ServerMain;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
- * @author Moritz, Dominic, Antoine
+ * @author Moritz, Dominic, Antoine, Firas
  * @version 1.0
  */
 public class Player {
 
     private String username;
     private int score;
+    private int id;
     private boolean isPlaying;
+    private boolean isReady;
     private boolean isOutOfRound;
     private ArrayList<Card> hand;
-
+    //TODO: further implementation of register logic
+    private Card[] cardRegister = new Card[5];
+    private boolean[] statusRegister = new boolean[5];
     public ServerMain.Server server;
     private LinkedList<Card> personalDiscardPile;
+    private Robot robot;
+
+    public Player(String username, Robot robot) {
+        this.username = username;
+        this.robot = robot;
+    }
 
     public Player(String username, ServerMain.Server server) {
         this.username = username;
@@ -45,6 +56,9 @@ public class Player {
     public void setScore(int score) {
         this.score = score;
     }
+    public void increaseScore() {
+        score++;
+    }
     public boolean isPlaying() {
         return isPlaying;
     }
@@ -66,10 +80,12 @@ public class Player {
     public int getPersonalDiscardPileSize() {
         return personalDiscardPile.size();
     }
-    public void increaseScore() {
-        score++;
+    public void setRobot(Robot robot) {
+        this.robot = robot;
     }
-
+    public Robot getRobot() {
+        return robot;
+    }
     public Card getTopCardFromPersonalDiscardPile() {
         Card topCard = personalDiscardPile.get(personalDiscardPile.size());
         return topCard;
@@ -89,9 +105,43 @@ public class Player {
     public Card getCard() {
         return hand.get(0);
     }
-
     public Card getCard(int index) {
         return hand.get(index);
+    }
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+    public boolean isReady() {
+        return isReady;
+    }
+    public void setReady(boolean ready) {
+        isReady = ready;
+    }
+    public Card[] getCardRegister() {
+        return cardRegister;
+    }
+    public Card getCardFromRegister(int index){
+        return cardRegister[index];
+    }
+    public int getCurrentRegister(Card currentCard){
+        return ArrayUtils.indexOf(cardRegister, currentCard);
+    }
+    public void setCardRegister(Card card, int index) {
+        cardRegister[index] = card;
+    }
+    public boolean[] getStatusRegister() {
+        return statusRegister;
+    }
+    public void setStatusRegister(boolean setter, int index) {
+        statusRegister[index] = setter;
+    }
+    public void setStatusRegister(boolean setAll) {
+        for(boolean status: statusRegister ){
+            status = setAll;
+        }
     }
 
 }

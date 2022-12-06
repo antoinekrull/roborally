@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.RobotSelection">
    <center>
       <GridPane alignment="CENTER" prefHeight="400.0" prefWidth="641.0" BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -28,7 +28,7 @@
           <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
         </rowConstraints>
          <children>
-            <Label fx:id="rowRobot" alignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
+            <Label fx:id="rowRobot" alignment="CENTER" onMouseClicked="#test" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
                <graphic>
                   <ImageView fitHeight="${rowRobot.height}" pickOnBounds="true" preserveRatio="true">
                      <image>

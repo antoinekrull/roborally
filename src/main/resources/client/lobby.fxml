@@ -5,104 +5,137 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelLobby">
-    <bottom>
-        <HBox spacing="20.0" BorderPane.alignment="CENTER">
-            <children>
-            <VBox alignment="CENTER" HBox.hgrow="ALWAYS">
-               <HBox.margin>
-                  <Insets bottom="30.0" />
-               </HBox.margin>
-               <children>
-                      <HBox fx:id="chatSendHBox" alignment="CENTER" prefHeight="34.0" prefWidth="202.0" spacing="20.0">
-                          <children>
-                              <TextField fx:id="chatTextfield" focusTraversable="false" prefHeight="30.0" prefWidth="388.0" promptText="Type here..." HBox.hgrow="ALWAYS">
-                                  <font>
-                                      <Font name="Hiragino Sans W2" size="13.0" />
-                                  </font>
-                              </TextField>
-                              <Button fx:id="chatButton" onAction="#chatButtonOnAction" mnemonicParsing="false" prefHeight="26.0" prefWidth="55.0">
-                                  <opaqueInsets>
-                                      <Insets />
-                                  </opaqueInsets>
-                                  <graphic>
-                                      <Label fx:id="sendLabel">
-                                          <font>
-                                              <Font name="Hiragino Sans W2" size="11.0" />
-                                          </font>
-                                          <graphic>
-                                              <ImageView fitHeight="18.0" fitWidth="24.0">
-                                                  <image>
-                                                      <Image url="@Send_Image.png" />
-                                                  </image>
-                                              </ImageView>
-                                          </graphic>
-                                      </Label>
-                                  </graphic>
-                              </Button>
-                          </children>
-                          <padding>
-                              <Insets left="10.0" right="10.0" />
-                          </padding>
-                      </HBox>
-                  <Button mnemonicParsing="false" text="Join Game-Session">
-                     <VBox.margin>
-                        <Insets top="20.0" />
-                     </VBox.margin>
-                  </Button>
-               </children>
-            </VBox>
-            </children>
-            <BorderPane.margin>
-                <Insets left="40.0" right="40.0" />
-            </BorderPane.margin>
-        </HBox>
-    </bottom>
-    <center>
-        <ScrollPane fx:id="chatScrollPane" hbarPolicy="NEVER" vbarPolicy="ALWAYS">
-            <content>
-                <VBox fx:id="chatVBox" />
-            </content>
-            <BorderPane.margin>
-                <Insets left="50.0" right="50.0" />
-            </BorderPane.margin>
-            <padding>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </padding>
-        </ScrollPane>
-    </center>
-    <top>
-        <VBox alignment="CENTER" BorderPane.alignment="CENTER">
-            <children>
-            <MenuBar>
-              <menus>
-                <Menu mnemonicParsing="false" text="Options">
-                  <items>
-                    <MenuItem mnemonicParsing="false" text="Exit" />
-                        <MenuItem mnemonicParsing="false" text="Help" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
-                <Label fx:id="chatLabel" alignment="CENTER" text="Lobby" VBox.vgrow="ALWAYS">
-                    <font>
-                        <Font name="Hiragino Sans W3" size="24.0" />
-                    </font>
-                </Label>
-            </children>
-            <BorderPane.margin>
-                <Insets bottom="20.0" />
-            </BorderPane.margin>
-        </VBox>
-    </top>
-</BorderPane>
+
+<?import javafx.scene.media.MediaView?>
+<?import javafx.scene.text.Font?>
+<StackPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.Controller">
+    <children>
+        <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="539.0" prefWidth="874.0">
+            <bottom>
+                <HBox spacing="20.0" BorderPane.alignment="CENTER">
+                    <BorderPane.margin>
+                        <Insets left="40.0" right="40.0" />
+                    </BorderPane.margin>
+                </HBox>
+            </bottom>
+            <center>
+                <GridPane>
+                    <BorderPane.margin>
+                        <Insets left="50.0" right="50.0" />
+                    </BorderPane.margin>
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="30.0" prefWidth="50.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                    <children>
+                        <GridPane GridPane.rowIndex="1">
+                            <columnConstraints>
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            </columnConstraints>
+                            <rowConstraints>
+                                <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                            </rowConstraints>
+                            <children>
+                                <HBox fx:id="chatSendHBox" alignment="CENTER" prefHeight="34.0" prefWidth="202.0">
+                                    <children>
+                                        <MenuButton mnemonicParsing="false" text="Select Chat">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" text="All" />
+                                                <MenuItem mnemonicParsing="false" text="Player  1" />
+                                            </items>
+                                        </MenuButton>
+                                        <TextField fx:id="chatTextfield" focusTraversable="false" onAction="#onEnter" prefHeight="30.0" prefWidth="388.0" promptText="Type here..." HBox.hgrow="ALWAYS">
+                                            <font>
+                                                <Font name="Hiragino Sans W2" size="13.0" />
+                                            </font>
+                                        </TextField>
+                                        <Button fx:id="buttonSend" mnemonicParsing="false" onAction="#onEnter" prefHeight="26.0" prefWidth="55.0">
+                                            <opaqueInsets>
+                                                <Insets />
+                                            </opaqueInsets>
+                                            <graphic>
+                                                <Label fx:id="sendLabel">
+                                                    <font>
+                                                        <Font name="Hiragino Sans W2" size="11.0" />
+                                                    </font>
+                                                    <graphic>
+                                                        <ImageView fitHeight="20.0" fitWidth="24.0">
+                                                            <image>
+                                                                <Image url="@Send_Image.png" />
+                                                            </image>
+                                                        </ImageView>
+                                                    </graphic>
+                                                </Label>
+                                            </graphic>
+                                        </Button>
+                                    </children>
+                                </HBox>
+                                <Button mnemonicParsing="false" text="Ready" GridPane.rowIndex="1" />
+                            </children>
+                        </GridPane>
+                        <ScrollPane fx:id="chatScrollPane" hbarPolicy="NEVER" vbarPolicy="ALWAYS">
+                            <content>
+                                <VBox fx:id="chatVBox" />
+                            </content>
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </padding>
+                        </ScrollPane>
+                        <TextArea prefHeight="200.0" prefWidth="200.0" text="Player 1&#10;Player 2" GridPane.columnIndex="1" />
+                        <MenuButton mnemonicParsing="false" text="Select Map" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="Dizzy Highway" />
+                                <MenuItem mnemonicParsing="false" text="KackJavaFX" />
+                            </items>
+                        </MenuButton>
+                    </children>
+                </GridPane>
+            </center>
+            <top>
+                <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+                    <children>
+                        <MenuBar>
+                            <menus>
+                                <Menu mnemonicParsing="false" text="Options">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" text="Exit" />
+                                        <MenuItem mnemonicParsing="false" text="Help" />
+                                    </items>
+                                </Menu>
+                            </menus>
+                        </MenuBar>
+                        <Label fx:id="chatLabel" alignment="CENTER" text="Lobby" VBox.vgrow="ALWAYS">
+                            <font>
+                                <Font name="Hiragino Sans W3" size="24.0" />
+                            </font>
+                        </Label>
+                    </children>
+                    <BorderPane.margin>
+                        <Insets bottom="20.0" />
+                    </BorderPane.margin>
+                </VBox>
+            </top>
+        </BorderPane>
+        <MediaView fitHeight="200.0" fitWidth="200.0" preserveRatio="false" StackPane.alignment="CENTER" />
+    </children>
+</StackPane>

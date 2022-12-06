@@ -69,7 +69,7 @@ public class Controller implements Initializable {
         String messageToSend = chatTextfield.getText();
         if (!messageToSend.isEmpty()) {
 
-            client.sendMessageToServer(messageToSend);
+            client.sendGroupMessage(messageToSend);
 
             chatTextfield.clear();
         }
