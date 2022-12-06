@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.LoginScreen">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelLogin">
     <center>
         <VBox alignment="CENTER" prefHeight="496.0" prefWidth="600.0" spacing="20.0" BorderPane.alignment="CENTER">
             <children>
@@ -24,14 +24,14 @@
                 <Label fx:id="messageLabel" />
                 <HBox fx:id="nicknameHBox" alignment="CENTER" prefHeight="41.0" prefWidth="399.0" spacing="20.0" VBox.vgrow="NEVER">
                     <children>
-                        <TextField fx:id="nicknameTextfield" alignment="TOP_LEFT" focusTraversable="false" onAction="#onEnter" prefHeight="26.0" prefWidth="287.0" promptText="Type here..." HBox.hgrow="ALWAYS">
+                        <TextField fx:id="nicknameTextfield" alignment="TOP_LEFT" focusTraversable="false" prefHeight="26.0" prefWidth="287.0" promptText="Type here..." HBox.hgrow="ALWAYS">
                             <font>
                                 <Font name="Hiragino Sans W2" size="13.0" />
                             </font>
                         </TextField>
-                        <Button fx:id="nicknameButton" mnemonicParsing="false" onAction="#onEnter" prefHeight="6.0" prefWidth="55.0">
+                        <Button fx:id="loginButton" onAction="#loginButtonOnAction" mnemonicParsing="false" prefHeight="6.0" prefWidth="55.0">
                             <graphic>
-                                <Label fx:id="loginButton" text="LOGIN">
+                                <Label text="LOGIN">
                                     <font>
                                         <Font name="Hiragino Sans W2" size="11.0" />
                                     </font>

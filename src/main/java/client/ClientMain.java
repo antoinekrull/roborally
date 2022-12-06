@@ -19,7 +19,7 @@ public class ClientMain extends Application {
     public Parent root;
     private Client client;
     String address = "localhost";
-    int port = 3000;
+    int port = 4000;
 
     //Link to fxml file
     URL url = getClass().getResource("login.fxml");

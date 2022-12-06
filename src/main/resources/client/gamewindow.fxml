@@ -19,7 +19,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.Controller">
+<BorderPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelGameWindow">
    <center>
       <GridPane prefHeight="377.0" prefWidth="775.0">
         <columnConstraints>
@@ -101,7 +101,7 @@
                                                       <Font name="Hiragino Sans W2" size="13.0" />
                                                    </font>
                                                 </TextField>
-                                                <Button fx:id="buttonSend" mnemonicParsing="false" prefHeight="26.0" prefWidth="55.0" onAction="#onEnter">
+                                                <Button fx:id="chatButton" onAction="#chatButtonOnAction" mnemonicParsing="false" prefHeight="26.0" prefWidth="55.0">
                                                    <opaqueInsets>
                                                       <Insets />
                                                    </opaqueInsets>

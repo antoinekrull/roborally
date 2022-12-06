@@ -11,5 +11,8 @@ module com.example.knorrigekorrelatehp {
     opens client to javafx.graphics, javafx.fxml, javafx.controls;
     exports client;
 
+    opens client.viewmodel to javafx.graphics, javafx.fxml, javafx.controls;
+    exports client.viewmodel;
+
     exports communication;
 }

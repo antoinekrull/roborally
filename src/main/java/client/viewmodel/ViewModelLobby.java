@@ -1,0 +1,162 @@
+package client.viewmodel;
+
+import client.ScreenController;
+import client.model.ModelChat;
+import client.model.ModelGame;
+import client.model.ModelUser;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.concurrent.LinkedBlockingQueue;
+
+/**
+ * ViewModel for lobby including chat and leaving
+ *
+ * @author Tobias
+ * @version 1.0
+ */
+
+public class ViewModelLobby {
+
+    @FXML
+    private TextField chatTextfield;
+    @FXML
+    private Button chatButton;
+    @FXML
+    private Button readyButton;
+    @FXML
+    private Button leaveButton;
+    @FXML
+    private ScrollPane chatScrollPane;
+    @FXML
+    private VBox chatVBox;
+    @FXML
+    private ListView<String> userList;
+    @FXML
+    private ListView<String> mapList;
+
+    private BooleanProperty ready;
+
+
+    private ModelChat modelChat;
+    private ModelUser modelUser;
+    private ModelGame modelGame;
+
+    public ViewModelLobby() {
+        modelChat = ModelChat.getInstance();
+        modelUser = ModelUser.getInstance();
+        modelGame = ModelGame.getInstance();
+        this.ready = new SimpleBooleanProperty();
+    }
+
+    public void initialize() {
+        chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
+        chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
+        ready.bindBidirectional(modelGame.readyToPlayProperty());
+        ObservableList<String> users = FXCollections.observableArrayList(modelGame.getUsers());
+        ObservableList<String> maps = FXCollections.observableArrayList(modelGame.getMaps());
+        this.userList = new ListView<>(users);
+        this.mapList = new ListView<>(maps);
+
+        chatVBox.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                chatScrollPane.setVvalue((Double) newValue);
+            }
+        });
+    }
+
+    public void messageToChat() {
+        String message = "";
+        try {
+            message = modelChat.getMessages().take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        hBox.setPadding(new Insets(5,5,5,10));
+
+        Text text = new Text(message);
+        TextFlow textFlow = new TextFlow(text);
+        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
+                "fx-background-radius: 40px; -fx-opacity: 100;");
+        textFlow.setPadding(new Insets(5, 10, 5, 10));
+        text.setFill(Color.color(0.934, 0.945, 0.996));
+
+        hBox.getChildren().add(textFlow);
+        chatVBox.getChildren().add(hBox);
+    }
+
+    public void chatButtonOnAction() {
+        int userID = modelUser.getUserID();
+        modelChat.sendMessage(userID);
+
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        hBox.setPadding(new Insets(5,5,5,10));
+
+        Text text = new Text(chatTextfield.getText());
+        TextFlow textFlow = new TextFlow(text);
+        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
+                    "fx-background-radius: 40px; -fx-opacity: 100;");
+        textFlow.setPadding(new Insets(5, 10, 5, 10));
+        text.setFill(Color.color(0.934, 0.945, 0.996));
+
+        hBox.getChildren().add(textFlow);
+        chatVBox.getChildren().add(hBox);
+
+        chatTextfield.clear();
+    }
+
+    public void readyButtonOnAction() {
+        if (readyButton.getText().equals("Ready!")) {
+            readyButton.setText("Not ready!");
+            this.ready.set(true);
+            modelGame.setPlayerStatus(modelUser.getUserID());
+        }
+        if (readyButton.getText().equals("Not ready!")) {
+            readyButton.setText("Ready!");
+            this.ready.set(false);
+            modelGame.setPlayerStatus(modelUser.getUserID());
+        }
+    }
+
+    public void leaveButtonOnAction() throws IOException {
+        //send notification to server: disconnect
+        Stage stage = (Stage) leaveButton.getScene().getWindow();
+        stage.close();
+    }
+
+    public void ButtonOnAction(ActionEvent event) throws IOException {
+        ScreenController.switchScene("lobby.fxml");
+
+
+        //resource is null
+        /*
+        FXMLLoader loader = FXMLLoader.load(getClass().getResource("lobby.fxml"));
+        Parent root = loader.load();
+        Stage currentStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        currentStage.setScene(new Scene(root, 1650, 1000));
+        currentStage.show();
+        */;
+    }
+
+}
