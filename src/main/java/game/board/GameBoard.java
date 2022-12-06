@@ -28,7 +28,7 @@ public class GameBoard extends Board{
         var entrySet = convertedMap.entrySet();
         try {
             Direction[] directions = new Direction[4];
-            for(int x = 0; x <= 10; x++){
+            for(int x = 0; x <= 13; x++){
                 for(int y = 0; y <= 10; y++){
                     for(var entry: entrySet) {
                         if(entry.getKey().equals("type")) {
