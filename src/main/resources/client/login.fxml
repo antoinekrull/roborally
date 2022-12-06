@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="678.0" prefWidth="1034.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.LoginScreen">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="678.0" prefWidth="1034.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.RobotSelection">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
@@ -33,7 +33,7 @@
     <bottom>
         <HBox fx:id="nicknameHBox" alignment="CENTER" maxWidth="500.0" prefHeight="41.0" prefWidth="399.0" spacing="20.0" BorderPane.alignment="CENTER">
             <children>
-                <TextField fx:id="nicknameTextfield" alignment="TOP_LEFT" focusTraversable="false" onAction="#onEnter" prefHeight="26.0" prefWidth="287.0" promptText="Enter username" HBox.hgrow="ALWAYS">
+                <TextField fx:id="nicknameTextfield" alignment="TOP_LEFT" focusTraversable="false" prefHeight="26.0" prefWidth="287.0" promptText="Enter username" HBox.hgrow="ALWAYS">
                     <font>
                         <Font name="Hiragino Sans W2" size="13.0" />
                     </font>
@@ -70,7 +70,7 @@
                 <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
             </rowConstraints>
             <children>
-                <Label fx:id="rowRobot" alignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1" GridPane.vgrow="SOMETIMES">
+                <Label fx:id="rowRobot" alignment="CENTER" onMouseClicked="#test" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1" GridPane.vgrow="SOMETIMES">
                     <graphic>
                         <ImageView fitHeight="${rowRobot.height}" pickOnBounds="true" preserveRatio="true">
                             <image>
