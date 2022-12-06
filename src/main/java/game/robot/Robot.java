@@ -13,6 +13,7 @@ public class Robot {
 
     private Direction direction;
     private Player owner;
+    private int figure;
     private int energyCubes;
     private int currentObjective;
     //currently only for DizzyHighWay, initialize position method needs to be implemented to set parameters
@@ -42,6 +43,8 @@ public class Robot {
     public Direction getDirection() {
         return direction;
     }
+    public int getFigure() {return figure;}
+    public void setFigure(int figure) {this.figure = figure;}
     public int getEnergyCubes() {
         return energyCubes;
     }

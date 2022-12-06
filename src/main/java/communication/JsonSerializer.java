@@ -1,6 +1,9 @@
 package communication;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.HashMap;
 
 /**
  * @author Antoine
@@ -23,6 +26,11 @@ public class JsonSerializer {
         } catch(Exception e){
             throw new RuntimeException(e);
         }
+    }
+
+    public HashMap convertJsonToHashMap(Object JsonMap) throws JsonProcessingException {
+        HashMap<String, String> convertedMap = objectMapper.readValue((String)JsonMap, HashMap.class);
+        return convertedMap;
     }
 }
 

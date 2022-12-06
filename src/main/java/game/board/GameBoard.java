@@ -2,6 +2,7 @@ package game.board;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import communication.JsonSerializer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,19 +13,10 @@ import java.util.Iterator;
  * @version 1.0
  */
 public class GameBoard extends Board{
-    ObjectMapper objectMapper = new ObjectMapper();
-
-
-    //GameMap Attribut ist vom Typ Array, Array reinpacken
-    public HashMap convertJson(Object JsonMap) throws JsonProcessingException {
-        HashMap<String, String> convertedMap = new HashMap<String, String>();
-        convertedMap = objectMapper.readValue((String)JsonMap, HashMap.class);
-        return convertedMap;
-    }
+    JsonSerializer jsonSerializer = new JsonSerializer();
 
     public void createBoard(Object jsonMap) throws JsonProcessingException {
-        HashMap<String, String> convertedMap = new HashMap<String, String>();
-        convertedMap = objectMapper.readValue((String)jsonMap, HashMap.class);
+        HashMap<String, String> convertedMap = jsonSerializer.convertJsonToHashMap(jsonMap);
         var entrySet = convertedMap.entrySet();
         try {
             Direction[] directions = new Direction[4];
