@@ -3,14 +3,14 @@ package server;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageType;
-import game.player.Player;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +19,7 @@ public class HandleClient implements Runnable{
 
     private DataInputStream in = null;
     private DataOutputStream out = null;
+    private int threadID;
     private int clientID;
 
     private boolean alive;
@@ -35,11 +36,12 @@ public class HandleClient implements Runnable{
      * @param port
      * @param socket
      */
-    public HandleClient(String address, int port, Socket socket, ServerMain.Server server) {
+    public HandleClient(String address, int port, Socket socket, ServerMain.Server server, int threadID) {
         this.address = address;
         this.port = port;
         this.socket = socket;
         this.server = server;
+        this.threadID = threadID;
         try {
             this.in = new DataInputStream(
                     new BufferedInputStream(socket.getInputStream()));
@@ -49,22 +51,11 @@ public class HandleClient implements Runnable{
         }
     }
 
-    public boolean containsName(final ArrayList<HandleClient> list, final String name) {
+    public boolean containsName(HashMap<Integer, HandleClient> list, final String name) {
         if (list.size() > 0) {
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getUsername().equals(name)) {
+            for (Map.Entry<Integer, HandleClient> client : server.CLIENTS.entrySet()) {
+                if (client.getValue().getUsername().equals(name)) {
                         return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public boolean containsId(final ArrayList<HandleClient> list, final int id) {
-        if (list.size() > 0) {
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getClientID() == id) {
-                    return true;
                 }
             }
         }
@@ -79,11 +70,25 @@ public class HandleClient implements Runnable{
         }
     }
 
+
+    //Old implementation, can be deleted after test of new method with id
+    //public void writeTo(String username, Message message) {
+    //    try {
+    //        for (server.HandleClient client : server.CLIENTS) {
+    //            if (client.getUsername().equals(username)) {
+    //                client.out.writeUTF(JsonSerializer.serializeJson(message));
+    //            }
+    //        }
+    //    } catch (Exception e) {
+    //        e.printStackTrace();
+    //    }
+    //}
+
     public void writeTo(int id, Message message) {
         try {
-            for (server.HandleClient client : server.CLIENTS) {
-                if (client.getClientID() == id) {
-                    client.out.writeUTF(JsonSerializer.serializeJson(message));
+            for (Map.Entry<Integer, HandleClient> client : server.CLIENTS.entrySet()) {
+                if (client.getValue().getClientID() == id) {
+                    client.getValue().out.writeUTF(JsonSerializer.serializeJson(message));
                 }
             }
         } catch (Exception e) {
@@ -122,11 +127,6 @@ public class HandleClient implements Runnable{
         setUsername("");
     }
      */
-
-    @Override
-    public String toString() {
-        return getUsername();
-    }
 
     public void setUsername(String username) {
         this.username = username;
@@ -188,7 +188,7 @@ public class HandleClient implements Runnable{
                             server.messages.put(line_formatted);
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.SendChat) {
-                        if (containsId(server.CLIENTS, incomingMessage.getMessageBody().getTo())) {
+                        if (server.CLIENTS.containsKey(incomingMessage.getMessageBody().getTo())) {
                             writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);
                         }
                     }
@@ -198,10 +198,10 @@ public class HandleClient implements Runnable{
                 }
             }
             String goodbyeMessage = "Server: " + this.username + " has left the chat!";
-            server.players.remove(username);
+            server.players.remove(threadID);
             server.messages.put(goodbyeMessage);
 
-            server.CLIENTS.remove(this);
+            server.CLIENTS.remove(threadID);
             this.in.close();
             this.out.close();
             socket.close();
