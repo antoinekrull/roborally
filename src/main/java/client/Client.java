@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import game.board.GameBoard;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
@@ -113,6 +114,25 @@ public class Client {
                             if(message.getMessageType().equals(MessageType.PlayerStatus)){
                                 otherPlayersStatus.add(new Pair<>(message.getMessageBody().getClientID(),
                                         message.getMessageBody().isReady()));
+                            }
+                            if(message.getMessageType().equals(MessageType.ReceivedChat)){
+                                MESSAGES.put(message.getMessageBody().getMessage());
+                            }
+                            if(message.getMessageType().equals(MessageType.Error)){
+                                System.out.println(message.getMessageBody().getMessage());
+                            }
+                            if(message.getMessageType().equals(MessageType.CardPlayed)){
+
+                            }
+                            if(message.getMessageType().equals(MessageType.CurrentPlayer)){
+
+                            }
+                            if(message.getMessageType().equals(MessageType.StartingPointTaken)){
+
+                            }
+                            if(message.getMessageType().equals(MessageType.GameStarted)){
+                                //GameBoard board = new GameBoard();
+                                //board.createBoard(message.getMessageBody());
                             }
                             //if (message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
                             //    if (message.getMessage().equals("accepted")) {
