@@ -1,15 +1,14 @@
 package client;
 
-import client.Controller;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,9 +19,11 @@ import java.util.ResourceBundle;
  * @version 1.0
  */
 
-public class LoginScreen implements Initializable{
+public class MainMenu implements Initializable{
     @FXML
     private TextField nicknameTextfield;
+    @FXML
+    private Button joinButton;
     @FXML
     private Label messageLabel;
 
@@ -46,7 +47,8 @@ public class LoginScreen implements Initializable{
             setMessage("You have to choose a username");
         }
         else {
-            client.sendUsernameToServer(nicknameTextfield.getText());
+            //not the real method, just for testing purpose
+            client.sendPlayerValuesMessage(nicknameTextfield.getText(), 0);
             nicknameTextfield.clear();
         }
     }
@@ -64,34 +66,29 @@ public class LoginScreen implements Initializable{
      * switch stages from login screen to chat after entering a nickname
      *
      */
-    public void goToChat(String username)throws IOException{
+    public void joinLobby()throws IOException{
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("chat.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("login.fxml"));
 
-                Scene scene = null;
+                Scene selectRobo = null;
                 try {
-                    scene = new Scene(loader.load(), 588, 416);
+                    selectRobo = new Scene(loader.load(), 588, 416);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                //scene.getStylesheets().add(ClientMain.class.getResource("/chat/chatgui/styles.css").toExternalForm());
-                stage = (Stage) nicknameTextfield.getScene().getWindow();
-                Controller controller = loader.getController();
+                //selectRobo.getStylesheets().add(ClientMain.class.getResource("/chat/chatgui/styles.css").toExternalForm());
+                stage = (Stage) joinButton.getScene().getWindow();
+                RobotSelection controller = loader.getController();
                 controller.getClient(client);
-                controller.setUsername(username);
-                client.getChat(controller);
-                client.enterChat(true);
-                stage.setTitle("Chat");
-                stage.setScene(scene);
+                stage.setTitle("Robot Selection");
+                stage.setScene(selectRobo);
                 stage.show();
-
             }
         });
     }
     public void closeButtonAction() {
-        System.out.println("Byeeeeeeeeeeeeeeeeeeeeeeeeee");
         client.closeApplication();
     }
 }

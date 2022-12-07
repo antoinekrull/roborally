@@ -1,7 +1,7 @@
 package client;
 
 import communication.JsonSerializer;
-import communication.ConcreteMessage;
+import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 
@@ -10,7 +10,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import game.board.GameBoard;
+import org.javatuples.Pair;
+import org.javatuples.Triplet;
 
 /**
  * @author Antoine, Dominik, Tobias
@@ -30,12 +35,19 @@ public class Client {
     private DataOutputStream out = null;
     private final LinkedBlockingQueue<String> MESSAGES;
     MessageCreator messageCreator;
-    private String username = "";
-    private final LoginScreen loginController;
+    private String name = "";
+    private final MainMenu loginController;
     private Controller chatController;
     private boolean accessible = false;
 
-    public Client(String address, int port, LoginScreen controller) {
+    private String protocolVersion = "Version 0.1";
+    private String group = "KnorrigeKorrelate";
+    private boolean isAI = false;
+    private int clientID;
+    private ArrayList<Triplet<Integer, String, Integer>> otherPlayers = new ArrayList<>();
+    private ArrayList<Pair<Integer, Boolean>> otherPlayersStatus = new ArrayList<>();
+
+    public Client(String address, int port, MainMenu controller) {
 
         this.MESSAGES = new LinkedBlockingQueue<>();
         this.loginController = controller;
@@ -56,16 +68,16 @@ public class Client {
         new Thread(server).start();
     }
 
-    public void sendUsernameToServer(String username) {
-        try {
-            out.writeUTF(JsonSerializer.serializeJson(new ConcreteMessage(username, username)));
-            setUsername(username);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    public void setUsername(String username) {
-        this.username=username;
+    //public void sendUsernameToServer(String username) {
+    //    try {
+    //        out.writeUTF(JsonSerializer.serializeJson(new Message(username, username)));
+    //        setName(username);
+    //    } catch (Exception e) {
+    //        e.printStackTrace();
+    //    }
+    //}
+    public void setName(String name) {
+        this.name = name;
     }
 
     private class ReadMessagesFromServer implements Runnable {
@@ -84,21 +96,58 @@ public class Client {
                     out = new DataOutputStream(socket.getOutputStream());
                     while (socket.isConnected()) {
                         try {
-                            ConcreteMessage concreteMessage = JsonSerializer.deserializeJson(in.readUTF(), ConcreteMessage.class);
-                            if (concreteMessage.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
-                                if (concreteMessage.getMessage().equals("accepted")) {
-                                    loginController.goToChat(username);
-                                } else {
-                                    setUsername("");
-                                    loginController.setMessage(concreteMessage.getMessage());
-                                }
+                            Message message = JsonSerializer.deserializeJson(in.readUTF(), Message.class);
+                            if(message.getMessageType().equals(MessageType.Alive)){
+                                sendAliveMessage();
                             }
-                            if (accessible && !concreteMessage.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
-                                MESSAGES.put(concreteMessage.getMessage());
+                            if(message.getMessageType().equals(MessageType.HelloClient)){
+                                sendHelloServerMessage(group, isAI, protocolVersion);
                             }
+                            if(message.getMessageType().equals(MessageType.Welcome)){
+                                clientID = message.getMessageBody().getClientID();
+                            }
+                            if(message.getMessageType().equals(MessageType.PlayerAdded)){
+                                otherPlayers.add(new Triplet<>(message.getMessageBody().getClientID(),
+                                        message.getMessageBody().getName(),
+                                        message.getMessageBody().getFigure()));
+                            }
+                            if(message.getMessageType().equals(MessageType.PlayerStatus)){
+                                otherPlayersStatus.add(new Pair<>(message.getMessageBody().getClientID(),
+                                        message.getMessageBody().isReady()));
+                            }
+                            if(message.getMessageType().equals(MessageType.ReceivedChat)){
+                                MESSAGES.put(message.getMessageBody().getMessage());
+                            }
+                            if(message.getMessageType().equals(MessageType.Error)){
+                                System.out.println(message.getMessageBody().getMessage());
+                            }
+                            if(message.getMessageType().equals(MessageType.CardPlayed)){
 
-                        } catch (IOException | InterruptedException e) {
-                            //e.printStackTrace();
+                            }
+                            if(message.getMessageType().equals(MessageType.CurrentPlayer)){
+
+                            }
+                            if(message.getMessageType().equals(MessageType.StartingPointTaken)){
+
+                            }
+                            if(message.getMessageType().equals(MessageType.GameStarted)){
+                                //GameBoard board = new GameBoard();
+                                //board.createBoard(message.getMessageBody());
+                            }
+                            //if (message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
+                            //    if (message.getMessage().equals("accepted")) {
+                            //        loginController.goToChat(name);
+                            //    } else {
+                            //        setName("");
+                            //        loginController.setMessage(message.getMessage());
+                            //    }
+                            //}
+                            //if (accessible && !message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
+                            //    MESSAGES.put(message.getMessage());
+                            //}
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
                 } catch (IOException e) {
@@ -130,23 +179,35 @@ public class Client {
             }
         }).start();
     }
+    //maybe are these methods redundant, but they are kept until everything is implemented for them to be there
+    public void sendAliveMessage(){
+        sendMessageToServer(messageCreator.generateAliveMessage());
+    }
+    public void sendHelloServerMessage(String group, boolean isAI, String protocolVersion){
+        sendMessageToServer(messageCreator.generateHelloServerMessage(group, isAI, protocolVersion));
+    }
+    public void sendPlayerValuesMessage(String name, int figure){
+        sendMessageToServer(messageCreator.generatePlayerValuesMessage(name, figure));
+    }
+    public void sendSetStatusMessage(boolean ready){
+        sendMessageToServer(messageCreator.generateSetStatusMessage(ready));
+    }
+    public void sendPrivateMessage(String message, int clientID){
+        sendMessageToServer(messageCreator.generateSendChatMessage(message, clientID));
+    }
+    public void sendGroupMessage(String message){
+        sendMessageToServer(messageCreator.generateSendChatMessage(message));
+    }
 
-    public void sendMessageToServer(String messageToServer) {
+    public void sendMessageToServer(Message message) {
         try {
-            out.writeUTF(JsonSerializer.serializeJson(messageCreator.generateMessage(username, messageToServer)));
+            out.writeUTF(JsonSerializer.serializeJson(message));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void closeApplication() {
-        ConcreteMessage bye = new ConcreteMessage(username, "Bye");
-        bye.setMessageType(MessageType.USER_LOGOUT);
-        try {
-            out.writeUTF(JsonSerializer.serializeJson(bye));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
         try {
             Thread.sleep(100);
             in.close();

@@ -1,7 +1,7 @@
 package game.player;
 
-import communication.ConcreteMessage;
 import game.card.Card;
+import game.robot.Robot;
 import server.HandleClient;
 import server.ServerMain;
 
@@ -9,28 +9,20 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * @author Moritz, Dominic, Antoine, Firas
+ * @author Moritz, Dominic, Antoine
  * @version 1.0
  */
 public class Player {
 
     private String username;
     private int score;
+    private int id;
     private boolean isPlaying;
     private boolean isOutOfRound;
     private ArrayList<Card> hand;
-
     public ServerMain.Server server;
     private LinkedList<Card> personalDiscardPile;
-    private int energyCubes;
-
-    public int getEnergyCubes() {
-        return energyCubes;
-    }
-
-    public void setEnergyCubes(int energyCubes) {
-        this.energyCubes = energyCubes;
-    }
+    private Robot robot;
 
     public Player(String username, ServerMain.Server server) {
         this.username = username;
@@ -78,7 +70,12 @@ public class Player {
     public void increaseScore() {
         score++;
     }
-
+    public void setRobot(Robot robot) {
+        this.robot = robot;
+    }
+    public Robot getRobot() {
+        return robot;
+    }
     public Card getTopCardFromPersonalDiscardPile() {
         Card topCard = personalDiscardPile.get(personalDiscardPile.size());
         return topCard;
@@ -98,9 +95,13 @@ public class Player {
     public Card getCard() {
         return hand.get(0);
     }
-
     public Card getCard(int index) {
         return hand.get(index);
     }
-
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
 }

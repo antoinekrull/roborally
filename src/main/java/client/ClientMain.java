@@ -22,8 +22,8 @@ public class ClientMain extends Application {
     int port = 3000;
 
     //Link to fxml file
-    URL url = getClass().getResource("login.fxml");
-    public LoginScreen controller;
+    URL url = getClass().getResource("mainmenu.fxml");
+    public MainMenu controller;
 
 
     /**
@@ -46,9 +46,9 @@ public class ClientMain extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        LoginScreen loginScreen = loader.getController();
+        MainMenu mainMenu = loader.getController();
         try {
-            client = new Client(address, port, loginScreen);
+            client = new Client(address, port, mainMenu);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error creating Client");
@@ -58,7 +58,7 @@ public class ClientMain extends Application {
                 logout(primaryStage);
             }
         });
-        loginScreen.getClient(client);
+        mainMenu.getClient(client);
 
     }
     public void logout(Stage stage){
