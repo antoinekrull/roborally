@@ -198,6 +198,7 @@ public class HandleClient implements Runnable{
                     if (incomingMessage.getMessageType() == MessageType.HelloServer) {
                         if(incomingMessage.getMessageBody().getProtocol().equals(server.getProtocolVersion())){
                             accepted = true;
+                            writeTo(clientID, messageCreator.generateWelcomeMessage(clientID));
                         } else{
                             //TODO message for client, that its version is not compatible
                             System.out.println("Client version is not correct: "

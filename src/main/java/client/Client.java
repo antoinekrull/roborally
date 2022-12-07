@@ -107,6 +107,7 @@ public class Client {
                             }
                             if(message.getMessageType().equals(MessageType.Welcome)){
                                 clientID = message.getMessageBody().getClientID();
+                                System.out.println("This is my ID: "+clientID);
                             }
                             if(message.getMessageType().equals(MessageType.PlayerAdded)){
                                 otherPlayers.add(new Triplet<>(message.getMessageBody().getClientID(),
