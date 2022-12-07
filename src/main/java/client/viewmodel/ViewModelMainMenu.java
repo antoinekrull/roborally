@@ -1,6 +1,6 @@
 package client.viewmodel;
 
-import client.ScreenController;
+import client.RoboRallyStart;
 import client.model.ModelUser;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -37,7 +37,7 @@ public class ViewModelMainMenu {
         //establish connection
 
         //if connected
-        ScreenController.switchScene("lobby.fxml");
+        RoboRallyStart.switchScene("lobby.fxml");
     }
 
     public void helpButtonOnAction() {

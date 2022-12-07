@@ -1,6 +1,7 @@
 package client.viewmodel;
 
-import client.ScreenController;
+import client.RoboRallyStart;
+import client.connection.NotifyChangeSupport;
 import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
@@ -23,7 +24,6 @@ import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * ViewModel for lobby including chat and leaving
@@ -60,8 +60,6 @@ public class ViewModelLobby {
     private ListView<String> mapList;
 
     private BooleanProperty ready;
-
-
     private ModelChat modelChat;
     private ModelUser modelUser;
     private ModelGame modelGame;
@@ -69,7 +67,7 @@ public class ViewModelLobby {
     public ViewModelLobby() {
         modelChat = ModelChat.getInstance();
         modelUser = ModelUser.getInstance();
-        modelGame = ModelGame.getInstance();
+        modelGame = ModelGame.getInstance();;
     }
 
     public void initialize() {
@@ -135,18 +133,18 @@ public class ViewModelLobby {
     }
 
     public void readyButtonOnAction() throws IOException {
-        if (readyButton.getText().equals("Ready!")) {
-            readyButton.setText("Not ready!");
+        if (readyButton.getText().equals("Ready")) {
+            readyButton.setText("Not ready");
             this.ready.set(true);
             modelGame.setPlayerStatus(modelUser.getUserID());
         }
-        if (readyButton.getText().equals("Not ready!")) {
-            readyButton.setText("Ready!");
+        if (readyButton.getText().equals("Not ready")) {
+            readyButton.setText("Ready");
             this.ready.set(false);
             modelGame.setPlayerStatus(modelUser.getUserID());
         }
 
-        ScreenController.switchScene("robotselection.fxml");
+        RoboRallyStart.switchScene("robotselection.fxml");
     }
 
     public void exit() throws IOException {
@@ -165,7 +163,7 @@ public class ViewModelLobby {
     }
 
     public void ButtonOnAction(ActionEvent event) throws IOException {
-        ScreenController.switchScene("robotselection.fxml");
+        RoboRallyStart.switchScene("robotselection.fxml");
 
 
         //resource is null

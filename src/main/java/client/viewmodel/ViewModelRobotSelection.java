@@ -1,13 +1,12 @@
 package client.viewmodel;
 
-import client.ScreenController;
+import client.RoboRallyStart;
 import client.model.ModelGame;
 import client.model.ModelUser;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
 
@@ -54,7 +53,7 @@ public class ViewModelRobotSelection {
             //modelGame.sendRobotSelection(userID);
         }
 
-        ScreenController.switchScene("gamewindow.fxml");
+        RoboRallyStart.switchScene("gamewindow.fxml");
     }
 
     //method for clicking on label

@@ -6,7 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class ScreenController extends Application {
+public class RoboRallyStart extends Application {
 
   public static void main(String[] args) {
     launch(args);
@@ -16,7 +16,7 @@ public class ScreenController extends Application {
   @Override
   public void start(Stage primaryStage) throws IOException {
     stage = primaryStage;
-    FXMLLoader loader = new FXMLLoader(ScreenController.class.getResource("mainmenu.fxml"));
+    FXMLLoader loader = new FXMLLoader(RoboRallyStart.class.getResource("mainmenu.fxml"));
 
     Scene scene = new Scene(loader.load(), 1650, 900);
     stage.setScene(scene);
@@ -24,7 +24,7 @@ public class ScreenController extends Application {
   }
 
   public static void switchScene(String fxmlFile) throws IOException {
-    FXMLLoader loader = new FXMLLoader(ScreenController.class.getResource(fxmlFile));
+    FXMLLoader loader = new FXMLLoader(RoboRallyStart.class.getResource(fxmlFile));
 
     Scene newScene = new Scene(loader.load(), 1650, 900);
     stage.setScene(newScene);

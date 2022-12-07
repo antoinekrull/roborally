@@ -1,7 +1,7 @@
 package client.viewmodel;
 
 
-import client.ScreenController;
+import client.RoboRallyStart;
 import client.model.ModelUser;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,7 +23,7 @@ public class ViewModelLogin {
 
     public void loginButtonOnAction(ActionEvent event) throws IOException {
 
-        ScreenController.switchScene("lobby.fxml");
+        RoboRallyStart.switchScene("lobby.fxml");
 
 
         //resource is null
