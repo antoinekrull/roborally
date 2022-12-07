@@ -23,7 +23,8 @@ public class HandleClient implements Runnable{
     private DataOutputStream out = null;
     private int threadID;
     private int clientID;
-    private boolean exit = false;
+    private boolean exit;
+    private boolean accepted;
 
     private boolean alive;
     public String address;
@@ -157,30 +158,11 @@ public class HandleClient implements Runnable{
      */
     public void run() {
         setAlive(false);
+        accepted = false;
         setClientID(threadID);
-        writeTo(getClientID(), messageCreator.generateHelloClientMessage(server.getProtocolVersion()));
-        Runnable sendAliveMessages = new Runnable() {
-            //TODO: Implement alive communications
-            public void run() {
-                while(!exit) {
-                    try {
-                        aliveMessage(clientID);
-                        Thread.sleep(5000);
-                        if (isAlive() == true) {
-                            setAlive(false);
-                        } else {
-                            closeConnection();
-                            exit = true;
-                        }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
 
-            }
-        };
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(sendAliveMessages, 5, 5, TimeUnit.SECONDS);
+        //send protocol version to client
+        writeTo(getClientID(), messageCreator.generateHelloClientMessage(server.getProtocolVersion()));
 
         try {
             String username ="";
@@ -208,7 +190,48 @@ public class HandleClient implements Runnable{
             }*/
 
             String line = "";
-            while (true) {
+
+            //Accept client if his protocol version is correct
+            while(!accepted) {
+                Message incomingMessage = JsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
+                try {
+                    if (incomingMessage.getMessageType() == MessageType.HelloServer) {
+                        if(incomingMessage.getMessageBody().getProtocol().equals(server.getProtocolVersion())){
+                            accepted = true;
+                        } else{
+                            //TODO message for client, that its version is not compatible
+                            System.out.println("Client version is not correct: "
+                                    +incomingMessage.getMessageBody().getProtocol()
+                                    + " but it should be: "+server.getProtocolVersion());
+                        }
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            Runnable sendAliveMessages = new Runnable() {
+                public void run() {
+                    while(!exit) {
+                        try {
+                            aliveMessage(clientID);
+                            Thread.sleep(5000);
+                            if (isAlive() == true) {
+                                setAlive(false);
+                            } else {
+                                closeConnection();
+                                exit = true;
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+            };
+            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+            executor.scheduleAtFixedRate(sendAliveMessages, 5, 5, TimeUnit.SECONDS);
+
+            while (accepted) {
                 Message incomingMessage = JsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
                 try {
                     if (incomingMessage.getMessageType() == MessageType.SendChat && incomingMessage.getMessageBody().getTo() == -1) {
