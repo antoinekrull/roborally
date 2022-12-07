@@ -262,12 +262,13 @@ public class HandleClient implements Runnable{
     private void closeConnection(){
         try {
             String goodbyeMessage = "Server: " + this.threadID + " has left the chat!";
+            System.out.println(goodbyeMessage);
             server.messages.put(goodbyeMessage);
             server.players.remove(threadID);
             server.CLIENTS.remove(threadID);
-            /*this.in.close();
+            this.in.close();
             this.out.close();
-            socket.close();*/
+            socket.close();
         } catch (Exception e) {
             System.out.println("Error while closing Connection" + e.getMessage());
         }
