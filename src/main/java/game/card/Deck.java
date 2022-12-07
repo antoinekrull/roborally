@@ -8,9 +8,9 @@ import java.util.LinkedList;
  * @version 1.0
  */
 
-public class Deck {
+public abstract class Deck {
 
-    private LinkedList<Card> deck;
+    protected LinkedList<Card> deck;
 
     public Deck() {
         deck = new LinkedList<Card>();
@@ -19,11 +19,7 @@ public class Deck {
     /**
      * Creates the shuffled deck of cards according to the rules of the game.
      */
-    public void createDeck() {
-        //TODO: Implement creation of Deck
-
-        Collections.shuffle(deck);
-    }
+    public void createDeck() {}
     public Card popCardFromDeck() {
         return deck.pop();
     }
@@ -32,6 +28,9 @@ public class Deck {
     }
     public void addCard(Card card) {
         deck.add(card);
+    }
+    public void shuffleDeck() {
+        Collections.shuffle(deck);
     }
 }
 

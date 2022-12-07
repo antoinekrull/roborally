@@ -2,7 +2,8 @@ package game.robot;
 
 import game.board.Direction;
 import game.board.Tile;
-import game.card.Card;
+import game.card.Deck;
+import game.card.ProgrammingDeck;
 import game.player.Player;
 
 /**
@@ -11,13 +12,22 @@ import game.player.Player;
  */
 public class Robot {
 
-    private Direction direction;
     private Player owner;
     private int figure;
     private int energyCubes;
     private int currentObjective;
     //currently only for DizzyHighWay, initialize position method needs to be implemented to set parameters
+    private Direction direction;
     private int[] currentPosition = new int[2];
+    private ProgrammingDeck deck;
+
+    public Robot(int figure, Player owner) {
+        this.figure = figure;
+        this.owner = owner;
+        deck.createDeck();
+        energyCubes = 0;
+        currentObjective = 1;
+    }
 
     public Player getOwner() {
         return owner;
@@ -54,8 +64,12 @@ public class Robot {
     public void increaseEnergyCubes() {
         energyCubes++;
     }
-
-
+    public ProgrammingDeck getDeck(){
+        return deck;
+    }
+    public void setDeck(ProgrammingDeck deck){
+        this.deck = deck;
+    }
     public void determineTileEffect(Tile tile){}
     public void checkCollision(){}
     public void reboot(int rebootTileIndex){}

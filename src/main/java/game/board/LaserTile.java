@@ -33,5 +33,4 @@ public class LaserTile extends Tile{
     public void fireLaser() {
         
     }
-
 }

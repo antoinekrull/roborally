@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import static java.lang.Integer.parseInt;
+
 /**
  * @author Antoine, Moritz
  * @version 1.0
@@ -27,7 +29,15 @@ public class GameBoard extends Board{
                             switch(input) {
                                 case "Empty", "tbd" ->  setTile(x, y, new NormalTile());
                                 case "EnergySpace" ->  setTile(x, y, new EnergySpaceTile());
-                                case "ConveyorBelt" -> setTile(x, y, new CheckpointTile());
+                                case "ConveyorBelt" -> {
+                                    entrySet.iterator().next();
+                                    entrySet.iterator().next();
+                                    int velocity = parseInt(entry.getValue());
+                                    entrySet.iterator().next();
+                                    Direction directionIn = null;
+                                    Direction directionOut = null;
+                                    //setTile(x, y, new ConveyorBeltTile(velocity, ));
+                                }
                                 case "Wall" -> {
                                     int index = 0;
                                     entrySet.iterator().next();
@@ -53,6 +63,10 @@ public class GameBoard extends Board{
                                     }
                                 }
                                 case "RestartPoint" -> setTile(x, y, new RebootTile());
+                                case "CheckPoint" -> {
+                                    setTile(x, y, new CheckpointTile());
+                                    increaseCheckPointCount();
+                                }
                             }
                         }
                     }

@@ -21,7 +21,6 @@ public class HandleClient implements Runnable{
     private DataOutputStream out = null;
     private int threadID;
     private int clientID;
-
     private boolean alive;
     public String address;
     public int port;
