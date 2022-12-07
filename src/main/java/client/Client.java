@@ -98,9 +98,11 @@ public class Client {
                         try {
                             Message message = JsonSerializer.deserializeJson(in.readUTF(), Message.class);
                             if(message.getMessageType().equals(MessageType.Alive)){
+                                System.out.println("client alive");
                                 sendAliveMessage();
                             }
                             if(message.getMessageType().equals(MessageType.HelloClient)){
+                                System.out.println(message.getMessageBody().getProtocol());
                                 sendHelloServerMessage(group, isAI, protocolVersion);
                             }
                             if(message.getMessageType().equals(MessageType.Welcome)){
