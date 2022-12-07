@@ -35,8 +35,8 @@ public class ViewModelRobotSelection {
     }
 
     public void initialize() {
-        usernameButton.disableProperty().bind(usernameTextField.textProperty().isEmpty());
-        usernameTextField.textProperty().bindBidirectional(modelUser.usernameProperty());
+        //usernameButton.disableProperty().bind(usernameTextField.textProperty().isEmpty());
+        //usernameTextField.textProperty().bindBidirectional(modelUser.usernameProperty());
         robot1.setOnMouseClicked(mouseEvent -> robot1.textProperty().bindBidirectional(modelGame.robotProperty()));
         robot2.setOnMouseClicked(mouseEvent -> robot2.textProperty().bindBidirectional(modelGame.robotProperty()));
         robot3.setOnMouseClicked(mouseEvent -> robot3.textProperty().bindBidirectional(modelGame.robotProperty()));
@@ -50,9 +50,11 @@ public class ViewModelRobotSelection {
         String username = modelUser.getUsername();
         int userID = modelUser.getUserID();
         if (!robot.isEmpty() && !username.isEmpty()) {
-            modelUser.sendUsername();
-            modelGame.sendRobotSelection(userID);
+            //modelUser.sendUsername();
+            //modelGame.sendRobotSelection(userID);
         }
+
+        ScreenController.switchScene("gamewindow.fxml");
     }
 
     //method for clicking on label

@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.RobotSelection">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelRobotSelection">
    <center>
       <GridPane alignment="CENTER" prefHeight="400.0" prefWidth="641.0" BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -28,18 +28,18 @@
           <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
         </rowConstraints>
          <children>
-            <Label fx:id="rowRobot" alignment="CENTER" onMouseClicked="#test" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
+            <Label fx:id="robot1" text="robot1" alignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
                <graphic>
-                  <ImageView fitHeight="${rowRobot.height}" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../textures/roboter1.jpg" />
                      </image>
                   </ImageView>
                </graphic>
             </Label>
-            <Label layoutX="10.0" layoutY="-40.0" GridPane.columnIndex="1">
+            <Label fx:id="robot2" text="robot2" layoutX="10.0" layoutY="-40.0" GridPane.columnIndex="1">
                <graphic>
-                  <ImageView fitHeight="${rowRobot.height}" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../textures/roboter2.jpg" />
                      </image>
@@ -49,16 +49,7 @@
                   </ImageView>
                </graphic>
             </Label>
-            <Label layoutX="10.0" layoutY="-40.0" GridPane.rowIndex="1">
-               <graphic>
-                  <ImageView fitHeight="${rowRobot.height}" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../textures/roboter3.jpg" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Label>
-            <Label layoutX="10.0" layoutY="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <Label fx:id="robot3" text="robot3" layoutX="10.0" layoutY="-40.0" GridPane.rowIndex="1">
                <graphic>
                   <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -67,7 +58,16 @@
                   </ImageView>
                </graphic>
             </Label>
-            <Label layoutX="310.0" layoutY="10.0" GridPane.rowIndex="2">
+            <Label fx:id="robot4" text="robot4" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../textures/roboter3.jpg" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+            <Label fx:id="robot5" text="robot5" layoutX="310.0" layoutY="10.0" GridPane.rowIndex="2">
                <graphic>
                   <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -76,7 +76,7 @@
                   </ImageView>
                </graphic>
             </Label>
-            <Label layoutX="10.0" layoutY="60.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <Label fx:id="robot6" text="robot6" layoutX="10.0" layoutY="60.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <graphic>
                   <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -85,7 +85,7 @@
                   </ImageView>
                </graphic>
             </Label>
-            <Label layoutX="310.0" layoutY="60.0" GridPane.rowIndex="3">
+            <Label fx:id="robot7" text="robot7" layoutX="310.0" layoutY="60.0" GridPane.rowIndex="3">
                <graphic>
                   <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -94,7 +94,7 @@
                   </ImageView>
                </graphic>
             </Label>
-            <Label layoutX="10.0" layoutY="110.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <Label fx:id="robot8" text="robot8" layoutX="10.0" layoutY="110.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <graphic>
                   <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                      <image>

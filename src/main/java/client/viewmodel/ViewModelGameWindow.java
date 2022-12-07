@@ -45,7 +45,8 @@ public class ViewModelGameWindow {
     }
 
     public void initialize() {
-
+        chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
+        chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
     }
 
     public void messageToChat() {
@@ -73,7 +74,7 @@ public class ViewModelGameWindow {
 
     public void chatButtonOnAction() {
         int userID = modelUser.getUserID();
-        modelChat.sendMessage(userID);
+        //modelChat.sendMessage(userID);
 
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);

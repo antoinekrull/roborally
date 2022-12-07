@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.media.MediaView?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.MainMenu">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelMainMenu">
    <children>
       <BorderPane prefHeight="200.0" prefWidth="200.0">
          <center>
@@ -24,9 +24,9 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button fx:id="joinButton" mnemonicParsing="false" onAction="#joinLobby" text="Join Game" />
-                  <Button mnemonicParsing="false" text="Help" GridPane.rowIndex="1" />
-                  <Button mnemonicParsing="false" text="Quit to Desktop" GridPane.rowIndex="2" />
+                  <Button fx:id="joinButton" mnemonicParsing="false" onAction="#joinButtonOnAction" text="Join Game" />
+                  <Button fx:id="helpButton" mnemonicParsing="false" onAction="#helpButtonOnAction" text="helpButtonOnAction" GridPane.rowIndex="1" />
+                  <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exitButtonOnAction" text="Quit to Desktop" GridPane.rowIndex="2" />
                </children>
             </GridPane>
          </center>

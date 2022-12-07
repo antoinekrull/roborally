@@ -53,7 +53,7 @@ public class ModelUser {
         return usernameProperty;
     }
 
-    public void sendUsername() {
+    /*public void sendUsername() {
         clientService.sendUsername(usernameProperty.get());
-    }
+    }*/
 }

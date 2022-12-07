@@ -1,6 +1,6 @@
 package client.client;
 
-import communication.ConcreteMessage;
+//import communication.ConcreteMessage;
 import communication.JsonSerializer;
 import communication.MessageCreator;
 import communication.MessageType;
@@ -20,6 +20,9 @@ import java.net.Socket;
  * @author Tobias
  * @version 1.0
  */
+
+
+
 public class ClientService {
 
     private static ClientService clientService;
@@ -51,10 +54,18 @@ public class ClientService {
             e.printStackTrace();
         }
 
-        new Thread(() -> readMessageFromServer(in)).start();
+        //new Thread(() -> readMessageFromServer(in)).start();
 
     }
 
+    public static ClientService getInstance() {
+        if (clientService == null) {
+            clientService = new ClientService();
+        }
+        return clientService;
+    }
+
+    /*
     public String getGroupMessage() {
         return groupMessage.get();
     }
@@ -73,7 +84,7 @@ public class ClientService {
 
     private void readMessageFromServer(DataInputStream in) {
 
-        /*try {
+        try {
             while (socket.isConnected()) {
                 try {
                     ConcreteMessage concreteMessage = JsonSerializer.deserializeJson(in.readUTF(), ConcreteMessage.class);
@@ -96,7 +107,7 @@ public class ClientService {
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
-        }*/
+        }
 
         while (socket.isConnected()) {
             try {
@@ -149,7 +160,7 @@ public class ClientService {
         return true;
     }
 
-    /*
+
     public void addListener(String eventName, PropertyChangeListener listener) {
         support.addPropertyChangeListener(eventName, listener);
     }
@@ -157,6 +168,8 @@ public class ClientService {
     public void removeListener(String eventName, PropertyChangeListener listener) {
         support.removePropertyChangeListener(eventName, listener);
     }
-     */
+*/
 }
+
+
 

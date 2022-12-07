@@ -47,6 +47,14 @@ public class ViewModelLobby {
     @FXML
     private VBox chatVBox;
     @FXML
+    private MenuItem groupChatItem;
+    @FXML
+    private MenuItem mapItem1;
+    @FXML
+    private MenuItem exitMenuItem;
+    @FXML
+    private MenuItem helpMenuItem;
+    @FXML
     private ListView<String> userList;
     @FXML
     private ListView<String> mapList;
@@ -62,10 +70,10 @@ public class ViewModelLobby {
         modelChat = ModelChat.getInstance();
         modelUser = ModelUser.getInstance();
         modelGame = ModelGame.getInstance();
-        this.ready = new SimpleBooleanProperty();
     }
 
     public void initialize() {
+        this.ready = new SimpleBooleanProperty();
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
         ready.bindBidirectional(modelGame.readyToPlayProperty());
@@ -107,7 +115,7 @@ public class ViewModelLobby {
 
     public void chatButtonOnAction() {
         int userID = modelUser.getUserID();
-        modelChat.sendMessage(userID);
+        //modelChat.sendMessage(userID);
 
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
@@ -126,7 +134,7 @@ public class ViewModelLobby {
         chatTextfield.clear();
     }
 
-    public void readyButtonOnAction() {
+    public void readyButtonOnAction() throws IOException {
         if (readyButton.getText().equals("Ready!")) {
             readyButton.setText("Not ready!");
             this.ready.set(true);
@@ -137,16 +145,27 @@ public class ViewModelLobby {
             this.ready.set(false);
             modelGame.setPlayerStatus(modelUser.getUserID());
         }
+
+        ScreenController.switchScene("robotselection.fxml");
     }
 
-    public void leaveButtonOnAction() throws IOException {
+    public void exit() throws IOException {
         //send notification to server: disconnect
         Stage stage = (Stage) leaveButton.getScene().getWindow();
         stage.close();
     }
 
+    public void help() {
+        //show help
+    }
+
+    public void setMap() {
+        String map = mapItem1.getText();
+        //map is Dizzy Highway
+    }
+
     public void ButtonOnAction(ActionEvent event) throws IOException {
-        ScreenController.switchScene("lobby.fxml");
+        ScreenController.switchScene("robotselection.fxml");
 
 
         //resource is null

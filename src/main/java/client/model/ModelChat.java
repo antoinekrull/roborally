@@ -27,7 +27,6 @@ public class ModelChat {
     private ModelChat() {
         clientService = ClientService.getInstance();
         textfieldProperty = new SimpleStringProperty("");
-
     }
 
     public static ModelChat getInstance() {
@@ -56,9 +55,9 @@ public class ModelChat {
         return messages;
     }
 
-    public void sendMessage(int userID) {
+    /*public void sendMessage(int userID) {
         clientService.sendMessageToServer(userID, modelChat.getTextfieldProperty());
-    }
+    }*/
 
 
 

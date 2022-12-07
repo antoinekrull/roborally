@@ -73,7 +73,7 @@ public class ModelGame {
         this.users = users;
     }
 
-    public void sendRobotSelection(int clientID) throws IOException {
+    /*public void sendRobotSelection(int clientID) throws IOException {
         boolean result = clientService.sendSelection(clientID, modelGame.getRobot());
         if (!result) {
             //setSelectionResult("Please choose another robot");
@@ -82,6 +82,8 @@ public class ModelGame {
             ScreenController.switchScene("lobby.fxml");
         }
     }
+    */
+
 
     public void setPlayerStatus(int userID) {
         //client.sendPlayerStatus or client.sendMessageToServer(userID, MessageType); true/false

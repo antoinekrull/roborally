@@ -16,7 +16,7 @@ public class ScreenController extends Application {
   @Override
   public void start(Stage primaryStage) throws IOException {
     stage = primaryStage;
-    FXMLLoader loader = new FXMLLoader(ScreenController.class.getResource("login.fxml"));
+    FXMLLoader loader = new FXMLLoader(ScreenController.class.getResource("mainmenu.fxml"));
 
     Scene scene = new Scene(loader.load(), 1650, 900);
     stage.setScene(scene);

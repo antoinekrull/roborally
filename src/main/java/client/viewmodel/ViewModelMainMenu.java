@@ -15,19 +15,19 @@ import java.io.IOException;
  * @version 1.0
  */
 
-public class ViewModelStartWindow{
+public class ViewModelMainMenu {
 
     @FXML
     private Button joinButton;
     @FXML
     private Button helpButton;
     @FXML
-    private Button closeButton;
+    private Button exitButton;
 
     private ModelUser modelUser;
 
-    public ViewModelStartWindow() {
-        ;
+    public ViewModelMainMenu() {
+
     }
 
     public void joinButtonOnAction() throws IOException {
@@ -37,15 +37,15 @@ public class ViewModelStartWindow{
         //establish connection
 
         //if connected
-        ScreenController.switchScene("robotselection.fxml");
+        ScreenController.switchScene("lobby.fxml");
     }
 
-    public void setHelpButtonOnAction() {
+    public void helpButtonOnAction() {
         //opens help
     }
 
-    public void closeButtonOnAction() {
-        Stage stage = (Stage) closeButton.getScene().getWindow();
+    public void exitButtonOnAction() {
+        Stage stage = (Stage) exitButton.getScene().getWindow();
         stage.close();
     }
 
