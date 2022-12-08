@@ -18,6 +18,7 @@ public class ObservableQueue<E> extends ObservableListBase<E> implements Queue<E
      * in notification to listeners.
      *
      * @param queue
+     * @version 0.1
      */
     public ObservableQueue(Queue<E> queue) {
         this.queue = queue ;
