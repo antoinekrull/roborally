@@ -18,4 +18,6 @@ module com.example.knorrigekorrelatehp {
     exports client.viewmodel;
 
     exports communication;
+    exports client.connection;
+    opens client.connection to javafx.controls, javafx.fxml, javafx.graphics;
 }

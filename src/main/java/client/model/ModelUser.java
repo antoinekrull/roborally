@@ -1,6 +1,7 @@
 package client.model;
 
-import client.client.ClientService;
+import client.connection.Client;
+import client.connection.ClientService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -9,7 +10,7 @@ import javafx.beans.property.StringProperty;
  * Model for login
  *
  * @author Tobias
- * @version 1.0
+ * @version 0.1
  */
 public class ModelUser {
 
@@ -19,10 +20,10 @@ public class ModelUser {
     private int userID;
     private StringProperty usernameProperty;
 
-    private ClientService clientService;
+    private Client client;
 
     private ModelUser() {
-        clientService = ClientService.getInstance();
+        client = Client.getInstance();
         usernameProperty = new SimpleStringProperty("");
     }
 
@@ -54,6 +55,6 @@ public class ModelUser {
     }
 
     /*public void sendUsername() {
-        clientService.sendUsername(usernameProperty.get());
+        client.sendUsername(usernameProperty.get());
     }*/
 }

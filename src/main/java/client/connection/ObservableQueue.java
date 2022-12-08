@@ -1,4 +1,4 @@
-package client.client;
+package client.connection;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -52,7 +52,6 @@ public class ObservableQueue<E> extends ObservableListBase<E> implements Queue<E
             endChange();
         }
     }
-
 
     @Override
     public E remove() {

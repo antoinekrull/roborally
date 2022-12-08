@@ -13,7 +13,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import game.board.GameBoard;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 

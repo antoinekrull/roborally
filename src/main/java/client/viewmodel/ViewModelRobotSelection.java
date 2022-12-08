@@ -7,6 +7,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
 
@@ -14,7 +16,7 @@ import java.io.IOException;
  * ViewModel for selecting one of eight robots
  *
  * @author Tobias
- * @version 1.0
+ * @version 0.1
  */
 
 public class ViewModelRobotSelection {
@@ -34,56 +36,24 @@ public class ViewModelRobotSelection {
     }
 
     public void initialize() {
-        //usernameButton.disableProperty().bind(usernameTextField.textProperty().isEmpty());
-        //usernameTextField.textProperty().bindBidirectional(modelUser.usernameProperty());
-        robot1.setOnMouseClicked(mouseEvent -> robot1.textProperty().bindBidirectional(modelGame.robotProperty()));
-        robot2.setOnMouseClicked(mouseEvent -> robot2.textProperty().bindBidirectional(modelGame.robotProperty()));
-        robot3.setOnMouseClicked(mouseEvent -> robot3.textProperty().bindBidirectional(modelGame.robotProperty()));
-        robot4.setOnMouseClicked(mouseEvent -> robot4.textProperty().bindBidirectional(modelGame.robotProperty()));
-        robot5.setOnMouseClicked(mouseEvent -> robot5.textProperty().bindBidirectional(modelGame.robotProperty()));
-        robot6.setOnMouseClicked(mouseEvent -> robot6.textProperty().bindBidirectional(modelGame.robotProperty()));
+        usernameButton.disableProperty().bind(usernameTextField.textProperty().isEmpty());
+        usernameTextField.textProperty().bindBidirectional(modelUser.usernameProperty());
+        robot1.setOnMouseClicked(mouseevent -> modelGame.setRobot(robot1.getText()));
+        robot2.setOnMouseClicked(mouseevent -> modelGame.setRobot(robot2.getText()));
+        robot3.setOnMouseClicked(mouseevent -> modelGame.setRobot(robot3.getText()));
+        robot4.setOnMouseClicked(mouseevent -> modelGame.setRobot(robot4.getText()));
+        robot5.setOnMouseClicked(mouseevent -> modelGame.setRobot(robot5.getText()));
+        robot6.setOnMouseClicked(mouseevent -> modelGame.setRobot(robot6.getText()));
     }
 
     public void usernameButtonOnAction() throws IOException {
         String robot = modelGame.getRobot();
-        String username = modelUser.getUsername();
+        String username = modelUser.usernameProperty().get();
         int userID = modelUser.getUserID();
         if (!robot.isEmpty() && !username.isEmpty()) {
             //modelUser.sendUsername();
             //modelGame.sendRobotSelection(userID);
-        }
-
-        RoboRallyStart.switchScene("gamewindow.fxml");
-    }
-
-    //method for clicking on label
-    /*
-    public void robot1LabelOnMouseAction(MouseEvent mouseEvent) {
-        if (mouseEvent.getSource() == robot1) {
-            robot1.textProperty().bindBidirectional(modelGame.robotProperty());
-        }
-        if (mouseEvent.getSource() == robot2) {
-            robot2.textProperty().bindBidirectional(modelGame.robotProperty());
-        }
-        if (mouseEvent.getSource() == robot3) {
-            robot3.textProperty().bindBidirectional(modelGame.robotProperty());
-        }
-        if (mouseEvent.getSource() == robot4) {
-            robot4.textProperty().bindBidirectional(modelGame.robotProperty());
-        }
-        if (mouseEvent.getSource() == robot5) {
-            robot5.textProperty().bindBidirectional(modelGame.robotProperty());
-        }
-        if (mouseEvent.getSource() == robot6) {
-            robot6.textProperty().bindBidirectional(modelGame.robotProperty());
-        }
-        if (mouseEvent.getSource() == robot7) {
-            robot7.textProperty().bindBidirectional(modelGame.robotProperty());
-        }
-        if (mouseEvent.getSource() == robot8) {
-            robot6.textProperty().bindBidirectional(modelGame.robotProperty());
+            RoboRallyStart.switchScene("gamewindow.fxml");
         }
     }
-    */
-
 }

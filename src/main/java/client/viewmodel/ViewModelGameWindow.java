@@ -20,7 +20,7 @@ import javafx.scene.text.TextFlow;
  * ViewModel for gamescreen
  *
  * @author Tobias
- * @version 1.0
+ * @version 0.1
  */
 
 public class ViewModelGameWindow {

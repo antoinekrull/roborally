@@ -1,38 +1,35 @@
 package client.model;
 
-import client.ScreenController;
-import client.client.ClientService;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import client.connection.Client;
+import javafx.beans.property.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  * Model for Game
  *
  * @author Tobias
- * @version 1.0
+ * @version 0.1
  */
 public class ModelGame {
 
     private static ModelGame modelGame;
+    public SimpleStringProperty robotProperty;
 
-    private ClientService clientService;
+    private Client client;
 
     private ArrayList<String> maps;
     private ArrayList<String> users;
 
-    private StringProperty robot;
+    private String robot;
     private BooleanProperty readyToPlay;
 
 
 
     private ModelGame() {
-        clientService = ClientService.getInstance();
-        this.robot = new SimpleStringProperty("");
+        client = Client.getInstance();
+        this.robot = "";
+        this.robotProperty = new SimpleStringProperty("");
         this.readyToPlay = new SimpleBooleanProperty();
         this.maps = new ArrayList<>();
         this.users = new ArrayList<>();
@@ -46,12 +43,12 @@ public class ModelGame {
         return modelGame;
     }
 
-    public StringProperty robotProperty() {
+    public String getRobot() {
         return robot;
     }
 
-    public String getRobot() {
-        return robot.get();
+    public void setRobot(String robot) {
+        this.robot = robot;
     }
 
     public BooleanProperty readyToPlayProperty() {

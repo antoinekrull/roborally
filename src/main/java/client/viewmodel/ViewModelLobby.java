@@ -1,7 +1,6 @@
 package client.viewmodel;
 
 import client.RoboRallyStart;
-import client.connection.NotifyChangeSupport;
 import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
@@ -29,7 +28,7 @@ import java.io.IOException;
  * ViewModel for lobby including chat and leaving
  *
  * @author Tobias
- * @version 1.0
+ * @version 0.1
  */
 
 public class ViewModelLobby {
@@ -144,7 +143,7 @@ public class ViewModelLobby {
             modelGame.setPlayerStatus(modelUser.getUserID());
         }
 
-        RoboRallyStart.switchScene("robotselection.fxml");
+        RoboRallyStart.switchScene("login.fxml");
     }
 
     public void exit() throws IOException {

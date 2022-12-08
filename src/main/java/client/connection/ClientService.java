@@ -1,9 +1,7 @@
-package client.client;
+package client.connection;
 
 //import communication.ConcreteMessage;
-import communication.JsonSerializer;
 import communication.MessageCreator;
-import communication.MessageType;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -30,7 +28,7 @@ public class ClientService {
     private DataInputStream in = null;
     private DataOutputStream out = null;
 
-    private final NotifyChangeSupport notifyChangeSupport;
+    private static final NotifyChangeSupport notifyChangeSupport = null;
 
     StringProperty groupMessage = new SimpleStringProperty("");
     StringProperty directMessage = new SimpleStringProperty("");
@@ -39,8 +37,6 @@ public class ClientService {
 
 
     private ClientService() {
-
-        this.notifyChangeSupport = new NotifyChangeSupport();
 
         this.messageCreator = new MessageCreator();
         //support = new PropertyChangeSupport(this);

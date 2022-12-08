@@ -1,6 +1,7 @@
 package client.model;
 
-import client.client.ClientService;
+import client.connection.Client;
+import client.connection.NotifyChangeSupport;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -11,7 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * Model for chat
  *
  * @author Tobias
- * @version 1.0
+ * @version 0.1
  */
 public class ModelChat {
 
@@ -19,14 +20,30 @@ public class ModelChat {
 
     private StringProperty textfieldProperty;
 
+    private StringProperty clientMessage;
+
     private LinkedBlockingQueue<String> messages;
 
-    private ClientService clientService;
+    private NotifyChangeSupport notifyChangeSupport;
+
+    private Client client;
 
 
     private ModelChat() {
-        clientService = ClientService.getInstance();
+        client = Client.getInstance();
+        notifyChangeSupport = new NotifyChangeSupport();
+        clientMessage = new SimpleStringProperty("");
+        this.messages = new LinkedBlockingQueue<>();
         textfieldProperty = new SimpleStringProperty("");
+        clientMessage.addListener((observable, oldValue, newValue) -> {
+            try {
+                messages.put(clientMessage.get());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            notifyChangeSupport.notifyInstance();
+        });
+        clientMessage.bind(client.messageProperty());
     }
 
     public static ModelChat getInstance() {

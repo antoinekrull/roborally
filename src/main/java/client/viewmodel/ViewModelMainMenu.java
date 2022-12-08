@@ -12,7 +12,7 @@ import java.io.IOException;
  * ViewModel for start window
  *
  * @author Tobias
- * @version 1.0
+ * @version 0.1
  */
 
 public class ViewModelMainMenu {
