@@ -1,9 +1,16 @@
-package client;
+package client.connection;
 
+import client.Controller;
+import client.model.ModelChat;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import org.javatuples.Pair;
+import org.javatuples.Triplet;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -13,31 +20,31 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.javatuples.Pair;
-import org.javatuples.Triplet;
-
 /**
- * @author Antoine, Dominik, Tobias
- * @version 1.0
  *
- */
-
-/**
  * Client Class
  * Communicating with Server and chat to send and receive messages from server and puts messages on chat.
  * Therefore putting incoming messages to LinkedBlockingQueue and reading from it.
+ *
+ * @author Antoine, Dominik, Tobias
+ * @version 0.1
+ *
  */
 
 public class Client {
+
+    private static Client client;
     private Socket socket = null;
     private DataInputStream in = null;
     private DataOutputStream out = null;
     private final LinkedBlockingQueue<String> MESSAGES;
+    private StringProperty message;
+    private NotifyChangeSupport notifyChangeSupport;
     MessageCreator messageCreator;
     private String name = "";
-    private final MainMenu loginController;
-    private Controller chatController;
     private boolean accessible = false;
+    String address = "localhost";
+    int port = 4000;
 
     private String protocolVersion = "Version 0.1";
     private String group = "KnorrigeKorrelate";
@@ -46,10 +53,9 @@ public class Client {
     private ArrayList<Triplet<Integer, String, Integer>> otherPlayers = new ArrayList<>();
     private ArrayList<Pair<Integer, Boolean>> otherPlayersStatus = new ArrayList<>();
 
-    public Client(String address, int port, MainMenu controller) {
+    private Client() {
 
         this.MESSAGES = new LinkedBlockingQueue<>();
-        this.loginController = controller;
         messageCreator = new MessageCreator();
 
         try {
@@ -59,12 +65,28 @@ public class Client {
             out = new DataOutputStream(socket.getOutputStream());
 
         } catch (Exception e) {
-            loginController.setMessage("Couldn't connect to server");
             //TODO: create error message to close window because there is no connection to server
         }
 
+        message = new SimpleStringProperty("");
+        message.addListener((observable, oldValue, newValue) -> {
+            ModelChat.getInstance().putMessage(newValue);
+            notifyChangeSupport.notifyInstance();
+        });
+
         ReadMessagesFromServer server = new ReadMessagesFromServer(socket);
         new Thread(server).start();
+    }
+
+    public static Client getInstance() {
+        if (client == null) {
+            client = new Client();
+        }
+        return client;
+    }
+
+    public StringProperty messageProperty() {
+        return message;
     }
 
     //public void sendUsernameToServer(String username) {
@@ -97,16 +119,13 @@ public class Client {
                         try {
                             Message message = JsonSerializer.deserializeJson(in.readUTF(), Message.class);
                             if(message.getMessageType().equals(MessageType.Alive)){
-                                System.out.println("client alive");
                                 sendAliveMessage();
                             }
                             if(message.getMessageType().equals(MessageType.HelloClient)){
-                                System.out.println(message.getMessageBody().getProtocol());
                                 sendHelloServerMessage(group, isAI, protocolVersion);
                             }
                             if(message.getMessageType().equals(MessageType.Welcome)){
                                 clientID = message.getMessageBody().getClientID();
-                                System.out.println("This is my ID: "+clientID);
                             }
                             if(message.getMessageType().equals(MessageType.PlayerAdded)){
                                 otherPlayers.add(new Triplet<>(message.getMessageBody().getClientID(),
@@ -156,7 +175,7 @@ public class Client {
                     System.out.println(e.getMessage());
                 }
             }else {
-                loginController.setMessage("Couldn't connect to server");
+
             }
 
         }
@@ -172,7 +191,6 @@ public class Client {
                     while(accessible) {
                         try {
                             message = MESSAGES.take();
-                            chatController.addMessageToChat(message);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -219,9 +237,7 @@ public class Client {
             e.printStackTrace();
         }
     }
-    public void getChat(Controller chatController){
-        this.chatController=chatController;
-    }
+
     public void enterChat(Boolean state) {
         accessible = state;
         readMessageToClientChat();

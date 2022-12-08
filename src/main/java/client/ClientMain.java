@@ -19,7 +19,7 @@ public class ClientMain extends Application {
     public Parent root;
     private Client client;
     String address = "localhost";
-    int port = 3000;
+    int port = 4000;
 
     //Link to fxml file
     URL url = getClass().getResource("mainmenu.fxml");
@@ -40,6 +40,7 @@ public class ClientMain extends Application {
             loader = new FXMLLoader(url);
             root = loader.load();
             Scene login = new Scene(root, 600, 520);
+            login.getStylesheets().add("/chat/chatgui/styles.css");
             primaryStage.setScene(login);
             primaryStage.show();
 

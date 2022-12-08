@@ -44,6 +44,7 @@ public class ServerMain extends Application {
 
         MessageCreator messageCreator = new MessageCreator();
         Server self = this;
+        private String protocolVersion = "Version 0.1";
 
         /**
          * Initialises server.
@@ -100,6 +101,7 @@ public class ServerMain extends Application {
         public synchronized int getUniqueID(){
             return uniqueID++;
         }
+        public String getProtocolVersion(){return this.protocolVersion;}
 
     }
     public static void main(String[] args) {

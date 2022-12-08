@@ -19,11 +19,10 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-
-
 <?import javafx.scene.media.MediaView?>
 <?import javafx.scene.text.Font?>
-<StackPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.Controller">
+
+<StackPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelLobby">
     <children>
         <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="539.0" prefWidth="874.0">
             <bottom>
@@ -56,25 +55,25 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <HBox fx:id="chatSendHBox" alignment="CENTER" prefHeight="34.0" prefWidth="202.0">
+                                <HBox alignment="CENTER" prefHeight="34.0" prefWidth="202.0">
                                     <children>
                                         <MenuButton mnemonicParsing="false" text="Select Chat">
                                             <items>
-                                                <MenuItem mnemonicParsing="false" text="All" />
+                                                <MenuItem fx:id="groupChatItem" mnemonicParsing="false" text="All" />
                                                 <MenuItem mnemonicParsing="false" text="Player  1" />
                                             </items>
                                         </MenuButton>
-                                        <TextField fx:id="chatTextfield" focusTraversable="false" onAction="#onEnter" prefHeight="30.0" prefWidth="388.0" promptText="Type here..." HBox.hgrow="ALWAYS">
+                                        <TextField fx:id="chatTextfield" focusTraversable="false" prefHeight="30.0" prefWidth="388.0" promptText="Type here..." HBox.hgrow="ALWAYS">
                                             <font>
                                                 <Font name="Hiragino Sans W2" size="13.0" />
                                             </font>
                                         </TextField>
-                                        <Button fx:id="buttonSend" mnemonicParsing="false" onAction="#onEnter" prefHeight="26.0" prefWidth="55.0">
+                                        <Button fx:id="chatButton" mnemonicParsing="false" onAction="#chatButtonOnAction" prefHeight="26.0" prefWidth="55.0">
                                             <opaqueInsets>
                                                 <Insets />
                                             </opaqueInsets>
                                             <graphic>
-                                                <Label fx:id="sendLabel">
+                                                <Label>
                                                     <font>
                                                         <Font name="Hiragino Sans W2" size="11.0" />
                                                     </font>
@@ -90,7 +89,7 @@
                                         </Button>
                                     </children>
                                 </HBox>
-                                <Button mnemonicParsing="false" text="Ready" GridPane.rowIndex="1" />
+                                <Button fx:id="readyButton" mnemonicParsing="false" text="Ready" GridPane.rowIndex="1" onAction="#readyButtonOnAction"/>
                             </children>
                         </GridPane>
                         <ScrollPane fx:id="chatScrollPane" hbarPolicy="NEVER" vbarPolicy="ALWAYS">
@@ -104,7 +103,7 @@
                         <TextArea prefHeight="200.0" prefWidth="200.0" text="Player 1&#10;Player 2" GridPane.columnIndex="1" />
                         <MenuButton mnemonicParsing="false" text="Select Map" GridPane.columnIndex="1" GridPane.rowIndex="1">
                             <items>
-                                <MenuItem mnemonicParsing="false" text="Dizzy Highway" />
+                                <MenuItem fx:id="mapItem1" mnemonicParsing="false" onAction="#setMap" text="Dizzy Highway" />
                                 <MenuItem mnemonicParsing="false" text="KackJavaFX" />
                             </items>
                         </MenuButton>
@@ -118,13 +117,13 @@
                             <menus>
                                 <Menu mnemonicParsing="false" text="Options">
                                     <items>
-                                        <MenuItem mnemonicParsing="false" text="Exit" />
-                                        <MenuItem mnemonicParsing="false" text="Help" />
+                                        <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#exit" text="Exit" />
+                                        <MenuItem fx:id="helpMenuItem" mnemonicParsing="false" onAction="#help" text="Help" />
                                     </items>
                                 </Menu>
                             </menus>
                         </MenuBar>
-                        <Label fx:id="chatLabel" alignment="CENTER" text="Lobby" VBox.vgrow="ALWAYS">
+                        <Label alignment="CENTER" text="Lobby" VBox.vgrow="ALWAYS">
                             <font>
                                 <Font name="Hiragino Sans W3" size="24.0" />
                             </font>
