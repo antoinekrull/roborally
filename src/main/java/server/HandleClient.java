@@ -1,7 +1,9 @@
 package server;
 
+import client.Client;
 import communication.JsonSerializer;
 import communication.Message;
+import communication.MessageCreator;
 import communication.MessageType;
 
 import java.io.BufferedInputStream;
@@ -21,6 +23,8 @@ public class HandleClient implements Runnable{
     private DataOutputStream out = null;
     private int threadID;
     private int clientID;
+    private boolean exit;
+    private boolean accepted;
 
     private boolean alive;
     public String address;
@@ -28,6 +32,7 @@ public class HandleClient implements Runnable{
     public Socket socket;
     private String username;
     private ServerMain.Server server;
+    private MessageCreator messageCreator;
 
     /**
      * Thread which handles the logged in clients.
@@ -42,6 +47,7 @@ public class HandleClient implements Runnable{
         this.socket = socket;
         this.server = server;
         this.threadID = threadID;
+        this.messageCreator = new MessageCreator();
         try {
             this.in = new DataInputStream(
                     new BufferedInputStream(socket.getInputStream()));
@@ -55,7 +61,7 @@ public class HandleClient implements Runnable{
         if (list.size() > 0) {
             for (Map.Entry<Integer, HandleClient> client : server.CLIENTS.entrySet()) {
                 if (client.getValue().getUsername().equals(name)) {
-                        return true;
+                    return true;
                 }
             }
         }
@@ -95,6 +101,17 @@ public class HandleClient implements Runnable{
             e.printStackTrace();
         }
     }
+    public void aliveMessage(int id) {
+        try {
+            for (Map.Entry<Integer, HandleClient> client : server.CLIENTS.entrySet()) {
+                if (client.getValue().getClientID() == id) {
+                    client.getValue().out.writeUTF(JsonSerializer.serializeJson(messageCreator.generateAliveMessage()));
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Client "+ id +" couldn't be reached");
+        }
+    }
 
     /**
      * Send info to client that he is connected to server.
@@ -130,7 +147,7 @@ public class HandleClient implements Runnable{
 
     public void setUsername(String username) {
         this.username = username;
-}
+    }
 
     public String getUsername() {
         return this.username;
@@ -140,21 +157,17 @@ public class HandleClient implements Runnable{
      * Runs the server and game logic.
      */
     public void run() {
-        alive = true;
+        setAlive(false);
+        accepted = false;
+        setClientID(threadID);
 
-        Runnable helloRunnable = new Runnable() {
-            //TODO: Implement alive communications
-            public void run() {
-                System.out.println("Test 5 seconds");
-            }
-        };
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(helloRunnable, 5, 5, TimeUnit.SECONDS);
+        //send protocol version to client
+        writeTo(getClientID(), messageCreator.generateHelloClientMessage(server.getProtocolVersion()));
 
         try {
             String username ="";
 
-            while (username == "") {
+            /*while (username == "") {
                 if(JsonSerializer.deserializeJson(in.readUTF(), Message.class).getMessageType() == MessageType.PlayerValues) {
                     username = JsonSerializer.deserializeJson(in.readUTF(), Message.class).getMessageBody().getName();
                     if (!containsName(server.CLIENTS, username)) {
@@ -164,20 +177,62 @@ public class HandleClient implements Runnable{
                         username = "";
                     }
                 }
-            }
+            }*/
 
-                //Thread needs to sleep so that the chat form can load and the user sees his welcome message
-                Thread.sleep(1000);
-                //welcome message to server
-                String message = this.username +  " has entered the chat";
-                try {
-                    server.messages.put(message);
-                } catch (InterruptedException e) {
-                    System.out.println(e.getMessage());
-                }
+            //Thread needs to sleep so that the chat form can load and the user sees his welcome message
+            /*Thread.sleep(1000);
+            //welcome message to server
+            String message = this.username +  " has entered the chat";
+            try {
+                server.messages.put(message);
+            } catch (InterruptedException e) {
+                System.out.println(e.getMessage());
+            }*/
 
             String line = "";
-            while (alive) {
+
+            //Accept client if his protocol version is correct
+            while(!accepted) {
+                Message incomingMessage = JsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
+                try {
+                    if (incomingMessage.getMessageType() == MessageType.HelloServer) {
+                        if(incomingMessage.getMessageBody().getProtocol().equals(server.getProtocolVersion())){
+                            accepted = true;
+                            writeTo(clientID, messageCreator.generateWelcomeMessage(clientID));
+                        } else{
+                            //TODO message for client, that its version is not compatible
+                            System.out.println("Client version is not correct: "
+                                    +incomingMessage.getMessageBody().getProtocol()
+                                    + " but it should be: "+server.getProtocolVersion());
+                        }
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            Runnable sendAliveMessages = new Runnable() {
+                public void run() {
+                    while(!exit) {
+                        try {
+                            aliveMessage(clientID);
+                            Thread.sleep(5000);
+                            if (isAlive() == true) {
+                                setAlive(false);
+                            } else {
+                                closeConnection();
+                                exit = true;
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+            };
+            ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+            executor.scheduleAtFixedRate(sendAliveMessages, 5, 5, TimeUnit.SECONDS);
+
+            while (accepted) {
                 Message incomingMessage = JsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
                 try {
                     if (incomingMessage.getMessageType() == MessageType.SendChat && incomingMessage.getMessageBody().getTo() == -1) {
@@ -191,23 +246,33 @@ public class HandleClient implements Runnable{
                         if (server.CLIENTS.containsKey(incomingMessage.getMessageBody().getTo())) {
                             writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);
                         }
+                    } else if (incomingMessage.getMessageType() == MessageType.Alive) {
+                        System.out.println("ClientID "+threadID + " is alive");
+                        setAlive(true);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     System.out.println(this.username);
                 }
             }
-            String goodbyeMessage = "Server: " + this.username + " has left the chat!";
-            server.players.remove(threadID);
+        } catch (Exception e) {
+            //System.out.println("Client disconnected");
+        }
+    }
+    private void closeConnection(){
+        try {
+            String goodbyeMessage = "Server: " + this.threadID + " has left the chat!";
+            System.out.println(goodbyeMessage);
             server.messages.put(goodbyeMessage);
-
+            server.players.remove(threadID);
             server.CLIENTS.remove(threadID);
             this.in.close();
             this.out.close();
             socket.close();
         } catch (Exception e) {
-            System.out.println("Client disconnected");
+            System.out.println("Error while closing Connection" + e.getMessage());
         }
+
     }
 
     public int getClientID() {

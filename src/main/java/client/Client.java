@@ -97,13 +97,16 @@ public class Client {
                         try {
                             Message message = JsonSerializer.deserializeJson(in.readUTF(), Message.class);
                             if(message.getMessageType().equals(MessageType.Alive)){
+                                System.out.println("client alive");
                                 sendAliveMessage();
                             }
                             if(message.getMessageType().equals(MessageType.HelloClient)){
+                                System.out.println(message.getMessageBody().getProtocol());
                                 sendHelloServerMessage(group, isAI, protocolVersion);
                             }
                             if(message.getMessageType().equals(MessageType.Welcome)){
                                 clientID = message.getMessageBody().getClientID();
+                                System.out.println("This is my ID: "+clientID);
                             }
                             if(message.getMessageType().equals(MessageType.PlayerAdded)){
                                 otherPlayers.add(new Triplet<>(message.getMessageBody().getClientID(),
