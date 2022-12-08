@@ -4,6 +4,7 @@ import client.RoboRallyStart;
 import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
@@ -79,6 +80,7 @@ public class ViewModelLobby {
         this.userList = new ListView<>(users);
         this.mapList = new ListView<>(maps);
 
+        Platform.runLater(() -> chatTextfield.requestFocus());
         chatVBox.heightProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -129,6 +131,7 @@ public class ViewModelLobby {
         chatVBox.getChildren().add(hBox);
 
         chatTextfield.clear();
+        chatTextfield.requestFocus();
     }
 
     public void readyButtonOnAction() throws IOException {
@@ -144,6 +147,15 @@ public class ViewModelLobby {
         }
 
         RoboRallyStart.switchScene("login.fxml");
+
+        //resource is null
+        /*
+        FXMLLoader loader = FXMLLoader.load(getClass().getResource("lobby.fxml"));
+        Parent root = loader.load();
+        Stage currentStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        currentStage.setScene(new Scene(root, 1650, 1000));
+        currentStage.show();
+        */;
     }
 
     public void exit() throws IOException {
@@ -160,19 +172,4 @@ public class ViewModelLobby {
         String map = mapItem1.getText();
         //map is Dizzy Highway
     }
-
-    public void ButtonOnAction(ActionEvent event) throws IOException {
-        RoboRallyStart.switchScene("robotselection.fxml");
-
-
-        //resource is null
-        /*
-        FXMLLoader loader = FXMLLoader.load(getClass().getResource("lobby.fxml"));
-        Parent root = loader.load();
-        Stage currentStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        currentStage.setScene(new Scene(root, 1650, 1000));
-        currentStage.show();
-        */;
-    }
-
 }

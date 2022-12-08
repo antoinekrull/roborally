@@ -24,7 +24,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * Client Class
  * Communicating with Server and chat to send and receive messages from server and puts messages on chat.
- * Therefore putting incoming messages to LinkedBlockingQueue and reading from it.
+ * Therefor putting incoming messages to LinkedBlockingQueue and reading from it.
  *
  * @author Antoine, Dominik, Tobias
  * @version 0.1

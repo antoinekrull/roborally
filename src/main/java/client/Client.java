@@ -25,7 +25,7 @@ import org.javatuples.Triplet;
 /**
  * Client Class
  * Communicating with Server and chat to send and receive messages from server and puts messages on chat.
- * Therefore putting incoming messages to LinkedBlockingQueue and reading from it.
+ * Therefor putting incoming messages to LinkedBlockingQueue and reading from it.
  */
 
 public class Client {
