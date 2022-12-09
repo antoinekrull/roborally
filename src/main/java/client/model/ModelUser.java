@@ -2,6 +2,8 @@ package client.model;
 
 import client.connection.Client;
 import client.connection.ClientService;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -15,6 +17,7 @@ import javafx.beans.property.StringProperty;
 public class ModelUser {
 
     private static ModelUser modelUser;
+    private BooleanProperty connected;
 
     private String username;
     private int userID;
@@ -24,6 +27,8 @@ public class ModelUser {
 
     private ModelUser() {
         client = Client.getInstance();
+        connected = new SimpleBooleanProperty();
+        connected.bind(client.connectedProperty());
         usernameProperty = new SimpleStringProperty("");
     }
 
@@ -41,6 +46,9 @@ public class ModelUser {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public boolean getConnection() { return this.connected.get(); }
+    public void reconnect() {client.reconnect();}
 
     public int getUserID() {
         return userID;

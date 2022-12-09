@@ -247,7 +247,6 @@ public class HandleClient implements Runnable{
                             writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
-                        System.out.println("ClientID "+threadID + " is alive");
                         setAlive(true);
                     }
                 } catch (Exception e) {

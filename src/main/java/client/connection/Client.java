@@ -4,6 +4,8 @@ import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.javatuples.Pair;
@@ -16,7 +18,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
-
 
 /**
  *
@@ -35,6 +36,7 @@ public class Client {
     private Socket socket = null;
     private DataInputStream in = null;
     private DataOutputStream out = null;
+    private BooleanProperty connected;
     private final LinkedBlockingQueue<String> MESSAGES;
     private StringProperty message;
     MessageCreator messageCreator;
@@ -57,15 +59,9 @@ public class Client {
         messageCreator = new MessageCreator();
         notifyChangeSupport = NotifyChangeSupport.getInstance();
 
-        try {
-            socket = new Socket(address, port);
-            in = new DataInputStream(
-                    new BufferedInputStream(socket.getInputStream()));
-            out = new DataOutputStream(socket.getOutputStream());
+        connected = new SimpleBooleanProperty();
 
-        } catch (Exception e) {
-            //TODO: create error message to close window because there is no connection to server
-        }
+        connectServer();
 
         message = new SimpleStringProperty("");
         message.addListener((observable, oldValue, newValue) -> {
@@ -86,7 +82,6 @@ public class Client {
     public StringProperty messageProperty() {
         return message;
     }
-
 
     //public void sendUsernameToServer(String username) {
     //    try {
@@ -117,11 +112,11 @@ public class Client {
                     while (socket.isConnected()) {
                         try {
                             Message message = JsonSerializer.deserializeJson(in.readUTF(), Message.class);
-                            System.out.println("helloooo");
                             if(message.getMessageType().equals(MessageType.Alive)){
                                 sendAliveMessage();
                             }
                             if(message.getMessageType().equals(MessageType.HelloClient)){
+                                System.out.println(message.getMessageBody().getProtocol());
                                 sendHelloServerMessage(group, isAI, protocolVersion);
                             }
                             if(message.getMessageType().equals(MessageType.Welcome)){
@@ -220,7 +215,6 @@ public class Client {
         sendMessageToServer(messageCreator.generateSendChatMessage(message, clientID));
     }
     public void sendGroupMessage(String message){
-        System.out.println("Message send");
         sendMessageToServer(messageCreator.generateSendChatMessage(message));
     }
 
@@ -249,6 +243,33 @@ public class Client {
         readMessageToClientChat();
     }
     */
+    private void connectServer() {
+        if (!connected.get()) {
+            try {
+                socket = new Socket(address, port);
+                in = new DataInputStream(
+                        new BufferedInputStream(socket.getInputStream()));
+                out = new DataOutputStream(socket.getOutputStream());
+                connected.set(true);
+                ReadMessagesFromServer server = new ReadMessagesFromServer(socket);
+                new Thread(server).start();
+            } catch (Exception e) {
+                socket = null;
+                in = null;
+                out = null;
+            }
+        }
+    }
+    public void reconnect() {
+        if (!connected.get()) {
+            connectServer();
+        }
+    }
+
+
+    public BooleanProperty connectedProperty() {
+        return connected;
+    }
 }
 
 
