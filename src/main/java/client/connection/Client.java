@@ -256,6 +256,11 @@ public class Client {
             }
         }
     }
+    public void reconnect() {
+        if (!connected.get()) {
+            connectServer();
+        }
+    }
 
 
     public BooleanProperty connectedProperty() {

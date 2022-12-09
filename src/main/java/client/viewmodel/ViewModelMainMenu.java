@@ -34,7 +34,8 @@ public class ViewModelMainMenu {
         if (modelUser.getConnection()){
             RoboRallyStart.switchScene("lobby.fxml");
         }else {
-            //TODO: Create label in menu to display that the user is not connected
+            //TODO: show in menu that user is not connected or is no connected if reconnect works
+           modelUser.reconnect();
         }
     }
 

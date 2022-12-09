@@ -48,6 +48,7 @@ public class ModelUser {
     }
 
     public boolean getConnection() { return this.connected.get(); }
+    public void reconnect() {client.reconnect();}
 
     public int getUserID() {
         return userID;
