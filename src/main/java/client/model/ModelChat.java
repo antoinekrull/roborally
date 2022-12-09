@@ -20,9 +20,9 @@ public class ModelChat {
 
     private StringProperty textfieldProperty;
 
-    private StringProperty clientMessage;
+    private StringProperty groupMessage;
 
-    private LinkedBlockingQueue<String> messages;
+    private final LinkedBlockingQueue<String> MESSSAGES;
 
     private NotifyChangeSupport notifyChangeSupport;
 
@@ -31,19 +31,19 @@ public class ModelChat {
 
     private ModelChat() {
         client = Client.getInstance();
-        notifyChangeSupport = new NotifyChangeSupport();
-        clientMessage = new SimpleStringProperty("");
-        this.messages = new LinkedBlockingQueue<>();
+        notifyChangeSupport = NotifyChangeSupport.getInstance();
+        groupMessage = new SimpleStringProperty("");
+        this.MESSSAGES = new LinkedBlockingQueue<>();
         textfieldProperty = new SimpleStringProperty("");
-        clientMessage.addListener((observable, oldValue, newValue) -> {
+        groupMessage.addListener((observable, oldValue, newValue) -> {
             try {
-                messages.put(clientMessage.get());
+                MESSSAGES.put(groupMessage.get());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             notifyChangeSupport.notifyInstance();
         });
-        clientMessage.bind(client.messageProperty());
+        groupMessage.bind(client.messageProperty());
     }
 
     public static ModelChat getInstance() {
@@ -62,14 +62,18 @@ public class ModelChat {
 
     public void putMessage(String message) {
         try {
-            this.messages.put(message);
+            this.MESSSAGES.put(message);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
     public LinkedBlockingQueue<String> getMessages() {
-        return messages;
+        return MESSSAGES;
+    }
+
+    public void sendMessage(int userID) {
+        client.sendGroupMessage(textfieldProperty.get());
     }
 
     /*public void sendMessage(int userID) {

@@ -118,7 +118,7 @@ public class ViewModelLobby {
 
     public void chatButtonOnAction() {
         int userID = modelUser.getUserID();
-        //modelChat.sendMessage(userID);
+        modelChat.sendMessage(userID);
 
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);

@@ -11,12 +11,34 @@ import client.viewmodel.ViewModelLobby;
  */
 public class NotifyChangeSupport {
 
+    private static NotifyChangeSupport notifyChangeSupport;
+
     ViewModelGameWindow viewModelGameWindow;
     ViewModelLobby viewModelLobby;
 
-    Boolean lobby;
-    Boolean gamewindow;
+    private Boolean lobby;
+    private Boolean gamewindow;
 
+    private NotifyChangeSupport() {
+
+    }
+    public static NotifyChangeSupport getInstance() {
+        if (notifyChangeSupport == null) {
+            notifyChangeSupport = new NotifyChangeSupport();
+        }
+        return notifyChangeSupport;
+    }
+
+    public void setBoolean(String instance) {
+        if(instance.equals("ViewModelLobby")) {
+            gamewindow = false;
+            lobby = true;
+        }
+        if(instance.equals("ViewModelGameWindow")) {
+            lobby = false;
+            gamewindow = true;
+        }
+    }
     public void notifyInstance() {
         if (lobby) {
             viewModelLobby.messageToChat();
@@ -24,10 +46,5 @@ public class NotifyChangeSupport {
         if (gamewindow) {
             viewModelGameWindow.messageToChat();
         }
-    }
-
-    public void setBoolean(Boolean instance1, Boolean instance2) {
-        this.lobby = instance1;
-        this.gamewindow = instance2;
     }
 }

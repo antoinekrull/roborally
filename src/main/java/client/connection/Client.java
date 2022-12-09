@@ -1,14 +1,11 @@
 package client.connection;
 
-import client.Controller;
-import client.model.ModelChat;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
@@ -19,6 +16,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
+
 
 /**
  *
@@ -39,8 +37,8 @@ public class Client {
     private DataOutputStream out = null;
     private final LinkedBlockingQueue<String> MESSAGES;
     private StringProperty message;
-    private NotifyChangeSupport notifyChangeSupport;
     MessageCreator messageCreator;
+    private NotifyChangeSupport notifyChangeSupport;
     private String name = "";
     private boolean accessible = false;
     String address = "localhost";
@@ -57,6 +55,7 @@ public class Client {
 
         this.MESSAGES = new LinkedBlockingQueue<>();
         messageCreator = new MessageCreator();
+        notifyChangeSupport = NotifyChangeSupport.getInstance();
 
         try {
             socket = new Socket(address, port);
@@ -70,7 +69,6 @@ public class Client {
 
         message = new SimpleStringProperty("");
         message.addListener((observable, oldValue, newValue) -> {
-            ModelChat.getInstance().putMessage(newValue);
             notifyChangeSupport.notifyInstance();
         });
 
@@ -88,6 +86,7 @@ public class Client {
     public StringProperty messageProperty() {
         return message;
     }
+
 
     //public void sendUsernameToServer(String username) {
     //    try {
@@ -118,6 +117,7 @@ public class Client {
                     while (socket.isConnected()) {
                         try {
                             Message message = JsonSerializer.deserializeJson(in.readUTF(), Message.class);
+                            System.out.println("helloooo");
                             if(message.getMessageType().equals(MessageType.Alive)){
                                 sendAliveMessage();
                             }
@@ -137,7 +137,8 @@ public class Client {
                                         message.getMessageBody().isReady()));
                             }
                             if(message.getMessageType().equals(MessageType.ReceivedChat)){
-                                MESSAGES.put(message.getMessageBody().getMessage());
+                                //MESSAGES.put(message.getMessageBody().getMessage())
+                                Client.this.setName(message.getMessageBody().getMessage());
                             }
                             if(message.getMessageType().equals(MessageType.Error)){
                                 System.out.println(message.getMessageBody().getMessage());
@@ -182,6 +183,7 @@ public class Client {
 
     }
 
+    /*
     public void readMessageToClientChat() {
         new Thread(new Runnable() {
             @Override
@@ -199,6 +201,8 @@ public class Client {
             }
         }).start();
     }
+    */
+
     //maybe are these methods redundant, but they are kept until everything is implemented for them to be there
     public void sendAliveMessage(){
         sendMessageToServer(messageCreator.generateAliveMessage());
@@ -216,6 +220,7 @@ public class Client {
         sendMessageToServer(messageCreator.generateSendChatMessage(message, clientID));
     }
     public void sendGroupMessage(String message){
+        System.out.println("Message send");
         sendMessageToServer(messageCreator.generateSendChatMessage(message));
     }
 
@@ -238,10 +243,12 @@ public class Client {
         }
     }
 
+    /*
     public void enterChat(Boolean state) {
         accessible = state;
         readMessageToClientChat();
     }
+    */
 }
 
 
