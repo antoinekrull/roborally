@@ -11,7 +11,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -57,7 +56,11 @@ public class ViewModelLobby {
     @FXML
     private ListView<String> userList;
     @FXML
-    private ListView<String> mapList;
+    private ChoiceBox<String> mapsChoiceBox;
+    @FXML
+    private ChoiceBox<String> usersChoiceBox;
+    @FXML
+    private Button userButton;
 
     private BooleanProperty ready;
     private ModelChat modelChat;
@@ -67,18 +70,19 @@ public class ViewModelLobby {
     public ViewModelLobby() {
         modelChat = ModelChat.getInstance();
         modelUser = ModelUser.getInstance();
-        modelGame = ModelGame.getInstance();;
+        modelGame = ModelGame.getInstance();
     }
 
     public void initialize() {
         this.ready = new SimpleBooleanProperty();
+        this.userList.setItems(modelGame.getUsers());
+        this.usersChoiceBox.setValue(modelGame.getUsers().get(0));
+        this.mapsChoiceBox.setValue(modelGame.getMaps().get(0));
+        this.usersChoiceBox.setItems(modelGame.getUsers());
+        this.mapsChoiceBox.setItems(modelGame.getMaps());
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
         ready.bindBidirectional(modelGame.readyToPlayProperty());
-        ObservableList<String> users = FXCollections.observableArrayList(modelGame.getUsers());
-        ObservableList<String> maps = FXCollections.observableArrayList(modelGame.getMaps());
-        this.userList = new ListView<>(users);
-        this.mapList = new ListView<>(maps);
 
         Platform.runLater(() -> chatTextfield.requestFocus());
         chatVBox.heightProperty().addListener(new ChangeListener<Number>() {
@@ -99,7 +103,7 @@ public class ViewModelLobby {
 
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new Insets(5,5,5,10));
+        hBox.setPadding(new Insets(5, 5, 5, 10));
 
         Text text = new Text(message);
         TextFlow textFlow = new TextFlow(text);
@@ -118,12 +122,12 @@ public class ViewModelLobby {
 
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new Insets(5,5,5,10));
+        hBox.setPadding(new Insets(5, 5, 5, 10));
 
         Text text = new Text(chatTextfield.getText());
         TextFlow textFlow = new TextFlow(text);
         textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
-                    "fx-background-radius: 40px; -fx-opacity: 100;");
+                "fx-background-radius: 40px; -fx-opacity: 100;");
         textFlow.setPadding(new Insets(5, 10, 5, 10));
         text.setFill(Color.color(0.934, 0.945, 0.996));
 
@@ -155,7 +159,8 @@ public class ViewModelLobby {
         Stage currentStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
         currentStage.setScene(new Scene(root, 1650, 1000));
         currentStage.show();
-        */;
+        */
+        ;
     }
 
     public void exit() throws IOException {

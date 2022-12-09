@@ -2,11 +2,11 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
@@ -53,20 +53,15 @@
                                 <RowConstraints maxHeight="139.0" minHeight="10.0" prefHeight="111.0" valignment="CENTER" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <Button fx:id="readyButton" mnemonicParsing="false" onAction="#readyButtonOnAction" text="Ready" GridPane.rowIndex="1">
+                                <Button fx:id="readyButton" mnemonicParsing="false" onAction="#readyButtonOnAction" prefHeight="26.0" prefWidth="95.0" text="Ready" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets bottom="20.0" />
                            </GridPane.margin></Button>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
-                              <MenuButton fx:id="chatMenuButton" mnemonicParsing="false" prefHeight="26.0" prefWidth="115.0" text="MenuButton">
-                                <items>
-                                  <MenuItem mnemonicParsing="false" text="Action 1" />
-                                  <MenuItem mnemonicParsing="false" text="Action 2" />
-                                </items>
-                              </MenuButton>
+                              <ChoiceBox fx:id="usersChoiceBox" prefHeight="26.0" prefWidth="113.0" />
                               <TextField fx:id="chatTextfield" prefHeight="26.0" prefWidth="386.0" />
-                              <Button fx:id="chatButton" onAction="#chatButtonOnAction" mnemonicParsing="false" prefHeight="26.0" prefWidth="75.0" text="Send" />
+                              <Button fx:id="chatButton" mnemonicParsing="false" onAction="#chatButtonOnAction" prefHeight="26.0" prefWidth="75.0" text="Send" />
                            </children>
                         </HBox>
                             </children>
@@ -77,13 +72,7 @@
                         <Insets bottom="5.0" />
                      </GridPane.margin>
                         </GridPane>
-                        <MenuButton mnemonicParsing="false" text="Select Map" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                            <items>
-                                <MenuItem fx:id="mapItem1" mnemonicParsing="false" onAction="#setMap" text="Dizzy Highway"  />
-                                <MenuItem mnemonicParsing="false" text="KackJavaFX" />
-                            </items>
-                        </MenuButton>
-                  <ListView fx:id="userLIst" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                  <ListView fx:id="userList" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
                   <Pane fx:id="chatPane" prefHeight="200.0" prefWidth="200.0">
                      <children>
                         <ScrollPane fx:id="chatScrollPane" prefHeight="${chatPane.height}" prefWidth="${chatPane.width}" vbarPolicy="ALWAYS">
@@ -93,6 +82,7 @@
                         </ScrollPane>
                      </children>
                   </Pane>
+                  <ChoiceBox fx:id="mapsChoiceBox" prefHeight="26.0" prefWidth="213.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     </children>
                 </GridPane>
             </center>

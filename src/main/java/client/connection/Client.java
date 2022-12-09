@@ -44,7 +44,7 @@ public class Client {
     private String name = "";
     private boolean accessible = false;
     String address = "localhost";
-    int port = 4000;
+    int port = 3000;
 
     private String protocolVersion = "Version 0.1";
     private String group = "KnorrigeKorrelate";

@@ -31,9 +31,6 @@ public class ViewModelMainMenu {
     }
 
     public void joinButtonOnAction() throws IOException {
-        //start client
-        //modelUser = ModelUser.getInstance();
-
         //establish connection
 
         //if connected
