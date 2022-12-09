@@ -6,14 +6,19 @@ import game.robot.Robot;
  * @version 1.0
  */
 public class ConveyorBeltTile extends Tile{
-    public int velocity;
-    public Direction direction;
+    private int velocity;
+    private Direction direction;
     public ConveyorBeltTile(int velocity, Direction direction) {
-        setDanger(false);
-        setBlocking(false);
+        isDanger = false;
+        isBlocking = false;
         this.velocity = velocity;
         this.direction = direction;
     }
+
+    public int getVelocity() { return velocity; }
+    public void setVelocity(int velocity) { this.velocity = velocity; }
+    public Direction getDirection() { return direction; }
+    public void setDirection(Direction direction) { this.direction = direction; }
 
     @Override
     public void applyEffect(Robot robot) throws Exception {

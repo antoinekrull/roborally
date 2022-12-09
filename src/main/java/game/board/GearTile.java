@@ -9,8 +9,8 @@ import game.robot.Robot;
 public class GearTile extends Tile{
     private RotationType rotationType;
     public GearTile() {
-        setDanger(false);
-        setBlocking(false);
+        isDanger = false;
+        isBlocking = false;
     }
     public void setRotationType(RotationType rotationType) {
         this.rotationType = rotationType;

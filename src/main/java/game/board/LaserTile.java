@@ -8,20 +8,20 @@ import game.robot.Robot;
  */
 public class LaserTile extends Tile{
     private Direction los;
+    private int rebootTileIndex;
+
+    public LaserTile(Direction los) {
+        isDanger = true;
+        isBlocking = false;
+        this.los = los;
+    }
+
     public int getRebootTileIndex() {
         return rebootTileIndex;
     }
     public void setRebootTileIndex(int rebootTileIndex) {
         this.rebootTileIndex = rebootTileIndex;
     }
-    private int rebootTileIndex;
-
-    public LaserTile(Direction los) {
-        setDanger(true);
-        setBlocking(false);
-        setLos(los);
-    }
-
     public Direction getLos() {
         return los;
     }
