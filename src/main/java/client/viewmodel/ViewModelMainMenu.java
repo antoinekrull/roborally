@@ -27,17 +27,15 @@ public class ViewModelMainMenu {
     private ModelUser modelUser;
 
     public ViewModelMainMenu() {
-
+        modelUser = ModelUser.getInstance();
     }
 
     public void joinButtonOnAction() throws IOException {
-        //start client
-        //modelUser = ModelUser.getInstance();
-
-        //establish connection
-
-        //if connected
-        RoboRallyStart.switchScene("lobby.fxml");
+        if (modelUser.getConnection()){
+            RoboRallyStart.switchScene("lobby.fxml");
+        }else {
+            //TODO: Create label in menu to display that the user is not connected
+        }
     }
 
     public void helpButtonOnAction() {
@@ -46,6 +44,7 @@ public class ViewModelMainMenu {
 
     public void exitButtonOnAction() {
         Stage stage = (Stage) exitButton.getScene().getWindow();
+        //TODO: close application not only window
         stage.close();
     }
 
