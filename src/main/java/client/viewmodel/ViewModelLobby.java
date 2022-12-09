@@ -164,9 +164,9 @@ public class ViewModelLobby {
     }
 
     public void exit() throws IOException {
-        //send notification to server: disconnect
-        Stage stage = (Stage) leaveButton.getScene().getWindow();
-        stage.close();
+        //send disconnect notification to server
+        Platform.exit();
+        System.exit(0);
     }
 
     public void help() {

@@ -3,8 +3,10 @@ package client.viewmodel;
 import client.RoboRallyStart;
 import client.connection.NotifyChangeSupport;
 import client.model.ModelUser;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -24,6 +26,8 @@ public class ViewModelMainMenu {
     private Button helpButton;
     @FXML
     private Button exitButton;
+    @FXML
+    private Label statusLabel;
 
     private ModelUser modelUser;
 
@@ -39,7 +43,12 @@ public class ViewModelMainMenu {
             RoboRallyStart.switchScene("lobby.fxml");
         }else {
             //TODO: show in menu that user is not connected or is no connected if reconnect works
+           statusLabel.setText("Connection failed. Please try again.");
            modelUser.reconnect();
+           if(modelUser.getConnection()) {
+               statusLabel.setText("Connection successful");
+               RoboRallyStart.switchScene("lobby.fxml");
+           }
         }
     }
 
@@ -48,9 +57,9 @@ public class ViewModelMainMenu {
     }
 
     public void exitButtonOnAction() {
-        Stage stage = (Stage) exitButton.getScene().getWindow();
-        //TODO: close application not only window
-        stage.close();
+        //send disconnect notification to server
+        Platform.exit();
+        System.exit(0);
     }
 
 }
