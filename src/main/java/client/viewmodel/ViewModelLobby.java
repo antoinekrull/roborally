@@ -84,7 +84,6 @@ public class ViewModelLobby {
         modelGame = ModelGame.getInstance();
         this.notifyChangeSupport = NotifyChangeSupport.getInstance();
         notifyChangeSupport.setViewModelLobby(this);
-        notifyChangeSupport.setBoolean("ViewModelLobby");
     }
 
     public void initialize() {

@@ -53,7 +53,6 @@ public class ViewModelGameWindow {
         this.modelUser = ModelUser.getInstance();
         this.notifyChangeSupport = NotifyChangeSupport.getInstance();
         notifyChangeSupport.setViewModelGameWindow(this);
-        notifyChangeSupport.setBoolean("ViewModelGameWindow");
     }
 
     public void initialize() {
