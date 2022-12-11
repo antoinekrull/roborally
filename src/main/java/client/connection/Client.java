@@ -1,8 +1,5 @@
 package client.connection;
 
-import client.Controller;
-import client.model.ModelChat;
-import client.model.ModelUser;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
@@ -11,7 +8,6 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
@@ -27,7 +23,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  *
  * Client Class
  * Communicating with Server and chat to send and receive messages from server and puts messages on chat.
- * Therefore putting incoming messages to LinkedBlockingQueue and reading from it.
+ * Therefor putting incoming messages to LinkedBlockingQueue and reading from it.
  *
  * @author Antoine, Dominik, Tobias
  * @version 0.1
@@ -43,8 +39,8 @@ public class Client {
     private BooleanProperty connected;
     private final LinkedBlockingQueue<String> MESSAGES;
     private StringProperty message;
-    private NotifyChangeSupport notifyChangeSupport;
     MessageCreator messageCreator;
+    private NotifyChangeSupport notifyChangeSupport;
     private String name = "";
     private boolean accessible = false;
     String address = "localhost";
@@ -61,6 +57,7 @@ public class Client {
 
         this.MESSAGES = new LinkedBlockingQueue<>();
         messageCreator = new MessageCreator();
+        notifyChangeSupport = NotifyChangeSupport.getInstance();
 
         connected = new SimpleBooleanProperty();
 
@@ -68,10 +65,8 @@ public class Client {
 
         message = new SimpleStringProperty("");
         message.addListener((observable, oldValue, newValue) -> {
-            ModelChat.getInstance().putMessage(newValue);
             notifyChangeSupport.notifyInstance();
         });
-
     }
 
     public static Client getInstance() {
@@ -134,7 +129,8 @@ public class Client {
                                         message.getMessageBody().isReady()));
                             }
                             if(message.getMessageType().equals(MessageType.ReceivedChat)){
-                                MESSAGES.put(message.getMessageBody().getMessage());
+                                //MESSAGES.put(message.getMessageBody().getMessage())
+                                Client.this.setName(message.getMessageBody().getMessage());
                             }
                             if(message.getMessageType().equals(MessageType.Error)){
                                 System.out.println(message.getMessageBody().getMessage());
@@ -179,6 +175,7 @@ public class Client {
 
     }
 
+    /*
     public void readMessageToClientChat() {
         new Thread(new Runnable() {
             @Override
@@ -196,6 +193,8 @@ public class Client {
             }
         }).start();
     }
+    */
+
     //maybe are these methods redundant, but they are kept until everything is implemented for them to be there
     public void sendAliveMessage(){
         sendMessageToServer(messageCreator.generateAliveMessage());
@@ -235,10 +234,12 @@ public class Client {
         }
     }
 
+    /*
     public void enterChat(Boolean state) {
         accessible = state;
         readMessageToClientChat();
     }
+    */
     private void connectServer() {
         if (!connected.get()) {
             try {

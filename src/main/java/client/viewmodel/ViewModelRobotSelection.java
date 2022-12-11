@@ -1,6 +1,7 @@
 package client.viewmodel;
 
 import client.RoboRallyStart;
+import client.connection.NotifyChangeSupport;
 import client.model.ModelGame;
 import client.model.ModelUser;
 import javafx.fxml.FXML;
@@ -30,9 +31,12 @@ public class ViewModelRobotSelection {
     private ModelUser modelUser;
     private ModelGame modelGame;
 
+    private NotifyChangeSupport notifyChangeSupport;
+
     public ViewModelRobotSelection() {
         this.modelUser = ModelUser.getInstance();
         this.modelGame = ModelGame.getInstance();
+        notifyChangeSupport = NotifyChangeSupport.getInstance();
     }
 
     public void initialize() {
@@ -53,6 +57,7 @@ public class ViewModelRobotSelection {
         if (!robot.isEmpty() && !username.isEmpty()) {
             //modelUser.sendUsername();
             //modelGame.sendRobotSelection(userID);
+            notifyChangeSupport.setBoolean("ViewModelGameWindow");
             RoboRallyStart.switchScene("gamewindow.fxml");
         }
     }

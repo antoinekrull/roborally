@@ -4,13 +4,16 @@ import client.RoboRallyStart;
 import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -21,8 +24,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * ViewModel for lobby including chat and leaving
@@ -56,7 +62,13 @@ public class ViewModelLobby {
     @FXML
     private ListView<String> userList;
     @FXML
-    private ListView<String> mapList;
+    private ChoiceBox<String> mapsChoiceBox;
+    @FXML
+    private ChoiceBox<String> usersChoiceBox;
+    @FXML
+    private Button userButton;
+    @FXML
+    private Label timeLabel;
 
     private BooleanProperty ready;
     private ModelChat modelChat;
@@ -66,19 +78,21 @@ public class ViewModelLobby {
     public ViewModelLobby() {
         modelChat = ModelChat.getInstance();
         modelUser = ModelUser.getInstance();
-        modelGame = ModelGame.getInstance();;
+        modelGame = ModelGame.getInstance();
     }
 
     public void initialize() {
         this.ready = new SimpleBooleanProperty();
+        this.userList.setItems(modelGame.getUsers());
+        this.usersChoiceBox.setValue(modelGame.getUsers().get(0));
+        this.mapsChoiceBox.setValue(modelGame.getMaps().get(0));
+        this.usersChoiceBox.setItems(modelGame.getUsers());
+        this.mapsChoiceBox.setItems(modelGame.getMaps());
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
         ready.bindBidirectional(modelGame.readyToPlayProperty());
-        ObservableList<String> users = FXCollections.observableArrayList(modelGame.getUsers());
-        ObservableList<String> maps = FXCollections.observableArrayList(modelGame.getMaps());
-        this.userList = new ListView<>(users);
-        this.mapList = new ListView<>(maps);
 
+        Platform.runLater(() -> chatTextfield.requestFocus());
         chatVBox.heightProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -97,7 +111,7 @@ public class ViewModelLobby {
 
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new Insets(5,5,5,10));
+        hBox.setPadding(new Insets(5, 5, 5, 10));
 
         Text text = new Text(message);
         TextFlow textFlow = new TextFlow(text);
@@ -112,16 +126,16 @@ public class ViewModelLobby {
 
     public void chatButtonOnAction() {
         int userID = modelUser.getUserID();
-        //modelChat.sendMessage(userID);
+        modelChat.sendMessage(userID);
 
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new Insets(5,5,5,10));
+        hBox.setPadding(new Insets(5, 5, 5, 10));
 
         Text text = new Text(chatTextfield.getText());
         TextFlow textFlow = new TextFlow(text);
         textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
-                    "fx-background-radius: 40px; -fx-opacity: 100;");
+                "fx-background-radius: 40px; -fx-opacity: 100;");
         textFlow.setPadding(new Insets(5, 10, 5, 10));
         text.setFill(Color.color(0.934, 0.945, 0.996));
 
@@ -129,6 +143,7 @@ public class ViewModelLobby {
         chatVBox.getChildren().add(hBox);
 
         chatTextfield.clear();
+        chatTextfield.requestFocus();
     }
 
     public void readyButtonOnAction() throws IOException {
@@ -136,6 +151,25 @@ public class ViewModelLobby {
             readyButton.setText("Not ready");
             this.ready.set(true);
             modelGame.setPlayerStatus(modelUser.getUserID());
+            long endTime = 2000;
+            DateFormat timeFormat = new SimpleDateFormat( "HH:mm:ss" );
+            final Timeline timeline = new Timeline(
+                    new KeyFrame(
+                            Duration.millis(500),
+                            event -> {
+                                final long diff = endTime - System.currentTimeMillis();
+                                if (diff < 0) {
+                                    //  timeLabel.setText("00:00:00");
+                                    timeLabel.setText(timeFormat.format(0));
+                                } else {
+                                    timeLabel.setText(timeFormat.format(diff));
+                                }
+                            }
+                    )
+            );
+            timeline.setCycleCount(Animation.INDEFINITE);
+            timeline.play();
+            RoboRallyStart.switchScene("login.fxml");
         }
         if (readyButton.getText().equals("Not ready")) {
             readyButton.setText("Ready");
@@ -143,13 +177,21 @@ public class ViewModelLobby {
             modelGame.setPlayerStatus(modelUser.getUserID());
         }
 
-        RoboRallyStart.switchScene("login.fxml");
+        //resource is null
+        /*
+        FXMLLoader loader = FXMLLoader.load(getClass().getResource("lobby.fxml"));
+        Parent root = loader.load();
+        Stage currentStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        currentStage.setScene(new Scene(root, 1650, 1000));
+        currentStage.show();
+        */
+        ;
     }
 
     public void exit() throws IOException {
-        //send notification to server: disconnect
-        Stage stage = (Stage) leaveButton.getScene().getWindow();
-        stage.close();
+        //send disconnect notification to server
+        Platform.exit();
+        System.exit(0);
     }
 
     public void help() {
@@ -160,19 +202,4 @@ public class ViewModelLobby {
         String map = mapItem1.getText();
         //map is Dizzy Highway
     }
-
-    public void ButtonOnAction(ActionEvent event) throws IOException {
-        RoboRallyStart.switchScene("robotselection.fxml");
-
-
-        //resource is null
-        /*
-        FXMLLoader loader = FXMLLoader.load(getClass().getResource("lobby.fxml"));
-        Parent root = loader.load();
-        Stage currentStage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        currentStage.setScene(new Scene(root, 1650, 1000));
-        currentStage.show();
-        */;
-    }
-
 }
