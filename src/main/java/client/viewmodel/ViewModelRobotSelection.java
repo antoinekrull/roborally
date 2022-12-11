@@ -57,7 +57,6 @@ public class ViewModelRobotSelection {
         if (!robot.isEmpty() && !username.isEmpty()) {
             //modelUser.sendUsername();
             //modelGame.sendRobotSelection(userID);
-            notifyChangeSupport.setBoolean("ViewModelGameWindow");
             RoboRallyStart.switchScene("gamewindow.fxml");
         }
     }

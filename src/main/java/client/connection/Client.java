@@ -64,9 +64,6 @@ public class Client {
         connectServer();
 
         message = new SimpleStringProperty("");
-        message.addListener((observable, oldValue, newValue) -> {
-            notifyChangeSupport.notifyInstance();
-        });
     }
 
     public static Client getInstance() {
@@ -78,6 +75,11 @@ public class Client {
 
     public StringProperty messageProperty() {
         return message;
+    }
+
+    private void setMessageProperty(String message) {
+        messageProperty().set(message);
+        System.out.println(messageProperty().get());
     }
 
     //public void sendUsernameToServer(String username) {
@@ -130,7 +132,7 @@ public class Client {
                             }
                             if(message.getMessageType().equals(MessageType.ReceivedChat)){
                                 //MESSAGES.put(message.getMessageBody().getMessage())
-                                Client.this.setName(message.getMessageBody().getMessage());
+                                Client.this.setMessageProperty(message.getMessageBody().getMessage());
                             }
                             if(message.getMessageType().equals(MessageType.Error)){
                                 System.out.println(message.getMessageBody().getMessage());
@@ -174,6 +176,7 @@ public class Client {
         }
 
     }
+
 
     /*
     public void readMessageToClientChat() {

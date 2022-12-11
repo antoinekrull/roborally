@@ -1,7 +1,6 @@
 package client.model;
 
 import client.connection.Client;
-import client.connection.ClientService;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
