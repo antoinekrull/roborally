@@ -75,20 +75,6 @@ public class HandleClient implements Runnable{
         }
     }
 
-
-    //Old implementation, can be deleted after test of new method with id
-    //public void writeTo(String username, Message message) {
-    //    try {
-    //        for (server.HandleClient client : server.CLIENTS) {
-    //            if (client.getUsername().equals(username)) {
-    //                client.out.writeUTF(JsonSerializer.serializeJson(message));
-    //            }
-    //        }
-    //    } catch (Exception e) {
-    //        e.printStackTrace();
-    //    }
-    //}
-
     public void writeTo(int id, Message message) {
         try {
             for (Map.Entry<Integer, HandleClient> client : server.CLIENTS.entrySet()) {
