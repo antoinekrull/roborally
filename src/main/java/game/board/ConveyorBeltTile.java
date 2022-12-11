@@ -9,13 +9,21 @@ public class ConveyorBeltTile extends Tile{
     private int velocity;
     private Direction directionIn;
     private Direction directionOut;
+    public ConveyorBeltTile(int velocity, Direction direction) {
+
+
     public ConveyorBeltTile(int velocity, Direction directionIn, Direction directionOut) {
-        setDanger(false);
-        setBlocking(false);
+        isDanger = false;
+        isBlocking = false;
         this.velocity = velocity;
         this.directionIn = directionIn;
         this.directionOut = directionOut;
     }
+
+    public int getVelocity() { return velocity; }
+    public void setVelocity(int velocity) { this.velocity = velocity; }
+    public Direction getDirection() { return direction; }
+    public void setDirection(Direction direction) { this.direction = direction; }
 
     @Override
     public void applyEffect(Robot robot) throws Exception {

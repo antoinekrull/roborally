@@ -7,8 +7,8 @@ import game.robot.Robot;
  * @version 1.0
  */
 public abstract class Tile {
-    private boolean isDanger;
-    private boolean isBlocking;
+    protected boolean isDanger;
+    protected boolean isBlocking;
     private int[][] position;
 
     public boolean isDanger() {

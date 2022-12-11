@@ -9,8 +9,8 @@ import game.robot.Robot;
 public class CheckpointTile extends Tile{
 
     public CheckpointTile() {
-        setDanger(false);
-        setBlocking(false);
+        isDanger = false;
+        isBlocking = false;
     }
 
     @Override

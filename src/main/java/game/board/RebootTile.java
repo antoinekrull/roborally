@@ -7,22 +7,19 @@ import game.robot.Robot;
  * @version 1.0
  */
 public class RebootTile extends Tile {
-    public boolean isRebootTile;
     private static int rebootTileIndex = 0;
     public Direction direction;
 
     public RebootTile(Direction direction){
-        this.isRebootTile = true;
-        setDanger(false);
-        setBlocking(false);
+        isDanger = false;
+        isBlocking = false;
         this.direction = direction;
         setRebootTileIndex(rebootTileIndex++);
     }
 
     public RebootTile(){
-        this.isRebootTile = true;
-        setDanger(false);
-        setBlocking(false);
+        isDanger = false;
+        isBlocking = false;
         setRebootTileIndex(rebootTileIndex++);
     }
 

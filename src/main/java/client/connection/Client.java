@@ -2,10 +2,13 @@ package client.connection;
 
 import client.Controller;
 import client.model.ModelChat;
+import client.model.ModelUser;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -37,6 +40,7 @@ public class Client {
     private Socket socket = null;
     private DataInputStream in = null;
     private DataOutputStream out = null;
+    private BooleanProperty connected;
     private final LinkedBlockingQueue<String> MESSAGES;
     private StringProperty message;
     private NotifyChangeSupport notifyChangeSupport;
@@ -44,7 +48,7 @@ public class Client {
     private String name = "";
     private boolean accessible = false;
     String address = "localhost";
-    int port = 4000;
+    int port = 3000;
 
     private String protocolVersion = "Version 0.1";
     private String group = "KnorrigeKorrelate";
@@ -58,15 +62,9 @@ public class Client {
         this.MESSAGES = new LinkedBlockingQueue<>();
         messageCreator = new MessageCreator();
 
-        try {
-            socket = new Socket(address, port);
-            in = new DataInputStream(
-                    new BufferedInputStream(socket.getInputStream()));
-            out = new DataOutputStream(socket.getOutputStream());
+        connected = new SimpleBooleanProperty();
 
-        } catch (Exception e) {
-            //TODO: create error message to close window because there is no connection to server
-        }
+        connectServer();
 
         message = new SimpleStringProperty("");
         message.addListener((observable, oldValue, newValue) -> {
@@ -74,8 +72,6 @@ public class Client {
             notifyChangeSupport.notifyInstance();
         });
 
-        ReadMessagesFromServer server = new ReadMessagesFromServer(socket);
-        new Thread(server).start();
     }
 
     public static Client getInstance() {
@@ -122,6 +118,7 @@ public class Client {
                                 sendAliveMessage();
                             }
                             if(message.getMessageType().equals(MessageType.HelloClient)){
+                                System.out.println(message.getMessageBody().getProtocol());
                                 sendHelloServerMessage(group, isAI, protocolVersion);
                             }
                             if(message.getMessageType().equals(MessageType.Welcome)){
@@ -241,6 +238,33 @@ public class Client {
     public void enterChat(Boolean state) {
         accessible = state;
         readMessageToClientChat();
+    }
+    private void connectServer() {
+        if (!connected.get()) {
+            try {
+                socket = new Socket(address, port);
+                in = new DataInputStream(
+                        new BufferedInputStream(socket.getInputStream()));
+                out = new DataOutputStream(socket.getOutputStream());
+                connected.set(true);
+                ReadMessagesFromServer server = new ReadMessagesFromServer(socket);
+                new Thread(server).start();
+            } catch (Exception e) {
+                socket = null;
+                in = null;
+                out = null;
+            }
+        }
+    }
+    public void reconnect() {
+        if (!connected.get()) {
+            connectServer();
+        }
+    }
+
+
+    public BooleanProperty connectedProperty() {
+        return connected;
     }
 }
 
