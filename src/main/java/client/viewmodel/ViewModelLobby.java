@@ -1,6 +1,7 @@
 package client.viewmodel;
 
 import client.RoboRallyStart;
+import client.connection.NotifyChangeSupport;
 import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
@@ -75,10 +76,14 @@ public class ViewModelLobby {
     private ModelUser modelUser;
     private ModelGame modelGame;
 
+    private NotifyChangeSupport notifyChangeSupport;
+
     public ViewModelLobby() {
         modelChat = ModelChat.getInstance();
         modelUser = ModelUser.getInstance();
         modelGame = ModelGame.getInstance();
+        this.notifyChangeSupport = NotifyChangeSupport.getInstance();
+        notifyChangeSupport.setViewModelLobby(this);
     }
 
     public void initialize() {
@@ -121,7 +126,13 @@ public class ViewModelLobby {
         text.setFill(Color.color(0.934, 0.945, 0.996));
 
         hBox.getChildren().add(textFlow);
-        chatVBox.getChildren().add(hBox);
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                chatVBox.getChildren().add(hBox);
+            }
+        });
     }
 
     public void chatButtonOnAction() {

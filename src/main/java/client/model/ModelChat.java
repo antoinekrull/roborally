@@ -35,15 +35,15 @@ public class ModelChat {
         groupMessage = new SimpleStringProperty("");
         this.MESSSAGES = new LinkedBlockingQueue<>();
         textfieldProperty = new SimpleStringProperty("");
+        groupMessage.bind(client.messageProperty());
         groupMessage.addListener((observable, oldValue, newValue) -> {
             try {
-                MESSSAGES.put(groupMessage.get());
+                MESSSAGES.put(client.messageProperty().get());
+                notifyChangeSupport.notifyInstance();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            notifyChangeSupport.notifyInstance();
         });
-        groupMessage.bind(client.messageProperty());
     }
 
     public static ModelChat getInstance() {
@@ -73,7 +73,6 @@ public class ModelChat {
     }
 
     public void sendMessage(int userID) {
-        System.out.println("send");
         client.sendGroupMessage(textfieldProperty.get());
     }
 
