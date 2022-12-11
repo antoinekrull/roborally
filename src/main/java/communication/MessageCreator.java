@@ -96,7 +96,7 @@ package communication;
             messageBody.setPrivate(isPrivate);
             return new Message(MessageType.ReceivedChat, messageBody);
         }
-        public Message generateReceivedChatMessage(String error){
+        public Message generateErrorMessage(String error){
             MessageBody messageBody = new MessageBody();
             messageBody.setError(error);
             return new Message(MessageType.Error, messageBody);

@@ -67,9 +67,6 @@ public class Client {
         message.addListener((observable, oldValue, newValue) -> {
             notifyChangeSupport.notifyInstance();
         });
-
-        ReadMessagesFromServer server = new ReadMessagesFromServer(socket);
-        new Thread(server).start();
     }
 
     public static Client getInstance() {

@@ -62,7 +62,6 @@ public class ServerMain extends Application {
 
                         while (true) {
                             socket = server.accept();
-                            System.out.println("yey, new client");
 
                             //handle multithreading for clients
                             int uniqueID = getUniqueID();
@@ -88,7 +87,7 @@ public class ServerMain extends Application {
                         try {
                             String message = messages.take();
                             for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
-                                client.getValue().write(messageCreator.generateSendChatMessage(message));
+                                client.getValue().write(messageCreator.generateReceivedChatMessage(message, 0, false));
                             }
                         } catch (Exception e) {
                             System.out.println("Error is it here " + e.getMessage());

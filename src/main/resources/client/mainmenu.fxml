@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.media.MediaView?>
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelMainMenu">
    <children>
@@ -26,15 +25,14 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <VBox alignment="CENTER" spacing="5.0">
+                  <VBox alignment="CENTER" spacing="10.0">
                      <children>
-                        <Label fx:id="statusLabel" />
+                        <Label fx:id="statusLabel"/>
                         <Button fx:id="joinButton" mnemonicParsing="false" onAction="#joinButtonOnAction" text="Join Game" />
                      </children>
                   </VBox>
                   <Button fx:id="helpButton" mnemonicParsing="false" onAction="#helpButtonOnAction" text="helpButtonOnAction" GridPane.rowIndex="1" />
                   <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exitButtonOnAction" text="Quit to Desktop" GridPane.rowIndex="2" />
-                  <MediaView fitHeight="200.0" fitWidth="200.0" />
                </children>
             </GridPane>
          </center>

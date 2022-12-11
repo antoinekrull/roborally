@@ -7,7 +7,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.stage.Stage;
+
 
 import java.io.IOException;
 
@@ -41,15 +41,15 @@ public class ViewModelMainMenu {
     public void joinButtonOnAction() throws IOException {
         if (modelUser.getConnection()){
             RoboRallyStart.switchScene("lobby.fxml");
-        }else {
-            //TODO: show in menu that user is not connected or is no connected if reconnect works
-           statusLabel.setText("Connection failed. Please try again.");
-           modelUser.reconnect();
-           if(modelUser.getConnection()) {
-               statusLabel.setText("Connection successful");
-               RoboRallyStart.switchScene("lobby.fxml");
-           }
+        } else {
+            statusLabel.setText("Connection failed. Please try again.");
+            modelUser.reconnect();
+            if (modelUser.getConnection()) {
+                statusLabel.setText("Connection successful.");
+                RoboRallyStart.switchScene("lobby.fxml");
+            }
         }
+
     }
 
     public void helpButtonOnAction() {

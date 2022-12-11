@@ -4,6 +4,9 @@ import client.RoboRallyStart;
 import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -21,8 +24,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  * ViewModel for lobby including chat and leaving
@@ -61,6 +67,8 @@ public class ViewModelLobby {
     private ChoiceBox<String> usersChoiceBox;
     @FXML
     private Button userButton;
+    @FXML
+    private Label timeLabel;
 
     private BooleanProperty ready;
     private ModelChat modelChat;
@@ -143,14 +151,31 @@ public class ViewModelLobby {
             readyButton.setText("Not ready");
             this.ready.set(true);
             modelGame.setPlayerStatus(modelUser.getUserID());
+            long endTime = 2000;
+            DateFormat timeFormat = new SimpleDateFormat( "HH:mm:ss" );
+            final Timeline timeline = new Timeline(
+                    new KeyFrame(
+                            Duration.millis(500),
+                            event -> {
+                                final long diff = endTime - System.currentTimeMillis();
+                                if (diff < 0) {
+                                    //  timeLabel.setText("00:00:00");
+                                    timeLabel.setText(timeFormat.format(0));
+                                } else {
+                                    timeLabel.setText(timeFormat.format(diff));
+                                }
+                            }
+                    )
+            );
+            timeline.setCycleCount(Animation.INDEFINITE);
+            timeline.play();
+            RoboRallyStart.switchScene("login.fxml");
         }
         if (readyButton.getText().equals("Not ready")) {
             readyButton.setText("Ready");
             this.ready.set(false);
             modelGame.setPlayerStatus(modelUser.getUserID());
         }
-
-        RoboRallyStart.switchScene("login.fxml");
 
         //resource is null
         /*

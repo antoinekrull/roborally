@@ -73,6 +73,7 @@ public class ModelChat {
     }
 
     public void sendMessage(int userID) {
+        System.out.println("send");
         client.sendGroupMessage(textfieldProperty.get());
     }
 

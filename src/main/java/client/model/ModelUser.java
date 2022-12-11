@@ -47,7 +47,7 @@ public class ModelUser {
         this.username = username;
     }
 
-    public boolean getConnection() { return this.connected.get(); }
+    public boolean getConnection() {return this.connected.get();}
     public void reconnect() {client.reconnect();}
 
     public int getUserID() {

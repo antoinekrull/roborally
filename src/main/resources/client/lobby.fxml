@@ -53,10 +53,6 @@
                                 <RowConstraints maxHeight="139.0" minHeight="10.0" prefHeight="111.0" valignment="CENTER" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <Button fx:id="readyButton" mnemonicParsing="false" onAction="#readyButtonOnAction" prefHeight="26.0" prefWidth="95.0" text="Ready" GridPane.rowIndex="1">
-                           <GridPane.margin>
-                              <Insets bottom="20.0" />
-                           </GridPane.margin></Button>
                         <HBox prefHeight="100.0" prefWidth="200.0">
                            <children>
                               <ChoiceBox fx:id="usersChoiceBox" prefHeight="26.0" prefWidth="113.0" />
@@ -64,6 +60,16 @@
                               <Button fx:id="chatButton" mnemonicParsing="false" onAction="#chatButtonOnAction" prefHeight="26.0" prefWidth="75.0" text="Send" />
                            </children>
                         </HBox>
+                                <Button fx:id="readyButton" mnemonicParsing="false" onAction="#readyButtonOnAction" prefHeight="26.0" prefWidth="95.0" text="Ready" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets bottom="20.0" />
+                           </GridPane.margin>
+                        </Button>
+                        <Label fx:id="timeLabel" GridPane.rowIndex="1">
+                           <GridPane.margin>
+                              <Insets top="60.0" />
+                           </GridPane.margin>
+                        </Label>
                             </children>
                      <padding>
                         <Insets top="3.0" />
