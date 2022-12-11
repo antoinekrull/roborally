@@ -3,10 +3,13 @@ package client.viewmodel;
 import client.RoboRallyStart;
 import client.connection.NotifyChangeSupport;
 import client.model.ModelUser;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.util.Duration;
 
 
 import java.io.IOException;
@@ -46,7 +49,16 @@ public class ViewModelMainMenu {
             modelUser.reconnect();
             if (modelUser.getConnection()) {
                 statusLabel.setText("Connection successful.");
-                RoboRallyStart.switchScene("lobby.fxml");
+                Timeline timeline = new Timeline(new KeyFrame(
+                        Duration.millis(1500),
+                        event -> {
+                            try {
+                                RoboRallyStart.switchScene("lobby.fxml");
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }));
+                timeline.play();
             }
         }
 

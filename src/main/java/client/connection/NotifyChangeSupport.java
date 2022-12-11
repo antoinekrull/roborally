@@ -11,13 +11,12 @@ import client.viewmodel.ViewModelLobby;
  */
 public class NotifyChangeSupport {
 
-    private static NotifyChangeSupport notifyChangeSupport;
-
     ViewModelGameWindow viewModelGameWindow;
     ViewModelLobby viewModelLobby;
+    private static NotifyChangeSupport notifyChangeSupport;
 
-    private Boolean lobby;
-    private Boolean gamewindow;
+    private Boolean lobby = false;
+    private Boolean gamewindow = false;
 
     private NotifyChangeSupport() {
 
@@ -39,8 +38,18 @@ public class NotifyChangeSupport {
             gamewindow = true;
         }
     }
+
+    public void setViewModelLobby(ViewModelLobby viewModelLobby) {
+        this.viewModelLobby = viewModelLobby;
+    }
+
+    public void setViewModelGameWindow(ViewModelGameWindow viewModelGameWindow) {
+        this.viewModelGameWindow = viewModelGameWindow;
+    }
+
     public void notifyInstance() {
         if (lobby) {
+            System.out.println("instance notified");
             viewModelLobby.messageToChat();
         }
         if (gamewindow) {
