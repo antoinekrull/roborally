@@ -1,6 +1,5 @@
 package server;
 
-import client.Client;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
@@ -216,7 +215,7 @@ public class HandleClient implements Runnable{
                         try {
                             aliveMessage(clientID);
                             Thread.sleep(5000);
-                            if (isAlive() == true) {
+                            if (isAlive()) {
                                 setAlive(false);
                             } else {
                                 closeConnection();
@@ -238,10 +237,7 @@ public class HandleClient implements Runnable{
                     if (incomingMessage.getMessageType() == MessageType.SendChat && incomingMessage.getMessageBody().getTo() == -1) {
                         line = incomingMessage.getMessageBody().getMessage();
                         String line_formatted = this.username + ":  " + line;
-
-                        if (!this.username.isBlank()) {
-                            server.messages.put(line_formatted);
-                        }
+                        server.messages.put(line_formatted);
                     } else if (incomingMessage.getMessageType() == MessageType.SendChat) {
                         if (server.CLIENTS.containsKey(incomingMessage.getMessageBody().getTo())) {
                             writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);

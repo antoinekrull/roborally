@@ -2,6 +2,8 @@ package client.model;
 
 import client.connection.Client;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 
@@ -18,8 +20,8 @@ public class ModelGame {
 
     private Client client;
 
-    private ArrayList<String> maps;
-    private ArrayList<String> users;
+    private ObservableList<String> maps;
+    private ObservableList<String> users;
 
     private String robot;
     private BooleanProperty readyToPlay;
@@ -31,9 +33,13 @@ public class ModelGame {
         this.robot = "";
         this.robotProperty = new SimpleStringProperty("");
         this.readyToPlay = new SimpleBooleanProperty();
-        this.maps = new ArrayList<>();
-        this.users = new ArrayList<>();
-
+        this.maps = FXCollections.observableArrayList();
+        this.users = FXCollections.observableArrayList();
+        maps.add("Dizzy Highway");
+        maps.add("KackJavaFX");
+        users.add("Tomi");
+        users.add("Firas");
+        users.add("Molri");
     }
 
     public static ModelGame getInstance() {
@@ -55,19 +61,12 @@ public class ModelGame {
         return readyToPlay;
     }
 
-    public ArrayList<String> getMaps() {
+    public ObservableList<String> getMaps() {
         return maps;
     }
-    public ArrayList<String> getUsers() {
+
+    public ObservableList<String> getUsers() {
         return users;
-    }
-
-    public void setMaps(ArrayList<String> maps) {
-        this.maps = maps;
-    }
-
-    public void setUsers(ArrayList<String> users) {
-        this.users = users;
     }
 
     /*public void sendRobotSelection(int clientID) throws IOException {
@@ -81,20 +80,8 @@ public class ModelGame {
     }
     */
 
-
     public void setPlayerStatus(int userID) {
         //client.sendPlayerStatus or client.sendMessageToServer(userID, MessageType); true/false
     }
-
-    /*
-
-    public void getPlayerList() {
-
-    }
-
-    public void getMapList() {
-
-    }
-    */
 
 }
