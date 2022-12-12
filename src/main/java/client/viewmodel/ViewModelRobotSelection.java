@@ -4,14 +4,12 @@ import client.RoboRallyStart;
 import client.connection.NotifyChangeSupport;
 import client.model.ModelGame;
 import client.model.ModelUser;
+import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-
-import java.io.IOException;
+import javafx.stage.Stage;
 
 /**
  * ViewModel for selecting one of eight robots
@@ -30,6 +28,8 @@ public class ViewModelRobotSelection {
     private Label robot1, robot2, robot3, robot4, robot5, robot6;
     private ModelUser modelUser;
     private ModelGame modelGame;
+    @FXML
+    private Button exitButton;
 
     private NotifyChangeSupport notifyChangeSupport;
 
@@ -59,5 +59,9 @@ public class ViewModelRobotSelection {
             //modelGame.sendRobotSelection(userID);
             RoboRallyStart.switchScene("gamewindow.fxml");
         }
+    }
+    public void exitButtonOnAction() {
+        Stage stage = (Stage) exitButton.getScene().getWindow();
+        stage.close();
     }
 }
