@@ -7,14 +7,13 @@ import client.model.ModelUser;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -38,6 +37,10 @@ public class ViewModelGameWindow {
     private VBox chatVBox;
     @FXML
     private ScrollPane chatScrollPane;
+    @FXML
+    private GridPane startBoard;
+    @FXML
+    private GridPane gameBoard;
 
     //buttons for cards
 
@@ -114,4 +117,5 @@ public class ViewModelGameWindow {
 
         chatTextfield.clear();
     }
+
 }

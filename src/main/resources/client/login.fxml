@@ -23,7 +23,7 @@
             <menus>
                 <Menu mnemonicParsing="false" text="Options">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Exit" />
+                        <MenuItem mnemonicParsing="false" text="Exit" fx:id="exitButton" onAction="#exitButtonOnAction" />
                         <MenuItem mnemonicParsing="false" text="Help" />
                     </items>
                 </Menu>
@@ -74,7 +74,7 @@
                     <graphic>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../textures/roboter1.jpg" />
+                                <Image url="@../textures/robots/roboter1.jpg" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -83,7 +83,7 @@
                     <graphic>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../textures/roboter2.jpg" />
+                                <Image url="@../textures/robots/roboter2.jpg" />
                             </image>
                             <cursor>
                                 <Cursor fx:constant="OPEN_HAND" />
@@ -95,7 +95,7 @@
                     <graphic>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../textures/roboter3.jpg" />
+                                <Image url="@../textures/robots/roboter3.jpg" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -104,7 +104,7 @@
                     <graphic>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../textures/roboter3.jpg" />
+                                <Image url="@../textures/robots/roboter3.jpg" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -113,7 +113,7 @@
                     <graphic>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../textures/roboter1.jpg" />
+                                <Image url="@../textures/robots/roboter1.jpg" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -122,7 +122,7 @@
                     <graphic>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../textures/roboter2.jpg" />
+                                <Image url="@../textures/robots/roboter2.jpg" />
                             </image>
                         </ImageView>
                     </graphic>
