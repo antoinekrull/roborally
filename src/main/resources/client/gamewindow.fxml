@@ -19,6 +19,10 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.media.MediaView?>
+
 
 
 <StackPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelGameWindow">
@@ -46,10 +50,10 @@
                             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <GridPane id="StartBoard" fx:id="StartBoard">
+                              <GridPane id="startBoard" fx:id="startBoard">
 
                               </GridPane>
-                              <GridPane id="GameBoard" fx:id="GameBoard">
+                              <GridPane id="gameBoard" fx:id="gameBoard">
 
                               </GridPane>
                           </children>
@@ -67,12 +71,12 @@
                                  <children>
                                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../textures/roborally_upgrade.jpg" />
+                                          <Image url="@../textures/cards/roborally_upgrade.jpg" />
                                        </image>
                                     </ImageView>
                                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../textures/roborally_spam.jpg" />
+                                          <Image url="@../textures/cards/roborally_spam.jpg" />
                                        </image>
                                     </ImageView>
                                     <Pane fx:id="toprightRow" HBox.hgrow="ALWAYS">
@@ -147,47 +151,47 @@
                            <children>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                            </children>
@@ -216,8 +220,8 @@
                     <menus>
                       <Menu mnemonicParsing="false" text="Options">
                         <items>
-                          <MenuItem mnemonicParsing="false" text="Exit" />
-                              <MenuItem mnemonicParsing="false" text="Help" />
+                           <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#exit" text="Exit" />
+                           <MenuItem mnemonicParsing="false" text="Help" />
                         </items>
                       </Menu>
                     </menus>
@@ -242,47 +246,47 @@
                            <children>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                            </children>
@@ -305,47 +309,47 @@
                            <children>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8">
                                  <image>
-                                    <Image url="@../textures/roborally_move3.jpg" />
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
                                  </image>
                               </ImageView>
                            </children>
