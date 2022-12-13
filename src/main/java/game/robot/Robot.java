@@ -5,6 +5,7 @@ import game.board.Tile;
 import game.card.Deck;
 import game.card.ProgrammingDeck;
 import game.player.Player;
+import org.javatuples.Pair;
 
 /**
  * @author Moritz, Antoine, Firas
@@ -18,7 +19,7 @@ public class Robot {
     private int currentObjective;
     //currently only for DizzyHighWay, initialize position method needs to be implemented to set parameters
     private Direction direction;
-    private int[] currentPosition = new int[2];
+    private Pair<Integer, Integer> currentPosition;
     private ProgrammingDeck deck;
 
     public Robot(int figure, Player owner) {
@@ -35,10 +36,10 @@ public class Robot {
     public void setOwner(Player owner) {
         this.owner = owner;
     }
-    public int[] getCurrentPosition() {
+    public Pair<Integer, Integer> getCurrentPosition() {
         return currentPosition;
     }
-    public void setCurrentPosition(int[] currentPosition) {
+    public void setCurrentPosition(Pair<Integer, Integer> currentPosition) {
         this.currentPosition = currentPosition;
     }
     public int getCurrentObjective() {

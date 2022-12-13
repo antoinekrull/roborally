@@ -1,6 +1,7 @@
 package game.board;
 
 import game.robot.Robot;
+import org.javatuples.Pair;
 
 /**
  * @author Antoine, Firas
@@ -10,7 +11,8 @@ public class LaserTile extends Tile{
     private Direction los;
     private int rebootTileIndex;
 
-    public LaserTile(Direction los) {
+    public LaserTile(int xCoordinate, int yCoordinate, Direction los) {
+        super(xCoordinate, yCoordinate);
         isDanger = true;
         isBlocking = false;
         this.los = los;
@@ -29,8 +31,5 @@ public class LaserTile extends Tile{
     @Override
     public void applyEffect(Robot robot) throws Exception {
         robot.reboot(this.getRebootTileIndex());
-    }
-    public void fireLaser() {
-        
     }
 }

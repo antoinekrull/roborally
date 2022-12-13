@@ -16,55 +16,55 @@ import static java.lang.Integer.parseInt;
  */
 public class GameBoard extends Board{
 
+    //TODO: Implement PushPanels
     public void createBoard(Object jsonMap) throws JsonProcessingException {
         HashMap<String, String> convertedMap = JsonSerializer.deserializeJson(jsonMap.toString(), HashMap.class);
         var entrySet = convertedMap.entrySet();
         try {
-            Direction[] directions = new Direction[4];
             for(int x = 0; x <= 13; x++){
                 for(int y = 0; y <= 10; y++){
                     for(var entry: entrySet) {
                         if(entry.getKey().equals("type")) {
                             String input = entry.getValue();
                             switch(input) {
-                                case "Empty", "tbd" ->  setTile(x, y, new NormalTile());
-                                case "EnergySpace" ->  setTile(x, y, new EnergySpaceTile());
+                                case "Empty", "tbd" ->  setTile(x, y, new NormalTile(x, y));
+                                case "EnergySpace" ->  setTile(x, y, new EnergySpaceTile(x, y));
                                 case "ConveyorBelt" -> {
+                                    ArrayList<Direction> directionIn = new ArrayList<>();
                                     entrySet.iterator().next();
                                     entrySet.iterator().next();
                                     int velocity = parseInt(entry.getValue());
                                     entrySet.iterator().next();
-                                    Direction directionIn = null;
-                                    Direction directionOut = null;
-                                    //setTile(x, y, new ConveyorBeltTile(velocity, ));
+                                    String[] directionArray = entry.getValue().split(",");
+                                   for(int i = 1; i < directionArray.length; i++) {
+                                       directionIn.add(parseDirection(directionArray[i]));
+                                   }
+                                    Direction directionOut = parseDirection(directionArray[0]);
+                                    setTile(x, y, new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
                                 }
                                 case "Wall" -> {
-                                    int index = 0;
+                                    ArrayList<Direction> directionList = new ArrayList<>();
                                     entrySet.iterator().next();
                                     entrySet.iterator().next();
-                                    String directionWall = entry.getValue();
-                                    switch (directionWall) {
-                                        case "left" -> directions[index] = Direction.WEST;
-                                        case "right" -> directions[index] = Direction.EAST;
-                                        case "top" -> directions[index] = Direction.NORTH;
-                                        case "bottom" -> directions[index] = Direction.SOUTH;
+                                    String[] directionArray = entry.getValue().split(",");
+                                    for(int i = 1; i < directionArray.length; i++) {
+                                        directionList.add(parseDirection(directionArray[i]));
                                     }
-                                    setTile(x, y, new WallTile(directions));
+                                    setTile(x, y, new WallTile(x, y, directionList));
                                 }
                                 case "Laser" -> {
                                     entrySet.iterator().next();
                                     entrySet.iterator().next();
                                     String directionLaser = entry.getValue();
-                                    switch (directionLaser) {
-                                        case "left" -> setTile(x, y, new LaserTile(Direction.WEST));
-                                        case "right" -> setTile(x, y, new LaserTile(Direction.EAST));
-                                        case "top" -> setTile(x, y, new LaserTile(Direction.NORTH));
-                                        case "bottom" -> setTile(x, y, new LaserTile(Direction.SOUTH));
-                                    }
+                                    setTile(x, y, new LaserTile(x, y, parseDirection(entry.getValue())));
                                 }
-                                case "RestartPoint" -> setTile(x, y, new RebootTile());
+                                case "RestartPoint" -> {
+                                    entrySet.iterator().next();
+                                    entrySet.iterator().next();
+                                    setTile(x, y, new RebootTile(x, y, parseDirection(entry.getValue())));
+                                }
                                 case "CheckPoint" -> {
-                                    setTile(x, y, new CheckpointTile());
+                                    setTile(x, y, new CheckpointTile(x, y));
                                     increaseCheckPointCount();
                                 }
                             }
@@ -76,4 +76,16 @@ public class GameBoard extends Board{
             e.printStackTrace();
         }
     }
+
+    public Direction parseDirection(String direction) {
+        Direction parsedDirection = null;
+        switch (direction) {
+            case "left" -> {parsedDirection = Direction.WEST;}
+            case "right" -> {parsedDirection = Direction.EAST;}
+            case "top" -> {parsedDirection = Direction.NORTH;}
+            case "bottom" -> {parsedDirection = Direction.SOUTH;}
+        }
+        return parsedDirection;
+    }
+
 }

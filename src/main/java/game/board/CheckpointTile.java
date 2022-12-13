@@ -8,7 +8,8 @@ import game.robot.Robot;
  */
 public class CheckpointTile extends Tile{
 
-    public CheckpointTile() {
+    public CheckpointTile(int xCoordinate, int yCoordinate) {
+        super(xCoordinate, yCoordinate);
         isDanger = false;
         isBlocking = false;
     }
