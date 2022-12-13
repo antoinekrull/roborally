@@ -18,7 +18,7 @@ public class RoboRallyStart extends Application {
     stage = primaryStage;
     FXMLLoader loader = new FXMLLoader(RoboRallyStart.class.getResource("mainmenu.fxml"));
     Scene scene = new Scene(loader.load(), 1650, 900);
-    scene.getStylesheets().add(getClass().getResource( "src/main/resources/stylesheets/styles.css" ).toExternalForm() );
+    //scene.getStylesheets().add(getClass().getResource( "src/main/resources/stylesheets/styles.css" ).toExternalForm() );
     //scene.getStylesheets().add("src/main/resources/stylesheets/styles.css");
     stage.setFullScreen(true);
     stage.setScene(scene);
