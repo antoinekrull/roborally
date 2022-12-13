@@ -10,7 +10,8 @@ public class PitTile extends Tile{
 
     private int rebootTileIndex;
 
-    public PitTile() {
+    public PitTile(int xCoordinate, int yCoordinate) {
+        super(xCoordinate, yCoordinate);
         isDanger = true;
         isBlocking = false;
     }

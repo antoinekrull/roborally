@@ -10,16 +10,11 @@ public class RebootTile extends Tile {
     private static int rebootTileIndex = 0;
     public Direction direction;
 
-    public RebootTile(Direction direction){
+    public RebootTile(int xCoordinate, int yCoordinate, Direction direction){
+        super(xCoordinate, yCoordinate);
         isDanger = false;
         isBlocking = false;
         this.direction = direction;
-        setRebootTileIndex(rebootTileIndex++);
-    }
-
-    public RebootTile(){
-        isDanger = false;
-        isBlocking = false;
         setRebootTileIndex(rebootTileIndex++);
     }
 
@@ -32,7 +27,7 @@ public class RebootTile extends Tile {
 
     @Override
     public void applyEffect(Robot robot) throws Exception {
-        //robot.setCurrentPosition(rebootTileList.getByIndex(this.getRebootTileIndex().getLocation); //get position from the reboot tile list
+        robot.setCurrentPosition(getPosition());
         robot.setDirection(this.direction);
     }
 }

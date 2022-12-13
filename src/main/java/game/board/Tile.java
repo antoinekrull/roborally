@@ -1,6 +1,8 @@
 package game.board;
 
 import game.robot.Robot;
+import org.javatuples.Pair;
+import org.javatuples.Tuple;
 
 /**
  * @author Antoine, Firas
@@ -9,7 +11,11 @@ import game.robot.Robot;
 public abstract class Tile {
     protected boolean isDanger;
     protected boolean isBlocking;
-    private int[][] position;
+    private Pair<Integer, Integer> position;
+
+    public Tile(int xCoordinate, int yCoordinate) {
+        position = new Pair<>(xCoordinate, yCoordinate);
+    }
 
     public boolean isDanger() {
         return isDanger;
@@ -22,6 +28,18 @@ public abstract class Tile {
     }
     public void setBlocking(boolean blocking) {
         isBlocking = blocking;
+    }
+    public Pair<Integer, Integer> getPosition() {
+        return position;
+    }
+    public void setPosition(Pair<Integer, Integer> position) {
+        this.position = position;
+    }
+    public int getXCoordinate() {
+        return position.getValue0();
+    }
+    public int getYCoordinate(){
+        return position.getValue1();
     }
     public void applyEffect(Robot robot) throws Exception{}
 }
