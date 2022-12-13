@@ -50,18 +50,18 @@
                   <VBox alignment="TOP_CENTER" GridPane.halignment="LEFT">
                      <children>
                         <Label fx:id="statusLabel" />
-                        <Button fx:id="joinButton" mnemonicParsing="false" onAction="#joinButtonOnAction" prefWidth="300.0" style="-fx-background-image: @../textures/designelements/buttonmainmenu.png;" text="Join Game">
+                        <Button fx:id="joinButton" mnemonicParsing="false" onAction="#joinButtonOnAction" prefWidth="300.0" styleClass="mainmenubutton" text="Join Game">
                            <font>
                               <Font name="Josefin Sans SemiBold" size="18.0" />
                            </font>
                         </Button>
                      </children>
                   </VBox>
-                  <Button fx:id="helpButton" mnemonicParsing="false" onAction="#helpButtonOnAction" prefWidth="300.0" text="Help" GridPane.rowIndex="1">
+                  <Button fx:id="helpButton" mnemonicParsing="false" onAction="#helpButtonOnAction" prefWidth="300.0" styleClass="mainmenubutton" text="Help" GridPane.rowIndex="1">
                      <font>
                         <Font name="Josefin Sans SemiBold" size="18.0" />
                      </font></Button>
-                  <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exitButtonOnAction" prefWidth="300.0" text="Quit to Desktop" GridPane.rowIndex="2">
+                  <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exitButtonOnAction" prefWidth="300.0" styleClass="mainmenubutton" text="Quit to Desktop" GridPane.rowIndex="2">
                      <font>
                         <Font name="Josefin Sans SemiBold" size="18.0" />
                      </font>

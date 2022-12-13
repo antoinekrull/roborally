@@ -38,8 +38,6 @@ public class ViewModelGameWindow {
     @FXML
     private ScrollPane chatScrollPane;
     @FXML
-    private GridPane startBoard;
-    @FXML
     private GridPane gameBoard;
 
     //buttons for cards
@@ -67,6 +65,14 @@ public class ViewModelGameWindow {
                 chatScrollPane.setVvalue((Double) newValue);
             }
         });
+        //for(int x = 0; x <= 13; x++) {
+        //    for (int y = 0; y <= 10; y++) {
+        //        gameBoard.add(new GameBoard(), x, y);
+        //    }
+        //}
+
+        //Node gameBoard1 = new GameBoard();
+        //gameBoard.add(gameBoard1, 0,0,13,10);
     }
 
     public void messageToChat() {
