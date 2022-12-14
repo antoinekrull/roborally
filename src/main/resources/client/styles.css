@@ -1,9 +1,9 @@
-@font-face {
+@font-face{
     font-family: RacingSansOne;
     src: url('RacingSansOne-Regular.ttf');
 }
 
-.mainmenubutton {
+.mainmenubutton{
 -fx-background-image: url("../textures/designelements/buttonmainmenu.png");
 -fx-background-color: none;
 -fx-text-fill: white;
@@ -11,7 +11,12 @@
 -fx-background-size: cover;
 }
 
-.mainmenubackground {
+.mainmenubutton:hover{
+-fx-text-fill: rgba(255, 86, 0, 1);
+-fx-effect: dropshadow(three-pass-box, rgba(255, 86, 0, 1), 15, 0.0, 0, 0);
+}
+
+.mainmenubackground{
 -fx-background-image: url("../textures/designelements/hauptmenueHintergrund.png");
 -fx-background-repeat: none;
 -fx-background-size: cover;
