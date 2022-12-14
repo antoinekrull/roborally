@@ -6,11 +6,6 @@ import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -31,7 +26,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.util.Duration;
 
 /**
  * ViewModel for lobby including chat and leaving
@@ -164,7 +158,7 @@ public class ViewModelLobby {
             readyButton.setText("NOT READY");
             this.ready.set(true);
             modelGame.setPlayerStatus(modelUser.getUserID());
-            long endTime = 2000;
+            /*long endTime = 2000;
             DateFormat timeFormat = new SimpleDateFormat( "HH:mm:ss" );
             final Timeline timeline = new Timeline(
                     new KeyFrame(
@@ -182,6 +176,8 @@ public class ViewModelLobby {
             );
             timeline.setCycleCount(Animation.INDEFINITE);
             timeline.play();
+
+             */
             RoboRallyStart.switchScene("login.fxml");
         }
         if (readyButton.getText().equals("NOT READY")) {
