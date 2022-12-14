@@ -57,7 +57,7 @@ public class ViewModelRobotSelection {
         if (!robot.isEmpty() && !username.isEmpty()) {
             //modelUser.sendUsername();
             //modelGame.sendRobotSelection(userID);
-            RoboRallyStart.switchScene("gamewindow.fxml");
+            RoboRallyStart.switchScene("lobby.fxml");
         }
     }
     public void exit() throws IOException {

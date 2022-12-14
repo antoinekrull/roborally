@@ -55,7 +55,7 @@ public class ViewModelMainMenu {
 
     public void joinButtonOnAction() throws IOException {
         if (modelUser.getConnection()){
-            RoboRallyStart.switchScene("lobby.fxml");
+            RoboRallyStart.switchScene("login.fxml");
         } else {
             statusLabel.setText("Connection failed. Please try again.");
             modelUser.reconnect();
@@ -65,7 +65,7 @@ public class ViewModelMainMenu {
                         Duration.millis(1500),
                         event -> {
                             try {
-                                RoboRallyStart.switchScene("lobby.fxml");
+                                RoboRallyStart.switchScene("login.fxml");
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
