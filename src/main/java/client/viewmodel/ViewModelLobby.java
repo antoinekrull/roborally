@@ -178,7 +178,7 @@ public class ViewModelLobby {
             timeline.play();
 
              */
-            RoboRallyStart.switchScene("login.fxml");
+            RoboRallyStart.switchScene("gamewindow.fxml");
         }
         if (readyButton.getText().equals("NOT READY")) {
             readyButton.setText("READY");

@@ -43,3 +43,9 @@
 -fx-background-color: none;
 }
 
+.roboterlabel{
+-fx-text-fill: transparent;
+}
+.roboterlabel:hover{
+-fx-text-fill: white;
+}

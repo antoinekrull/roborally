@@ -4,6 +4,7 @@ import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class RoboRallyStart extends Application {
@@ -13,6 +14,8 @@ public class RoboRallyStart extends Application {
   }
 
   private static Stage stage;
+  private static StackPane layout;
+
   @Override
   public void start(Stage primaryStage) throws IOException {
     stage = primaryStage;
@@ -26,11 +29,8 @@ public class RoboRallyStart extends Application {
 
   public static void switchScene(String fxmlFile) throws IOException {
     FXMLLoader loader = new FXMLLoader(RoboRallyStart.class.getResource(fxmlFile));
-    Scene newScene = new Scene(loader.load(), 1280, 720);
-    newScene.getStylesheets().add(RoboRallyStart.class.getResource("styles.css").toExternalForm());
-    stage.setScene(newScene);
-    stage.setFullScreen(true);
-    stage.show();
+    layout = loader.load();
+    stage.getScene().setRoot(layout);
   }
 }
 
