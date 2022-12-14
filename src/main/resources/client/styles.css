@@ -1,3 +1,8 @@
+@font-face {
+    font-family: RacingSansOne;
+    src: url('RacingSansOne-Regular.ttf');
+}
+
 .mainmenubutton {
 -fx-background-image: url("../textures/designelements/buttonmainmenu.png");
 -fx-background-color: none;
@@ -32,3 +37,4 @@
 -fx-background-size: cover;
 -fx-background-color: none;
 }
+

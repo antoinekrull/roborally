@@ -32,5 +32,6 @@ public class RoboRallyStart extends Application {
     stage.setScene(newScene);
     stage.show();
   }
+
 }
 
