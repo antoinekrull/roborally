@@ -29,5 +29,8 @@ public class RebootTile extends Tile {
     public void applyEffect(Robot robot) throws Exception {
         robot.setCurrentPosition(getPosition());
         robot.setDirection(this.direction);
+        robot.setRebootStatus(true);
+        //robot.drawSpam(2);
+        //robot.discardSpam(2);
     }
 }

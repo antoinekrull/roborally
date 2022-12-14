@@ -21,6 +21,7 @@ public class Robot {
     private Direction direction;
     private Pair<Integer, Integer> currentPosition;
     private ProgrammingDeck deck;
+    private boolean isRebooted = false;
 
     public Robot(int figure, Player owner) {
         this.figure = figure;
@@ -74,7 +75,7 @@ public class Robot {
     public void determineTileEffect(Tile tile){}
     public void checkCollision(){}
     public void reboot(int rebootTileIndex){}
-
-
+    public boolean getRebootStatus() {return isRebooted;}
+    public void setRebootStatus(boolean rebooted) {isRebooted = rebooted;}
 
 }
