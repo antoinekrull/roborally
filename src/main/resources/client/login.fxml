@@ -14,6 +14,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -21,16 +22,12 @@
 
 <StackPane fx:id="loginWindow" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelRobotSelection">
    <children>
-      <ImageView fitWidth="${loginWindow.width}" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../textures/designelements/robotselectBackground.jpg" />
-         </image>
-      </ImageView>
+      <Pane styleClass="loginbackground" />
       <BorderPane minHeight="500.0" minWidth="1000.0">
           <top>
             <VBox alignment="TOP_CENTER" BorderPane.alignment="CENTER">
                <children>
-                    <MenuBar>
+                    <MenuBar styleClass="menubar">
                         <menus>
                             <Menu mnemonicParsing="false" text="Options">
                                 <items>
@@ -40,11 +37,7 @@
                             </Menu>
                         </menus>
                     </MenuBar>
-                  <ImageView fitHeight="200.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../textures/designelements/Robo-Rally-2017-Header-Avalon-Hill-Hasbro-Rezension-topaz-2.png" />
-                     </image>
-                  </ImageView>
+                  <Pane VBox.vgrow="ALWAYS" />
                </children>
             </VBox>
           </top>

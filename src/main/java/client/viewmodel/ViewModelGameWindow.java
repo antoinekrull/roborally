@@ -23,7 +23,7 @@ import javafx.scene.text.TextFlow;
 /**
  * ViewModel for gamescreen
  *
- * @author Tobias
+ * @author Tobias, Benedikt
  * @version 0.1
  */
 
@@ -65,13 +65,8 @@ public class ViewModelGameWindow {
                 chatScrollPane.setVvalue((Double) newValue);
             }
         });
-        //for(int x = 0; x <= 13; x++) {
-        //    for (int y = 0; y <= 10; y++) {
-        //        gameBoard.add(new GameBoard(), x, y);
-        //    }
-        //}
 
-        //Node gameBoard1 = new GameBoard();
+        //TODO:Node gameBoard1 = new GameBoard().createBoard();
         //gameBoard.add(gameBoard1, 0,0,13,10);
     }
 

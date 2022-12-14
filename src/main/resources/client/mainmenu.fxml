@@ -16,14 +16,8 @@
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="656.0" prefWidth="1193.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelMainMenu">
    <children>
-      <Pane fx:id="mainmenuwindow">
-         <children>
-            <ImageView fitWidth="${mainmenuwindow.width}" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../textures/designelements/hauptmenueHintergrund.png" />
-               </image>
-            </ImageView>
-         </children>
+      <Pane fx:id="mainmenuwindow" styleClass="mainmenubackground">
+
       </Pane>
       <BorderPane minHeight="480.0" minWidth="720.0">
          <top>
@@ -37,9 +31,9 @@
             </ImageView>
          </top>
          <left>
-            <GridPane alignment="TOP_CENTER" maxHeight="200.0" BorderPane.alignment="CENTER">
+            <GridPane alignment="TOP_CENTER" maxHeight="200.0" BorderPane.alignment="CENTER_LEFT">
               <columnConstraints>
-                <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" minWidth="10.0" prefWidth="200.0" />
+                <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" minWidth="200.0" prefWidth="300.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -49,26 +43,27 @@
                <children>
                   <VBox alignment="TOP_CENTER" GridPane.halignment="LEFT">
                      <children>
-                        <Label fx:id="statusLabel" />
-                        <Button fx:id="joinButton" mnemonicParsing="false" onAction="#joinButtonOnAction" prefWidth="300.0" styleClass="mainmenubutton" text="Join Game">
+                        <Label fx:id="statusLabel" textFill="WHITE">
                            <font>
-                              <Font name="Josefin Sans SemiBold" size="18.0" />
-                           </font>
-                        </Button>
+                              <Font size="14.0" />
+                           </font></Label>
+                        <Button fx:id="joinButton" mnemonicParsing="false" onAction="#joinButtonOnAction" prefWidth="300.0" styleClass="mainmenubutton" text="JOIN GAME">
+                           <font>
+                              <Font name="Raleway Black" size="18.0" />
+                           </font></Button>
                      </children>
                   </VBox>
-                  <Button fx:id="helpButton" mnemonicParsing="false" onAction="#helpButtonOnAction" prefWidth="300.0" styleClass="mainmenubutton" text="Help" GridPane.rowIndex="1">
+                  <Button fx:id="helpButton" mnemonicParsing="false" onAction="#helpButtonOnAction" prefWidth="300.0" styleClass="mainmenubutton" text="HELP" GridPane.rowIndex="1">
                      <font>
-                        <Font name="Josefin Sans SemiBold" size="18.0" />
+                        <Font name="Raleway Black" size="18.0" />
                      </font></Button>
-                  <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exitButtonOnAction" prefWidth="300.0" styleClass="mainmenubutton" text="Quit to Desktop" GridPane.rowIndex="2">
+                  <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exitButtonOnAction" prefWidth="300.0" styleClass="mainmenubutton" text="QUIT TO DESKTOP" GridPane.rowIndex="2">
                      <font>
-                        <Font name="Josefin Sans SemiBold" size="18.0" />
-                     </font>
-                  </Button>
+                        <Font name="Raleway Black" size="18.0" />
+                     </font></Button>
                </children>
                <BorderPane.margin>
-                  <Insets left="50.0" top="100.0" />
+                  <Insets top="100.0" />
                </BorderPane.margin>
                <opaqueInsets>
                   <Insets />
