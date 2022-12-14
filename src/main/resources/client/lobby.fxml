@@ -22,13 +22,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="lobbyWindow" minWidth="720.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelLobby">
+<StackPane fx:id="lobbyWindow" minWidth="720.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelLobby">
     <children>
-      <ImageView fitWidth="${lobbyWindow.width}" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../textures/designelements/lobbyBackground.jpg" />
-         </image>
-      </ImageView>
+      <Pane styleClass="lobbybackground">
+      </Pane>
         <BorderPane minHeight="480.0" minWidth="720.0">
             <bottom>
             <VBox alignment="TOP_CENTER" BorderPane.alignment="CENTER">
@@ -101,7 +98,7 @@
             <top>
                 <VBox alignment="CENTER" spacing="10.0" BorderPane.alignment="CENTER">
                     <children>
-                        <MenuBar>
+                        <MenuBar styleClass="menubar">
                             <menus>
                                 <Menu mnemonicParsing="false" text="Options">
                                     <items>

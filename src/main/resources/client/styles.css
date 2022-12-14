@@ -1,0 +1,34 @@
+.mainmenubutton {
+-fx-background-image: url("../textures/designelements/buttonmainmenu.png");
+-fx-background-color: none;
+-fx-text-fill: white;
+-fx-background-repeat: none;
+-fx-background-size: cover;
+}
+
+.mainmenubackground {
+-fx-background-image: url("../textures/designelements/hauptmenueHintergrund.png");
+-fx-background-repeat: none;
+-fx-background-size: cover;
+}
+
+.menubar{
+-fx-background-color: none;
+-fx-background-image: url("../textures/designelements/menubarbackground.jpg");
+-fx-background-color: none;
+-fx-text-fill: white;
+-fx-background-size: auto;
+}
+
+.loginbackground{
+-fx-background-image: url("../textures/designelements/robotselectBackground.jpg");
+-fx-background-repeat: none;
+-fx-background-size: cover;
+}
+
+.lobbybackground{
+-fx-background-image: url("../textures/designelements/lobbyBackground.jpg");
+-fx-background-repeat: none;
+-fx-background-size: cover;
+-fx-background-color: none;
+}
