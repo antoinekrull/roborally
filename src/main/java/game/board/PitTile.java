@@ -7,20 +7,21 @@ import game.robot.Robot;
  * @version 1.0
  */
 public class PitTile extends Tile{
+
+    private int rebootTileIndex;
+
+    public PitTile(int xCoordinate, int yCoordinate) {
+        super(xCoordinate, yCoordinate);
+        isDanger = true;
+        isBlocking = false;
+    }
+
     public int getRebootTileIndex() {
         return rebootTileIndex;
     }
     public void setRebootTileIndex(int rebootTileIndex) {
         this.rebootTileIndex = rebootTileIndex;
     }
-
-    private int rebootTileIndex;
-
-    public PitTile() {
-        this.isDanger = true;
-        this.isBlocking = false;
-    }
-
     @Override
     public void applyEffect(Robot robot) throws Exception {
         robot.reboot(this.getRebootTileIndex());

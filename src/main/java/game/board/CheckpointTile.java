@@ -8,9 +8,10 @@ import game.robot.Robot;
  */
 public class CheckpointTile extends Tile{
 
-    public CheckpointTile() {
-        this.isDanger = false;
-        this.isBlocking = false;
+    public CheckpointTile(int xCoordinate, int yCoordinate) {
+        super(xCoordinate, yCoordinate);
+        isDanger = false;
+        isBlocking = false;
     }
 
     @Override

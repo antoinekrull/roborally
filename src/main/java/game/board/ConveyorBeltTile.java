@@ -1,29 +1,50 @@
 package game.board;
 
 import game.robot.Robot;
+import org.javatuples.Pair;
+
+import java.util.ArrayList;
+
 /**
  * @author Antoine, Firas
  * @version 1.0
  */
 public class ConveyorBeltTile extends Tile{
-    public int velocity;
-    public Direction direction;
-    public ConveyorBeltTile(int velocity, Direction direction) {
-        this.isDanger = false;
-        this.isBlocking = false;
+    private int velocity;
+    private ArrayList<Direction> directionIn;
+    private Direction directionOut;
+
+    public ConveyorBeltTile(int xCoordinate, int yCoordinate, int velocity, ArrayList<Direction> directionIn, Direction directionOut) {
+        super(xCoordinate, yCoordinate);
+        isDanger = false;
+        isBlocking = false;
         this.velocity = velocity;
-        this.direction = direction;
+        this.directionIn = directionIn;
+        this.directionOut = directionOut;
+    }
+
+    public int getVelocity() { return velocity; }
+    public void setVelocity(int velocity) { this.velocity = velocity; }
+    public ArrayList<Direction> getDirectionIn() { return directionIn; }
+    public void setDirectionIn(ArrayList<Direction> directionIn) { this.directionIn = directionIn; }
+
+    public Direction getDirectionOut() {
+        return directionOut;
+    }
+
+    public void setDirectionOut(Direction directionOut) {
+        this.directionOut = directionOut;
     }
 
     @Override
     public void applyEffect(Robot robot) throws Exception {
-        robot.setDirection(this.direction);
-        int[] newPosition = {robot.getCurrentPosition()[0], robot.getCurrentPosition()[1]};
-        switch(this.direction){
-            case NORTH -> newPosition[1] += velocity;
-            case SOUTH -> newPosition[1]-= velocity ;
-            case EAST -> newPosition[0] += velocity;
-            case WEST -> newPosition[0] -= velocity;
+        robot.setDirection(this.directionOut);
+        Pair<Integer, Integer> newPosition = new Pair<>(robot.getCurrentPosition().getValue0(), robot.getCurrentPosition().getValue1());
+        switch(this.directionOut){
+            case NORTH -> newPosition.setAt1(newPosition.getValue1() + velocity);
+            case SOUTH -> newPosition.setAt1(newPosition.getValue1() - velocity);
+            case EAST -> newPosition.setAt0(newPosition.getValue0() + velocity);
+            case WEST -> newPosition.setAt0(newPosition.getValue0() - velocity);
             default -> throw(new Exception("Invalid direction"));
         }
         robot.setCurrentPosition(newPosition);

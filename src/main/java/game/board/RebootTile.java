@@ -7,14 +7,13 @@ import game.robot.Robot;
  * @version 1.0
  */
 public class RebootTile extends Tile {
-    public boolean isRebootTile;
     private static int rebootTileIndex = 0;
     public Direction direction;
 
-    public RebootTile(Direction direction){
-        this.isRebootTile = true;
-        this.isDanger = false;
-        this.isBlocking = false;
+    public RebootTile(int xCoordinate, int yCoordinate, Direction direction){
+        super(xCoordinate, yCoordinate);
+        isDanger = false;
+        isBlocking = false;
         this.direction = direction;
         setRebootTileIndex(rebootTileIndex++);
     }
@@ -28,7 +27,10 @@ public class RebootTile extends Tile {
 
     @Override
     public void applyEffect(Robot robot) throws Exception {
-        //robot.setCurrentPosition(rebootTileList.getByIndex(this.getRebootTileIndex().getLocation); //get position from the reboot tile list
+        robot.setCurrentPosition(getPosition());
         robot.setDirection(this.direction);
+        robot.setRebootStatus(true);
+        //robot.drawSpam(2);
+        //robot.discardSpam(2);
     }
 }

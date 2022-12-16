@@ -8,9 +8,10 @@ import game.robot.Robot;
  */
 public class NormalTile extends Tile{
 
-    public NormalTile() {
-        this.isDanger = false;
-        this.isBlocking = false;
+    public NormalTile(int xCoordinate, int yCoordinate) {
+        super(xCoordinate, yCoordinate);
+        isDanger = false;
+        isBlocking = false;
     }
 
     @Override

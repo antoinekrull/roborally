@@ -17,13 +17,13 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="678.0" prefWidth="1034.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.RobotSelection">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="678.0" prefWidth="1034.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelRobotSelection">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
                 <Menu mnemonicParsing="false" text="Options">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Exit" />
+                        <MenuItem mnemonicParsing="false" text="Exit" fx:id="exitButton" onAction="#exitButtonOnAction" />
                         <MenuItem mnemonicParsing="false" text="Help" />
                     </items>
                 </Menu>
@@ -33,12 +33,12 @@
     <bottom>
         <HBox fx:id="nicknameHBox" alignment="CENTER" maxWidth="500.0" prefHeight="41.0" prefWidth="399.0" spacing="20.0" BorderPane.alignment="CENTER">
             <children>
-                <TextField fx:id="nicknameTextfield" alignment="TOP_LEFT" focusTraversable="false" prefHeight="26.0" prefWidth="287.0" promptText="Enter username" HBox.hgrow="ALWAYS">
+                <TextField fx:id="usernameTextField" alignment="TOP_LEFT" focusTraversable="false" prefHeight="26.0" prefWidth="287.0" promptText="Enter username" HBox.hgrow="ALWAYS">
                     <font>
                         <Font name="Hiragino Sans W2" size="13.0" />
                     </font>
                 </TextField>
-                <Button fx:id="nicknameButton" mnemonicParsing="false" onAction="#onEnter" prefHeight="26.0" prefWidth="55.0" HBox.hgrow="ALWAYS">
+                <Button fx:id="usernameButton" mnemonicParsing="false" onAction="#usernameButtonOnAction" prefHeight="26.0" prefWidth="55.0" HBox.hgrow="ALWAYS">
                     <graphic>
                         <Label fx:id="loginButton" text="LOGIN">
                             <font>
@@ -70,20 +70,20 @@
                 <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
             </rowConstraints>
             <children>
-                <Label fx:id="rowRobot" alignment="CENTER" onMouseClicked="#test" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1" GridPane.vgrow="SOMETIMES">
+                <Label fx:id="robot1" text="Titan Thorben"  alignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1" GridPane.vgrow="SOMETIMES">
                     <graphic>
-                        <ImageView fitHeight="${rowRobot.height}" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../textures/roboter1.jpg" />
+                                <Image url="@../textures/robots/roboter1.jpg" />
                             </image>
                         </ImageView>
                     </graphic>
                 </Label>
-                <Label layoutX="10.0" layoutY="-40.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <Label fx:id="robot2" text="Tomi" layoutX="10.0" layoutY="-40.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <graphic>
-                        <ImageView fitHeight="${rowRobot.height}" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../textures/roboter2.jpg" />
+                                <Image url="@../textures/robots/roboter2.jpg" />
                             </image>
                             <cursor>
                                 <Cursor fx:constant="OPEN_HAND" />
@@ -91,56 +91,38 @@
                         </ImageView>
                     </graphic>
                 </Label>
-                <Label layoutX="10.0" layoutY="-40.0" GridPane.rowIndex="2">
+                <Label fx:id="robot3" text="Anto" layoutX="10.0" layoutY="-40.0" GridPane.rowIndex="2">
                     <graphic>
-                        <ImageView fitHeight="${rowRobot.height}" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../textures/roboter3.jpg" />
+                                <Image url="@../textures/robots/roboter3.jpg" />
                             </image>
                         </ImageView>
                     </graphic>
                 </Label>
-                <Label layoutX="10.0" layoutY="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                <Label fx:id="robot4" text="Molri" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                     <graphic>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../textures/roboter3.jpg" />
+                                <Image url="@../textures/robots/roboter3.jpg" />
                             </image>
                         </ImageView>
                     </graphic>
                 </Label>
-                <Label layoutX="310.0" layoutY="10.0" GridPane.rowIndex="3">
+                <Label fx:id="robot5" text="Firas" layoutX="10.0" layoutY="10.0" GridPane.rowIndex="3">
                     <graphic>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../textures/roboter1.jpg" />
+                                <Image url="@../textures/robots/roboter1.jpg" />
                             </image>
                         </ImageView>
                     </graphic>
                 </Label>
-                <Label layoutX="10.0" layoutY="60.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                <Label fx:id="robot6" text="Bene" layoutX="10.0" layoutY="60.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                     <graphic>
                         <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@../textures/roboter2.jpg" />
-                            </image>
-                        </ImageView>
-                    </graphic>
-                </Label>
-                <Label layoutX="310.0" layoutY="60.0" GridPane.rowIndex="4">
-                    <graphic>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@../textures/roboter1.jpg" />
-                            </image>
-                        </ImageView>
-                    </graphic>
-                </Label>
-                <Label layoutX="10.0" layoutY="110.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
-                    <graphic>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                            <image>
-                                <Image url="@../textures/roboter3.jpg" />
+                                <Image url="@../textures/robots/roboter2.jpg" />
                             </image>
                         </ImageView>
                     </graphic>

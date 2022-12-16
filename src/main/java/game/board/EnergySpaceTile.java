@@ -8,13 +8,14 @@ import game.robot.Robot;
  */
 public class EnergySpaceTile extends Tile{
 
-    public EnergySpaceTile() {
-        this.isDanger = false;
-        this.isBlocking = false;
+    public EnergySpaceTile(int xCoordinate, int yCoordinate) {
+        super(xCoordinate, yCoordinate);
+        isDanger = false;
+        isBlocking = false;
     }
 
     @Override
     public void applyEffect(Robot robot) throws Exception {
-        robot.getOwner().setEnergyCubes(robot.getOwner().getEnergyCubes() + 1);
+        robot.setEnergyCubes(robot.getEnergyCubes() + 1);
     }
 }

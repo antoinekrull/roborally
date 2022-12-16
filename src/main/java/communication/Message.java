@@ -6,6 +6,8 @@ package communication;
  */
 
 public class Message {
+    public Message() {
+    }
     private MessageType messageType;
 
     private MessageBody messageBody;

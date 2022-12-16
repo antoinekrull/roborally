@@ -1,8 +1,9 @@
 package game.card;
 
 public enum CardType {
-    //TODO: Implement card types
     NONE,
     PROGRAMMING_CARD,
-    UPGRADE_CARD
+    SPECIAL_PROGRAMMING_CARD,
+    UPGRADE_CARD,
+    DAMAGE_CARD
 }

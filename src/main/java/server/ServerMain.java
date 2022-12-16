@@ -4,13 +4,10 @@ import communication.MessageCreator;
 import game.player.Player;
 import javafx.application.Application;
 import javafx.stage.Stage;
-
-
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
@@ -36,14 +33,14 @@ public class ServerMain extends Application {
 
         protected Socket socket = null;
         protected ServerSocket server = null;
-        public HashMap<String, Player> players = new HashMap<>();
-        protected HashMap<String, Player> activePlayers = new HashMap<>();
-        //Network Communication
-        protected final ArrayList<HandleClient> CLIENTS = new ArrayList<>();
+        public HashMap<Integer, Player> players = new HashMap<>();
+        public HashMap<Integer, HandleClient> CLIENTS = new HashMap<>();
         public final LinkedBlockingQueue<String> messages;
+        public int uniqueID = 0;
 
         MessageCreator messageCreator = new MessageCreator();
         Server self = this;
+        private String protocolVersion = "Version 0.1";
 
         /**
          * Initialises server.
@@ -63,11 +60,13 @@ public class ServerMain extends Application {
                             socket = server.accept();
 
                             //handle multithreading for clients
-                            HandleClient client = new HandleClient(socket.getRemoteSocketAddress().toString(), socket.getPort(), socket, self);
+                            int uniqueID = getUniqueID();
+                            HandleClient client = new HandleClient(socket.getRemoteSocketAddress().toString(), socket.getPort(), socket, self, uniqueID);
                             client.setUsername("");
                             synchronized (CLIENTS) {
-                                CLIENTS.add(client);
+                                CLIENTS.put(uniqueID, client);
                             }
+
                             new Thread(client).start();
                         }
 
@@ -83,8 +82,8 @@ public class ServerMain extends Application {
                     while (true) {
                         try {
                             String message = messages.take();
-                            for (HandleClient client : CLIENTS) {
-                                client.write(messageCreator.generateSendChatMessage(message));
+                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                                client.getValue().write(messageCreator.generateReceivedChatMessage(message, 0, false));
                             }
                         } catch (Exception e) {
                             System.out.println("Error is it here " + e.getMessage());
@@ -95,10 +94,10 @@ public class ServerMain extends Application {
             writeMessages.start();
         }
 
-
-        public List<HandleClient> getClients() {
-            return this.CLIENTS;
+        public synchronized int getUniqueID(){
+            return uniqueID++;
         }
+        public String getProtocolVersion(){return this.protocolVersion;}
 
     }
     public static void main(String[] args) {

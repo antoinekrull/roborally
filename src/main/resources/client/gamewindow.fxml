@@ -16,77 +16,72 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.media.MediaView?>
 
-<BorderPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.Controller">
-   <center>
-      <GridPane prefHeight="377.0" prefWidth="775.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints fx:id="rowUp" percentHeight="70.0" valignment="TOP" vgrow="ALWAYS" />
-          <RowConstraints percentHeight="30.0" valignment="BOTTOM" vgrow="ALWAYS" />
-        </rowConstraints>
-         <children>
-            <HBox GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+
+
+<StackPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelGameWindow">
+   <children>
+      <BorderPane prefHeight="1080.0" prefWidth="1920.0">
+         <center>
+            <GridPane prefHeight="377.0" prefWidth="775.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints fx:id="rowUp" percentHeight="50.0" valignment="TOP" vgrow="ALWAYS" />
+                  <RowConstraints minHeight="10.0" percentHeight="30.0" prefHeight="30.0" valignment="TOP" vgrow="ALWAYS" />
+                <RowConstraints percentHeight="20.0" valignment="BOTTOM" vgrow="ALWAYS" />
+              </rowConstraints>
                <children>
-                  <GridPane fx:id="boardImages" minWidth="100.0" HBox.hgrow="ALWAYS">
-                    <columnConstraints>
-                      <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
+                  <HBox GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                      <children>
-                        <Pane fx:id="paneBoardStart" minWidth="100.0" GridPane.halignment="RIGHT" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                        <GridPane fx:id="boardImages" minWidth="100.0" HBox.hgrow="ALWAYS">
+                          <columnConstraints>
+                            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="200.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
                            <children>
-                              <ImageView fx:id="startboard" fitHeight="${paneBoardStart.height}" preserveRatio="true">
-                                 <image>
-                                   <Image url="@../textures/roborally_startboard.jpg" />
-                                </image>
-                             </ImageView>
-                           </children>
-                        </Pane>
-                        <Pane fx:id="paneBoardGame" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                           <children>
-                             <ImageView fx:id="playboard" fitHeight="${paneBoardStart.height}" preserveRatio="true">
-                                <image>
-                                   <Image url="@../textures/roborally_beginnerBoard.jpg" />
-                                </image>
-                             </ImageView>
-                           </children>
-                        </Pane>
-                    </children>
-                 </GridPane>
-                 <GridPane HBox.hgrow="ALWAYS">
-                   <columnConstraints>
-                     <ColumnConstraints hgrow="SOMETIMES" />
-                   </columnConstraints>
-                   <rowConstraints>
-                     <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
-                     <RowConstraints fx:id="programspace" percentHeight="50" valignment="CENTER" vgrow="SOMETIMES" />
-                   </rowConstraints>
-                    <children>
-                       <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                           <children>
-                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../textures/roborally_upgrade.jpg" />
-                                 </image>
-                              </ImageView>
-                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../textures/roborally_spam.jpg" />
-                                 </image>
-                              </ImageView>
-                              <Pane fx:id="toprightRow" HBox.hgrow="ALWAYS">
+                              <GridPane id="startBoard" fx:id="startBoard">
+
+                              </GridPane>
+                              <GridPane id="gameBoard" fx:id="gameBoard">
+
+                              </GridPane>
+                          </children>
+                       </GridPane>
+                       <GridPane HBox.hgrow="ALWAYS">
+                         <columnConstraints>
+                           <ColumnConstraints hgrow="SOMETIMES" />
+                         </columnConstraints>
+                         <rowConstraints>
+                           <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
+                           <RowConstraints fx:id="programspace" percentHeight="50" valignment="CENTER" vgrow="SOMETIMES" />
+                         </rowConstraints>
+                          <children>
+                             <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                                  <children>
-                                    <VBox>
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../textures/cards/roborally_upgrade.jpg" />
+                                       </image>
+                                    </ImageView>
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../textures/cards/roborally_spam.jpg" />
+                                       </image>
+                                    </ImageView>
+                                    <Pane fx:id="toprightRow" HBox.hgrow="ALWAYS">
                                        <children>
-                                          <ScrollPane fx:id="chatScrollPane" hbarPolicy="NEVER" minHeight="80.0" prefHeight="${toprightRow.height}" vbarPolicy="ALWAYS">
+                                          <ScrollPane fx:id="chatScrollPane" hbarPolicy="NEVER" minHeight="80.0" minWidth="300.0" prefHeight="${toprightRow.height}" vbarPolicy="ALWAYS">
                                              <content>
                                                 <VBox fx:id="chatVBox" />
                                              </content>
@@ -94,14 +89,14 @@
                                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                              </padding>
                                           </ScrollPane>
-                                          <HBox>
+                                          <HBox layoutY="80.0">
                                              <children>
                                                 <TextField fx:id="chatTextfield" focusTraversable="false" prefHeight="30.0" prefWidth="388.0" promptText="Type here...">
                                                    <font>
                                                       <Font name="Hiragino Sans W2" size="13.0" />
                                                    </font>
                                                 </TextField>
-                                                <Button fx:id="buttonSend" mnemonicParsing="false" onAction="#onEnter" prefHeight="26.0" prefWidth="55.0">
+                                                <Button fx:id="chatButton" mnemonicParsing="false" onAction="#chatButtonOnAction" prefHeight="26.0" prefWidth="55.0">
                                                    <opaqueInsets>
                                                       <Insets />
                                                    </opaqueInsets>
@@ -123,113 +118,248 @@
                                              </children>
                                           </HBox>
                                        </children>
-                                    </VBox>
+                                       <HBox.margin>
+                                          <Insets bottom="30.0" />
+                                       </HBox.margin>
+                                    </Pane>
                                  </children>
-                                 <HBox.margin>
-                                    <Insets bottom="30.0" />
-                                 </HBox.margin>
-                              </Pane>
-                           </children>
-                           <GridPane.margin>
-                              <Insets left="20.0" />
-                           </GridPane.margin>
-                        </HBox>
-                        <Pane fx:id="playerProgramPane" GridPane.rowIndex="1">
-                           <children>
-                             <ImageView fitHeight="${playerProgramPane.height}" fitWidth="${playerProgramPane.width}" preserveRatio="true">
-                                <image>
-                                   <Image url="@../textures/roborally_programierflaeche.jpg" />
-                                </image>
-                             </ImageView>
-                           </children>
-                        </Pane>
+                                 <GridPane.margin>
+                                    <Insets left="20.0" />
+                                 </GridPane.margin>
+                              </HBox>
+                          </children>
+                       </GridPane>
                     </children>
-                 </GridPane>
-              </children>
-           </HBox>
-            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
-               <children>
-                  <GridPane HBox.hgrow="ALWAYS">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" valignment="BOTTOM" vgrow="SOMETIMES" />
-                     </rowConstraints>
+                 </HBox>
+                  <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
                      <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../textures/roborally_move3.jpg" />
-                           </image>
-                        </ImageView>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
-                           <image>
-                              <Image url="@../textures/roborally_move3.jpg" />
-                           </image>
-                        </ImageView>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
-                           <image>
-                              <Image url="@../textures/roborally_move3.jpg" />
-                           </image>
-                        </ImageView>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
-                           <image>
-                              <Image url="@../textures/roborally_move3.jpg" />
-                           </image>
-                        </ImageView>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4">
-                           <image>
-                              <Image url="@../textures/roborally_move3.jpg" />
-                           </image>
-                        </ImageView>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5">
-                           <image>
-                              <Image url="@../textures/roborally_move3.jpg" />
-                           </image>
-                        </ImageView>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6">
-                           <image>
-                              <Image url="@../textures/roborally_move3.jpg" />
-                           </image>
-                        </ImageView>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7">
-                           <image>
-                              <Image url="@../textures/roborally_move3.jpg" />
-                           </image>
-                        </ImageView>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8">
-                           <image>
-                              <Image url="@../textures/roborally_move3.jpg" />
-                           </image>
-                        </ImageView>
+                        <GridPane maxWidth="600.0" HBox.hgrow="ALWAYS">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </GridPane>
                      </children>
-                  </GridPane>
+                  </HBox>
+                  <Pane fx:id="playerProgramPane" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                     <children>
+                       <ImageView fitHeight="${playerProgramPane.height}" fitWidth="${playerProgramPane.width}" preserveRatio="true">
+                          <image>
+                             <Image url="@../textures/roborally_programierflaeche.jpg" />
+                          </image>
+                       </ImageView>
+                     </children>
+                  </Pane>
+              </children>
+               <BorderPane.margin>
+                  <Insets top="20.0" />
+               </BorderPane.margin>
+            </GridPane>
+         </center>
+         <top>
+            <VBox spacing="60.0" BorderPane.alignment="CENTER">
+               <children>
+                  <MenuBar>
+                    <menus>
+                      <Menu mnemonicParsing="false" text="Options">
+                        <items>
+                           <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#exit" text="Exit" />
+                           <MenuItem mnemonicParsing="false" text="Help" />
+                        </items>
+                      </Menu>
+                    </menus>
+                  </MenuBar>
+                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="60.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <GridPane maxWidth="600.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </GridPane>
+                        <GridPane maxWidth="600.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8">
+                                 <image>
+                                    <Image url="@../textures/cards/roborally_move3.jpg" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </HBox>
                </children>
-            </HBox>
-        </children>
-         <BorderPane.margin>
-            <Insets top="20.0" />
-         </BorderPane.margin>
-      </GridPane>
-   </center>
-   <top>
-      <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="Options">
-            <items>
-              <MenuItem mnemonicParsing="false" text="Exit" />
-                  <MenuItem mnemonicParsing="false" text="Help" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-   </top>
-</BorderPane>
+            </VBox>
+         </top>
+      </BorderPane>
+      <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+   </children>
+</StackPane>
