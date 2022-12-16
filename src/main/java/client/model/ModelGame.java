@@ -35,11 +35,7 @@ public class ModelGame {
         this.readyToPlay = new SimpleBooleanProperty();
         this.maps = FXCollections.observableArrayList();
         this.users = FXCollections.observableArrayList();
-        maps.add("Dizzy Highway");
-        maps.add("KackJavaFX");
-        users.add("Tomi");
-        users.add("Firas");
-        users.add("Molri");
+        addToList();
     }
 
     public static ModelGame getInstance() {
@@ -47,6 +43,15 @@ public class ModelGame {
             modelGame = new ModelGame();
         }
         return modelGame;
+    }
+
+    public void addToList() {
+        maps.add("Dizzy Highway");
+        maps.add("KackJavaFX");
+        users.add("All");
+        users.add("Tomi");
+        users.add("Firas");
+        users.add("Molri");
     }
 
     public String getRobot() {

@@ -6,6 +6,7 @@ import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
 import java.io.IOException;
+import communication.Message;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -43,15 +44,9 @@ public class ViewModelLobby {
     @FXML
     private Button readyButton;
     @FXML
-    private Button leaveButton;
-    @FXML
     private ScrollPane chatScrollPane;
     @FXML
     private VBox chatVBox;
-    @FXML
-    private MenuItem groupChatItem;
-    @FXML
-    private MenuItem mapItem1;
     @FXML
     private MenuItem exitMenuItem;
     @FXML
@@ -62,8 +57,6 @@ public class ViewModelLobby {
     private ChoiceBox<String> mapsChoiceBox;
     @FXML
     private ChoiceBox<String> usersChoiceBox;
-    @FXML
-    private Button userButton;
     @FXML
     private Label timeLabel;
 
@@ -102,19 +95,64 @@ public class ViewModelLobby {
         });
     }
 
-    public void messageToChat() {
-        String message = "";
+    public void receivedMessage() {
+        Message message = null;
         try {
-            message = modelChat.getMessages().take();
+            message = modelChat.getMESSSAGES().take();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
+        assert message != null;
+        if (message.getMessageBody().isPrivate()) {
+            String privateMessage = message.getMessageBody().getMessage();
+            privateMessageToChat(privateMessage);
+        }
+        else {
+            String groupMessage = message.getMessageBody().getMessage();
+            groupMessageToChat(groupMessage);
+        }
+    }
+
+    public void chatButtonOnAction() {
+        String user = usersChoiceBox.getSelectionModel().getSelectedItem();
+        int userID = modelUser.userIDProperty().get();
+
+        if(user.equals("All")) {
+            modelChat.sendGroupMessage(userID);
+        }
+        else {
+            modelChat.sendPrivateMessage(userID);
+        }
+
+        addToChat(chatTextfield.getText());
+    }
+
+    public void addToChat(String message) {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setPadding(new Insets(5, 5, 5, 10));
 
         Text text = new Text(message);
+        TextFlow textFlow = new TextFlow(text);
+        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
+                "fx-background-radius: 40px; -fx-opacity: 100;");
+        textFlow.setPadding(new Insets(5, 10, 5, 10));
+        text.setFill(Color.color(0.934, 0.945, 0.996));
+
+        hBox.getChildren().add(textFlow);
+        chatVBox.getChildren().add(hBox);
+
+        chatTextfield.clear();
+        chatTextfield.requestFocus();
+    }
+
+    public void groupMessageToChat(String privateMessage) {
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        hBox.setPadding(new Insets(5, 5, 5, 10));
+
+        Text text = new Text(privateMessage);
         TextFlow textFlow = new TextFlow(text);
         textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
                 "fx-background-radius: 40px; -fx-opacity: 100;");
@@ -131,33 +169,32 @@ public class ViewModelLobby {
         });
     }
 
-    public void chatButtonOnAction() {
-        int userID = modelUser.getUserID();
-        modelChat.sendMessage(userID);
-
+    public void privateMessageToChat(String groupMessage) {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setPadding(new Insets(5, 5, 5, 10));
 
-        Text text = new Text(chatTextfield.getText());
+        Text text = new Text(groupMessage);
         TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
+        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(208,167,15);" +
                 "fx-background-radius: 40px; -fx-opacity: 100;");
         textFlow.setPadding(new Insets(5, 10, 5, 10));
         text.setFill(Color.color(0.934, 0.945, 0.996));
 
         hBox.getChildren().add(textFlow);
-        chatVBox.getChildren().add(hBox);
-
-        chatTextfield.clear();
-        chatTextfield.requestFocus();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                chatVBox.getChildren().add(hBox);
+            }
+        });
     }
 
     public void readyButtonOnAction() throws IOException {
         if (readyButton.getText().equals("READY")) {
             readyButton.setText("NOT READY");
             this.ready.set(true);
-            modelGame.setPlayerStatus(modelUser.getUserID());
+            modelGame.setPlayerStatus(modelUser.userIDProperty().get());
             /*long endTime = 2000;
             DateFormat timeFormat = new SimpleDateFormat( "HH:mm:ss" );
             final Timeline timeline = new Timeline(
@@ -176,14 +213,13 @@ public class ViewModelLobby {
             );
             timeline.setCycleCount(Animation.INDEFINITE);
             timeline.play();
-
              */
             RoboRallyStart.switchScene("gamewindow.fxml");
         }
         if (readyButton.getText().equals("NOT READY")) {
             readyButton.setText("READY");
             this.ready.set(false);
-            modelGame.setPlayerStatus(modelUser.getUserID());
+            modelGame.setPlayerStatus(modelUser.userIDProperty().get());
         }
 
         //resource is null
@@ -208,7 +244,7 @@ public class ViewModelLobby {
     }
 
     public void setMap() {
-        String map = mapItem1.getText();
+        //set map
         //map is Dizzy Highway
     }
 }

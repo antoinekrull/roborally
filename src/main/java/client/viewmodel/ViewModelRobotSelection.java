@@ -53,7 +53,7 @@ public class ViewModelRobotSelection {
     public void usernameButtonOnAction() throws IOException {
         String robot = modelGame.getRobot();
         String username = modelUser.usernameProperty().get();
-        int userID = modelUser.getUserID();
+        int userID = modelUser.userIDProperty().get();
         if (!robot.isEmpty() && !username.isEmpty()) {
             //modelUser.sendUsername();
             //modelGame.sendRobotSelection(userID);

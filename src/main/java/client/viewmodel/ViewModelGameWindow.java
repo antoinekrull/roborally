@@ -4,6 +4,7 @@ import client.connection.NotifyChangeSupport;
 import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
+import communication.Message;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -70,43 +71,48 @@ public class ViewModelGameWindow {
         //gameBoard.add(gameBoard1, 0,0,13,10);
     }
 
-    public void messageToChat() {
-        String message = "";
+    public void receivedMessage() {
+        Message message = null;
         try {
-            message = modelChat.getMessages().take();
+            message = modelChat.getMESSSAGES().take();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new Insets(5,5,5,10));
-
-        Text text = new Text(message);
-        TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
-                "fx-background-radius: 40px; -fx-opacity: 100;");
-        textFlow.setPadding(new Insets(5, 10, 5, 10));
-        text.setFill(Color.color(0.934, 0.945, 0.996));
-
-        hBox.getChildren().add(textFlow);
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                chatVBox.getChildren().add(hBox);
-            }
-        });
+        assert message != null;
+        if (message.getMessageBody().isPrivate()) {
+            String privateMessage = message.getMessageBody().getMessage();
+            privateMessageToChat(privateMessage);
+        }
+        else {
+            String groupMessage = message.getMessageBody().getMessage();
+            groupMessageToChat(groupMessage);
+        }
     }
 
     public void chatButtonOnAction() {
+        /*String user = usersChoiceBox.getSelectionModel().getSelectedItem();
         int userID = modelUser.getUserID();
-        modelChat.sendMessage(userID);
 
+        if(user.equals("All")) {
+            modelChat.sendGroupMessage(userID);
+        }
+        else {
+            modelChat.sendPrivateMessage(userID);
+        }
+         */
+
+        int userID = modelUser.userIDProperty().get();
+        modelChat.sendGroupMessage(userID);
+        addToChat(chatTextfield.getText());
+    }
+
+    public void addToChat(String message) {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new Insets(5,5,5,10));
+        hBox.setPadding(new Insets(5, 5, 5, 10));
 
-        Text text = new Text(chatTextfield.getText());
+        Text text = new Text(message);
         TextFlow textFlow = new TextFlow(text);
         textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
                 "fx-background-radius: 40px; -fx-opacity: 100;");
@@ -117,6 +123,48 @@ public class ViewModelGameWindow {
         chatVBox.getChildren().add(hBox);
 
         chatTextfield.clear();
+        chatTextfield.requestFocus();
+    }
+
+    public void privateMessageToChat(String privateMessage) {
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        hBox.setPadding(new Insets(5, 5, 5, 10));
+
+        Text text = new Text(privateMessage);
+        TextFlow textFlow = new TextFlow(text);
+        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
+                "fx-background-radius: 40px; -fx-opacity: 100;");
+        textFlow.setPadding(new Insets(5, 10, 5, 10));
+        text.setFill(Color.color(0.934, 0.945, 0.996));
+
+        hBox.getChildren().add(textFlow);
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                chatVBox.getChildren().add(hBox);
+            }
+        });
+    }
+
+    public void groupMessageToChat(String groupMessage) {
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        hBox.setPadding(new Insets(5, 5, 5, 10));
+
+        Text text = new Text(groupMessage);
+        TextFlow textFlow = new TextFlow(text);
+        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(208,167,15);" +
+                "fx-background-radius: 40px; -fx-opacity: 100;");
+        textFlow.setPadding(new Insets(5, 10, 5, 10));
+        text.setFill(Color.color(0.934, 0.945, 0.996));
+
+        hBox.getChildren().add(textFlow);
+        chatVBox.getChildren().add(hBox);
+
+        chatTextfield.clear();
+        chatTextfield.requestFocus();
     }
 
 }
