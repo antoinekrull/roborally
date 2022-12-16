@@ -12,16 +12,12 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -38,15 +34,13 @@ import javafx.scene.text.TextFlow;
 public class ViewModelLobby {
 
     @FXML
-    private TextField chatTextfield;
-    @FXML
-    private Button chatButton;
-    @FXML
-    private Button readyButton;
+    private VBox chatVBox;
     @FXML
     private ScrollPane chatScrollPane;
     @FXML
-    private VBox chatVBox;
+    private TextField chatTextfield;
+    @FXML
+    private Button chatButton;
     @FXML
     private MenuItem exitMenuItem;
     @FXML
@@ -57,6 +51,8 @@ public class ViewModelLobby {
     private ChoiceBox<String> mapsChoiceBox;
     @FXML
     private ChoiceBox<String> usersChoiceBox;
+    @FXML
+    private Button readyButton;
     @FXML
     private Label timeLabel;
 
@@ -78,9 +74,9 @@ public class ViewModelLobby {
     public void initialize() {
         this.ready = new SimpleBooleanProperty();
         this.userList.setItems(modelGame.getUsers());
-        this.usersChoiceBox.setValue(modelGame.getUsers().get(0));
+        this.usersChoiceBox.setValue(modelGame.getUsersToSelect().get(0));
         this.mapsChoiceBox.setValue(modelGame.getMaps().get(0));
-        this.usersChoiceBox.setItems(modelGame.getUsers());
+        this.usersChoiceBox.setItems(modelGame.getUsersToSelect());
         this.mapsChoiceBox.setItems(modelGame.getMaps());
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
@@ -92,6 +88,27 @@ public class ViewModelLobby {
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 chatScrollPane.setVvalue((Double) newValue);
             }
+        });
+
+
+        userList.setCellFactory(lv -> {
+            ListCell<String> cell = new ListCell<String>() {
+                @Override
+                protected void updateItem(String item, boolean empty) {
+                    super.updateItem(item, empty);
+                    setText(item);
+                }
+            };
+            cell.setOnMouseClicked(e -> {
+                if (!cell.isEmpty()) {
+                    usersChoiceBox.setValue(userList.getSelectionModel().getSelectedItem());
+                    e.consume();
+                }
+                else {
+                    usersChoiceBox.setValue("All");
+                }
+            });
+            return cell;
         });
     }
 
@@ -120,23 +137,29 @@ public class ViewModelLobby {
 
         if(user.equals("All")) {
             modelChat.sendGroupMessage(userID);
+            addToChat(chatTextfield.getText(), false);
         }
         else {
             modelChat.sendPrivateMessage(userID);
+            addToChat(chatTextfield.getText(), true);
         }
-
-        addToChat(chatTextfield.getText());
     }
 
-    public void addToChat(String message) {
+    public void addToChat(String message, Boolean isPrivate) {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setPadding(new Insets(5, 5, 5, 10));
 
         Text text = new Text(message);
         TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
-                "fx-background-radius: 40px; -fx-opacity: 100;");
+        if(!isPrivate) {
+            textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
+                    "fx-background-radius: 40px; -fx-opacity: 100;");
+        }
+        else {
+            textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(208,167,15);" +
+                    "fx-background-radius: 40px; -fx-opacity: 100;");
+        }
         textFlow.setPadding(new Insets(5, 10, 5, 10));
         text.setFill(Color.color(0.934, 0.945, 0.996));
 

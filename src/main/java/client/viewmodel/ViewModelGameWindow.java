@@ -46,7 +46,6 @@ public class ViewModelGameWindow {
     private ModelChat modelChat;
     private ModelGame modelGame;
     private ModelUser modelUser;
-
     private NotifyChangeSupport notifyChangeSupport;
 
     public ViewModelGameWindow() {
@@ -126,7 +125,7 @@ public class ViewModelGameWindow {
         chatTextfield.requestFocus();
     }
 
-    public void privateMessageToChat(String privateMessage) {
+    public void groupMessageToChat(String privateMessage) {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setPadding(new Insets(5, 5, 5, 10));
@@ -148,7 +147,7 @@ public class ViewModelGameWindow {
         });
     }
 
-    public void groupMessageToChat(String groupMessage) {
+    public void privateMessageToChat(String groupMessage) {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setPadding(new Insets(5, 5, 5, 10));
@@ -161,10 +160,12 @@ public class ViewModelGameWindow {
         text.setFill(Color.color(0.934, 0.945, 0.996));
 
         hBox.getChildren().add(textFlow);
-        chatVBox.getChildren().add(hBox);
-
-        chatTextfield.clear();
-        chatTextfield.requestFocus();
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                chatVBox.getChildren().add(hBox);
+            }
+        });;
     }
 
 }

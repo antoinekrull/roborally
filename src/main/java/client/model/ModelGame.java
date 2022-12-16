@@ -5,7 +5,6 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.util.ArrayList;
 
 /**
  * Model for Game
@@ -22,6 +21,7 @@ public class ModelGame {
 
     private ObservableList<String> maps;
     private ObservableList<String> users;
+    private ObservableList<String> usersToSelect;
 
     private String robot;
     private BooleanProperty readyToPlay;
@@ -34,8 +34,11 @@ public class ModelGame {
         this.robotProperty = new SimpleStringProperty("");
         this.readyToPlay = new SimpleBooleanProperty();
         this.maps = FXCollections.observableArrayList();
-        this.users = FXCollections.observableArrayList();
-        addToList();
+        this.users = FXCollections.observableArrayList(client.getPlayersOnline());
+        this.usersToSelect = FXCollections.observableArrayList(client.getPlayersToChat());
+
+        maps.add("Dizzy Highway");
+        maps.add("KackJavaFX");
     }
 
     public static ModelGame getInstance() {
@@ -43,15 +46,6 @@ public class ModelGame {
             modelGame = new ModelGame();
         }
         return modelGame;
-    }
-
-    public void addToList() {
-        maps.add("Dizzy Highway");
-        maps.add("KackJavaFX");
-        users.add("All");
-        users.add("Tomi");
-        users.add("Firas");
-        users.add("Molri");
     }
 
     public String getRobot() {
@@ -72,6 +66,10 @@ public class ModelGame {
 
     public ObservableList<String> getUsers() {
         return users;
+    }
+
+    public ObservableList<String> getUsersToSelect() {
+        return usersToSelect;
     }
 
     /*public void sendRobotSelection(int clientID) throws IOException {

@@ -1,10 +1,15 @@
 package client.connection;
 
+import client.model.ModelChat;
+import client.model.ModelGame;
+import client.model.ModelUser;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
@@ -14,7 +19,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  *
@@ -43,14 +47,18 @@ public class Client {
     int port = 3000;
     private String protocolVersion = "Version 0.1";
     private String group = "KnorrigeKorrelate";
+    private ObservableList<String> playersOnline;
+    private ObservableList<String> playersToChat;
     private ArrayList<Triplet<Integer, String, Integer>> otherPlayers = new ArrayList<>();
     private ArrayList<Pair<Integer, Boolean>> otherPlayersStatus = new ArrayList<>();
 
     private Client() {
-        messageCreator = new MessageCreator();
-        message = new SimpleObjectProperty<>();
-        userID = new SimpleIntegerProperty();
-        isAI = new SimpleBooleanProperty();
+        this.messageCreator = new MessageCreator();
+        this.message = new SimpleObjectProperty<>();
+        this.userID = new SimpleIntegerProperty();
+        this.isAI = new SimpleBooleanProperty();
+        this.playersOnline = FXCollections.observableArrayList("Tomi", "Firas", "Molri", "Anto");
+        this.playersToChat = FXCollections.observableArrayList("All", "Tomi", "Firas", "Molri", "Anto");
 
         connected = new SimpleBooleanProperty();
 
@@ -62,6 +70,14 @@ public class Client {
             client = new Client();
         }
         return client;
+    }
+
+    public ObservableList<String> getPlayersOnline() {
+        return playersOnline;
+    }
+
+    public ObservableList<String> getPlayersToChat() {
+        return playersToChat;
     }
 
     public ObjectProperty<Message> messageProperty() {
