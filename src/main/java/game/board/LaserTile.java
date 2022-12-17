@@ -11,11 +11,11 @@ public class LaserTile extends Tile{
     private Direction los;
     private int rebootTileIndex;
 
-    public LaserTile(int xCoordinate, int yCoordinate, Direction los) {
+    public LaserTile(int xCoordinate, int yCoordinate, Direction LineOfSight) {
         super(xCoordinate, yCoordinate);
         isDanger = true;
         isBlocking = false;
-        this.los = los;
+        this.los = LineOfSight;
     }
 
     public int getRebootTileIndex() {
