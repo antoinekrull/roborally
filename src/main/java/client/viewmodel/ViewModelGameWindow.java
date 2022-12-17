@@ -130,7 +130,7 @@ public class ViewModelGameWindow {
         for (int x = 0; x < mapX; x++) {
             for (int y = 0; y < mapY; y++) {
                 if (map[x][y] != null) {
-                    map[x][y].makeImage(gameGrid);
+                    map[x][y].makeImage(gameGrid, x, y);
                 }
             }
         }
