@@ -23,6 +23,9 @@ public abstract class Board {
     public void setCheckPointCount(int checkPointCount) {
         this.checkPointCount = checkPointCount;
     }
+    public Tile[][] getBoard() {
+        return board;
+    }
 }
 
 
