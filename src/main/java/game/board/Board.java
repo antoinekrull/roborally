@@ -9,9 +9,11 @@ public abstract class Board {
     protected int rows;
 
     private int checkPointCount;
-    protected Tile[][] board;
+    protected Tile[][] board = new Tile[13][10];
     public void loadBoard(){}
-    public void setTile(int colum, int row, Tile tile){}
+    public void setTile(int column, int row, Tile tile){
+        board[column][row] = tile;
+    }
     public int getCheckPointCount() {
         return checkPointCount;
     }
