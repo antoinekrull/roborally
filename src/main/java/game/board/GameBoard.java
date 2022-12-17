@@ -16,7 +16,7 @@ import static java.lang.Integer.parseInt;
  */
 public class GameBoard extends Board{
 
-    //TODO: Implement PushPanels
+    //TODO: Implement PushPanels, implement multiple tile types in single field
     public void createBoard(Object jsonMap) throws JsonProcessingException {
         HashMap<String, String> convertedMap = JsonSerializer.deserializeJson(jsonMap.toString(), HashMap.class);
         var entrySet = convertedMap.entrySet();
