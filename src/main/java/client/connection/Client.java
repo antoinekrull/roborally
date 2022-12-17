@@ -1,5 +1,6 @@
 package client.connection;
 
+import client.model.ModelGame;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
@@ -53,6 +54,8 @@ public class Client {
     private ArrayList<Triplet<Integer, String, Integer>> otherPlayers = new ArrayList<>();
     private ArrayList<Pair<Integer, Boolean>> otherPlayersStatus = new ArrayList<>();
 
+    private ModelGame modelGame;
+
     private Client() {
 
         this.MESSAGES = new LinkedBlockingQueue<>();
@@ -64,6 +67,8 @@ public class Client {
         connectServer();
 
         message = new SimpleStringProperty("");
+
+        modelGame = ModelGame.getInstance();
     }
 
     public static Client getInstance() {
@@ -147,6 +152,7 @@ public class Client {
 
                             }
                             if(message.getMessageType().equals(MessageType.GameStarted)){
+                                modelGame.createMap(message.getMessageBody());
                                 //GameBoard board = new GameBoard();
                                 //board.createBoard(message.getMessageBody());
                             }

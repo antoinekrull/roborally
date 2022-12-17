@@ -1,6 +1,8 @@
 package client.model;
 
 import client.connection.Client;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import game.board.GameBoard;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 public class ModelGame {
 
     private static ModelGame modelGame;
+    public GameBoard gameBoard;
     public SimpleStringProperty robotProperty;
 
     private Client client;
@@ -35,6 +38,7 @@ public class ModelGame {
         this.readyToPlay = new SimpleBooleanProperty();
         this.maps = FXCollections.observableArrayList();
         this.users = FXCollections.observableArrayList();
+        this.gameBoard = new GameBoard();
         maps.add("Dizzy Highway");
         maps.add("KackJavaFX");
         users.add("Tomi");
@@ -55,6 +59,9 @@ public class ModelGame {
 
     public void setRobot(String robot) {
         this.robot = robot;
+    }
+    public void createMap(Object jsonMap) throws JsonProcessingException {
+        gameBoard.createBoard(jsonMap);
     }
 
     public BooleanProperty readyToPlayProperty() {
@@ -79,7 +86,6 @@ public class ModelGame {
         }
     }
     */
-
     public void setPlayerStatus(int userID) {
         //client.sendPlayerStatus or client.sendMessageToServer(userID, MessageType); true/false
     }

@@ -87,5 +87,4 @@ public class GameBoard extends Board{
         }
         return parsedDirection;
     }
-
 }

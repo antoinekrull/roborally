@@ -4,6 +4,9 @@ import client.connection.NotifyChangeSupport;
 import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
+import game.Game;
+import game.board.GameBoard;
+import game.board.Tile;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -38,13 +41,14 @@ public class ViewModelGameWindow {
     @FXML
     private ScrollPane chatScrollPane;
     @FXML
-    private GridPane gameBoard;
+    private GridPane gameGrid;
 
     //buttons for cards
 
     private ModelChat modelChat;
     private ModelGame modelGame;
     private ModelUser modelUser;
+    private GameBoard gameBoard;
 
     private NotifyChangeSupport notifyChangeSupport;
 
@@ -57,6 +61,9 @@ public class ViewModelGameWindow {
     }
 
     public void initialize() {
+        Tile[][] map;
+        map = modelGame.gameBoard.getBoard();
+        placeTiles(map,13,10);
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
         chatVBox.heightProperty().addListener(new ChangeListener<Number>() {
@@ -118,5 +125,14 @@ public class ViewModelGameWindow {
 
         chatTextfield.clear();
     }
-
+    public void placeTiles(Tile[][] map, int mapX, int mapY) {
+        Tile tile;
+        for (int x = 0; x < mapX; x++) {
+            for (int y = 0; y < mapY; y++) {
+                if (map[x][y] != null) {
+                    map[x][y].makeImage(gameGrid);
+                }
+            }
+        }
+    }
 }
