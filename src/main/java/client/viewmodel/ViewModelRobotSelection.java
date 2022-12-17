@@ -5,11 +5,11 @@ import client.connection.NotifyChangeSupport;
 import client.model.ModelGame;
 import client.model.ModelUser;
 import java.io.IOException;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 /**
  * ViewModel for selecting one of eight robots
@@ -57,11 +57,12 @@ public class ViewModelRobotSelection {
         if (!robot.isEmpty() && !username.isEmpty()) {
             //modelUser.sendUsername();
             //modelGame.sendRobotSelection(userID);
-            RoboRallyStart.switchScene("gamewindow.fxml");
+            RoboRallyStart.switchScene("lobby.fxml");
         }
     }
-    public void exitButtonOnAction() {
-        Stage stage = (Stage) exitButton.getScene().getWindow();
-        stage.close();
+    public void exit() throws IOException {
+        //send disconnect notification to server
+        Platform.exit();
+        System.exit(0);
     }
 }

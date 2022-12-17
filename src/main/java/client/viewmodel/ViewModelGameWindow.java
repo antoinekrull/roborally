@@ -66,7 +66,7 @@ public class ViewModelGameWindow {
             }
         });
 
-        //TODO:Node gameBoard1 = new GameBoard().createBoard();
+        //Node gameBoard1 = new GameBoard().createBoard();
         //gameBoard.add(gameBoard1, 0,0,13,10);
     }
 

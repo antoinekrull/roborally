@@ -31,7 +31,7 @@
                         <menus>
                             <Menu mnemonicParsing="false" text="Options">
                                 <items>
-                                    <MenuItem fx:id="exitButton" mnemonicParsing="false" onAction="#exitButtonOnAction" text="Exit" />
+                                    <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#exit" text="Exit" />
                                     <MenuItem mnemonicParsing="false" text="Help" />
                                 </items>
                             </Menu>
@@ -63,7 +63,7 @@
                             <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
                         </rowConstraints>
                         <children>
-                            <Label fx:id="robot1" alignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
+                            <Label fx:id="robot1" alignment="CENTER" contentDisplay="CENTER" styleClass="roboterlabel" text="Roboter 1" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
                                 <graphic>
                                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                         <image>
@@ -72,7 +72,7 @@
                                     </ImageView>
                                 </graphic>
                             </Label>
-                            <Label fx:id="robot2" layoutX="10.0" layoutY="-40.0" GridPane.columnIndex="1">
+                            <Label fx:id="robot2" contentDisplay="CENTER" layoutX="10.0" layoutY="-40.0" styleClass="roboterlabel" text="Roboter 2" GridPane.columnIndex="1">
                                 <graphic>
                                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                         <image>
@@ -84,7 +84,7 @@
                                     </ImageView>
                                 </graphic>
                             </Label>
-                            <Label fx:id="robot3" layoutX="10.0" layoutY="-40.0" GridPane.rowIndex="1">
+                            <Label fx:id="robot3" contentDisplay="CENTER" layoutX="10.0" layoutY="-40.0" styleClass="roboterlabel" text="Roboter 3" GridPane.rowIndex="1">
                                 <graphic>
                                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                         <image>
@@ -93,7 +93,7 @@
                                     </ImageView>
                                 </graphic>
                             </Label>
-                            <Label fx:id="robot4" layoutX="10.0" layoutY="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <Label fx:id="robot4" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" styleClass="roboterlabel" text="Roboter 4" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                 <graphic>
                                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                         <image>
@@ -102,7 +102,7 @@
                                     </ImageView>
                                 </graphic>
                             </Label>
-                            <Label fx:id="robot5" layoutX="10.0" layoutY="10.0" GridPane.rowIndex="2">
+                            <Label fx:id="robot5" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" styleClass="roboterlabel" text="Roboter 5" GridPane.rowIndex="2">
                                 <graphic>
                                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                         <image>
@@ -111,7 +111,7 @@
                                     </ImageView>
                                 </graphic>
                             </Label>
-                            <Label fx:id="robot6" layoutX="10.0" layoutY="60.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                            <Label fx:id="robot6" contentDisplay="CENTER" layoutX="10.0" layoutY="60.0" styleClass="roboterlabel" text="Roboter 6" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                 <graphic>
                                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                         <image>
