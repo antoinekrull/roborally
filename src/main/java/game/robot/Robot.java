@@ -2,7 +2,7 @@ package game.robot;
 
 import game.board.Direction;
 import game.board.Tile;
-import game.card.Deck;
+import game.card.Card;
 import game.card.ProgrammingDeck;
 import game.player.Player;
 import org.javatuples.Pair;
@@ -22,6 +22,7 @@ public class Robot {
     private Pair<Integer, Integer> currentPosition;
     private ProgrammingDeck deck;
     private boolean isRebooted = false;
+    private Card[] register = new Card[5];
 
     public Robot(int figure, Player owner) {
         this.figure = figure;
@@ -29,6 +30,12 @@ public class Robot {
         deck.createDeck();
         energyCubes = 0;
         currentObjective = 1;
+    }
+    public void setRegister(int registerNumber, Card card){
+        register[registerNumber] = card;
+    }
+    public void executeRegister(int registerNumber) throws Exception {
+        register[registerNumber].applyEffect(this);
     }
 
     public Player getOwner() {
