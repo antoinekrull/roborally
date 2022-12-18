@@ -10,7 +10,6 @@ import org.javatuples.Pair;
  */
 public class LaserTile extends Tile{
     private Direction los;
-    private int rebootTileIndex;
 
     public LaserTile(int xCoordinate, int yCoordinate, Direction los) {
         super(xCoordinate, yCoordinate);
@@ -19,12 +18,6 @@ public class LaserTile extends Tile{
         this.los = los;
     }
 
-    public int getRebootTileIndex() {
-        return rebootTileIndex;
-    }
-    public void setRebootTileIndex(int rebootTileIndex) {
-        this.rebootTileIndex = rebootTileIndex;
-    }
     public Direction getLos() {
         return los;
     }
