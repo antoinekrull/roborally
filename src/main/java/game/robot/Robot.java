@@ -23,6 +23,7 @@ public class Robot {
     private ProgrammingDeck deck;
     private boolean isRebooted = false;
     private Card[] register = new Card[5];
+    private int activeRegister;
 
     public Robot(int figure, Player owner) {
         this.figure = figure;
@@ -84,5 +85,7 @@ public class Robot {
     public void reboot(int rebootTileIndex){}
     public boolean getRebootStatus() {return isRebooted;}
     public void setRebootStatus(boolean rebooted) {isRebooted = rebooted;}
+    public int getActiveRegister() {return activeRegister;}
+    public void setActiveRegister(int activeRegister) {this.activeRegister = activeRegister;}
 
 }

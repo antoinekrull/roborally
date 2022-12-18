@@ -8,6 +8,7 @@ public class SpamCard extends Card {
 
     @Override
     public void applyEffect(Robot robot) throws Exception {
-        super.applyEffect(robot);
+        Card topProgrammingCard = robot.getDeck().popCardFromDeck();
+        robot.setRegister(robot.getActiveRegister(), topProgrammingCard);
     }
 }
