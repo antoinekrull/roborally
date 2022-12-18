@@ -9,7 +9,7 @@ import server.PlayerList;
 
 public class Game {
     private GamePhase currentGamePhase;
-    private PlayerList playerList;
+    public static PlayerList playerList;
     private GameBoard board;
     private Robot activeRobot;
     public static SpamDeck spamDeck = new SpamDeck();
