@@ -1,5 +1,6 @@
 package game.card;
 
+import game.Game;
 import game.robot.Robot;
 
 public class TrojanCard extends Card{
@@ -7,6 +8,9 @@ public class TrojanCard extends Card{
     public TrojanCard(){setCardName("Trojan Horse");}
     @Override
     public void applyEffect(Robot robot) throws Exception {
-        super.applyEffect(robot);
+        robot.getOwner().addCard(Game.spamDeck.popCardFromDeck());
+        robot.getOwner().addCard(Game.spamDeck.popCardFromDeck());
+        Card topProgrammingCard = robot.getDeck().popCardFromDeck();
+        robot.setRegister(robot.getActiveRegister(), topProgrammingCard);
     }
 }
