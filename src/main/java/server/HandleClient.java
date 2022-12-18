@@ -232,6 +232,8 @@ public class HandleClient implements Runnable{
                         setAlive(true);
                     } else if (incomingMessage.getMessageType() == MessageType.MapSelected) {
                         //write(messageCreator.generateGameStartedMessage(game.board.BoardModels.DizzyHighwayGameBoard));
+                    } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {;
+                        write(messageCreator.generatePlayerAddedMessage(incomingMessage.getMessageBody().getName(), incomingMessage.getMessageBody().getFigure(), this.clientID));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

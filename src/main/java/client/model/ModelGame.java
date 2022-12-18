@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Model for Game
@@ -26,14 +27,14 @@ public class ModelGame {
     private ObservableList<String> maps;
     private ObservableList<String> users;
 
-    private String robot;
+    private int robot;
     private BooleanProperty readyToPlay;
 
 
 
     private ModelGame() {
-        client = Client.getInstance();
-        this.robot = "";
+        //client = Client.getInstance();
+        this.robot = -1;
         this.robotProperty = new SimpleStringProperty("");
         this.readyToPlay = new SimpleBooleanProperty();
         this.maps = FXCollections.observableArrayList();
@@ -41,9 +42,9 @@ public class ModelGame {
         this.gameBoard = new GameBoard();
         maps.add("Dizzy Highway");
         maps.add("KackJavaFX");
-        users.add("Tomi");
+        /*users.add("Tomi");
         users.add("Firas");
-        users.add("Molri");
+        users.add("Molri");*/
     }
 
     public static ModelGame getInstance() {
@@ -53,11 +54,12 @@ public class ModelGame {
         return modelGame;
     }
 
-    public String getRobot() {
+    public int getRobot() {
         return robot;
     }
+    public void addUser(String user) {this.users.add(user);}
 
-    public void setRobot(String robot) {
+    public void setRobot(int robot) {
         this.robot = robot;
     }
     public void createMap(Object jsonMap) throws JsonProcessingException {
@@ -75,6 +77,7 @@ public class ModelGame {
     public ObservableList<String> getUsers() {
         return users;
     }
+
 
     /*public void sendRobotSelection(int clientID) throws IOException {
         boolean result = clientService.sendSelection(clientID, modelGame.getRobot());

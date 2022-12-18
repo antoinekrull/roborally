@@ -130,6 +130,7 @@ public class Client {
                                 otherPlayers.add(new Triplet<>(message.getMessageBody().getClientID(),
                                         message.getMessageBody().getName(),
                                         message.getMessageBody().getFigure()));
+                                //TODO process the data input like giving the player his robot and stuff like that
                             }
                             if(message.getMessageType().equals(MessageType.PlayerStatus)){
                                 otherPlayersStatus.add(new Pair<>(message.getMessageBody().getClientID(),

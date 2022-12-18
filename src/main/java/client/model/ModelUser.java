@@ -52,6 +52,9 @@ public class ModelUser {
     public int getUserID() {
         return userID;
     }
+    public void sendPlayerValues(String name, int figure) {
+        client.sendPlayerValuesMessage(name, figure);
+    }
 
     public void setUserID(int clientID) {
         this.userID = clientID;
