@@ -1,0 +1,136 @@
+{
+  "gameMap": [
+    [x0
+      [y0
+        {
+          "type": "EnergySpace",
+          "isOnBoard": "4A",
+          "count": "1"
+        }
+      ],
+      [y1
+        {
+          "type": "Empty",
+          "isOnBoard": "4A"
+        }
+      ],
+      [y2
+        {
+          "type": "Empty",
+          "isOnBoard": "4A"
+        }
+      ],
+      [y3
+        {
+          "type": "Empty",
+          "isOnBoard": "4A"
+        }
+      ],
+      [y4
+        {
+          "type": "Wall",
+          "isOnBoard": "4A",
+          "orientations": [
+            "bottom"
+          ]
+        },
+        {
+          "type": "Empty",
+          "isOnBoard": "4A"
+        }
+      ],
+      [y5
+        {
+          "type": "Wall",
+          "isOnBoard": "4A",
+          "orientations": [
+            "top"
+          ]
+        },
+        {
+          "type": "EnergySpace",
+          "isOnBoard": "4A",
+          "count": "1"
+        }
+      ],
+      [y6
+        {
+          "type": "Empty",
+          "isOnBoard": "4A"
+        }
+      ],
+      [y7
+        {
+          "type": "Empty",
+          "isOnBoard": "4A"
+        }
+      ],
+      [y8
+        {
+          "type": "Empty",
+          "isOnBoard": "4A"
+        }
+      ],
+      [y9
+        {
+          "type": "Empty",
+          "isOnBoard": "4A"
+        }
+      ]
+    ],
+    [x1
+      [y0
+        [
+          {
+            "type": "Wall",
+            "isOnBoard": "4A",
+            "orientations": [
+              "left"
+            ]
+          },
+          {
+            "type": "Laser",
+            "isOnBoard": "4A",
+            "orientations": [
+              "right"
+            ],
+            "count": 1
+          }
+        ]
+      ],
+      [y1
+        {
+          "type": "ConveyorBelt",
+          "isOnBoard": "5B",
+          "speed": 2,
+          "orientations": [
+            "top",
+            "right"
+          ]
+        }
+      ],
+      [y2
+        {
+          "type": "ConveyorBelt",
+          "isOnBoard": "5B",
+          "speed": 2,
+          "orientations": [
+            "left",
+            "right"
+          ]
+        }
+      ],
+      [y3
+        {
+          "type": "ConveyorBelt",
+          "isOnBoard": "5B",
+          "speed": 2,
+          "orientations": [
+            "left",
+            "right"
+          ]
+        }
+      ]
+    ]
+  ]
+}

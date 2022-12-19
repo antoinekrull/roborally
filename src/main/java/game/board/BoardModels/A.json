@@ -4,19 +4,7 @@
     [
       [
         {
-          "type": "Empty",
-          "isOnBoard": "Start A"
-        }
-      ],
-      [
-        {
-          "type": "Empty",
-          "isOnBoard": "Start A"
-        }
-      ],
-      [
-        {
-          "type": "Empty",
+          "type": "StartPoint",
           "isOnBoard": "Start A"
         }
       ],
@@ -28,7 +16,13 @@
       ],
       [
         {
-          "type": "Empty",
+          "type": "StartPoint",
+          "isOnBoard": "Start A"
+        }
+      ],
+      [
+        {
+          "type": "StartPoint",
           "isOnBoard": "Start A"
         }
       ],
@@ -40,7 +34,7 @@
       ],
       [
         {
-          "type": "StartPoint",
+          "type": "Empty",
           "isOnBoard": "Start A"
         }
       ],
@@ -52,13 +46,19 @@
       ],
       [
         {
-          "type": "StartPoint",
+          "type": "Empty",
           "isOnBoard": "Start A"
         }
       ],
       [
         {
-          "type": "StartPoint",
+          "type": "Empty",
+          "isOnBoard": "Start A"
+        }
+      ],
+      [
+        {
+          "type": "Empty",
           "isOnBoard": "Start A"
         }
       ]
@@ -82,7 +82,7 @@
             "type": "Wall",
             "isOnBoard": "Start A",
             "orientations": [
-              "bottom"
+              "top"
             ]
           },
           {
@@ -121,7 +121,7 @@
             "type": "Wall",
             "isOnBoard": "Start A",
             "orientations": [
-              "top"
+              "bottom"
             ]
           },
           {
@@ -152,7 +152,7 @@
           "orientations": [
             "right",
             "left"
-            ]
+          ]
         }
       ],
       [
