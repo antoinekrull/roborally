@@ -1,12 +1,10 @@
 package game.board;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import communication.JsonSerializer;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import static java.lang.Integer.parseInt;
 
@@ -27,7 +25,7 @@ public class GameBoard extends Board{
                         if(entry.getKey().equals("type")) {
                             String input = entry.getValue();
                             switch(input) {
-                                case "Empty", "tbd" ->  setTile(x, y, new NormalTile(x, y));
+                                case "Empty", "tbd" ->  setTile(x, y, new EmptyTile(x, y));
                                 case "EnergySpace" ->  setTile(x, y, new EnergySpaceTile(x, y));
                                 case "ConveyorBelt" -> {
                                     ArrayList<Direction> directionIn = new ArrayList<>();
