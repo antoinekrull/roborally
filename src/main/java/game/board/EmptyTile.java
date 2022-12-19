@@ -6,9 +6,9 @@ import game.robot.Robot;
  * @author Antoine, Firas
  * @version 1.0
  */
-public class NormalTile extends Tile{
+public class EmptyTile extends Tile{
 
-    public NormalTile(int xCoordinate, int yCoordinate) {
+    public EmptyTile(int xCoordinate, int yCoordinate) {
         super(xCoordinate, yCoordinate);
         isDanger = false;
         isBlocking = false;
