@@ -33,7 +33,7 @@ public class Game {
     }
 
     public void activateRegister(Player player) throws Exception {
-        player.getCardFromRegister(currentRegister).applyEffect(player.getRobot());
+        player.getCardFromRegister(currentRegister).applyEffect(player);
     }
 
 }
