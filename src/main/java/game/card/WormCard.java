@@ -1,12 +1,12 @@
 package game.card;
 
-import game.robot.Robot;
+import game.player.Player;
 
 public class WormCard extends Card {
     //immediately reboot your robot
     public WormCard() {setCardName("Worm");}
     @Override
-    public void applyEffect(Robot robot) throws Exception {
-        robot.reboot(0);
+    public void applyEffect(Player player) throws Exception {
+        player.getRobot().reboot(0);
     }
 }

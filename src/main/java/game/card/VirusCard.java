@@ -1,6 +1,7 @@
 package game.card;
 
 import game.Game;
+import game.player.Player;
 import game.robot.Robot;
 
 public class VirusCard extends Card {
@@ -16,9 +17,9 @@ public class VirusCard extends Card {
         }
     }
     @Override
-    public void applyEffect(Robot robot) throws Exception {
+    public void applyEffect(Player player) throws Exception {
         for(int i = 0; i < Game.playerList.size(); i++){
-            if(isInRange(robot, Game.playerList.getPlayerFromList(i).getRobot())){
+            if(isInRange(player.getRobot(), Game.playerList.getPlayerFromList(i).getRobot())){
                 Game.playerList.getPlayerFromList(i).addCard(Game.virusDeck.popCardFromDeck());
             }
         }
