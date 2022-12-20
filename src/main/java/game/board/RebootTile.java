@@ -1,6 +1,6 @@
 package game.board;
 
-import game.robot.Robot;
+import game.player.Player;
 
 /**
  * @author Firas
@@ -11,7 +11,8 @@ public class RebootTile extends Tile {
     public Direction direction;
 
     public RebootTile(int xCoordinate, int yCoordinate, Direction direction){
-        super(xCoordinate, yCoordinate);
+        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
+        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
         isDanger = false;
         isBlocking = false;
         this.direction = direction;
@@ -26,8 +27,13 @@ public class RebootTile extends Tile {
     }
 
     @Override
-    public void applyEffect(Robot robot) throws Exception {
-        robot.setCurrentPosition(getPosition());
-        robot.setDirection(this.direction);
+    public void applyEffect(Player player) throws Exception {
+        player.getRobot().setCurrentPosition(getPosition());
+        player.getRobot().setDirection(this.direction);
+        player.getRobot().setRebootStatus(true);
+        //TODO:Implement this
+        //robot.drawSpam(2);
+        //robot.discardSpam(2);
     }
+
 }

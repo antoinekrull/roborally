@@ -1,7 +1,7 @@
 package game.card;
 
 import game.board.Direction;
-import game.robot.Robot;
+import game.player.Player;
 
 public class UTurnCard extends Card {
 
@@ -10,12 +10,12 @@ public class UTurnCard extends Card {
     }
 
     @Override
-    public void applyEffect(Robot robot) throws Exception {
-        switch (robot.getDirection()) {
-            case NORTH -> robot.setDirection(Direction.SOUTH);
-            case EAST -> robot.setDirection(Direction.WEST);
-            case SOUTH -> robot.setDirection(Direction.NORTH);
-            case WEST -> robot.setDirection(Direction.EAST);
+    public void applyEffect(Player player) throws Exception {
+        switch (player.getRobot().getDirection()) {
+            case NORTH -> player.getRobot().setDirection(Direction.SOUTH);
+            case EAST -> player.getRobot().setDirection(Direction.WEST);
+            case SOUTH -> player.getRobot().setDirection(Direction.NORTH);
+            case WEST -> player.getRobot().setDirection(Direction.EAST);
             default -> throw new Exception("Invalid direction");
         }
     }

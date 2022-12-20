@@ -2,9 +2,8 @@ package game.robot;
 
 import game.board.Direction;
 import game.board.Tile;
-import game.card.Deck;
+import game.card.Card;
 import game.card.ProgrammingDeck;
-import game.player.Player;
 import org.javatuples.Pair;
 
 /**
@@ -13,7 +12,6 @@ import org.javatuples.Pair;
  */
 public class Robot {
 
-    private Player owner;
     private int figure;
     private int energyCubes;
     private int currentObjective;
@@ -21,21 +19,16 @@ public class Robot {
     private Direction direction;
     private Pair<Integer, Integer> currentPosition;
     private ProgrammingDeck deck;
+    private boolean isRebooted = false;
+    private int activeRegister;
 
-    public Robot(int figure, Player owner) {
+    public Robot(int figure) {
         this.figure = figure;
-        this.owner = owner;
         deck.createDeck();
         energyCubes = 0;
         currentObjective = 1;
     }
 
-    public Player getOwner() {
-        return owner;
-    }
-    public void setOwner(Player owner) {
-        this.owner = owner;
-    }
     public Pair<Integer, Integer> getCurrentPosition() {
         return currentPosition;
     }
@@ -74,7 +67,9 @@ public class Robot {
     public void determineTileEffect(Tile tile){}
     public void checkCollision(){}
     public void reboot(int rebootTileIndex){}
-
-
+    public boolean getRebootStatus() {return isRebooted;}
+    public void setRebootStatus(boolean rebooted) {isRebooted = rebooted;}
+    public int getActiveRegister() {return activeRegister;}
+    public void setActiveRegister(int activeRegister) {this.activeRegister = activeRegister;}
 
 }

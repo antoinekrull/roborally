@@ -1,6 +1,6 @@
 package game.board;
 
-import game.robot.Robot;
+import game.player.Player;
 
 /**
  * @author Antoine, Firas
@@ -9,13 +9,14 @@ import game.robot.Robot;
 public class EnergySpaceTile extends Tile{
 
     public EnergySpaceTile(int xCoordinate, int yCoordinate) {
-        super(xCoordinate, yCoordinate);
+        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
+        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
         isDanger = false;
         isBlocking = false;
     }
 
     @Override
-    public void applyEffect(Robot robot) throws Exception {
-        robot.setEnergyCubes(robot.getEnergyCubes() + 1);
+    public void applyEffect(Player player) throws Exception {
+        player.getRobot().setEnergyCubes(player.getRobot().getEnergyCubes() + 1);
     }
 }

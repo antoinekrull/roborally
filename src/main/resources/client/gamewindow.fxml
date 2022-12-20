@@ -188,7 +188,7 @@
                              <Region GridPane.columnIndex="11" GridPane.rowIndex="7" />
                              <Region GridPane.columnIndex="11" GridPane.rowIndex="8" />
                              <Region GridPane.columnIndex="11" GridPane.rowIndex="9" />
-                             <Region GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                             <Region GridPane.columnIndex="12" GridPane.rowIndex="0" />
                              <Region GridPane.columnIndex="12" GridPane.rowIndex="1" />
                              <Region GridPane.columnIndex="12" GridPane.rowIndex="2" />
                              <Region GridPane.columnIndex="12" GridPane.rowIndex="3" />
@@ -208,8 +208,6 @@
                              <Region GridPane.columnIndex="13" GridPane.rowIndex="7" />
                              <Region GridPane.columnIndex="13" GridPane.rowIndex="8" />
                              <Region GridPane.columnIndex="13" GridPane.rowIndex="9" />
-
-
                            </children>
                        </GridPane>
                        <GridPane HBox.hgrow="ALWAYS">

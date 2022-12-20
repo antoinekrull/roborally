@@ -71,9 +71,6 @@ public class ViewModelGameWindow {
                 chatScrollPane.setVvalue((Double) newValue);
             }
         });
-
-        //Node gameBoard1 = new GameBoard().createBoard();
-        //gameBoard.add(gameBoard1, 0,0,13,10);
     }
 
     public void messageToChat() {

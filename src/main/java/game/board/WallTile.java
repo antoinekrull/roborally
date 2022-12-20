@@ -1,6 +1,6 @@
 package game.board;
 
-import game.robot.Robot;
+import game.player.Player;
 
 import java.util.ArrayList;
 
@@ -12,7 +12,8 @@ public class WallTile extends Tile{
 
     private ArrayList<Direction> blockedDirections;
     public WallTile(int xCoordinate, int yCoordinate, ArrayList<Direction> blockedDirections) {
-        super(xCoordinate, yCoordinate);
+        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
+        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
         isDanger = false;
         isBlocking = true;
         this.blockedDirections = blockedDirections;
@@ -25,7 +26,7 @@ public class WallTile extends Tile{
         this.blockedDirections = blockedDirections;
     }
     @Override
-    public void applyEffect(Robot robot) throws Exception {
+    public void applyEffect(Player player) throws Exception {
         //has no effect, the robot movement is what detects collisions
     }
 }

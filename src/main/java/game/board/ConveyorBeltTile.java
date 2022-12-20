@@ -1,9 +1,8 @@
 package game.board;
 
-import game.robot.Robot;
-import org.javatuples.Pair;
-
+import game.player.Player;
 import java.util.ArrayList;
+import org.javatuples.Pair;
 
 /**
  * @author Antoine, Firas
@@ -15,7 +14,8 @@ public class ConveyorBeltTile extends Tile{
     private Direction directionOut;
 
     public ConveyorBeltTile(int xCoordinate, int yCoordinate, int velocity, ArrayList<Direction> directionIn, Direction directionOut) {
-        super(xCoordinate, yCoordinate);
+        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
+        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
         isDanger = false;
         isBlocking = false;
         this.velocity = velocity;
@@ -37,9 +37,9 @@ public class ConveyorBeltTile extends Tile{
     }
 
     @Override
-    public void applyEffect(Robot robot) throws Exception {
-        robot.setDirection(this.directionOut);
-        Pair<Integer, Integer> newPosition = new Pair<>(robot.getCurrentPosition().getValue0(), robot.getCurrentPosition().getValue1());
+    public void applyEffect(Player player) throws Exception {
+        player.getRobot().setDirection(this.directionOut);
+        Pair<Integer, Integer> newPosition = new Pair<>(player.getRobot().getCurrentPosition().getValue0(), player.getRobot().getCurrentPosition().getValue1());
         switch(this.directionOut){
             case NORTH -> newPosition.setAt1(newPosition.getValue1() + velocity);
             case SOUTH -> newPosition.setAt1(newPosition.getValue1() - velocity);
@@ -47,6 +47,6 @@ public class ConveyorBeltTile extends Tile{
             case WEST -> newPosition.setAt0(newPosition.getValue0() - velocity);
             default -> throw(new Exception("Invalid direction"));
         }
-        robot.setCurrentPosition(newPosition);
+        player.getRobot().setCurrentPosition(newPosition);
     }
 }
