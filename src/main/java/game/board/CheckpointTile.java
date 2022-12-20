@@ -1,5 +1,6 @@
 package game.board;
 
+import game.player.Player;
 import game.robot.Robot;
 
 /**
@@ -15,7 +16,7 @@ public class CheckpointTile extends Tile{
     }
 
     @Override
-    public void applyEffect(Robot robot) {
-        robot.setCurrentObjective(robot.getCurrentObjective() + 1);
+    public void applyEffect(Player player) {
+        player.getRobot().setCurrentObjective(player.getRobot().getCurrentObjective() + 1);
     }
 }

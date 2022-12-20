@@ -1,6 +1,6 @@
 package game.board;
 
-import game.robot.Robot;
+import game.player.Player;
 
 import java.util.ArrayList;
 
@@ -25,7 +25,7 @@ public class WallTile extends Tile{
         this.blockedDirections = blockedDirections;
     }
     @Override
-    public void applyEffect(Robot robot) throws Exception {
+    public void applyEffect(Player player) throws Exception {
         //has no effect, the robot movement is what detects collisions
     }
 }

@@ -1,6 +1,6 @@
 package game.card;
 
-import game.robot.Robot;
+import game.player.Player;
 
 public class AgainCard extends Card{
 
@@ -11,8 +11,8 @@ public class AgainCard extends Card{
     }
 
     @Override
-    public void applyEffect(Robot robot) throws Exception {
-        int previousRegister = robot.getOwner().getCurrentRegister(this) - 1;
-        robot.getOwner().getCardFromRegister(previousRegister).applyEffect(robot);
+    public void applyEffect(Player player) throws Exception {
+        int previousRegister = player.getRobot().getOwner().getCurrentRegister(this) - 1;
+        player.getRobot().getOwner().getCardFromRegister(previousRegister).applyEffect(player);
     }
 }

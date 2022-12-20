@@ -1,5 +1,6 @@
 package game.board;
 
+import game.player.Player;
 import game.robot.Robot;
 
 /**
@@ -23,7 +24,7 @@ public class PitTile extends Tile{
         this.rebootTileIndex = rebootTileIndex;
     }
     @Override
-    public void applyEffect(Robot robot) throws Exception {
-        robot.reboot(this.getRebootTileIndex());
+    public void applyEffect(Player player) throws Exception {
+        player.getRobot().reboot(this.getRebootTileIndex());
     }
 }
