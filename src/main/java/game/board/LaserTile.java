@@ -1,6 +1,7 @@
 package game.board;
 
 import game.card.SpamDeck;
+import game.player.Player;
 import game.robot.Robot;
 import org.javatuples.Pair;
 
@@ -23,7 +24,7 @@ public class LaserTile extends Tile{
     }
     public void setLos(Direction los) {this.los = los;}
     @Override
-    public void applyEffect(Robot robot) throws Exception {
-        robot.getOwner().addCard(game.Game.spamDeck.popCardFromDeck());
+    public void applyEffect(Player player) throws Exception {
+        player.addCard(game.Game.spamDeck.popCardFromDeck());
     }
 }
