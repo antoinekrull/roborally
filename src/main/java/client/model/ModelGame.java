@@ -2,7 +2,7 @@ package client.model;
 
 import client.connection.Client;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import game.board.GameBoard;
+import game.board.Board;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,7 +19,7 @@ import java.util.LinkedList;
 public class ModelGame {
 
     private static ModelGame modelGame;
-    public GameBoard gameBoard;
+    public Board gameBoard;
     public SimpleStringProperty robotProperty;
 
     private Client client;
@@ -38,7 +38,7 @@ public class ModelGame {
         this.readyToPlay = new SimpleBooleanProperty();
         this.maps = FXCollections.observableArrayList();
         this.users = FXCollections.observableArrayList();
-        this.gameBoard = new GameBoard();
+        this.gameBoard = new Board();
         maps.add("Dizzy Highway");
         maps.add("KackJavaFX");
         /*users.add("Tomi");

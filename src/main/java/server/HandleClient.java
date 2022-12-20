@@ -4,6 +4,7 @@ import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
+import game.Game;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -32,6 +33,7 @@ public class HandleClient implements Runnable{
     private String username;
     private ServerMain.Server server;
     private MessageCreator messageCreator;
+    private Game game;
 
     /**
      * Thread which handles the logged in clients.
@@ -47,6 +49,7 @@ public class HandleClient implements Runnable{
         this.server = server;
         this.threadID = threadID;
         this.messageCreator = new MessageCreator();
+        this.game = server.getGameInstance();
         try {
             this.in = new DataInputStream(
                     new BufferedInputStream(socket.getInputStream()));
@@ -232,8 +235,20 @@ public class HandleClient implements Runnable{
                         setAlive(true);
                     } else if (incomingMessage.getMessageType() == MessageType.MapSelected) {
                         //write(messageCreator.generateGameStartedMessage(game.board.BoardModels.DizzyHighwayGameBoard));
-                    } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {;
+                    } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
                         write(messageCreator.generatePlayerAddedMessage(incomingMessage.getMessageBody().getName(), incomingMessage.getMessageBody().getFigure(), this.clientID));
+                    } else if(incomingMessage.getMessageType() == MessageType.SetStatus) {
+                        boolean ready = incomingMessage.getMessageBody().isReady();
+                        if(ready){
+                            game.addReady(clientID);
+                            if(game.getFirstReadyID()==clientID){
+                                write(messageCreator.generateSelectMapMessage(game.getMaps()));
+                            }
+                        } else {
+                            game.removeReady(clientID);
+                        }
+                        write(messageCreator.generatePlayerStatusMessage(clientID,ready));
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

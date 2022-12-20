@@ -5,6 +5,8 @@ import game.board.PushPanelTile;
 import game.player.Player;
 import game.card.*;
 import server.PlayerList;
+import java.util.LinkedList;
+
 
 public class Game {
     private GamePhase currentGamePhase;
@@ -16,6 +18,10 @@ public class Game {
     public static TrojanDeck trojanDeck = new TrojanDeck();
     public static WormDeck wormDeck = new WormDeck();
     public static int currentRegister = 0;
+    private LinkedList<Integer> readyList = new LinkedList<>();
+    private String[] maps = {"DizzyHighway"};
+    public Game(){
+    }
 
     //applyTileEffect would be called after the programming register is executed
     public void applyTileEffect() throws Exception {
@@ -81,10 +87,27 @@ public class Game {
     private void activateRegister(Player player) throws Exception {
         player.getCardFromRegister(currentRegister).applyEffect(player);
     }
+    public String[] getMaps(){return this.maps;}
 
     //maybe implement with chosen deck as input value
     public Card drawDamageCard(Player player) {
         return null;
+    }
+    public void addReady(int clientID) {readyList.add(clientID);}
+    public void removeReady(int clientID) {
+        for (int i = 0; i < readyList.size(); i++) {
+            if (readyList.get(i).equals(clientID)) {
+                readyList.remove(i);
+            }
+        }
+    }
+    public int getFirstReadyID() {
+        if(readyList.size() > 0) {
+            return readyList.getFirst();
+        }
+        else {
+            return -1;
+        }
     }
 
 }

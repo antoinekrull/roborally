@@ -136,6 +136,12 @@ public class Client {
                                 otherPlayersStatus.add(new Pair<>(message.getMessageBody().getClientID(),
                                         message.getMessageBody().isReady()));
                             }
+                            if (message.getMessageType().equals(MessageType.SelectMap)){
+                                String[] maps = message.getMessageBody().getAvailableMaps();
+                                for (int i = 0; i < maps.length; i++) {
+                                    System.out.println(maps[i]);
+                                }
+                            }
                             if(message.getMessageType().equals(MessageType.ReceivedChat)){
                                 //MESSAGES.put(message.getMessageBody().getMessage())
                                 Client.this.setMessageProperty(message.getMessageBody().getMessage());

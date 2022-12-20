@@ -5,7 +5,7 @@ import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
 import game.Game;
-import game.board.GameBoard;
+import game.board.Board;
 import game.board.Tile;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -48,7 +48,7 @@ public class ViewModelGameWindow {
     private ModelChat modelChat;
     private ModelGame modelGame;
     private ModelUser modelUser;
-    private GameBoard gameBoard;
+    private Board gameBoard;
 
     private NotifyChangeSupport notifyChangeSupport;
 
