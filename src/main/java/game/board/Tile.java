@@ -1,6 +1,10 @@
 package game.board;
 
 import game.player.Player;
+import game.robot.Robot;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import org.javatuples.Pair;
 
 /**
@@ -8,11 +12,16 @@ import org.javatuples.Pair;
  * @version 1.0
  */
 public abstract class Tile {
+    String path;
+    protected int x;
+    protected int y;
+    protected int width;
+    protected int height;
     protected boolean isDanger;
     protected boolean isBlocking;
     private Pair<Integer, Integer> position;
 
-    public Tile(int xCoordinate, int yCoordinate) {
+    public Tile(int xCoordinate, int yCoordinate, String path) {
         position = new Pair<>(xCoordinate, yCoordinate);
     }
 
@@ -41,4 +50,11 @@ public abstract class Tile {
         return position.getValue1();
     }
     public void applyEffect(Player player) throws Exception{}
+
+    public void makeImage(GridPane tiles){
+        ImageView img = new ImageView();
+        Image im = new Image(path,(double) width,(double) height,false,false);
+        img.setImage(im);
+        tiles.add(img,x,y);
+    }
 }

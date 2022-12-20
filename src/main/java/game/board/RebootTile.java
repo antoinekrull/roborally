@@ -11,7 +11,8 @@ public class RebootTile extends Tile {
     public Direction direction;
 
     public RebootTile(int xCoordinate, int yCoordinate, Direction direction){
-        super(xCoordinate, yCoordinate);
+        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
+        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
         isDanger = false;
         isBlocking = false;
         this.direction = direction;
