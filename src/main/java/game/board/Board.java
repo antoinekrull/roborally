@@ -16,7 +16,7 @@ public abstract class Board {
     public void setTile(int column, int row, Tile tile){
         board[column][row] = tile;
     }
-    public void setTile(int colum, int row, Tile tile){}
+
     public Tile getTile(Pair<Integer, Integer> position){
         return board[position.getValue0()][position.getValue1()];
     }

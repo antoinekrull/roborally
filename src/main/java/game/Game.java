@@ -12,20 +12,19 @@ public class Game {
     private GamePhase currentGamePhase;
     public static PlayerList playerList;
     private GameBoard board;
-    private Robot activeRobot;
+    private Player activePlayer;
     public static SpamDeck spamDeck = new SpamDeck();
     public static VirusDeck virusDeck = new VirusDeck();
     public static TrojanDeck trojanDeck = new TrojanDeck();
     public static WormDeck wormDeck = new WormDeck();
+    public static int currentRegister;
     //applyTileEffect would be called after the programming register is executed
     public void applyTileEffect() throws Exception {
-        board.getTile(activeRobot.getCurrentPosition()).applyEffect(activeRobot);
+        board.getTile(activePlayer.getRobot().getCurrentPosition()).applyEffect(activePlayer);
     }
     public GamePhase getCurrentGamePhase() {
         return currentGamePhase;
     }
-
-    int currentRegister;
 
     public void startGame(PlayerList playerList) {
 
@@ -46,7 +45,7 @@ public class Game {
     }
 
     public void activateRegister(Player player) throws Exception {
-        player.getCardFromRegister(currentRegister).applyEffect(player.getRobot());
+        player.getCardFromRegister(currentRegister).applyEffect(player);
     }
 
 }
