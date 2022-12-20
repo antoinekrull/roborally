@@ -29,6 +29,7 @@ public class Game {
     }
 
     public void runActivationPhase(){
+
     }
 
     public void activateRegister(Player player) throws Exception {

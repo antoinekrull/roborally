@@ -1,7 +1,6 @@
 package game.board;
 
-import game.board.Tile;
-import game.robot.Robot;
+import game.player.Player;
 
 public class PushPanelTile extends Tile {
 
@@ -15,7 +14,7 @@ public class PushPanelTile extends Tile {
     }
 
     @Override
-    public void applyEffect(Robot robot) throws Exception {
+    public void applyEffect(Player player) throws Exception {
         //TODO: Implement this once we have working register logic
     }
 }
