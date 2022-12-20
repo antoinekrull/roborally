@@ -1,18 +1,30 @@
 package game;
 
-import game.card.Card;
 import game.player.Player;
 import game.robot.Robot;
+import game.board.GameBoard;
+import game.board.Tile;
+import game.card.*;
+import javafx.util.Pair;
 import server.PlayerList;
 
 public class Game {
     private GamePhase currentGamePhase;
-    private PlayerList playerList;
+    public static PlayerList playerList;
+    private GameBoard board;
+    private Player activePlayer;
+    public static SpamDeck spamDeck = new SpamDeck();
+    public static VirusDeck virusDeck = new VirusDeck();
+    public static TrojanDeck trojanDeck = new TrojanDeck();
+    public static WormDeck wormDeck = new WormDeck();
+    public static int currentRegister;
+    //applyTileEffect would be called after the programming register is executed
+    public void applyTileEffect() throws Exception {
+        board.getTile(activePlayer.getRobot().getCurrentPosition()).applyEffect(activePlayer);
+    }
     public GamePhase getCurrentGamePhase() {
         return currentGamePhase;
     }
-
-    int currentRegister;
 
     public void startGame(PlayerList playerList) {
 
