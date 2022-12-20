@@ -1,9 +1,13 @@
 package server;
 
+import communication.JsonSerializer;
+import communication.Message;
 import communication.MessageCreator;
 import game.player.Player;
 import javafx.application.Application;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -35,7 +39,7 @@ public class ServerMain extends Application {
         protected ServerSocket server = null;
         public HashMap<Integer, Player> players = new HashMap<>();
         public HashMap<Integer, HandleClient> CLIENTS = new HashMap<>();
-        public final LinkedBlockingQueue<String> messages;
+        //public final LinkedBlockingQueue<Message> messages;
         public int uniqueID = 0;
 
         MessageCreator messageCreator = new MessageCreator();
@@ -49,7 +53,7 @@ public class ServerMain extends Application {
          */
 
         public Server(int port) {
-            this.messages = new LinkedBlockingQueue<>();
+            //this.messages = new LinkedBlockingQueue<>();
 
             Thread acceptClients = new Thread() {
                 public void run() {
@@ -77,13 +81,20 @@ public class ServerMain extends Application {
             };
             acceptClients.start();
 
+            /*
+            //should be redundant, because linkedblockingqueue is not necessary anymore
             Thread writeMessages = new Thread() {
                 public void run() {
                     while (true) {
                         try {
-                            String message = messages.take();
+                            Message message = messages.take();
+                            int id = message.getMessageBody().getFrom();
                             for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
-                                client.getValue().write(messageCreator.generateReceivedChatMessage(message, 0, false));
+                                if (client.getKey() != id) {
+                                    client.getValue().write(message);
+                                }
+                                System.out.println("ID: " + id + "\n" + "clientValue:" + client.getValue() + "\n" + "clientKey:" + client.getKey() +
+                                        "\n" + "clientKey:" + client.getKey());
                             }
                         } catch (Exception e) {
                             System.out.println("Error is it here " + e.getMessage());
@@ -92,6 +103,24 @@ public class ServerMain extends Application {
                 }
             };
             writeMessages.start();
+
+             */
+        }
+
+        public void broadcast(int id, Message message) {
+            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                if (client.getKey() != id) {
+                    client.getValue().write(message);
+                }
+            }
+        }
+
+        public void sendTo(int toUser, Message message) {
+            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                if (client.getKey() == toUser) {
+                    client.getValue().write(message);
+                }
+            }
         }
 
         public synchronized int getUniqueID(){

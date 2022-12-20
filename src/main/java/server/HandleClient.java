@@ -75,6 +75,8 @@ public class HandleClient implements Runnable{
         }
     }
 
+
+    /*
     public void writeTo(int id, Message message) {
         try {
             for (Map.Entry<Integer, HandleClient> client : server.CLIENTS.entrySet()) {
@@ -86,6 +88,8 @@ public class HandleClient implements Runnable{
             e.printStackTrace();
         }
     }
+     */
+
     public void aliveMessage(int id) {
         try {
             for (Map.Entry<Integer, HandleClient> client : server.CLIENTS.entrySet()) {
@@ -147,7 +151,8 @@ public class HandleClient implements Runnable{
         setClientID(threadID);
 
         //send protocol version to client
-        writeTo(getClientID(), messageCreator.generateHelloClientMessage(server.getProtocolVersion()));
+        //writeTo(getClientID(), messageCreator.generateHelloClientMessage(server.getProtocolVersion()));
+        write(messageCreator.generateHelloClientMessage(server.getProtocolVersion()));
 
         try {
             String username ="";
@@ -183,7 +188,8 @@ public class HandleClient implements Runnable{
                     if (incomingMessage.getMessageType() == MessageType.HelloServer) {
                         if(incomingMessage.getMessageBody().getProtocol().equals(server.getProtocolVersion())){
                             accepted = true;
-                            writeTo(clientID, messageCreator.generateWelcomeMessage(clientID));
+                            //writeTo(clientID, messageCreator.generateWelcomeMessage(clientID));
+                            write(messageCreator.generateWelcomeMessage(clientID));
                         } else{
                             //TODO message for client, that its version is not compatible
                             System.out.println("Client version is not correct: "
@@ -219,14 +225,18 @@ public class HandleClient implements Runnable{
 
             while (accepted) {
                 Message incomingMessage = JsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
+                line = incomingMessage.getMessageBody().getMessage();
+                String line_formatted = this.username + ":  " + line;
                 try {
                     if (incomingMessage.getMessageType() == MessageType.SendChat && incomingMessage.getMessageBody().getTo() == -1) {
-                        line = incomingMessage.getMessageBody().getMessage();
-                        String line_formatted = this.username + ":  " + line;
-                        server.messages.put(line_formatted);
+                        int clientID = getClientID();
+                        //server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, clientID, false));
+                        server.broadcast(clientID, messageCreator.generateReceivedChatMessage(line_formatted, clientID, false));
                     } else if (incomingMessage.getMessageType() == MessageType.SendChat) {
                         if (server.CLIENTS.containsKey(incomingMessage.getMessageBody().getTo())) {
-                            writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);
+                            int toUser = incomingMessage.getMessageBody().getTo();
+                            server.sendTo(toUser, messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
+                            //writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
                         setAlive(true);
@@ -244,7 +254,7 @@ public class HandleClient implements Runnable{
         try {
             String goodbyeMessage = "Server: " + this.threadID + " has left the chat!";
             System.out.println(goodbyeMessage);
-            server.messages.put(goodbyeMessage);
+            //server.messages.put(goodbyeMessage);
             server.players.remove(threadID);
             server.CLIENTS.remove(threadID);
             this.in.close();
