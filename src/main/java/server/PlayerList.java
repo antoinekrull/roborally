@@ -59,6 +59,32 @@ public class PlayerList {
         return answer;
     }
 
+    public boolean playersAreReady() {
+        int readyCount = 0;
+        boolean result = false;
+        for(int i = 0; i < playerList.size(); i++) {
+            if(playerList.get(i).isReady()) {
+                readyCount++;
+            }
+            if(readyCount == playerList.size()) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    public void setPlayerReadiness(boolean setter) {
+        for(int i = 0; i < playerList.size(); i++) {
+            playerList.get(i).setReady(setter);
+        }
+    }
+
+    public void setPlayersPlaying(boolean setter) {
+        for(int i = 0; i < playerList.size(); i++) {
+            playerList.get(i).setPlaying(setter);
+        }
+    }
+
     /**
      * Returns player from the list when his username is used.
      *
@@ -132,5 +158,19 @@ public class PlayerList {
 
     public Player get(int index) {
         return playerList.get(index);
+    }
+
+    public boolean allPlayerRegistersActivated() {
+        boolean result = false;
+        int count = 0;
+        for(int i = 0; i < playerList.size(); i++) {
+            if(playerList.get(i).allRegistersActivated()) {
+                count++;
+            }
+        }
+        if(count == playerList.size()) {
+            result = true;
+        }
+        return result;
     }
 }

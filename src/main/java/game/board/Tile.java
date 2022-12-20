@@ -1,8 +1,7 @@
 package game.board;
 
-import game.robot.Robot;
+import game.player.Player;
 import org.javatuples.Pair;
-import org.javatuples.Tuple;
 
 /**
  * @author Antoine, Firas
@@ -41,5 +40,5 @@ public abstract class Tile {
     public int getYCoordinate(){
         return position.getValue1();
     }
-    public void applyEffect(Robot robot) throws Exception{}
+    public void applyEffect(Player player) throws Exception{}
 }

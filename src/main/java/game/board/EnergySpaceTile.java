@@ -1,5 +1,6 @@
 package game.board;
 
+import game.player.Player;
 import game.robot.Robot;
 
 /**
@@ -15,7 +16,7 @@ public class EnergySpaceTile extends Tile{
     }
 
     @Override
-    public void applyEffect(Robot robot) throws Exception {
-        robot.setEnergyCubes(robot.getEnergyCubes() + 1);
+    public void applyEffect(Player player) throws Exception {
+        player.getRobot().setEnergyCubes(player.getRobot().getEnergyCubes() + 1);
     }
 }

@@ -1,6 +1,6 @@
 package game.board;
 
-import game.robot.Robot;
+import game.player.Player;
 
 /**
  * @author Antoine, Firas
@@ -15,7 +15,7 @@ public class NormalTile extends Tile{
     }
 
     @Override
-    public void applyEffect(Robot robot) throws Exception {
-        super.applyEffect(robot);
+    public void applyEffect(Player player) throws Exception {
+        super.applyEffect(player);
     }
 }

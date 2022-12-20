@@ -4,6 +4,8 @@ import game.card.Card;
 import game.card.ProgrammingDeck;
 import game.robot.Robot;
 import java.util.ArrayList;
+import java.util.Random;
+
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
@@ -111,6 +113,41 @@ public class Player {
         for(boolean status: statusRegister ){
             status = setAll;
         }
+    }
+
+    public boolean allRegistersActivated() {
+        boolean result = false;
+        int registerCount = 0;
+        for(int i = 0; i < statusRegister.length; i++) {
+            if(statusRegister[i] == true) {
+                registerCount++;
+            }
+            if(registerCount == statusRegister.length) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    public void fillRegisterWithRandomCards() {
+        Random random = new Random();
+        for(int x = hand.size(); x > getEmptyRegisterAmount(); x-- ) {
+            for(int y = 0; y < cardRegister.length; y++) {
+                if(cardRegister[y] == null) {
+                    cardRegister[y] = discard(random.nextInt(x));
+                }
+            }
+        }
+    }
+
+    public int getEmptyRegisterAmount() {
+        int count = 0;
+        for(int i = 0; i < cardRegister.length; i++) {
+            if(cardRegister[i] == null) {
+                count++;
+            }
+        }
+        return count;
     }
 
 }
