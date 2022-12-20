@@ -12,12 +12,10 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -25,10 +23,11 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 /**
- * ViewModel for lobby including chat and leaving
+ * ViewModel for lobby including chat, ListView to show current players,
+ * two ChoiceBoxes (one for selecting chatpartner, another one for selecting the map)
  *
  * @author Tobias
- * @version 0.1
+ * @version 1.0
  */
 
 public class ViewModelLobby {
@@ -71,6 +70,9 @@ public class ViewModelLobby {
         notifyChangeSupport.setViewModelLobby(this);
     }
 
+    /**
+     * Initializing method for JavaFX components
+     */
     public void initialize() {
         this.ready = new SimpleBooleanProperty();
         this.userList.setItems(modelGame.getUsers());
@@ -82,7 +84,14 @@ public class ViewModelLobby {
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
         ready.bindBidirectional(modelGame.readyToPlayProperty());
 
+        /*
+         * Sets focus for TextField after sending a message
+         */
         Platform.runLater(() -> chatTextfield.requestFocus());
+
+        /*
+         * Adjusts VBox height and updates ScrollPane to latest message.
+         */
         chatVBox.heightProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -90,7 +99,11 @@ public class ViewModelLobby {
             }
         });
 
-
+        /*
+         * Mouse event for player's ListView to update choice box.
+         * Cell with name updates ChoiceBox with current name.
+         * If cell is empty, ChoiceBox is updated to all.
+         */
         userList.setCellFactory(lv -> {
             ListCell<String> cell = new ListCell<String>() {
                 @Override
@@ -109,6 +122,18 @@ public class ViewModelLobby {
                 }
             });
             return cell;
+        });
+
+        /*
+         * Selects item in ListView after changing item in ChoiceBox
+         */
+        usersChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if(usersChoiceBox.getSelectionModel().getSelectedIndex() != 0) {
+                    userList.getSelectionModel().select(usersChoiceBox.getSelectionModel().getSelectedIndex()-1);
+                }
+            }
         });
     }
 
@@ -136,7 +161,7 @@ public class ViewModelLobby {
         int userID = modelUser.userIDProperty().get();
 
         if(user.equals("All")) {
-            modelChat.sendGroupMessage(userID);
+            modelChat.sendGroupMessage();
             addToChat(chatTextfield.getText(), false);
         }
         else {
@@ -170,12 +195,12 @@ public class ViewModelLobby {
         chatTextfield.requestFocus();
     }
 
-    public void groupMessageToChat(String privateMessage) {
+    public void groupMessageToChat(String groupMessage) {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setPadding(new Insets(5, 5, 5, 10));
 
-        Text text = new Text(privateMessage);
+        Text text = new Text(groupMessage);
         TextFlow textFlow = new TextFlow(text);
         textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
                 "fx-background-radius: 40px; -fx-opacity: 100;");
@@ -192,12 +217,12 @@ public class ViewModelLobby {
         });
     }
 
-    public void privateMessageToChat(String groupMessage) {
+    public void privateMessageToChat(String privateMessage) {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setPadding(new Insets(5, 5, 5, 10));
 
-        Text text = new Text(groupMessage);
+        Text text = new Text(privateMessage);
         TextFlow textFlow = new TextFlow(text);
         textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(208,167,15);" +
                 "fx-background-radius: 40px; -fx-opacity: 100;");

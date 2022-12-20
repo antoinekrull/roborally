@@ -60,11 +60,11 @@ public class ModelChat {
         return MESSSAGES;
     }
 
-    public void sendGroupMessage(int userID) {
+    public void sendGroupMessage() {
         client.sendGroupMessage(textfieldProperty.get());
     }
 
-    public void sendPrivateMessage(int userID) {
-        client.sendPrivateMessage(textfieldProperty.get(), userID);
+    public void sendPrivateMessage(int toUser) {
+        client.sendPrivateMessage(textfieldProperty.get(), toUser);
     }
 }

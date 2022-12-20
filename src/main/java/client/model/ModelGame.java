@@ -7,7 +7,7 @@ import javafx.collections.ObservableList;
 
 
 /**
- * Model for Game
+ * Model for game
  *
  * @author Tobias
  * @version 0.1

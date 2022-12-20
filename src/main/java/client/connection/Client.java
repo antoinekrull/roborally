@@ -199,8 +199,8 @@ public class Client {
     public void sendSetStatusMessage(boolean ready){
         sendMessageToServer(messageCreator.generateSetStatusMessage(ready));
     }
-    public void sendPrivateMessage(String message, int clientID){
-        sendMessageToServer(messageCreator.generateSendChatMessage(message, clientID));
+    public void sendPrivateMessage(String message, int to){
+        sendMessageToServer(messageCreator.generateSendChatMessage(message, to));
     }
     public void sendGroupMessage(String message){
         sendMessageToServer(messageCreator.generateSendChatMessage(message));

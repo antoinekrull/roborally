@@ -12,7 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 /**
- * ViewModel for selecting one of eight robots
+ * ViewModel for selecting a robot and choosing a name
  *
  * @author Tobias
  * @version 0.1
@@ -39,6 +39,9 @@ public class ViewModelRobotSelection {
         notifyChangeSupport = NotifyChangeSupport.getInstance();
     }
 
+    /**
+     * Binds selected robot to model
+     */
     public void initialize() {
         usernameButton.disableProperty().bind(usernameTextField.textProperty().isEmpty());
         usernameTextField.textProperty().bindBidirectional(modelUser.usernameProperty());
@@ -50,6 +53,9 @@ public class ViewModelRobotSelection {
         robot6.setOnMouseClicked(mouseevent -> modelGame.setRobotProperty(6));
     }
 
+    /**
+     * Entering lobby after selecting a robot and choosing a nickname
+     */
     public void usernameButtonOnAction() throws IOException {
         int robot = modelGame.robotProperty().get();
         String username = modelUser.usernameProperty().get();

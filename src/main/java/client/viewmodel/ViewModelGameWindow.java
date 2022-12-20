@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -20,6 +21,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+
+import java.io.IOException;
 
 /**
  * ViewModel for gamescreen
@@ -38,6 +41,8 @@ public class ViewModelGameWindow {
     private VBox chatVBox;
     @FXML
     private ScrollPane chatScrollPane;
+    @FXML
+    private MenuItem exitMenuItem;
     @FXML
     private GridPane gameBoard;
 
@@ -59,8 +64,7 @@ public class ViewModelGameWindow {
     public void initialize() {
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
-        chatVBox.heightProperty().addListener(new ChangeListener<Number>() {
-            @Override
+        chatVBox.heightProperty().addListener(new ChangeListener<Number>() {@Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 chatScrollPane.setVvalue((Double) newValue);
             }
@@ -102,7 +106,7 @@ public class ViewModelGameWindow {
          */
 
         int userID = modelUser.userIDProperty().get();
-        modelChat.sendGroupMessage(userID);
+        modelChat.sendGroupMessage();
         addToChat(chatTextfield.getText());
     }
 
@@ -166,6 +170,12 @@ public class ViewModelGameWindow {
                 chatVBox.getChildren().add(hBox);
             }
         });;
+    }
+
+    public void exit() throws IOException {
+        //send disconnect notification to server
+        Platform.exit();
+        System.exit(0);
     }
 
 }

@@ -5,7 +5,7 @@ import javafx.beans.property.*;
 
 
 /**
- * Model for login
+ * Model for user
  *
  * @author Tobias
  * @version 0.1
