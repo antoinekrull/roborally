@@ -115,6 +115,20 @@ public class Player {
         }
     }
 
+    public boolean allRegistersActivated() {
+        boolean result = false;
+        int registerCount = 0;
+        for(int i = 0; i < statusRegister.length; i++) {
+            if(statusRegister[i] == true) {
+                registerCount++;
+            }
+            if(registerCount == statusRegister.length) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
     public void fillRegisterWithRandomCards() {
         Random random = new Random();
         for(int x = hand.size(); x > getEmptyRegisterAmount(); x-- ) {
