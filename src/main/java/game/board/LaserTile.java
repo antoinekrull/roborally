@@ -1,9 +1,6 @@
 package game.board;
 
-import game.card.SpamDeck;
 import game.player.Player;
-import game.robot.Robot;
-import org.javatuples.Pair;
 
 /**
  * @author Antoine, Firas
@@ -13,7 +10,8 @@ public class LaserTile extends Tile{
     private Direction los;
 
     public LaserTile(int xCoordinate, int yCoordinate, Direction LineOfSight) {
-        super(xCoordinate, yCoordinate);
+        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
+        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
         isDanger = true;
         isBlocking = false;
         this.los = LineOfSight;
