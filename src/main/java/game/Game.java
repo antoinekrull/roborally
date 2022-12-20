@@ -1,17 +1,15 @@
 package game;
 
+import game.board.Board;
+import game.board.PushPanelTile;
 import game.player.Player;
-import game.robot.Robot;
-import game.board.GameBoard;
-import game.board.Tile;
 import game.card.*;
-import javafx.util.Pair;
 import server.PlayerList;
 
 public class Game {
     private GamePhase currentGamePhase;
     public static PlayerList playerList;
-    private GameBoard board;
+    private Board board;
     private Player activePlayer;
     public static SpamDeck spamDeck = new SpamDeck();
     public static VirusDeck virusDeck = new VirusDeck();
@@ -21,6 +19,19 @@ public class Game {
     //applyTileEffect would be called after the programming register is executed
     public void applyTileEffect() throws Exception {
         board.getTile(activePlayer.getRobot().getCurrentPosition()).applyEffect(activePlayer);
+    }
+    public void applyAllTileEffects() throws Exception{
+        for (int i = 0; i < playerList.size(); i++) {
+            board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()).applyEffect(playerList.getPlayerFromList(i));
+        }
+    }
+    //Might be unnecessary
+    public void activatePushPanels() throws Exception {
+        for (int i = 0; i < playerList.size(); i++) {
+            if(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()) instanceof PushPanelTile){
+                board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()).applyEffect(playerList.getPlayerFromList(i));
+            }
+        }
     }
     public GamePhase getCurrentGamePhase() {
         return currentGamePhase;
