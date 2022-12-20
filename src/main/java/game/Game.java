@@ -1,17 +1,14 @@
 package game;
 
+import game.board.Board;
 import game.player.Player;
-import game.robot.Robot;
-import game.board.GameBoard;
-import game.board.Tile;
 import game.card.*;
-import javafx.util.Pair;
 import server.PlayerList;
 
 public class Game {
     private GamePhase currentGamePhase;
     public static PlayerList playerList;
-    private GameBoard board;
+    private Board board;
     private Player activePlayer;
     public static SpamDeck spamDeck = new SpamDeck();
     public static VirusDeck virusDeck = new VirusDeck();

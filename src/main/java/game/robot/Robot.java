@@ -20,7 +20,6 @@ public class Robot {
     private Pair<Integer, Integer> currentPosition;
     private ProgrammingDeck deck;
     private boolean isRebooted = false;
-    private Card[] register = new Card[5];
     private int activeRegister;
 
     public Robot(int figure) {
@@ -28,12 +27,6 @@ public class Robot {
         deck.createDeck();
         energyCubes = 0;
         currentObjective = 1;
-    }
-    public void setRegister(int registerNumber, Card card){
-        register[registerNumber] = card;
-    }
-    public void executeRegister(int registerNumber) throws Exception {
-        register[registerNumber].applyEffect(this);
     }
 
     public Pair<Integer, Integer> getCurrentPosition() {
