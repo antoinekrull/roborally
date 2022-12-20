@@ -16,7 +16,8 @@ public class ConveyorBeltTile extends Tile{
     private Direction directionOut;
 
     public ConveyorBeltTile(int xCoordinate, int yCoordinate, int velocity, ArrayList<Direction> directionIn, Direction directionOut) {
-        super(xCoordinate, yCoordinate);
+        super(xCoordinate, yCoordinate"/textures/gameboard/foerderbandGeradeAnimated.gif");
+        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
         isDanger = false;
         isBlocking = false;
         this.velocity = velocity;
