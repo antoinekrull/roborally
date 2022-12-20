@@ -33,7 +33,6 @@ public class ModelGame {
 
 
     private ModelGame() {
-        //client = Client.getInstance();
         this.robot = -1;
         this.robotProperty = new SimpleStringProperty("");
         this.readyToPlay = new SimpleBooleanProperty();
@@ -77,7 +76,6 @@ public class ModelGame {
     public ObservableList<String> getUsers() {
         return users;
     }
-
 
     /*public void sendRobotSelection(int clientID) throws IOException {
         boolean result = clientService.sendSelection(clientID, modelGame.getRobot());

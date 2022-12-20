@@ -55,6 +55,9 @@ public class ModelUser {
     public void sendPlayerValues(String name, int figure) {
         client.sendPlayerValuesMessage(name, figure);
     }
+    public void sendSetStatus(Boolean status) {
+        client.sendSetStatusMessage(status);
+    }
 
     public void setUserID(int clientID) {
         this.userID = clientID;

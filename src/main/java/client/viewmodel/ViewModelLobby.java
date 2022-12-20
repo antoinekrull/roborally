@@ -158,6 +158,7 @@ public class ViewModelLobby {
             readyButton.setText("NOT READY");
             this.ready.set(true);
             modelGame.setPlayerStatus(modelUser.getUserID());
+            modelUser.sendSetStatus(true);
             /*long endTime = 2000;
             DateFormat timeFormat = new SimpleDateFormat( "HH:mm:ss" );
             final Timeline timeline = new Timeline(
@@ -184,6 +185,7 @@ public class ViewModelLobby {
             readyButton.setText("READY");
             this.ready.set(false);
             modelGame.setPlayerStatus(modelUser.getUserID());
+            modelUser.sendSetStatus(false);
         }
 
         //resource is null
