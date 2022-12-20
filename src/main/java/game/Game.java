@@ -15,48 +15,76 @@ public class Game {
     public static VirusDeck virusDeck = new VirusDeck();
     public static TrojanDeck trojanDeck = new TrojanDeck();
     public static WormDeck wormDeck = new WormDeck();
-    public static int currentRegister;
+    public static int currentRegister = 0;
+
     //applyTileEffect would be called after the programming register is executed
     public void applyTileEffect() throws Exception {
         board.getTile(activePlayer.getRobot().getCurrentPosition()).applyEffect(activePlayer);
     }
-    public void applyAllTileEffects() throws Exception{
+
+    //might not be necessary
+    private void applyAllTileEffects() throws Exception{
         for (int i = 0; i < playerList.size(); i++) {
             board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()).applyEffect(playerList.getPlayerFromList(i));
         }
     }
     //Might be unnecessary
-    public void activatePushPanels() throws Exception {
+    private void activatePushPanels() throws Exception {
         for (int i = 0; i < playerList.size(); i++) {
             if(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()) instanceof PushPanelTile){
                 board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()).applyEffect(playerList.getPlayerFromList(i));
             }
         }
     }
+
+    private PlayerList determinePriority() {
+        PlayerList priorityList = null;
+        return  priorityList;
+    }
+
     public GamePhase getCurrentGamePhase() {
         return currentGamePhase;
     }
 
     public void startGame(PlayerList playerList) {
-
+        if(playerList.playersAreReady()) {
+            playerList.setPlayerReadiness(false);
+            //start game
+        }
     }
-    public void setCurrentGamePhase(GamePhase currentGamePhase) {
+    private void setCurrentGamePhase(GamePhase currentGamePhase) {
         this.currentGamePhase = currentGamePhase;
     }
 
-    public void runUpgradePhase(){
+    private void runUpgradePhase(){
 
     }
-    public void runProgrammingPhase(){
-
+    private void runProgrammingPhase(PlayerList playerList){
+        playerList.setPlayersPlaying(true);
+        while(!playerList.playersAreReady()) {
+            //wait
+        }
+        //start next phase
     }
 
-    public void runActivationPhase(){
-
+    private void runActivationPhase() throws Exception {
+        while(!playerList.allPlayerRegistersActivated()) {
+            for(int i = 0; i < playerList.size(); i++) {
+                activateRegister(playerList.get(i));
+                playerList.get(i).setStatusRegister(true, currentRegister);
+            }
+            currentRegister++;
+            //TODO: Add tile effects;
+        }
     }
 
-    public void activateRegister(Player player) throws Exception {
+    private void activateRegister(Player player) throws Exception {
         player.getCardFromRegister(currentRegister).applyEffect(player);
+    }
+
+    //maybe implement with chosen deck as input value
+    public Card drawDamageCard(Player player) {
+        return null;
     }
 
 }
