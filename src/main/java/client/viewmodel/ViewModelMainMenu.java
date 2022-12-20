@@ -14,7 +14,7 @@ import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 
 /**
- * ViewModel for start window
+ * ViewModel for main menu
  *
  * @author Tobias
  * @version 0.1
@@ -54,7 +54,7 @@ public class ViewModelMainMenu {
     }
 
     public void joinButtonOnAction() throws IOException {
-        if (modelUser.getConnection()){
+        /*if (modelUser.getConnection()){
             RoboRallyStart.switchScene("login.fxml");
         } else {
             statusLabel.setText("Connection failed. Please try again.");
@@ -74,6 +74,9 @@ public class ViewModelMainMenu {
             }
         }
 
+         */
+
+        RoboRallyStart.switchScene("login.fxml");
     }
 
     public void helpButtonOnAction() {

@@ -1,13 +1,15 @@
 package client.connection;
 
+import client.model.ModelChat;
+import client.model.ModelGame;
+import client.model.ModelUser;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
@@ -17,7 +19,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  *
@@ -37,33 +38,31 @@ public class Client {
     private DataInputStream in = null;
     private DataOutputStream out = null;
     private BooleanProperty connected;
-    private final LinkedBlockingQueue<String> MESSAGES;
-    private StringProperty message;
+    private BooleanProperty isAI;
+    private ObjectProperty<Message> message;
+    private IntegerProperty userID;
+
     MessageCreator messageCreator;
-    private NotifyChangeSupport notifyChangeSupport;
-    private String name = "";
-    private boolean accessible = false;
     String address = "localhost";
     int port = 3000;
-
     private String protocolVersion = "Version 0.1";
     private String group = "KnorrigeKorrelate";
-    private boolean isAI = false;
-    private int clientID;
+    private ObservableList<String> playersOnline;
+    private ObservableList<String> playersToChat;
     private ArrayList<Triplet<Integer, String, Integer>> otherPlayers = new ArrayList<>();
     private ArrayList<Pair<Integer, Boolean>> otherPlayersStatus = new ArrayList<>();
 
     private Client() {
-
-        this.MESSAGES = new LinkedBlockingQueue<>();
-        messageCreator = new MessageCreator();
-        notifyChangeSupport = NotifyChangeSupport.getInstance();
+        this.messageCreator = new MessageCreator();
+        this.message = new SimpleObjectProperty<>();
+        this.userID = new SimpleIntegerProperty();
+        this.isAI = new SimpleBooleanProperty();
+        this.playersOnline = FXCollections.observableArrayList("Tomi", "Firas", "Molri", "Anto");
+        this.playersToChat = FXCollections.observableArrayList("All", "Tomi", "Firas", "Molri", "Anto");
 
         connected = new SimpleBooleanProperty();
 
         connectServer();
-
-        message = new SimpleStringProperty("");
     }
 
     public static Client getInstance() {
@@ -73,25 +72,36 @@ public class Client {
         return client;
     }
 
-    public StringProperty messageProperty() {
+    public ObservableList<String> getPlayersOnline() {
+        return playersOnline;
+    }
+
+    public ObservableList<String> getPlayersToChat() {
+        return playersToChat;
+    }
+
+    public ObjectProperty<Message> messageProperty() {
         return message;
     }
 
-    private void setMessageProperty(String message) {
-        messageProperty().set(message);
-        System.out.println(messageProperty().get());
+    public void setMessage(Message message) {
+        this.message.set(message);
     }
 
-    //public void sendUsernameToServer(String username) {
-    //    try {
-    //        out.writeUTF(JsonSerializer.serializeJson(new Message(username, username)));
-    //        setName(username);
-    //    } catch (Exception e) {
-    //        e.printStackTrace();
-    //    }
-    //}
-    public void setName(String name) {
-        this.name = name;
+    public IntegerProperty userIDProperty() {
+        return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID.set(userID);
+    }
+
+    public BooleanProperty isAIProperty() {
+        return isAI;
+    }
+
+    public BooleanProperty connectedProperty() {
+        return connected;
     }
 
     private class ReadMessagesFromServer implements Runnable {
@@ -116,10 +126,10 @@ public class Client {
                             }
                             if(message.getMessageType().equals(MessageType.HelloClient)){
                                 System.out.println(message.getMessageBody().getProtocol());
-                                sendHelloServerMessage(group, isAI, protocolVersion);
+                                sendHelloServerMessage(group, isAI.get(), protocolVersion);
                             }
                             if(message.getMessageType().equals(MessageType.Welcome)){
-                                clientID = message.getMessageBody().getClientID();
+                                Client.this.setUserID(message.getMessageBody().getClientID());
                             }
                             if(message.getMessageType().equals(MessageType.PlayerAdded)){
                                 otherPlayers.add(new Triplet<>(message.getMessageBody().getClientID(),
@@ -131,8 +141,7 @@ public class Client {
                                         message.getMessageBody().isReady()));
                             }
                             if(message.getMessageType().equals(MessageType.ReceivedChat)){
-                                //MESSAGES.put(message.getMessageBody().getMessage())
-                                Client.this.setMessageProperty(message.getMessageBody().getMessage());
+                                Client.this.setMessage(message);
                             }
                             if(message.getMessageType().equals(MessageType.Error)){
                                 System.out.println(message.getMessageBody().getMessage());
@@ -177,27 +186,6 @@ public class Client {
 
     }
 
-
-    /*
-    public void readMessageToClientChat() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String message;
-                while(true) {
-                    while(accessible) {
-                        try {
-                            message = MESSAGES.take();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-        }).start();
-    }
-    */
-
     //maybe are these methods redundant, but they are kept until everything is implemented for them to be there
     public void sendAliveMessage(){
         sendMessageToServer(messageCreator.generateAliveMessage());
@@ -211,8 +199,8 @@ public class Client {
     public void sendSetStatusMessage(boolean ready){
         sendMessageToServer(messageCreator.generateSetStatusMessage(ready));
     }
-    public void sendPrivateMessage(String message, int clientID){
-        sendMessageToServer(messageCreator.generateSendChatMessage(message, clientID));
+    public void sendPrivateMessage(String message, int to){
+        sendMessageToServer(messageCreator.generateSendChatMessage(message, to));
     }
     public void sendGroupMessage(String message){
         sendMessageToServer(messageCreator.generateSendChatMessage(message));
@@ -226,23 +214,6 @@ public class Client {
         }
     }
 
-    public void closeApplication() {
-        try {
-            Thread.sleep(100);
-            in.close();
-            out.close();
-            System.exit(0);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /*
-    public void enterChat(Boolean state) {
-        accessible = state;
-        readMessageToClientChat();
-    }
-    */
     private void connectServer() {
         if (!connected.get()) {
             try {
@@ -264,11 +235,6 @@ public class Client {
         if (!connected.get()) {
             connectServer();
         }
-    }
-
-
-    public BooleanProperty connectedProperty() {
-        return connected;
     }
 }
 
