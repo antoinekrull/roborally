@@ -15,30 +15,22 @@ import javafx.collections.ObservableList;
 public class ModelGame {
 
     private static ModelGame modelGame;
-    public SimpleStringProperty robotProperty;
-
+    public SimpleIntegerProperty robotProperty;
     private Client client;
-
     private ObservableList<String> maps;
     private ObservableList<String> users;
     private ObservableList<String> usersToSelect;
-
-    private String robot;
     private BooleanProperty readyToPlay;
 
 
 
     private ModelGame() {
         client = Client.getInstance();
-        this.robot = "";
-        this.robotProperty = new SimpleStringProperty("");
+        this.robotProperty = new SimpleIntegerProperty();
         this.readyToPlay = new SimpleBooleanProperty();
-        this.maps = FXCollections.observableArrayList();
+        this.maps = FXCollections.observableArrayList("Dizzy Highway", "Extra Crispy", "Lost Bearings", "Death Trap");
         this.users = FXCollections.observableArrayList(client.getPlayersOnline());
         this.usersToSelect = FXCollections.observableArrayList(client.getPlayersToChat());
-
-        maps.add("Dizzy Highway");
-        maps.add("KackJavaFX");
     }
 
     public static ModelGame getInstance() {
@@ -48,12 +40,12 @@ public class ModelGame {
         return modelGame;
     }
 
-    public String getRobot() {
-        return robot;
+    public SimpleIntegerProperty robotProperty() {
+        return robotProperty;
     }
 
-    public void setRobot(String robot) {
-        this.robot = robot;
+    public void setRobotProperty(int robotProperty) {
+        this.robotProperty.set(robotProperty);
     }
 
     public BooleanProperty readyToPlayProperty() {

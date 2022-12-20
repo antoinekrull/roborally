@@ -42,19 +42,19 @@ public class ViewModelRobotSelection {
     public void initialize() {
         usernameButton.disableProperty().bind(usernameTextField.textProperty().isEmpty());
         usernameTextField.textProperty().bindBidirectional(modelUser.usernameProperty());
-        robot1.setOnMouseClicked(mouseevent -> modelGame.setRobot(robot1.getText()));
-        robot2.setOnMouseClicked(mouseevent -> modelGame.setRobot(robot2.getText()));
-        robot3.setOnMouseClicked(mouseevent -> modelGame.setRobot(robot3.getText()));
-        robot4.setOnMouseClicked(mouseevent -> modelGame.setRobot(robot4.getText()));
-        robot5.setOnMouseClicked(mouseevent -> modelGame.setRobot(robot5.getText()));
-        robot6.setOnMouseClicked(mouseevent -> modelGame.setRobot(robot6.getText()));
+        robot1.setOnMouseClicked(mouseevent -> modelGame.setRobotProperty(1));
+        robot2.setOnMouseClicked(mouseevent -> modelGame.setRobotProperty(2));
+        robot3.setOnMouseClicked(mouseevent -> modelGame.setRobotProperty(3));
+        robot4.setOnMouseClicked(mouseevent -> modelGame.setRobotProperty(4));
+        robot5.setOnMouseClicked(mouseevent -> modelGame.setRobotProperty(5));
+        robot6.setOnMouseClicked(mouseevent -> modelGame.setRobotProperty(6));
     }
 
     public void usernameButtonOnAction() throws IOException {
-        String robot = modelGame.getRobot();
+        int robot = modelGame.robotProperty().get();
         String username = modelUser.usernameProperty().get();
         int userID = modelUser.userIDProperty().get();
-        if (!robot.isEmpty() && !username.isEmpty()) {
+        if (robot != 0 && !username.isEmpty()) {
             //modelUser.sendUsername();
             //modelGame.sendRobotSelection(userID);
             RoboRallyStart.switchScene("lobby.fxml");
