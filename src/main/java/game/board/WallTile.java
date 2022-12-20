@@ -12,7 +12,7 @@ public class WallTile extends Tile{
 
     private ArrayList<Direction> blockedDirections;
     public WallTile(int xCoordinate, int yCoordinate, ArrayList<Direction> blockedDirections) {
-        super(xCoordinate, yCoordinate"/textures/gameboard/foerderbandGeradeAnimated.gif");
+        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
         this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
         isDanger = false;
         isBlocking = true;

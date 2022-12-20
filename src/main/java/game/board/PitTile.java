@@ -1,7 +1,6 @@
 package game.board;
 
 import game.player.Player;
-import game.robot.Robot;
 
 /**
  * @author Antoine, Firas
@@ -12,7 +11,7 @@ public class PitTile extends Tile{
     private int rebootTileIndex;
 
     public PitTile(int xCoordinate, int yCoordinate) {
-        super(xCoordinate, yCoordinate"/textures/gameboard/foerderbandGeradeAnimated.gif");
+        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
         this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
         isDanger = true;
         isBlocking = false;
