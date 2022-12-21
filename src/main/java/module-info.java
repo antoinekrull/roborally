@@ -11,6 +11,9 @@ module com.example.knorrigekorrelatehp {
     opens server to javafx.graphics;
     exports server;
 
+    opens server.gui to javafx.graphics, javafx.fxml, javafx.controls;
+    exports server.gui;
+
     opens client to javafx.graphics, javafx.fxml, javafx.controls;
     exports client;
 
@@ -20,4 +23,6 @@ module com.example.knorrigekorrelatehp {
     exports communication;
     exports client.connection;
     opens client.connection to javafx.controls, javafx.fxml, javafx.graphics;
+    exports server.connection;
+    opens server.connection to javafx.graphics;
 }

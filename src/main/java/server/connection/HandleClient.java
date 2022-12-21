@@ -1,9 +1,10 @@
-package server;
+package server.connection;
 
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -24,13 +25,16 @@ public class HandleClient implements Runnable{
     private int clientID;
     private boolean exit;
     private boolean accepted;
-
     private boolean alive;
+    private SimpleBooleanProperty serverStatus;
     public String address;
     public int port;
     public Socket socket;
     private String username;
-    private ServerMain.Server server;
+    //private ServerMain.Server serverMain;
+
+    private Server server;
+
     private MessageCreator messageCreator;
 
     /**
@@ -40,13 +44,24 @@ public class HandleClient implements Runnable{
      * @param port
      * @param socket
      */
-    public HandleClient(String address, int port, Socket socket, ServerMain.Server server, int threadID) {
+    public HandleClient(String address, int port, Socket socket, Server server, int threadID) {
         this.address = address;
         this.port = port;
         this.socket = socket;
         this.server = server;
         this.threadID = threadID;
         this.messageCreator = new MessageCreator();
+        serverStatus = new SimpleBooleanProperty();
+        serverStatus.bind(server.onlineProperty());
+        serverStatus.addListener(event -> {
+            if (!serverStatus.get()) {
+                try {
+                    closeHandler();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         try {
             this.in = new DataInputStream(
                     new BufferedInputStream(socket.getInputStream()));
@@ -264,6 +279,18 @@ public class HandleClient implements Runnable{
             System.out.println("Error while closing Connection" + e.getMessage());
         }
 
+    }
+
+    public void closeHandler() throws IOException {
+        if (in != null) {
+            in.close();
+        }
+        if (out != null) {
+            out.close();
+        }
+        if (socket != null) {
+            socket.close();
+        }
     }
 
     public int getClientID() {

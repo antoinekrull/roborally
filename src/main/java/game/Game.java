@@ -4,7 +4,7 @@ import game.board.Board;
 import game.board.PushPanelTile;
 import game.player.Player;
 import game.card.*;
-import server.PlayerList;
+import server.connection.PlayerList;
 
 public class Game {
     private GamePhase currentGamePhase;

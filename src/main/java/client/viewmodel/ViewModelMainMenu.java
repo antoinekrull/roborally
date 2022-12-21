@@ -54,7 +54,7 @@ public class ViewModelMainMenu {
     }
 
     public void joinButtonOnAction() throws IOException {
-        /*if (modelUser.getConnection()){
+        if (modelUser.getConnection()){
             RoboRallyStart.switchScene("login.fxml");
         } else {
             statusLabel.setText("Connection failed. Please try again.");
@@ -73,10 +73,6 @@ public class ViewModelMainMenu {
                 timeline.play();
             }
         }
-
-         */
-
-        RoboRallyStart.switchScene("login.fxml");
     }
 
     public void helpButtonOnAction() {

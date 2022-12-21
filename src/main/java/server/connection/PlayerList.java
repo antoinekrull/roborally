@@ -1,4 +1,4 @@
-package server;
+package server.connection;
 
 import game.player.Player;
 import game.robot.Robot;

@@ -1,6 +1,5 @@
-package server;
-
-import communication.JsonSerializer;
+package server.connection;
+/*
 import communication.Message;
 import communication.MessageCreator;
 import game.player.Player;
@@ -12,26 +11,13 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @author Antoine, Moritz, Dominic, Firas
  * @version 1.0
- */
 
-public class ServerMain extends Application {
-    int port;
 
-    @Override
-    public void start(Stage primaryStage) {
-
-        //port
-        port = 3000;
-
-        //Server Stuff
-        new Server(port);
-
-    }
+public class ServerMain{
 
     public static class Server {
 
@@ -50,7 +36,7 @@ public class ServerMain extends Application {
          * Initialises server.
          *
          * @param port Port where the server listens to.
-         */
+
 
         public Server(int port) {
             //this.messages = new LinkedBlockingQueue<>();
@@ -87,7 +73,7 @@ public class ServerMain extends Application {
                 public void run() {
                     while (true) {
                         try {
-                            Message message = messages.take();
+                            Message message = messages.ggggggtake();
                             int id = message.getMessageBody().getFrom();
                             for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
                                 if (client.getKey() != id) {
@@ -104,7 +90,7 @@ public class ServerMain extends Application {
             };
             writeMessages.start();
 
-             */
+
         }
 
         public void broadcast(int id, Message message) {
@@ -128,9 +114,7 @@ public class ServerMain extends Application {
         }
         public String getProtocolVersion(){return this.protocolVersion;}
 
-    }
-    public static void main(String[] args) {
-        launch(args);
-    }
+        }
 }
 
+*/
