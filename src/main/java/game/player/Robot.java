@@ -3,6 +3,7 @@ package game.player;
 import game.board.Direction;
 import game.board.Tile;
 import game.card.Card;
+import game.card.Deck;
 import game.card.ProgrammingDeck;
 import org.javatuples.Pair;
 

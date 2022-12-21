@@ -2,6 +2,9 @@ package client.connection;
 
 import client.viewmodel.ViewModelGameWindow;
 import client.viewmodel.ViewModelLobby;
+import client.model.ModelGame;
+import client.model.ModelUser;
+import client.model.ModelChat;
 
 /**
  * Notifier class. Actively notifies specific instances for changes.
@@ -42,11 +45,10 @@ public class NotifyChangeSupport {
 
     public void notifyInstance() {
         if (lobby) {
-            System.out.println("instance notified");
-            viewModelLobby.messageToChat();
+            viewModelLobby.receivedMessage();
         }
         if (gamewindow) {
-            viewModelGameWindow.messageToChat();
+            viewModelGameWindow.receivedMessage();
         }
     }
 }

@@ -11,7 +11,8 @@ public class PitTile extends Tile{
     private int rebootTileIndex;
 
     public PitTile(int xCoordinate, int yCoordinate) {
-        super(xCoordinate, yCoordinate);
+        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
+        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
         isDanger = true;
         isBlocking = false;
     }

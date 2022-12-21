@@ -12,7 +12,8 @@ public class PushPanelTile extends Tile {
     ArrayList<Integer> registers;
     Pair<Integer, Integer> tileLocation;
     public PushPanelTile(int xCoordinate, int yCoordinate, Direction pushDirection, ArrayList<Integer> registers) {
-        super(xCoordinate, yCoordinate);
+        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
+        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
         isBlocking = true;
         isDanger = false;
         this.pushDirection = pushDirection;

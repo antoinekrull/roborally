@@ -7,6 +7,7 @@ package game.card;
 
 import com.fasterxml.jackson.databind.Module;
 import game.player.Player;
+import game.robot.Robot;
 
 /**
  * Combines the features for a playable card.
@@ -46,5 +47,6 @@ public abstract class Card {
     }
 
     public void applyEffect(Player player) throws Exception {}
+
 }
 

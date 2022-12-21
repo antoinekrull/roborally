@@ -9,7 +9,8 @@ import game.player.Player;
 public class EnergySpaceTile extends Tile{
 
     public EnergySpaceTile(int xCoordinate, int yCoordinate) {
-        super(xCoordinate, yCoordinate);
+        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
+        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
         isDanger = false;
         isBlocking = false;
     }
