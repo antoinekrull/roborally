@@ -136,9 +136,6 @@ public class Server {
     public void stopServer() throws IOException {
         setOnline(false);
         this.alive = false;
-        if (socket != null) {
-            socket.close();
-        }
         if (serverSocket != null) {
             serverSocket.close();
         }
