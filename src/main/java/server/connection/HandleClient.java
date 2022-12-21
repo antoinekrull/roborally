@@ -249,8 +249,10 @@ public class HandleClient implements Runnable{
                         server.broadcast(clientID, messageCreator.generateReceivedChatMessage(line_formatted, clientID, false));
                     } else if (incomingMessage.getMessageType() == MessageType.SendChat) {
                         if (server.CLIENTS.containsKey(incomingMessage.getMessageBody().getTo())) {
-                            int toUser = incomingMessage.getMessageBody().getTo();
+                            int toUser = getClientID();
+                            //int toUser = incomingMessage.getMessageBody().getTo();
                             server.sendTo(toUser, messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
+                            //server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
                             //writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {

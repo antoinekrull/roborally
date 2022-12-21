@@ -78,8 +78,40 @@ public class Server {
             }
         };
         acceptClients.start();
-
     }
+
+    /*
+            //should be redundant, because linkedblockingqueue is not necessary anymore
+            Thread writeMessages = new Thread() {
+                public void run() {
+                    while (true) {
+                        try {
+                            Message message = messages.take();
+                            Boolean isPrivate = message.getMessageBody().isPrivate();
+                            if (!isPrivate) {
+                            int id = message.getMessageBody().getFrom();
+                                for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                                    if (client.getKey() != id) {
+                                        client.getValue().write(message);
+                                }
+                            }
+                            if (isPrivate) {
+                            int toUser = message.getMessageBody().getFrom();
+                                for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                                     if (client.getKey() == toUser) {
+                                         client.getValue().write(message);
+                                    }
+                                }
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Error is it here " + e.getMessage());
+                        }
+                    }
+                }
+            };
+            writeMessages.start();
+        }
+     */
 
     public void broadcast(int id, Message message) {
         for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
