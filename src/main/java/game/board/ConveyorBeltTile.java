@@ -1,7 +1,6 @@
 package game.board;
 
 import game.player.Player;
-import game.robot.Robot;
 import org.javatuples.Pair;
 
 import java.util.ArrayList;

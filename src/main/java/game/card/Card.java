@@ -16,6 +16,9 @@ public abstract class Card {
     private String cardName;
     private boolean isActivated = false;
 
+
+
+    protected boolean isDamageCard = false;
     private String cardEffect;
     public String getCardName() {
         return cardName;
@@ -35,6 +38,13 @@ public abstract class Card {
     public void setActivated(boolean activated) {
         isActivated = activated;
     }
+    public boolean isDamageCard() {
+        return isDamageCard;
+    }
+    public void setDamageCard(boolean damageCard) {
+        isDamageCard = damageCard;
+    }
+
     public void applyEffect(Player player) throws Exception {}
 }
 

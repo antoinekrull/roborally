@@ -1,4 +1,4 @@
-package game.robot;
+package game.player;
 
 import game.board.Direction;
 import game.board.Tile;
@@ -71,5 +71,9 @@ public class Robot {
     public void setRebootStatus(boolean rebooted) {isRebooted = rebooted;}
     public int getActiveRegister() {return activeRegister;}
     public void setActiveRegister(int activeRegister) {this.activeRegister = activeRegister;}
+
+    public void shootLaser() {
+        //TODO: Implement this
+    }
 
 }

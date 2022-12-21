@@ -1,7 +1,6 @@
 package game.board;
 
 import game.player.Player;
-import game.robot.Robot;
 
 /**
  * @author Antoine, Firas

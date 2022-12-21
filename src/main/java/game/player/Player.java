@@ -1,11 +1,14 @@
 package game.player;
 
+import game.Game;
+import game.card.AgainCard;
 import game.card.Card;
 import game.card.ProgrammingDeck;
-import game.robot.Robot;
+
 import java.util.ArrayList;
 import java.util.Random;
 
+import game.card.TrojanDeck;
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
@@ -82,6 +85,17 @@ public class Player {
     public Card getCard(int index) {
         return hand.get(index);
     }
+
+    //TODO: Add GUI functionality / exceptions
+    public void playCard(Card card, int index) {
+        if(index == 0 && card instanceof AgainCard) {
+            System.out.println("You cant play this card in the first register, please try again!");
+        } else if(index > 0 || index < cardRegister.length){
+            System.out.println("The register has not been addressed properly, please try again!");
+        } else {
+            cardRegister[index] = card;
+        }
+    }
     public int getId() {
         return id;
     }
@@ -100,6 +114,8 @@ public class Player {
     public int getCurrentRegister(Card currentCard){
         return ArrayUtils.indexOf(cardRegister, currentCard);
     }
+
+    //This method is used to add a card to a specified register. It should not be used by the player
     public void setCardRegister(Card card, int index) {
         cardRegister[index] = card;
     }
@@ -148,6 +164,22 @@ public class Player {
             }
         }
         return count;
+    }
+
+    public void emptyAllCardRegisters() {
+        for(int i = 0; i < cardRegister.length; i++) {
+            if(cardRegister[i].isDamageCard()) {
+                switch (cardRegister[i].getCardName()) {
+                    case "Trojan Horse" -> Game.trojanDeck.addCard(cardRegister[i]);
+                    case "Worm" -> Game.wormDeck.addCard(cardRegister[i]);
+                    case "Spam" -> Game.spamDeck.addCard(cardRegister[i]);
+                    case "Virus" -> Game.virusDeck.addCard(cardRegister[i]);
+                }
+            } else {
+                personalDiscardPile.addCard(cardRegister[i]);
+            }
+            setCardRegister(null, i);
+        }
     }
 
 }

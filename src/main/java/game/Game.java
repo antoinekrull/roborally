@@ -1,10 +1,13 @@
 package game;
 
 import game.board.Board;
+import game.board.CheckpointTile;
 import game.board.PushPanelTile;
 import game.player.Player;
 import game.card.*;
 import server.PlayerList;
+
+import java.util.ArrayList;
 
 public class Game {
     private GamePhase currentGamePhase;
@@ -16,6 +19,7 @@ public class Game {
     public static TrojanDeck trojanDeck = new TrojanDeck();
     public static WormDeck wormDeck = new WormDeck();
     public static int currentRegister = 0;
+    private ArrayList<CheckpointTile> checkpointTileArrayList = null;
 
     //applyTileEffect would be called after the programming register is executed
     public void applyTileEffect() throws Exception {
@@ -33,6 +37,7 @@ public class Game {
         for (int i = 0; i < playerList.size(); i++) {
             if(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()) instanceof PushPanelTile){
                 board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()).applyEffect(playerList.getPlayerFromList(i));
+                //TODO: add push panel timings based on register
             }
         }
     }
@@ -68,12 +73,19 @@ public class Game {
     }
 
     private void runActivationPhase() throws Exception {
+        int playerRegisterLength = 5;
         while(!playerList.allPlayerRegistersActivated()) {
             for(int i = 0; i < playerList.size(); i++) {
                 activateRegister(playerList.get(i));
                 playerList.get(i).setStatusRegister(true, currentRegister);
             }
             currentRegister++;
+            //checks if all registers have been activated
+            if(currentRegister == playerRegisterLength) {
+                for(int i = 0; i < playerList.size(); i++) {
+                    playerList.get(i).emptyAllCardRegisters();
+                }
+            }
             //TODO: Add tile effects;
         }
     }
