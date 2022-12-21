@@ -65,7 +65,7 @@
                         <children>
                             <Label fx:id="robot1" alignment="CENTER" contentDisplay="CENTER" styleClass="roboterlabel" text="Roboter 1" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
                                 <graphic>
-                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="roboter">
                                         <image>
                                             <Image url="@../textures/robots/Robot_5_bunt.png" />
                                         </image>
@@ -74,7 +74,7 @@
                             </Label>
                             <Label fx:id="robot2" contentDisplay="CENTER" layoutX="10.0" layoutY="-40.0" styleClass="roboterlabel" text="Roboter 2" GridPane.columnIndex="1">
                                 <graphic>
-                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="roboter">
                                         <image>
                                             <Image url="@../textures/robots/Robot_4_bunt.png" />
                                         </image>
@@ -86,7 +86,7 @@
                             </Label>
                             <Label fx:id="robot3" contentDisplay="CENTER" layoutX="10.0" layoutY="-40.0" styleClass="roboterlabel" text="Roboter 3" GridPane.rowIndex="1">
                                 <graphic>
-                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="roboter">
                                         <image>
                                             <Image url="@../textures/robots/Robot_3_bunt.png" />
                                         </image>
@@ -95,7 +95,7 @@
                             </Label>
                             <Label fx:id="robot4" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" styleClass="roboterlabel" text="Roboter 4" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                 <graphic>
-                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="roboter">
                                         <image>
                                             <Image url="@../textures/robots/Robot_6_bunt.png" />
                                         </image>
@@ -104,7 +104,7 @@
                             </Label>
                             <Label fx:id="robot5" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" styleClass="roboterlabel" text="Roboter 5" GridPane.rowIndex="2">
                                 <graphic>
-                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="roboter">
                                         <image>
                                             <Image url="@../textures/robots/Robot_1_bunt.png" />
                                         </image>
@@ -113,7 +113,7 @@
                             </Label>
                             <Label fx:id="robot6" contentDisplay="CENTER" layoutX="10.0" layoutY="60.0" styleClass="roboterlabel" text="Roboter 6" GridPane.columnIndex="1" GridPane.rowIndex="2">
                                 <graphic>
-                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="roboter">
                                         <image>
                                             <Image url="@../textures/robots/Robot_2_bunt.png" />
                                         </image>

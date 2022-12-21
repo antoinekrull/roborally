@@ -48,4 +48,5 @@
 }
 .roboterlabel:hover{
 -fx-text-fill: white;
+-fx-effect: dropshadow(three-pass-box, rgba(255, 86, 0, 1), 15, 0.0, 0, 0);
 }
