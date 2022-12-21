@@ -1,12 +1,15 @@
-package server.gui;
+package server.viewmodel;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import server.model.ModelServer;
 
-public class ServerStartController {
+public class ViewModelServer {
 
     @FXML
     private Button startserver;
@@ -19,7 +22,7 @@ public class ServerStartController {
     private ModelServer modelServer;
 
 
-    public ServerStartController() {
+    public ViewModelServer() {
         this.modelServer = ModelServer.getInstance();
     }
 
@@ -41,5 +44,10 @@ public class ServerStartController {
     public void stopServerOnAction()  {
         modelServer.stopServer();
         modelServer.getAlive();
+    }
+
+    public void closeApplication(ActionEvent actionEvent) {
+        Platform.exit();
+        System.exit(0);
     }
 }

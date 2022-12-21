@@ -1,4 +1,4 @@
-package server.gui;
+package server.model;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

@@ -23,7 +23,6 @@ public class Server {
     //public final LinkedBlockingQueue<Message> messages;
     public int uniqueID = 0;
     public Boolean alive;
-
     public BooleanProperty online;
     MessageCreator messageCreator;
     private final String protocolVersion;
@@ -53,6 +52,7 @@ public class Server {
 
     public void startServer(int port) {
         this.alive = true;
+        server.setOnline(true);
         Thread acceptClients = new Thread() {
             public void run() {
                 try {
@@ -102,13 +102,10 @@ public class Server {
     public String getProtocolVersion() {return this.protocolVersion;}
 
     public void stopServer() throws IOException {
-        //this.alive = false;
         setOnline(false);
+        this.alive = false;
         if (socket != null) {
             socket.close();
-        }
-        if (socket == null) {
-            this.alive = false;
         }
         if (serverSocket != null) {
             serverSocket.close();
