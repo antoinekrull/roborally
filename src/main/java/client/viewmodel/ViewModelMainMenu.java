@@ -4,14 +4,11 @@ import client.RoboRallyStart;
 import client.connection.NotifyChangeSupport;
 import client.model.ModelUser;
 import java.io.IOException;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.media.MediaView;
-import javafx.util.Duration;
 
 /**
  * ViewModel for main menu
@@ -55,7 +52,7 @@ public class ViewModelMainMenu {
 
     public void joinButtonOnAction() throws IOException {
         /*if (modelUser.getConnection()){
-            RoboRallyStart.switchScene("login.fxml");
+            RoboRallyStart.switchScene("robotselection.fxml");
         } else {
             statusLabel.setText("Connection failed. Please try again.");
             modelUser.reconnect();
@@ -65,7 +62,7 @@ public class ViewModelMainMenu {
                         Duration.millis(1500),
                         event -> {
                             try {
-                                RoboRallyStart.switchScene("login.fxml");
+                                RoboRallyStart.switchScene("robotselection.fxml");
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -76,7 +73,7 @@ public class ViewModelMainMenu {
 
          */
 
-        RoboRallyStart.switchScene("login.fxml");
+        RoboRallyStart.switchScene("robotselection.fxml");
     }
 
     public void helpButtonOnAction() {
