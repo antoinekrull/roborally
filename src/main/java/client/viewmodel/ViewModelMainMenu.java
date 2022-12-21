@@ -13,11 +13,13 @@ import javafx.scene.media.MediaView;
 /**
  * ViewModel for main menu
  *
- * @author Tobias
+ * @author Tobias, Benedikt
  * @version 0.1
  */
 
 public class ViewModelMainMenu {
+
+
 
     @FXML
     private Button joinButton;
@@ -28,7 +30,7 @@ public class ViewModelMainMenu {
     @FXML
     private Label statusLabel;
     @FXML
-    private MediaView factoryVideo;
+    private MediaView factoryvideo;
 
     private ModelUser modelUser;
 
@@ -39,15 +41,12 @@ public class ViewModelMainMenu {
         notifyChangeSupport = NotifyChangeSupport.getInstance();
     }
     public void initialize() {
-        //Background-Video:
-
         /*
-        Media factoryVideo = new Media(
-            getClass().getResource("https://www.youtube.com/watch?v=7rk3b1ctttg").toString());
-        MediaPlayer mediaPlayer = new MediaPlayer(factoryVideo);
+        //Background-Video
+        Media factoryvideo = new Media(new File("src/main/resources/client/factoryBackground.mp4").toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(factoryvideo);
         mediaPlayer.setAutoPlay(true);
-        mediaPlayer.play();
-        */
+         */
     }
 
     public void joinButtonOnAction() throws IOException {
