@@ -17,7 +17,7 @@ import javafx.scene.control.TextField;
 /**
  * ViewModel for selecting a robot and choosing a name
  *
- * @author Tobias
+ * @author Tobias, Benedikt
  * @version 0.1
  */
 
@@ -78,11 +78,12 @@ public class ViewModelRobotSelection {
 
     //When selecting a robot, the robot gets highlighted, but only the selected one
     private void applyStyle(Node node) {
-        for (Node robot : robots){
+        for (Node robot : robots) {
             robot.setStyle("");
         }
         node.setStyle("-fx-effect: dropshadow(three-pass-box, white, 15, 0.0, 0, 0);");
-    }
+     }
+
 
     /**
      * Entering lobby after selecting a robot and choosing a nickname
