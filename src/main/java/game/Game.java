@@ -32,7 +32,13 @@ public class Game implements Runnable {
         }
         return INSTANCE;
     }
+    public Board getBoard() {
+        return board;
+    }
 
+    public void setBoard(Board board) {
+        this.board = board;
+    }
     public void setPlayerList(PlayerList playerList) {
         this.playerList = playerList;
     }
