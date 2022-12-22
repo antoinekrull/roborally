@@ -11,6 +11,8 @@ public class PushPanelTile extends Tile {
     Direction pushDirection;
     ArrayList<Integer> registers;
     Pair<Integer, Integer> tileLocation;
+
+    ArrayList<Integer> activeRegisterList = new ArrayList<>();
     public PushPanelTile(int xCoordinate, int yCoordinate, Direction pushDirection, ArrayList<Integer> registers) {
         super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
         this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
@@ -38,5 +40,11 @@ public class PushPanelTile extends Tile {
                 player.getRobot().setCurrentPosition(newPosition);
             }
         }
+    }
+    public ArrayList<Integer> getActiveRegisterList() {
+        return activeRegisterList;
+    }
+    public void setActiveRegisterList(ArrayList<Integer> activeRegisterList) {
+        this.activeRegisterList = activeRegisterList;
     }
 }

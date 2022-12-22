@@ -19,6 +19,7 @@ public class Game {
     public static TrojanDeck trojanDeck = new TrojanDeck();
     public static WormDeck wormDeck = new WormDeck();
     public static int currentRegister = 0;
+
     private ArrayList<CheckpointTile> checkpointTileArrayList = null;
 
     //applyTileEffect would be called after the programming register is executed
@@ -33,11 +34,13 @@ public class Game {
         }
     }
     //Might be unnecessary
-    private void activatePushPanels() throws Exception {
+    private void applyPushPanelEffects() throws Exception {
         for (int i = 0; i < playerList.size(); i++) {
             if(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()) instanceof PushPanelTile){
-                board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()).applyEffect(playerList.getPlayerFromList(i));
-                //TODO: add push panel timings based on register
+                if(((PushPanelTile) board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()))
+                        .getActiveRegisterList().contains(currentRegister)) {
+                    board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()).applyEffect(playerList.getPlayerFromList(i));
+                }
             }
         }
     }
@@ -87,6 +90,8 @@ public class Game {
                 }
             }
             //TODO: Add tile effects;
+            applyAllTileEffects();
+
         }
     }
 

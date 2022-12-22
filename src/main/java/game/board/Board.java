@@ -24,7 +24,7 @@ public class Board {
         board[column][row] = tile;
     }
 
-    //TODO: ArrayList instead of array, scanBoardMethod to store tiles and their respective locations, GUI functionality in case of errors
+    //TODO: scanBoardMethod to store tiles and their respective locations, GUI functionality in case of errors, calculate collision method
 
     public Tile getTile(Pair<Integer, Integer> position){
         return board[position.getValue0()][position.getValue1()];
