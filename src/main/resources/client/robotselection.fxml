@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane fx:id="loginWindow" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelRobotSelection">
+   <children>
+      <Pane styleClass="loginbackground" />
+      <BorderPane minHeight="500.0" minWidth="1000.0">
+          <top>
+            <VBox alignment="TOP_CENTER" BorderPane.alignment="CENTER">
+               <children>
+                    <MenuBar styleClass="menubar">
+                        <menus>
+                            <Menu mnemonicParsing="false" text="Options">
+                                <items>
+                                    <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#exit" text="Exit" />
+                                    <MenuItem mnemonicParsing="false" text="Help" />
+                                </items>
+                            </Menu>
+                        </menus>
+                    </MenuBar>
+                  <Pane VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
+          </top>
+         <left>
+            <VBox minHeight="600.0" BorderPane.alignment="CENTER">
+               <children>
+                      <Label text="SELECT CHARACTER" textFill="WHITE">
+                          <padding>
+                              <Insets left="10.0" top="20.0" />
+                          </padding>
+                          <font>
+                              <Font name="Josefin Sans SemiBold" size="36.0" />
+                          </font>
+                      </Label>
+                    <GridPane alignment="TOP_CENTER" VBox.vgrow="ALWAYS">
+                        <columnConstraints>
+                            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" prefWidth="100.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                            <RowConstraints minHeight="10.0" valignment="CENTER" vgrow="ALWAYS" />
+                            <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
+                            <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
+                        </rowConstraints>
+                        <children>
+                            <Label fx:id="robot1" alignment="CENTER" contentDisplay="CENTER" styleClass="roboterlabel" text="Roboter 1" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
+                                <graphic>
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="roboter">
+                                        <image>
+                                            <Image url="@../textures/robots/Robot_5_bunt.png" />
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                            </Label>
+                            <Label fx:id="robot2" contentDisplay="CENTER" layoutX="10.0" layoutY="-40.0" styleClass="roboterlabel" text="Roboter 2" GridPane.columnIndex="1">
+                                <graphic>
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="roboter">
+                                        <image>
+                                            <Image url="@../textures/robots/Robot_4_bunt.png" />
+                                        </image>
+                                        <cursor>
+                                            <Cursor fx:constant="OPEN_HAND" />
+                                        </cursor>
+                                    </ImageView>
+                                </graphic>
+                            </Label>
+                            <Label fx:id="robot3" contentDisplay="CENTER" layoutX="10.0" layoutY="-40.0" styleClass="roboterlabel" text="Roboter 3" GridPane.rowIndex="1">
+                                <graphic>
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="roboter">
+                                        <image>
+                                            <Image url="@../textures/robots/Robot_3_bunt.png" />
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                            </Label>
+                            <Label fx:id="robot4" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" styleClass="roboterlabel" text="Roboter 4" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                <graphic>
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="roboter">
+                                        <image>
+                                            <Image url="@../textures/robots/Robot_6_bunt.png" />
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                            </Label>
+                            <Label fx:id="robot5" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" styleClass="roboterlabel" text="Roboter 5" GridPane.rowIndex="2">
+                                <graphic>
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="roboter">
+                                        <image>
+                                            <Image url="@../textures/robots/Robot_1_bunt.png" />
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                            </Label>
+                            <Label fx:id="robot6" contentDisplay="CENTER" layoutX="10.0" layoutY="60.0" styleClass="roboterlabel" text="Roboter 6" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                <graphic>
+                                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="roboter">
+                                        <image>
+                                            <Image url="@../textures/robots/Robot_2_bunt.png" />
+                                        </image>
+                                    </ImageView>
+                                </graphic>
+                            </Label>
+                        </children>
+                        <padding>
+                            <Insets bottom="20.0" top="20.0" />
+                        </padding>
+                    </GridPane>
+                    <HBox fx:id="nicknameHBox" alignment="CENTER" prefHeight="41.0" prefWidth="399.0" spacing="10.0" VBox.vgrow="SOMETIMES">
+                        <children>
+                            <TextField fx:id="usernameTextField" alignment="TOP_LEFT" focusTraversable="false" prefHeight="26.0" prefWidth="287.0" promptText="Enter username" HBox.hgrow="ALWAYS">
+                                <font>
+                                    <Font name="Hiragino Sans W2" size="13.0" />
+                                </font>
+                            </TextField>
+                            <Button fx:id="usernameButton" mnemonicParsing="false" onAction="#usernameButtonOnAction" prefHeight="26.0" prefWidth="55.0" HBox.hgrow="ALWAYS">
+                                <graphic>
+                                    <Label fx:id="loginButton" text="LOGIN">
+                                        <font>
+                                            <Font name="Hiragino Sans W2" size="11.0" />
+                                        </font>
+                                    </Label>
+                                </graphic>
+                                <HBox.margin>
+                                    <Insets />
+                                </HBox.margin>
+                            </Button>
+                        </children>
+                        <padding>
+                            <Insets bottom="20.0" left="40.0" right="10.0" top="10.0" />
+                        </padding>
+                    </HBox>
+               </children>
+               <BorderPane.margin>
+                  <Insets bottom="50.0" left="50.0" />
+               </BorderPane.margin>
+            </VBox>
+         </left>
+      </BorderPane>
+   </children>
+</StackPane>
