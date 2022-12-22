@@ -19,6 +19,14 @@ public class Board {
 
     private int checkPointCount;
     protected Tile[][] board = new Tile[13][10];
+    //Lists of used tiles on the board, would be iterated on during the activation phase
+    public static ArrayList<ConveyorBeltTile> conveyorBelt2List;
+    public static ArrayList<ConveyorBeltTile> conveyorBelt1List;
+    public static ArrayList<PushPanelTile> pushPanelList;
+    public static ArrayList<GearTile> gearTileList;
+    public static ArrayList<LaserTile> laserTileList;
+    public static ArrayList<CheckpointTile> checkpointList;
+    public static ArrayList<EnergySpaceTile> energySpaceList;
     public void loadBoard(){}
     public void setTile(int column, int row, Tile tile){
         board[column][row] = tile;
