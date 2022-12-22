@@ -42,8 +42,12 @@ public class ViewModelServer {
     }
 
     public void stopServerOnAction()  {
-        modelServer.stopServer();
-        modelServer.getAlive();
+        try {
+            modelServer.stopServer();
+            modelServer.getAlive();
+        } catch (NullPointerException e) {
+            System.out.println("No Server to stop.");
+        }
     }
 
     public void closeApplication(ActionEvent actionEvent) {

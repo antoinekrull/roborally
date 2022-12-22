@@ -48,6 +48,7 @@ public enum MessageType {
     Energy,
     CheckPointReached,
     GameFinished,
-    Sample
+    Sample,
+    Goodbye
     }
 

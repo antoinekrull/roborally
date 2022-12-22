@@ -1,9 +1,6 @@
 package server.connection;
 
-import communication.JsonSerializer;
-import communication.Message;
-import communication.MessageCreator;
-import communication.MessageType;
+import communication.*;
 import javafx.beans.property.SimpleBooleanProperty;
 
 import java.io.BufferedInputStream;
@@ -245,14 +242,14 @@ public class HandleClient implements Runnable{
                 try {
                     if (incomingMessage.getMessageType() == MessageType.SendChat && incomingMessage.getMessageBody().getTo() == -1) {
                         int clientID = getClientID();
-                        //server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, clientID, false));
-                        server.broadcast(clientID, messageCreator.generateReceivedChatMessage(line_formatted, clientID, false));
+                        server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, clientID, false));
+                        //server.broadcast(clientID, messageCreator.generateReceivedChatMessage(line_formatted, clientID, false));
                     } else if (incomingMessage.getMessageType() == MessageType.SendChat) {
                         if (server.CLIENTS.containsKey(incomingMessage.getMessageBody().getTo())) {
-                            int toUser = getClientID();
-                            //int toUser = incomingMessage.getMessageBody().getTo();
-                            server.sendTo(toUser, messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
-                            //server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
+                            int toUser = incomingMessage.getMessageBody().getTo();
+                            server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
+                            //int toUser = getClientID();
+                            //server.sendTo(toUser, messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
                             //writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
@@ -271,7 +268,7 @@ public class HandleClient implements Runnable{
         try {
             String goodbyeMessage = "Server: " + this.threadID + " has left the chat!";
             System.out.println(goodbyeMessage);
-            //server.messages.put(goodbyeMessage);
+            server.messages.put(messageCreator.generateGoodbyeMessage(clientID, goodbyeMessage));
             server.players.remove(threadID);
             server.CLIENTS.remove(threadID);
             this.in.close();

@@ -2,6 +2,7 @@ package server.connection;
 
 import communication.Message;
 import communication.MessageCreator;
+import communication.MessageType;
 import game.player.Player;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -11,6 +12,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Server {
 
@@ -20,7 +22,7 @@ public class Server {
     protected ServerSocket serverSocket;
     public HashMap<Integer, Player> players = new HashMap<>();
     public HashMap<Integer, HandleClient> CLIENTS = new HashMap<>();
-    //public final LinkedBlockingQueue<Message> messages;
+    public LinkedBlockingQueue<Message> messages;
     public int uniqueID = 0;
     public Boolean alive;
     public BooleanProperty online;
@@ -28,9 +30,10 @@ public class Server {
     private final String protocolVersion;
 
     private Server() {
-        messageCreator = new MessageCreator();
-        protocolVersion = "Version 0.1";
-        online = new SimpleBooleanProperty(true);
+        this.messageCreator = new MessageCreator();
+        this.protocolVersion = "Version 0.1";
+        this.online = new SimpleBooleanProperty(true);
+        this.messages = new LinkedBlockingQueue<>();
     }
 
     public static Server getInstance() {
@@ -78,41 +81,47 @@ public class Server {
             }
         };
         acceptClients.start();
+
+        Thread writeMessages = new Thread() {
+            public void run() {
+                while (true) {
+                    try {
+                        Message message = messages.take();
+                        boolean isPrivate = message.getMessageBody().isPrivate();
+                        if (message.getMessageType() == MessageType.Goodbye) {
+                            int id = message.getMessageBody().getClientID();
+                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                                if (client.getKey() != id) {
+                                    client.getValue().write(message);
+                                }
+                            }
+                        }
+                        if (!isPrivate) {
+                            int id = message.getMessageBody().getFrom();
+                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                                if (client.getKey() != id) {
+                                    client.getValue().write(message);
+                                }
+                            }
+                        }
+                        if (isPrivate) {
+                            int toUser = message.getMessageBody().getFrom();
+                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                                if (client.getKey() == toUser) {
+                                    client.getValue().write(message);
+                                }
+                            }
+                        }
+                    } catch (InterruptedException e) {
+                            System.out.println("Error is it here " + e.getMessage());
+                    }
+                }
+            }
+        };
+        writeMessages.start();
     }
 
     /*
-            //should be redundant, because linkedblockingqueue is not necessary anymore
-            Thread writeMessages = new Thread() {
-                public void run() {
-                    while (true) {
-                        try {
-                            Message message = messages.take();
-                            Boolean isPrivate = message.getMessageBody().isPrivate();
-                            if (!isPrivate) {
-                            int id = message.getMessageBody().getFrom();
-                                for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
-                                    if (client.getKey() != id) {
-                                        client.getValue().write(message);
-                                }
-                            }
-                            if (isPrivate) {
-                            int toUser = message.getMessageBody().getFrom();
-                                for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
-                                     if (client.getKey() == toUser) {
-                                         client.getValue().write(message);
-                                    }
-                                }
-                            }
-                        } catch (Exception e) {
-                            System.out.println("Error is it here " + e.getMessage());
-                        }
-                    }
-                }
-            };
-            writeMessages.start();
-        }
-     */
-
     public void broadcast(int id, Message message) {
         for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
             if (client.getKey() != id) {
@@ -128,6 +137,8 @@ public class Server {
             }
         }
     }
+     */
+
     public synchronized int getUniqueID() {
         return uniqueID++;
     }
