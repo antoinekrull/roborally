@@ -22,10 +22,13 @@ public class Player {
     private int id;
     private boolean isPlaying;
     private boolean isReady;
+    private boolean isDamaged;
     private ArrayList<Card> hand;
     //TODO: further implementation of register logic
     private Card[] cardRegister = new Card[5];
     private boolean[] statusRegister = new boolean[5];
+
+
     private ProgrammingDeck personalDiscardPile;
     private Robot robot;
 
@@ -55,6 +58,18 @@ public class Player {
     public void setPlaying(boolean playing) {
         isPlaying = playing;
     }
+    public boolean isReady() {
+        return isReady;
+    }
+    public void setReady(boolean ready) {
+        isReady = ready;
+    }
+    public boolean isDamaged() {
+        return isDamaged;
+    }
+    public void setDamaged(boolean damaged) {
+        isDamaged = damaged;
+    }
     public ArrayList<Card> getHand() {
         return hand;
     }
@@ -66,6 +81,9 @@ public class Player {
         personalDiscardPile.addCard(discardedCard);
         hand.remove(index);
         return discardedCard;
+    }
+    public ProgrammingDeck getPersonalDiscardPile() {
+        return personalDiscardPile;
     }
     public void refillDeck(){
         robot.setDeck(personalDiscardPile);
@@ -98,12 +116,6 @@ public class Player {
     }
     public int getId() {
         return id;
-    }
-    public boolean isReady() {
-        return isReady;
-    }
-    public void setReady(boolean ready) {
-        isReady = ready;
     }
     public Card[] getCardRegister() {
         return cardRegister;

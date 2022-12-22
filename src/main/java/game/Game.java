@@ -9,7 +9,7 @@ import server.PlayerList;
 
 import java.util.ArrayList;
 
-public class Game {
+public class Game implements Runnable {
     private GamePhase currentGamePhase;
     public static PlayerList playerList;
     private Board board;
@@ -20,9 +20,23 @@ public class Game {
     public static WormDeck wormDeck = new WormDeck();
     public static int currentRegister = 0;
 
+    private static Game INSTANCE;
+
     private ArrayList<CheckpointTile> checkpointTileArrayList = null;
 
-    //applyTileEffect would be called after the programming register is executed
+    private Game() {}
+
+    public static Game getInstance() {
+        if(INSTANCE == null) {
+            INSTANCE = new Game();
+        }
+        return INSTANCE;
+    }
+
+    public void setPlayerList(PlayerList playerList) {
+        this.playerList = playerList;
+    }
+
     public void applyTileEffect() throws Exception {
         board.getTile(activePlayer.getRobot().getCurrentPosition()).applyEffect(activePlayer);
     }
@@ -45,21 +59,19 @@ public class Game {
         }
     }
 
+    //TODO: Implement this
     private PlayerList determinePriority() {
         PlayerList priorityList = null;
         return  priorityList;
     }
 
+    //TODO: Implement this
+    private void runTimer(){}
+
     public GamePhase getCurrentGamePhase() {
         return currentGamePhase;
     }
 
-    public void startGame(PlayerList playerList) {
-        if(playerList.playersAreReady()) {
-            playerList.setPlayerReadiness(false);
-            //start game
-        }
-    }
     private void setCurrentGamePhase(GamePhase currentGamePhase) {
         this.currentGamePhase = currentGamePhase;
     }
@@ -67,12 +79,11 @@ public class Game {
     private void runUpgradePhase(){
 
     }
-    private void runProgrammingPhase(PlayerList playerList){
+    private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
         playerList.setPlayersPlaying(true);
         while(!playerList.playersAreReady()) {
-            //wait
+            Thread.sleep(10000);
         }
-        //start next phase
     }
 
     private void runActivationPhase() throws Exception {
@@ -89,9 +100,8 @@ public class Game {
                     playerList.get(i).emptyAllCardRegisters();
                 }
             }
-            //TODO: Add tile effects;
             applyAllTileEffects();
-
+            //TODO: check if players get damaged
         }
     }
 
@@ -99,9 +109,23 @@ public class Game {
         player.getCardFromRegister(currentRegister).applyEffect(player);
     }
 
-    //maybe implement with chosen deck as input value
-    public Card drawDamageCard(Player player) {
-        return null;
+    //TODO: Add checks to see if player gets damaged
+    public void drawDamageCard(Player player, Deck deck) {
+        player.getPersonalDiscardPile().addCard(deck.popCardFromDeck());
+        player.setDamaged(false);
     }
 
+    @Override
+    public void run() {
+        playerList.setPlayerReadiness(false);
+        while(true) {
+            runUpgradePhase();
+            try {
+                runProgrammingPhase(playerList);
+                runActivationPhase();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }
