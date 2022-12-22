@@ -8,7 +8,6 @@ import game.card.ProgrammingDeck;
 import java.util.ArrayList;
 import java.util.Random;
 
-import game.card.TrojanDeck;
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
@@ -22,9 +21,7 @@ public class Player {
     private int id;
     private boolean isPlaying;
     private boolean isReady;
-    private boolean isDamaged;
     private ArrayList<Card> hand;
-    //TODO: further implementation of register logic
     private Card[] cardRegister = new Card[5];
     private boolean[] statusRegister = new boolean[5];
 
@@ -63,12 +60,6 @@ public class Player {
     }
     public void setReady(boolean ready) {
         isReady = ready;
-    }
-    public boolean isDamaged() {
-        return isDamaged;
-    }
-    public void setDamaged(boolean damaged) {
-        isDamaged = damaged;
     }
     public ArrayList<Card> getHand() {
         return hand;
