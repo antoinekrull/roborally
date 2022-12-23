@@ -107,7 +107,6 @@ public class Game implements Runnable {
                 }
             }
             applyAllTileEffects();
-            //TODO: check if players get damaged
         }
     }
 
@@ -115,10 +114,8 @@ public class Game implements Runnable {
         player.getCardFromRegister(currentRegister).applyEffect(player);
     }
 
-    //TODO: Add checks to see if player gets damaged
     public void drawDamageCard(Player player, Deck deck) {
         player.getPersonalDiscardPile().addCard(deck.popCardFromDeck());
-        player.setDamaged(false);
     }
 
     @Override

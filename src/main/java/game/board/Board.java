@@ -19,7 +19,6 @@ public class Board {
 
     private int checkPointCount;
     protected Tile[][] board = new Tile[13][10];
-    //Lists of used tiles on the board, would be iterated on during the activation phase
     public static ArrayList<ConveyorBeltTile> conveyorBelt2List;
     public static ArrayList<ConveyorBeltTile> conveyorBelt1List;
     public static ArrayList<PushPanelTile> pushPanelList;
@@ -31,8 +30,6 @@ public class Board {
     public void setTile(int column, int row, Tile tile){
         board[column][row] = tile;
     }
-
-    //TODO: scanBoardMethod to store tiles and their respective locations, GUI functionality in case of errors, calculate collision method
 
     public Tile getTile(Pair<Integer, Integer> position){
         return board[position.getValue0()][position.getValue1()];
