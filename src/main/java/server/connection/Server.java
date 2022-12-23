@@ -14,6 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * Server
+ * Changed to Singleton to connect it with a gui
+ */
 public class Server {
 
     private static Server server;
@@ -22,6 +26,7 @@ public class Server {
     protected ServerSocket serverSocket;
     public HashMap<Integer, Player> players = new HashMap<>();
     public HashMap<Integer, HandleClient> CLIENTS = new HashMap<>();
+    //Message type instead of Strings
     public LinkedBlockingQueue<Message> messages;
     public int uniqueID = 0;
     public Boolean alive;
@@ -82,12 +87,14 @@ public class Server {
         };
         acceptClients.start();
 
+        //Changes
         Thread writeMessages = new Thread() {
             public void run() {
                 while (true) {
                     try {
                         Message message = messages.take();
                         boolean isPrivate = message.getMessageBody().isPrivate();
+                        //Added goodbye: added message type in HandleClient to Message instead of String because of protocol (Chat)
                         if (message.getMessageType() == MessageType.Goodbye) {
                             int id = message.getMessageBody().getClientID();
                             for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
@@ -96,6 +103,7 @@ public class Server {
                                 }
                             }
                         }
+                        //Changed group messages: will only be displayed to other clients, not to yourself
                         if (!isPrivate) {
                             int id = message.getMessageBody().getFrom();
                             for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
@@ -104,6 +112,7 @@ public class Server {
                                 }
                             }
                         }
+                        //added private message to work in chat
                         if (isPrivate) {
                             int toUser = message.getMessageBody().getFrom();
                             for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
@@ -121,6 +130,7 @@ public class Server {
         writeMessages.start();
     }
 
+    //not used anymore
     /*
     public void broadcast(int id, Message message) {
         for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
@@ -144,6 +154,7 @@ public class Server {
     }
     public String getProtocolVersion() {return this.protocolVersion;}
 
+    //Added to stop server (for gui)
     public void stopServer() throws IOException {
         setOnline(false);
         this.alive = false;

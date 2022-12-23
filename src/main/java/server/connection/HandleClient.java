@@ -48,6 +48,7 @@ public class HandleClient implements Runnable{
         this.server = server;
         this.threadID = threadID;
         this.messageCreator = new MessageCreator();
+        //closes handler when stopServer method is called
         serverStatus = new SimpleBooleanProperty();
         serverStatus.bind(server.onlineProperty());
         serverStatus.addListener(event -> {
@@ -88,6 +89,7 @@ public class HandleClient implements Runnable{
     }
 
 
+    //messages stored in linkedblockingqueue (thread using linkedblockingqueue calls write method which should be enough)
     /*
     public void writeTo(int id, Message message) {
         try {
@@ -240,12 +242,14 @@ public class HandleClient implements Runnable{
                 line = incomingMessage.getMessageBody().getMessage();
                 String line_formatted = this.username + ":  " + line;
                 try {
+                    //String changed to Message type (protocol, from: sender): added to linkedblockingqueue
                     if (incomingMessage.getMessageType() == MessageType.SendChat && incomingMessage.getMessageBody().getTo() == -1) {
                         int clientID = getClientID();
                         server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, clientID, false));
                         //server.broadcast(clientID, messageCreator.generateReceivedChatMessage(line_formatted, clientID, false));
                     } else if (incomingMessage.getMessageType() == MessageType.SendChat) {
                         if (server.CLIENTS.containsKey(incomingMessage.getMessageBody().getTo())) {
+                            //String changed to Message type (protocol, from: to send): added to linkedblockingqueue
                             int toUser = incomingMessage.getMessageBody().getTo();
                             server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
                             //int toUser = getClientID();
@@ -266,6 +270,7 @@ public class HandleClient implements Runnable{
     }
     private void closeConnection(){
         try {
+            //changed String to Message to match with other messages (added generateGoodbyeMessage to MessageCreator)
             String goodbyeMessage = "Server: " + this.threadID + " has left the chat!";
             System.out.println(goodbyeMessage);
             server.messages.put(messageCreator.generateGoodbyeMessage(clientID, goodbyeMessage));
@@ -280,6 +285,7 @@ public class HandleClient implements Runnable{
 
     }
 
+    //when server is stopped, close handlers
     public void closeHandler() throws IOException {
         if (in != null) {
             in.close();
