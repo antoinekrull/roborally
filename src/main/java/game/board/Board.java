@@ -14,11 +14,12 @@ import static java.lang.Integer.parseInt;
  * @version 1.0
  */
 public class Board {
-    protected int columns;
-    protected int rows;
+    protected static int columns;
+    protected static int rows;
 
     private int checkPointCount;
-    protected Tile[][] board = new Tile[13][10];
+    protected static Tile[][] board = new Tile[13][10];
+    //Lists of used tiles on the board, would be iterated on during the activation phase
     public static ArrayList<ConveyorBeltTile> conveyorBelt2List;
     public static ArrayList<ConveyorBeltTile> conveyorBelt1List;
     public static ArrayList<PushPanelTile> pushPanelList;
@@ -30,9 +31,13 @@ public class Board {
     public void setTile(int column, int row, Tile tile){
         board[column][row] = tile;
     }
-    public Tile getTile(Pair<Integer, Integer> position){
+
+    public static Tile getTile(Pair<Integer, Integer> position){
         return board[position.getValue0()][position.getValue1()];
     }
+    public static int getColumns() {return columns;}
+
+    public static int getRows() {return rows;}
     public int getCheckPointCount() {
         return checkPointCount;
     }
