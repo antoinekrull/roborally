@@ -47,13 +47,54 @@ public class Game implements Runnable {
         board.getTile(activePlayer.getRobot().getCurrentPosition()).applyEffect(activePlayer);
     }
 
-    //might not be necessary
-    private void applyAllTileEffects() throws Exception{
-        for (int i = 0; i < playerList.size(); i++) {
-            board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()).applyEffect(playerList.getPlayerFromList(i));
+    private void applyAllTileEffects() throws Exception {
+        for(int x = 0; x < Board.conveyorBelt2List.size(); x++) {
+            for(int y = 0; y < playerList.size(); y++) {
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.conveyorBelt2List.get(x).getPosition())) {
+                    Board.conveyorBelt2List.get(x).applyEffect(playerList.get(y));
+                }
+            }
+        }
+        for(int x = 0; x < Board.conveyorBelt1List.size(); x++) {
+            for(int y = 0; y < playerList.size(); y++) {
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.conveyorBelt1List.get(x).getPosition())) {
+                    Board.conveyorBelt1List.get(x).applyEffect(playerList.get(y));
+                }
+            }
+        }
+        applyPushPanelEffects();
+        for(int x = 0; x < Board.gearTileList.size(); x++) {
+            for(int y = 0; y < playerList.size(); y++) {
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.gearTileList.get(x).getPosition())) {
+                    Board.gearTileList.get(x).applyEffect(playerList.get(y));
+                }
+            }
+        }
+        //TODO: Might need to be changed
+        for(int x = 0; x < Board.laserTileList.size(); x++) {
+            for(int y = 0; y < playerList.size(); y++) {
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.laserTileList.get(x).getPosition())) {
+                    Board.laserTileList.get(x).applyEffect(playerList.get(y));
+                }
+            }
+        }
+        //TODO: Robo laser activation
+        for(int x = 0; x < Board.energySpaceList.size(); x++) {
+            for(int y = 0; y < playerList.size(); y++) {
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.energySpaceList.get(x).getPosition())) {
+                    Board.energySpaceList.get(x).applyEffect(playerList.get(y));
+                }
+            }
+        }
+        for(int x = 0; x < Board.checkpointList.size(); x++) {
+            for(int y = 0; y < playerList.size(); y++) {
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.checkpointList.get(x).getPosition())) {
+                    Board.checkpointList.get(x).applyEffect(playerList.get(y));
+                }
+            }
         }
     }
-    //Might be unnecessary
+
     private void applyPushPanelEffects() throws Exception {
         for (int i = 0; i < playerList.size(); i++) {
             if(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()) instanceof PushPanelTile){
@@ -112,10 +153,6 @@ public class Game implements Runnable {
 
     private void activateRegister(Player player) throws Exception {
         player.getCardFromRegister(currentRegister).applyEffect(player);
-    }
-
-    public void drawDamageCard(Player player, Deck deck) {
-        player.getPersonalDiscardPile().addCard(deck.popCardFromDeck());
     }
 
     @Override

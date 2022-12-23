@@ -23,6 +23,10 @@ public class PushPanelTile extends Tile {
         tileLocation = new Pair<>(xCoordinate, yCoordinate);
     }
 
+    public Direction getPushDirection() {
+        return pushDirection;
+    }
+
     @Override
     public void applyEffect(Player player) throws Exception {
         //TODO: Ask GUI team if they need extra info for animations
