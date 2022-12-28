@@ -5,16 +5,19 @@ import client.connection.NotifyChangeSupport;
 import client.model.ModelGame;
 import client.model.ModelUser;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 /**
- * ViewModel for selecting one of eight robots
+ * ViewModel for selecting a robot and choosing a name
  *
- * @author Tobias
+ * @author Tobias, Benedikt
  * @version 0.1
  */
 
@@ -30,7 +33,8 @@ public class ViewModelRobotSelection {
     private ModelGame modelGame;
     @FXML
     private Button exitButton;
-
+    
+    private List<Node> robots;
     private NotifyChangeSupport notifyChangeSupport;
 
     public ViewModelRobotSelection() {
@@ -39,22 +43,56 @@ public class ViewModelRobotSelection {
         notifyChangeSupport = NotifyChangeSupport.getInstance();
     }
 
+    /**
+     * Binds selected robot to model
+     */
     public void initialize() {
         usernameButton.disableProperty().bind(usernameTextField.textProperty().isEmpty());
         usernameTextField.textProperty().bindBidirectional(modelUser.usernameProperty());
-        robot1.setOnMouseClicked(mouseevent -> modelGame.setRobot(robot1.getText()));
-        robot2.setOnMouseClicked(mouseevent -> modelGame.setRobot(robot2.getText()));
-        robot3.setOnMouseClicked(mouseevent -> modelGame.setRobot(robot3.getText()));
-        robot4.setOnMouseClicked(mouseevent -> modelGame.setRobot(robot4.getText()));
-        robot5.setOnMouseClicked(mouseevent -> modelGame.setRobot(robot5.getText()));
-        robot6.setOnMouseClicked(mouseevent -> modelGame.setRobot(robot6.getText()));
+        robots = Arrays.asList(robot1, robot2, robot3, robot4, robot5, robot6);
+        robot1.setOnMouseClicked(mouseevent -> {
+            modelGame.setRobotProperty(1);
+            applyStyle(robot1);
+        });
+        robot2.setOnMouseClicked(mouseevent -> {
+            modelGame.setRobotProperty(2);
+            applyStyle(robot2);
+        });
+        robot3.setOnMouseClicked(mouseevent -> {
+            modelGame.setRobotProperty(3);
+            applyStyle(robot3);
+        });
+        robot4.setOnMouseClicked(mouseevent -> {
+            modelGame.setRobotProperty(4);
+            applyStyle(robot4);
+        });
+        robot5.setOnMouseClicked(mouseevent -> {
+            modelGame.setRobotProperty(5);
+            applyStyle(robot5);
+        });
+        robot6.setOnMouseClicked(mouseevent -> {
+            modelGame.setRobotProperty(6);
+            applyStyle(robot6);
+        });
     }
 
+    //When selecting a robot, the robot gets highlighted, but only the selected one
+    private void applyStyle(Node node) {
+        for (Node robot : robots) {
+            robot.setStyle("");
+        }
+        node.setStyle("-fx-effect: dropshadow(three-pass-box, white, 15, 0.0, 0, 0);");
+     }
+
+
+    /**
+     * Entering lobby after selecting a robot and choosing a nickname
+     */
     public void usernameButtonOnAction() throws IOException {
-        String robot = modelGame.getRobot();
+        int robot = modelGame.robotProperty().get();
         String username = modelUser.usernameProperty().get();
-        int userID = modelUser.getUserID();
-        if (!robot.isEmpty() && !username.isEmpty()) {
+        int userID = modelUser.userIDProperty().get();
+        if (robot != 0 && !username.isEmpty()) {
             //modelUser.sendUsername();
             //modelGame.sendRobotSelection(userID);
             RoboRallyStart.switchScene("lobby.fxml");

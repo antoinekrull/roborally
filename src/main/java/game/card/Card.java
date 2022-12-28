@@ -6,7 +6,7 @@ package game.card;
  */
 
 import com.fasterxml.jackson.databind.Module;
-import game.robot.Robot;
+import game.player.Player;
 
 /**
  * Combines the features for a playable card.
@@ -16,6 +16,9 @@ public abstract class Card {
     private String cardName;
     private boolean isActivated = false;
 
+
+
+    protected boolean isDamageCard = false;
     private String cardEffect;
     public String getCardName() {
         return cardName;
@@ -35,6 +38,14 @@ public abstract class Card {
     public void setActivated(boolean activated) {
         isActivated = activated;
     }
-    public void applyEffect(Robot robot) throws Exception {}
+    public boolean isDamageCard() {
+        return isDamageCard;
+    }
+    public void setDamageCard(boolean damageCard) {
+        isDamageCard = damageCard;
+    }
+
+    public void applyEffect(Player player) throws Exception {}
+
 }
 

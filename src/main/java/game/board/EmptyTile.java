@@ -1,21 +1,23 @@
 package game.board;
 
-import game.robot.Robot;
+import game.player.Player;
 
 /**
  * @author Antoine, Firas
  * @version 1.0
  */
-public class EmptyTile extends Tile{
+public class NormalTile extends Tile{
 
-    public EmptyTile(int xCoordinate, int yCoordinate) {
-        super(xCoordinate, yCoordinate);
+    public NormalTile(int xCoordinate, int yCoordinate) {
+        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
+        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
         isDanger = false;
         isBlocking = false;
     }
 
     @Override
-    public void applyEffect(Robot robot) throws Exception {
-        super.applyEffect(robot);
+    public void applyEffect(Player player) throws Exception {
+        super.applyEffect(player);
     }
 }
+

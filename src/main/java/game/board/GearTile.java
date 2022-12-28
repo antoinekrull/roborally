@@ -1,6 +1,6 @@
 package game.board;
 
-import game.robot.Robot;
+import game.player.Player;
 
 /**
  * @author Antoine, Firas
@@ -9,7 +9,8 @@ import game.robot.Robot;
 public class GearTile extends Tile{
     private RotationType rotationType;
     public GearTile(int xCoordinate, int yCoordinate) {
-        super(xCoordinate, yCoordinate);
+        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
+        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
         isDanger = false;
         isBlocking = false;
     }
@@ -18,21 +19,21 @@ public class GearTile extends Tile{
     }
 
     @Override
-    public void applyEffect(Robot robot) throws Exception {
+    public void applyEffect(Player player) throws Exception {
         if(rotationType == RotationType.RIGHT){
-            switch (robot.getDirection()){
-                case NORTH -> robot.setDirection(Direction.EAST);
-                case EAST -> robot.setDirection(Direction.SOUTH);
-                case SOUTH -> robot.setDirection(Direction.WEST);
-                case WEST -> robot.setDirection(Direction.NORTH);
+            switch (player.getRobot().getDirection()){
+                case NORTH -> player.getRobot().setDirection(Direction.EAST);
+                case EAST -> player.getRobot().setDirection(Direction.SOUTH);
+                case SOUTH -> player.getRobot().setDirection(Direction.WEST);
+                case WEST -> player.getRobot().setDirection(Direction.NORTH);
                 default -> throw new Exception("Invalid direction");
             }
         } else if(rotationType == RotationType.LEFT){
-            switch (robot.getDirection()){
-                case NORTH -> robot.setDirection(Direction.WEST);
-                case WEST -> robot.setDirection(Direction.SOUTH);
-                case SOUTH -> robot.setDirection(Direction.EAST);
-                case EAST -> robot.setDirection(Direction.NORTH);
+            switch (player.getRobot().getDirection()){
+                case NORTH -> player.getRobot().setDirection(Direction.WEST);
+                case WEST -> player.getRobot().setDirection(Direction.SOUTH);
+                case SOUTH -> player.getRobot().setDirection(Direction.EAST);
+                case EAST -> player.getRobot().setDirection(Direction.NORTH);
                 default -> throw new Exception("Invalid direction");
             }
         } else {
