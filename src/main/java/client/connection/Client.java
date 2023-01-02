@@ -1,6 +1,9 @@
 package client.connection;
 
 import client.model.ModelGame;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
@@ -17,8 +20,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -141,6 +148,8 @@ public class Client {
                                 for (int i = 0; i < maps.length; i++) {
                                     System.out.println(maps[i]);
                                 }
+                                sendMapMessage("hier soll mal die Map rein dann");
+
                             }
                             if(message.getMessageType().equals(MessageType.ReceivedChat)){
                                 //MESSAGES.put(message.getMessageBody().getMessage())
@@ -159,7 +168,16 @@ public class Client {
 
                             }
                             if(message.getMessageType().equals(MessageType.GameStarted)){
-                                modelGame.createMap(message.getMessageBody());
+                                ObjectMapper mapper = new ObjectMapper();
+                                String send = new String(message.getMessageBody().getGameMap());
+                                //Map<String, Object> mapObject = mapper.readValue(send, new TypeReference<Map<String,Object>>(){});
+
+                                //String content = send.lines().collect(Collectors.joining());
+
+                                System.out.println(send);
+                                //modelGame.createMap(mapObject);
+
+                                //System.out.println(map);
                                 //GameBoard board = new GameBoard();
                                 //board.createBoard(message.getMessageBody());
                             }
@@ -229,6 +247,9 @@ public class Client {
     }
     public void sendGroupMessage(String message){
         sendMessageToServer(messageCreator.generateSendChatMessage(message));
+    }
+    public void sendMapMessage(String message) {
+        sendMessageToServer(messageCreator.generateMapSelectedMessage("DizzyHighway"));
     }
 
     public void sendMessageToServer(Message message) {

@@ -1,16 +1,18 @@
 package server;
 
+import com.fasterxml.jackson.core.JsonParser;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
-import game.Game;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
+import java.io.*;
+
+import game.Game;
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -33,7 +35,8 @@ public class HandleClient implements Runnable{
     private String username;
     private ServerMain.Server server;
     private MessageCreator messageCreator;
-    private Game game;
+    private Game gameOne;
+
 
     /**
      * Thread which handles the logged in clients.
@@ -49,7 +52,8 @@ public class HandleClient implements Runnable{
         this.server = server;
         this.threadID = threadID;
         this.messageCreator = new MessageCreator();
-        this.game = server.getGameInstance();
+        this.gameOne = server.getGameInstance();
+
         try {
             this.in = new DataInputStream(
                     new BufferedInputStream(socket.getInputStream()));
@@ -234,21 +238,23 @@ public class HandleClient implements Runnable{
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
                         setAlive(true);
                     } else if (incomingMessage.getMessageType() == MessageType.MapSelected) {
-                        //write(messageCreator.generateGameStartedMessage(game.board.BoardModels.DizzyHighwayGameBoard));
+
+                        String map = new String(Files.readAllBytes(Paths.get("E:\\Programme\\knorrige-korrelate-hp\\src\\main\\java\\game\\board\\BoardModels\\DizzyHighwayGameBoard.json")));
+                        write(messageCreator.generateGameStartedMessage(map));
+
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
                         write(messageCreator.generatePlayerAddedMessage(incomingMessage.getMessageBody().getName(), incomingMessage.getMessageBody().getFigure(), this.clientID));
                     } else if(incomingMessage.getMessageType() == MessageType.SetStatus) {
                         boolean ready = incomingMessage.getMessageBody().isReady();
                         if(ready){
-                            game.addReady(clientID);
-                            if(game.getFirstReadyID()==clientID){
-                                write(messageCreator.generateSelectMapMessage(game.getMaps()));
+                            gameOne.addReady(clientID);
+                            if(gameOne.getFirstReadyID()==clientID){
+                                write(messageCreator.generateSelectMapMessage(gameOne.getMaps()));
                             }
                         } else {
-                            game.removeReady(clientID);
+                            gameOne.removeReady(clientID);
                         }
                         write(messageCreator.generatePlayerStatusMessage(clientID,ready));
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

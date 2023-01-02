@@ -1,6 +1,8 @@
 package communication;
 
-    /**
+import com.fasterxml.jackson.databind.util.JSONPObject;
+
+/**
      * This class is used for communication between the server and the client by processing the client's input
      */
 
@@ -69,7 +71,7 @@ package communication;
             messageBody.setMap(map);
             return new Message(MessageType.MapSelected, messageBody);
         }
-        public Message generateGameStartedMessage(Object gameMap){
+        public Message generateGameStartedMessage(String gameMap){
             MessageBody messageBody = new MessageBody();
             messageBody.setGameMap(gameMap);
             return new Message(MessageType.GameStarted, messageBody);

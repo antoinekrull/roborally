@@ -94,6 +94,8 @@ public class Board {
                         }
                     }
                 }
+            } for(int i = 0; 0 < board.length; i++) {
+                System.out.println(board[i][i]);
             }
         } catch (Exception e) {
             e.printStackTrace();

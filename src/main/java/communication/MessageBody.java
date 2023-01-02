@@ -1,5 +1,7 @@
 package communication;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
+
 /**
  * @author Antoine, Firas
  * @version 1.0
@@ -36,7 +38,7 @@ public class MessageBody {
     private String direction;
     private int count;
     private String source;
-    private Object gameMap; //TODO: must be a jsonObject, think about implementation
+    private String gameMap; //TODO: must be a jsonObject, think about implementation
     private int number;
 
     public int getNumber() {
@@ -47,11 +49,11 @@ public class MessageBody {
         this.number = number;
     }
 
-    public Object getGameMap() {
+    public String getGameMap() {
         return gameMap;
     }
 
-    public void setGameMap(Object gameMap) {
+    public void setGameMap(String gameMap) {
         this.gameMap = gameMap;
     }
 
