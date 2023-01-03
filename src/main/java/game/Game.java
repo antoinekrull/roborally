@@ -79,10 +79,10 @@ public class Game implements Runnable {
             }
         }
         //Robot laser activation, still needs implementation
-        for(int x = 0; x < Board.laserTileList.size(); x++) {
+        for(int x = 0; x < Board.robotLaserList.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.robotLaserList.get(x).getPosition())) {
-                    Board.robotLaserList.get(x).applyEffect(playerList.get(y));
+                    playerList.get(y).addCard(game.Game.spamDeck.popCardFromDeck());
                 }
             }
         }
