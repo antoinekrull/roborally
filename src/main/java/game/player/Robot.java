@@ -6,6 +6,7 @@ import game.card.Card;
 import game.card.Deck;
 import game.card.ProgrammingDeck;
 import org.javatuples.Pair;
+import game.CollisionCalculator;
 
 /**
  * @author Moritz, Antoine, Firas
@@ -74,7 +75,7 @@ public class Robot {
     public void setActiveRegister(int activeRegister) {this.activeRegister = activeRegister;}
 
     public void shootLaser(Player player) throws Exception {
-        //player.addCard(game.Game.spamDeck.popCardFromDeck());
+        //checkRobotLaserCollision(player);
     }
 
 }

@@ -9,6 +9,8 @@ import server.PlayerList;
 
 import java.util.ArrayList;
 
+import static game.board.Board.robotLaserList;
+
 public class Game implements Runnable {
     private GamePhase currentGamePhase;
     public static PlayerList playerList;
@@ -78,14 +80,16 @@ public class Game implements Runnable {
                 }
             }
         }
-        //Robot laser activation, still needs implementation
-        for(int x = 0; x < Board.robotLaserList.size(); x++) {
+
+        for(int x = 0; x < robotLaserList.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
-                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.robotLaserList.get(x).getPosition())) {
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(robotLaserList.get(x).getPosition())) {
                     playerList.get(y).addCard(game.Game.spamDeck.popCardFromDeck());
                 }
             }
         }
+        robotLaserList.clear();
+
         for(int x = 0; x < Board.energySpaceList.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.energySpaceList.get(x).getPosition())) {
