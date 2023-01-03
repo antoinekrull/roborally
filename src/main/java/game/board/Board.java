@@ -51,7 +51,7 @@ public class Board {
         return board;
     }
 
-    public void createBoard(Object jsonMap) throws JsonProcessingException {
+    public void createBoard(String jsonMap) throws JsonProcessingException {
         HashMap<String, String> convertedMap = JsonSerializer.deserializeJson(jsonMap.toString(), HashMap.class);
         var entrySet = convertedMap.entrySet();
         try {
