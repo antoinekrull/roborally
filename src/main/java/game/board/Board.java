@@ -14,19 +14,31 @@ import static java.lang.Integer.parseInt;
  * @version 1.0
  */
 public class Board {
-    protected int columns;
-    protected int rows;
+    protected static int columns;
+    protected static int rows;
 
     private int checkPointCount;
-    protected Tile[][] board = new Tile[13][10];
+    protected static Tile[][] board = new Tile[13][10];
+    //Lists of used tiles on the board, would be iterated on during the activation phase
+    public static ArrayList<ConveyorBeltTile> conveyorBelt2List;
+    public static ArrayList<ConveyorBeltTile> conveyorBelt1List;
+    public static ArrayList<PushPanelTile> pushPanelList;
+    public static ArrayList<GearTile> gearTileList;
+    public static ArrayList<LaserTile> laserTileList;
+    public static ArrayList<CheckpointTile> checkpointList;
+    public static ArrayList<EnergySpaceTile> energySpaceList;
+    public static ArrayList<Tile> robotLaserList;
     public void loadBoard(){}
     public void setTile(int column, int row, Tile tile){
         board[column][row] = tile;
     }
 
-    public Tile getTile(Pair<Integer, Integer> position){
+    public static Tile getTile(Pair<Integer, Integer> position){
         return board[position.getValue0()][position.getValue1()];
     }
+    public static int getColumns() {return columns;}
+
+    public static int getRows() {return rows;}
     public int getCheckPointCount() {
         return checkPointCount;
     }
@@ -40,7 +52,7 @@ public class Board {
         return board;
     }
 
-    public void createBoard(Object jsonMap) throws JsonProcessingException {
+    public void createBoard(String jsonMap) throws JsonProcessingException {
         HashMap<String, String> convertedMap = JsonSerializer.deserializeJson(jsonMap.toString(), HashMap.class);
         var entrySet = convertedMap.entrySet();
         try {
@@ -51,7 +63,10 @@ public class Board {
                             String input = entry.getValue();
                             switch(input) {
                                 case "Empty", "tbd" ->  setTile(x, y, new NormalTile(x, y));
-                                case "EnergySpace" ->  setTile(x, y, new EnergySpaceTile(x, y));
+                                case "EnergySpace" ->  {
+                                    setTile(x, y, new EnergySpaceTile(x, y));
+                                    energySpaceList.add(new EnergySpaceTile(x, y));
+                                }
                                 case "ConveyorBelt" -> {
                                     ArrayList<Direction> directionIn = new ArrayList<>();
                                     entrySet.iterator().next();
@@ -64,6 +79,10 @@ public class Board {
                                     }
                                     Direction directionOut = parseDirection(directionArray[0]);
                                     setTile(x, y, new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
+                                    switch (velocity){
+                                        case 1: conveyorBelt1List.add(new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
+                                        case 2: conveyorBelt2List.add(new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
+                                    }
                                 }
                                 case "Wall" -> {
                                     ArrayList<Direction> directionList = new ArrayList<>();
@@ -80,6 +99,7 @@ public class Board {
                                     entrySet.iterator().next();
                                     String directionLaser = entry.getValue();
                                     setTile(x, y, new LaserTile(x, y, parseDirection(entry.getValue())));
+                                    laserTileList.add(new LaserTile(x, y, parseDirection(entry.getValue())));
                                 }
                                 case "RestartPoint" -> {
                                     entrySet.iterator().next();
@@ -89,6 +109,7 @@ public class Board {
                                 case "CheckPoint" -> {
                                     setTile(x, y, new CheckpointTile(x, y));
                                     increaseCheckPointCount();
+                                    checkpointList.add(new CheckpointTile(x, y));
                                 }
                             }
                         }

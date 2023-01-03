@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * Model for Game
+ * Model for game
  *
  * @author Tobias
  * @version 0.1
@@ -20,22 +20,22 @@ public class ModelGame {
 
     private static ModelGame modelGame;
     public Board gameBoard;
-    public SimpleStringProperty robotProperty;
-
+    public SimpleIntegerProperty robotProperty;
     private Client client;
-
     private ObservableList<String> maps;
     private ObservableList<String> users;
-
-    private int robot;
+    private ObservableList<String> usersToSelect;
     private BooleanProperty readyToPlay;
 
 
 
     private ModelGame() {
-        this.robot = -1;
-        this.robotProperty = new SimpleStringProperty("");
+        client = Client.getInstance();
+        this.robotProperty = new SimpleIntegerProperty();
         this.readyToPlay = new SimpleBooleanProperty();
+        this.maps = FXCollections.observableArrayList("Dizzy Highway", "Extra Crispy", "Lost Bearings", "Death Trap");
+        this.users = FXCollections.observableArrayList(client.getPlayersOnline());
+        this.usersToSelect = FXCollections.observableArrayList(client.getPlayersToChat());
         this.maps = FXCollections.observableArrayList();
         this.users = FXCollections.observableArrayList();
         this.gameBoard = new Board();
@@ -53,13 +53,13 @@ public class ModelGame {
         return modelGame;
     }
 
-    public int getRobot() {
-        return robot;
+    public SimpleIntegerProperty robotProperty() {
+        return robotProperty;
     }
     public void addUser(String user) {this.users.add(user);}
 
-    public void setRobot(int robot) {
-        this.robot = robot;
+    public void setRobotProperty(int robotProperty) {
+        this.robotProperty.set(robotProperty);
     }
     public void createMap(Object jsonMap) throws JsonProcessingException {
         gameBoard.createBoard(jsonMap);
@@ -75,6 +75,10 @@ public class ModelGame {
 
     public ObservableList<String> getUsers() {
         return users;
+    }
+
+    public ObservableList<String> getUsersToSelect() {
+        return usersToSelect;
     }
 
     /*public void sendRobotSelection(int clientID) throws IOException {

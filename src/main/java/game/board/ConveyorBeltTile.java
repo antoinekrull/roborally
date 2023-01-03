@@ -1,8 +1,9 @@
 package game.board;
 
 import game.player.Player;
-import java.util.ArrayList;
 import org.javatuples.Pair;
+
+import java.util.ArrayList;
 
 /**
  * @author Antoine, Firas

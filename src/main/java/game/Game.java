@@ -1,6 +1,7 @@
 package game;
 
 import game.board.Board;
+import game.board.CheckpointTile;
 import game.board.PushPanelTile;
 import game.player.Player;
 import game.card.*;
@@ -8,7 +9,11 @@ import server.PlayerList;
 import java.util.LinkedList;
 
 
-public class Game {
+import java.util.ArrayList;
+
+import static game.board.Board.robotLaserList;
+
+public class Game implements Runnable {
     private GamePhase currentGamePhase;
     public static PlayerList playerList;
     private Board board;
@@ -23,41 +28,114 @@ public class Game {
     public Game(){
     }
 
-    //applyTileEffect would be called after the programming register is executed
+    private static Game INSTANCE;
+
+    private ArrayList<CheckpointTile> checkpointTileArrayList = null;
+
+    private Game() {}
+
+    public static Game getInstance() {
+        if(INSTANCE == null) {
+            INSTANCE = new Game();
+        }
+        return INSTANCE;
+    }
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+    public void setPlayerList(PlayerList playerList) {
+        this.playerList = playerList;
+    }
+
     public void applyTileEffect() throws Exception {
         board.getTile(activePlayer.getRobot().getCurrentPosition()).applyEffect(activePlayer);
     }
 
-    //might not be necessary
-    private void applyAllTileEffects() throws Exception{
-        for (int i = 0; i < playerList.size(); i++) {
-            board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()).applyEffect(playerList.getPlayerFromList(i));
+    private void applyAllTileEffects() throws Exception {
+        for(int x = 0; x < Board.conveyorBelt2List.size(); x++) {
+            for(int y = 0; y < playerList.size(); y++) {
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.conveyorBelt2List.get(x).getPosition())) {
+                    Board.conveyorBelt2List.get(x).applyEffect(playerList.get(y));
+                }
+            }
         }
-    }
-    //Might be unnecessary
-    private void activatePushPanels() throws Exception {
-        for (int i = 0; i < playerList.size(); i++) {
-            if(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()) instanceof PushPanelTile){
-                board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()).applyEffect(playerList.getPlayerFromList(i));
+        for(int x = 0; x < Board.conveyorBelt1List.size(); x++) {
+            for(int y = 0; y < playerList.size(); y++) {
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.conveyorBelt1List.get(x).getPosition())) {
+                    Board.conveyorBelt1List.get(x).applyEffect(playerList.get(y));
+                }
+            }
+        }
+        applyPushPanelEffects();
+        for(int x = 0; x < Board.gearTileList.size(); x++) {
+            for(int y = 0; y < playerList.size(); y++) {
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.gearTileList.get(x).getPosition())) {
+                    Board.gearTileList.get(x).applyEffect(playerList.get(y));
+                }
+            }
+        }
+        //TODO: Might need to be changed
+        for(int x = 0; x < Board.laserTileList.size(); x++) {
+            for(int y = 0; y < playerList.size(); y++) {
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.laserTileList.get(x).getPosition())) {
+                    Board.laserTileList.get(x).applyEffect(playerList.get(y));
+                }
+            }
+        }
+
+        for(int x = 0; x < robotLaserList.size(); x++) {
+            for(int y = 0; y < playerList.size(); y++) {
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(robotLaserList.get(x).getPosition())) {
+                    playerList.get(y).addCard(game.Game.spamDeck.popCardFromDeck());
+                }
+            }
+        }
+        robotLaserList.clear();
+
+        for(int x = 0; x < Board.energySpaceList.size(); x++) {
+            for(int y = 0; y < playerList.size(); y++) {
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.energySpaceList.get(x).getPosition())) {
+                    Board.energySpaceList.get(x).applyEffect(playerList.get(y));
+                }
+            }
+        }
+        for(int x = 0; x < Board.checkpointList.size(); x++) {
+            for(int y = 0; y < playerList.size(); y++) {
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.checkpointList.get(x).getPosition())) {
+                    Board.checkpointList.get(x).applyEffect(playerList.get(y));
+                }
             }
         }
     }
 
+    private void applyPushPanelEffects() throws Exception {
+        for (int i = 0; i < playerList.size(); i++) {
+            if(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()) instanceof PushPanelTile){
+                if(((PushPanelTile) board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()))
+                        .getActiveRegisterList().contains(currentRegister)) {
+                    board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()).applyEffect(playerList.getPlayerFromList(i));
+                }
+            }
+        }
+    }
+
+    //TODO: Implement this
     private PlayerList determinePriority() {
         PlayerList priorityList = null;
         return  priorityList;
     }
 
+    //TODO: Implement this
+    private void runTimer(){}
+
     public GamePhase getCurrentGamePhase() {
         return currentGamePhase;
     }
 
-    public void startGame(PlayerList playerList) {
-        if(playerList.playersAreReady()) {
-            playerList.setPlayerReadiness(false);
-            //start game
-        }
-    }
     private void setCurrentGamePhase(GamePhase currentGamePhase) {
         this.currentGamePhase = currentGamePhase;
     }
@@ -65,22 +143,28 @@ public class Game {
     private void runUpgradePhase(){
 
     }
-    private void runProgrammingPhase(PlayerList playerList){
+    private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
         playerList.setPlayersPlaying(true);
         while(!playerList.playersAreReady()) {
-            //wait
+            Thread.sleep(10000);
         }
-        //start next phase
     }
 
     private void runActivationPhase() throws Exception {
+        int playerRegisterLength = 5;
         while(!playerList.allPlayerRegistersActivated()) {
             for(int i = 0; i < playerList.size(); i++) {
                 activateRegister(playerList.get(i));
                 playerList.get(i).setStatusRegister(true, currentRegister);
             }
             currentRegister++;
-            //TODO: Add tile effects;
+            //checks if all registers have been activated
+            if(currentRegister == playerRegisterLength) {
+                for(int i = 0; i < playerList.size(); i++) {
+                    playerList.get(i).emptyAllCardRegisters();
+                }
+            }
+            applyAllTileEffects();
         }
     }
 
@@ -89,9 +173,18 @@ public class Game {
     }
     public String[] getMaps(){return this.maps;}
 
-    //maybe implement with chosen deck as input value
-    public Card drawDamageCard(Player player) {
-        return null;
+    @Override
+    public void run() {
+        playerList.setPlayerReadiness(false);
+        while(true) {
+            runUpgradePhase();
+            try {
+                runProgrammingPhase(playerList);
+                runActivationPhase();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
     public void addReady(int clientID) {readyList.add(clientID);}
     public void removeReady(int clientID) {
