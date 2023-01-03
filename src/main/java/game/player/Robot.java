@@ -73,8 +73,8 @@ public class Robot {
     public int getActiveRegister() {return activeRegister;}
     public void setActiveRegister(int activeRegister) {this.activeRegister = activeRegister;}
 
-    public void shootLaser() {
-        //TODO: Implement this
+    public void shootLaser(Player player) throws Exception {
+        //player.addCard(game.Game.spamDeck.popCardFromDeck());
     }
 
 }

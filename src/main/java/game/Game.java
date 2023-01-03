@@ -78,7 +78,14 @@ public class Game implements Runnable {
                 }
             }
         }
-        //TODO: Robo laser activation
+        //Robot laser activation, still needs implementation
+        for(int x = 0; x < Board.laserTileList.size(); x++) {
+            for(int y = 0; y < playerList.size(); y++) {
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.robotLaserList.get(x).getPosition())) {
+                    Board.robotLaserList.get(x).applyEffect(playerList.get(y));
+                }
+            }
+        }
         for(int x = 0; x < Board.energySpaceList.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.energySpaceList.get(x).getPosition())) {

@@ -27,6 +27,7 @@ public class Board {
     public static ArrayList<LaserTile> laserTileList;
     public static ArrayList<CheckpointTile> checkpointList;
     public static ArrayList<EnergySpaceTile> energySpaceList;
+    public static ArrayList<Tile> robotLaserList;
     public void loadBoard(){}
     public void setTile(int column, int row, Tile tile){
         board[column][row] = tile;
