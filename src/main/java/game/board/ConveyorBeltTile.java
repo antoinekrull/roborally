@@ -1,14 +1,15 @@
 package game.board;
 
-import game.player.*;
 import java.util.ArrayList;
+
 import org.javatuples.Pair;
+import game.player.Player;
 
 /**
  * @author Antoine, Firas
  * @version 1.0
  */
-public class ConveyorBeltTile extends Tile{
+public class ConveyorBeltTile extends Tile {
     private int velocity;
     private ArrayList<Direction> directionIn;
     private Direction directionOut;

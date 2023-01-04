@@ -1,12 +1,12 @@
 package game.board;
 
-import game.player.*;
+import game.player.Player;
 
 /**
  * @author Antoine, Firas
  * @version 1.0
  */
-public class PitTile extends Tile{
+public class PitTile extends Tile {
 
     private int rebootTileIndex;
 

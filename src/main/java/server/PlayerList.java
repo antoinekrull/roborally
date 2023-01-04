@@ -1,6 +1,5 @@
 package server;
 
-import game.player.Player;
 import game.player.Robot;
 
 import java.util.ArrayList;

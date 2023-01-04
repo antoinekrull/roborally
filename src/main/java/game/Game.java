@@ -3,8 +3,8 @@ package game;
 import game.board.Board;
 import game.board.CheckpointTile;
 import game.board.PushPanelTile;
-import game.player.*;
 import game.card.*;
+import game.player.Player;
 import server.PlayerList;
 import java.util.LinkedList;
 
@@ -25,14 +25,13 @@ public class Game implements Runnable {
     public static int currentRegister = 0;
     private LinkedList<Integer> readyList = new LinkedList<>();
     private String[] maps = {"DizzyHighway"};
-    public Game(){
-    }
+
 
     private static Game INSTANCE;
 
     private ArrayList<CheckpointTile> checkpointTileArrayList = null;
 
-    private Game() {}
+    public Game() {}
 
     public static Game getInstance() {
         if(INSTANCE == null) {
@@ -172,21 +171,8 @@ public class Game implements Runnable {
         player.getCardFromRegister(currentRegister).applyEffect(player);
     }
     public String[] getMaps(){return this.maps;}
-
-    @Override
-    public void run() {
-        playerList.setPlayerReadiness(false);
-        while(true) {
-            runUpgradePhase();
-            try {
-                runProgrammingPhase(playerList);
-                runActivationPhase();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
     public void addReady(int clientID) {readyList.add(clientID);}
+
     public void removeReady(int clientID) {
         for (int i = 0; i < readyList.size(); i++) {
             if (readyList.get(i).equals(clientID)) {
@@ -203,4 +189,17 @@ public class Game implements Runnable {
         }
     }
 
+    @Override
+    public void run() {
+        playerList.setPlayerReadiness(false);
+        while(true) {
+            runUpgradePhase();
+            try {
+                runProgrammingPhase(playerList);
+                runActivationPhase();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

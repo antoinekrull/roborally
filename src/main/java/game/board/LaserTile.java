@@ -1,12 +1,12 @@
 package game.board;
 
-import game.player.*;
+import game.player.Player;
 
 /**
  * @author Antoine, Firas
  * @version 1.0
  */
-public class LaserTile extends Tile{
+public class LaserTile extends Tile {
     private Direction los;
 
     public LaserTile(int xCoordinate, int yCoordinate, Direction LineOfSight) {

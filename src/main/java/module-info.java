@@ -20,4 +20,10 @@ module com.example.knorrigekorrelatehp {
     exports communication;
     exports client.connection;
     opens client.connection to javafx.controls, javafx.fxml, javafx.graphics;
+    exports game.player;
+    opens game.player to javafx.graphics;
+    exports game;
+    opens game to javafx.graphics;
+    exports game.board;
+    opens game.board to javafx.graphics;
 }

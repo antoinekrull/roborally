@@ -1,9 +1,7 @@
 package server;
 
-import client.connection.Client;
 import communication.MessageCreator;
 import game.Game;
-import game.player.Player;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import java.net.ServerSocket;
@@ -11,6 +9,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
+import game.player.Player;
 
 /**
  * @author Antoine, Moritz, Dominic, Firas
@@ -101,6 +100,7 @@ public class ServerMain extends Application {
             return uniqueID++;
         }
         public String getProtocolVersion(){return this.protocolVersion;}
+
         public static Game getGameInstance(){
             if (game == null) {
                 game = new Game();

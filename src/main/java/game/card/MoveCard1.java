@@ -1,6 +1,5 @@
 package game.card;
 
-import game.board.Direction;
 import game.player.Player;
 import org.javatuples.Pair;
 import game.CollisionCalculator;

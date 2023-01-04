@@ -1,6 +1,6 @@
 package game.board;
 
-import game.player.*;
+import game.player.Player;
 
 /**
  * @author Firas

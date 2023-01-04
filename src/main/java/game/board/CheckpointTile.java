@@ -1,12 +1,12 @@
 package game.board;
 
-import game.player.*;
+import game.player.Player;
 
 /**
  * @author Antoine, Firas
  * @version 1.0
  */
-public class CheckpointTile extends Tile{
+public class CheckpointTile extends Tile {
 
     public CheckpointTile(int xCoordinate, int yCoordinate) {
         super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");

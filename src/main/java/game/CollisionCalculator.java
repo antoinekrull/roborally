@@ -6,8 +6,6 @@ import game.board.Direction;
 import game.player.Player;
 import org.javatuples.Pair;
 
-import java.util.ArrayList;
-
 public class CollisionCalculator {
 
     static Board board;

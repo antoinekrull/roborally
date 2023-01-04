@@ -5,7 +5,6 @@ package game.card;
  * @version 1.0
  */
 
-import com.fasterxml.jackson.databind.Module;
 import game.player.Player;
 
 /**
