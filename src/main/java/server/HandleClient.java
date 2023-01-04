@@ -12,6 +12,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
@@ -236,7 +237,9 @@ public class HandleClient implements Runnable{
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
                         setAlive(true);
                     } else if (incomingMessage.getMessageType() == MessageType.MapSelected) {
-                        String map = new String(Files.readAllBytes(Paths.get("game/board/BoardModels/ExtraCrispy.json")));
+                        Path pathtoFile = Paths.get("src/main/java/game/board/BoardModels/ExtraCrispy.json");
+                        System.out.println(pathtoFile.toAbsolutePath());
+                        String map = new String(Files.readAllBytes(pathtoFile));
                         write(messageCreator.generateGameStartedMessage(map));
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
                         write(messageCreator.generatePlayerAddedMessage(incomingMessage.getMessageBody().getName(), incomingMessage.getMessageBody().getFigure(), this.clientID));
