@@ -294,7 +294,7 @@ public class ViewModelLobby {
     }
 
     public void setMap() {
-        String map = mapItem1.getText();
+        //String map = mapItem1.getText();
         //map is Dizzy Highway
     }
 }

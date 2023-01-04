@@ -61,7 +61,7 @@ public class ModelGame {
     public void setRobotProperty(int robotProperty) {
         this.robotProperty.set(robotProperty);
     }
-    public void createMap(Object jsonMap) throws JsonProcessingException {
+    public void createMap(String jsonMap) throws JsonProcessingException {
         gameBoard.createBoard(jsonMap);
     }
 

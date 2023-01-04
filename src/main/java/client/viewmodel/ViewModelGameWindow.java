@@ -7,7 +7,7 @@ import client.model.ModelUser;
 import communication.Message;
 import game.Game;
 import game.board.Board;
-import game.board.Tile;
+import game.board.*;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
