@@ -1,7 +1,7 @@
 package game.board;
 
 import game.Game;
-import game.player.Player;
+import game.player.*;
 import org.javatuples.Pair;
 
 import java.util.ArrayList;

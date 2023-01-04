@@ -42,11 +42,10 @@ public class NotifyChangeSupport {
 
     public void notifyInstance() {
         if (lobby) {
-            System.out.println("instance notified");
-            viewModelLobby.messageToChat();
+            viewModelLobby.receivedMessage();
         }
         if (gamewindow) {
-            viewModelGameWindow.messageToChat();
+            viewModelGameWindow.receivedMessage();
         }
     }
 }

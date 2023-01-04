@@ -2,7 +2,7 @@ package game.card;
 
 import game.Game;
 import game.player.Player;
-import game.robot.Robot;
+import game.player.Robot;
 
 public class VirusCard extends Card {
     //robots within a 6 space radius of your robot immediately take 1 spam, play the top card of your programming deck this register

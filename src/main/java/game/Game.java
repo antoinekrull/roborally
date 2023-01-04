@@ -3,7 +3,7 @@ package game;
 import game.board.Board;
 import game.board.CheckpointTile;
 import game.board.PushPanelTile;
-import game.player.Player;
+import game.player.*;
 import game.card.*;
 import server.PlayerList;
 import java.util.LinkedList;

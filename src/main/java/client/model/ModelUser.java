@@ -1,10 +1,7 @@
 package client.model;
 
 import client.connection.Client;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 
 
 /**
@@ -17,18 +14,24 @@ public class ModelUser {
 
     private static ModelUser modelUser;
     private BooleanProperty connected;
-
     private String username;
-    private int userID;
+    private IntegerProperty userID;
     private StringProperty usernameProperty;
+    private BooleanProperty isAI;
 
     private Client client;
+
 
     private ModelUser() {
         client = Client.getInstance();
         connected = new SimpleBooleanProperty();
         connected.bind(client.connectedProperty());
         usernameProperty = new SimpleStringProperty("");
+        userID = new SimpleIntegerProperty();
+        userID.bindBidirectional(client.userIDProperty());
+        isAI = new SimpleBooleanProperty();
+        isAI.bind(client.isAIProperty());
+
     }
 
     public static ModelUser getInstance() {
@@ -49,9 +52,6 @@ public class ModelUser {
     public boolean getConnection() {return this.connected.get();}
     public void reconnect() {client.reconnect();}
 
-    public int getUserID() {
-        return userID;
-    }
     public void sendPlayerValues(String name, int figure) {
         client.sendPlayerValuesMessage(name, figure);
     }
@@ -59,8 +59,8 @@ public class ModelUser {
         client.sendSetStatusMessage(status);
     }
 
-    public void setUserID(int clientID) {
-        this.userID = clientID;
+    public IntegerProperty userIDProperty() {
+        return userID;
     }
 
     public StringProperty usernameProperty() {

@@ -2,6 +2,9 @@ package client.model;
 
 import client.connection.Client;
 import client.connection.NotifyChangeSupport;
+import communication.Message;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -17,13 +20,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ModelChat {
 
     private static ModelChat modelChat;
-
     private StringProperty textfieldProperty;
-
-    private StringProperty groupMessage;
-
-    private final LinkedBlockingQueue<String> MESSSAGES;
-
+    private ObjectProperty<Message> chatMessage;
+    private final LinkedBlockingQueue<Message> MESSSAGES;
     private NotifyChangeSupport notifyChangeSupport;
 
     private Client client;
@@ -32,13 +31,13 @@ public class ModelChat {
     private ModelChat() {
         client = Client.getInstance();
         notifyChangeSupport = NotifyChangeSupport.getInstance();
-        groupMessage = new SimpleStringProperty("");
+        chatMessage = new SimpleObjectProperty<>();
         this.MESSSAGES = new LinkedBlockingQueue<>();
         textfieldProperty = new SimpleStringProperty("");
-        groupMessage.bind(client.messageProperty());
-        groupMessage.addListener((observable, oldValue, newValue) -> {
+        chatMessage.bind(client.messageProperty());
+        chatMessage.addListener((observable, oldValue, newValue) -> {
             try {
-                MESSSAGES.put(client.messageProperty().get());
+                MESSSAGES.put(client.messageProperty().getValue());
                 notifyChangeSupport.notifyInstance();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -52,34 +51,21 @@ public class ModelChat {
         }
         return modelChat;
     }
+
     public StringProperty textfieldProperty() {
         return textfieldProperty;
     }
 
-    public String getTextfieldProperty() {
-        return textfieldProperty.get();
-    }
-
-    public void putMessage(String message) {
-        try {
-            this.MESSSAGES.put(message);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public LinkedBlockingQueue<String> getMessages() {
+    public LinkedBlockingQueue<Message> getMESSSAGES() {
         return MESSSAGES;
     }
 
-    public void sendMessage(int userID) {
+    public void sendGroupMessage() {
         client.sendGroupMessage(textfieldProperty.get());
     }
 
-    /*public void sendMessage(int userID) {
-        clientService.sendMessageToServer(userID, modelChat.getTextfieldProperty());
-    }*/
-
-
-
+    public void sendPrivateMessage(int toUser) {
+        client.sendPrivateMessage(textfieldProperty.get(), toUser);
+    }
 }
+
