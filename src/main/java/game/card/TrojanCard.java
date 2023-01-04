@@ -5,10 +5,7 @@ import game.player.Player;
 
 public class TrojanCard extends Card{
     //immediately take 2 spam, play the top card of your programming deck this register
-    public TrojanCard(){
-        setCardName("Trojan Horse");
-        super.isDamageCard = true;
-    }
+    public TrojanCard(){setCardName("Trojan Horse");}
     @Override
     public void applyEffect(Player player) throws Exception {
         player.addCard(Game.spamDeck.popCardFromDeck());

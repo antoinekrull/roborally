@@ -20,4 +20,3 @@ public class NormalTile extends Tile{
         super.applyEffect(player);
     }
 }
-

@@ -2,14 +2,11 @@ package game.card;
 
 import game.Game;
 import game.player.Player;
-import game.player.Robot;
+import game.robot.Robot;
 
 public class VirusCard extends Card {
     //robots within a 6 space radius of your robot immediately take 1 spam, play the top card of your programming deck this register
-    public VirusCard(){
-        setCardName("Virus");
-        super.isDamageCard = true;
-    }
+    public VirusCard(){setCardName("Virus");}
     //isInrange Checks if two robots are within 6 tiles of each other
     private boolean isInRange(Robot robot1, Robot robot2){
         if(robot1.getCurrentPosition().equals(robot2.getCurrentPosition())){ //if the condition is true then robot1 == robot2

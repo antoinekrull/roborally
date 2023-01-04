@@ -1,6 +1,7 @@
 package game.card;
 
 import game.player.Player;
+import game.robot.Robot;
 
 public class PowerUpCard extends Card{
 
