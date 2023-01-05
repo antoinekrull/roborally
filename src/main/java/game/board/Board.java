@@ -18,7 +18,10 @@ public class Board {
     protected static int rows;
 
     private int checkPointCount;
-    protected static Tile[][] board = new Tile[13][10];
+
+
+    protected static ArrayList<ArrayList<Tile>> board = new ArrayList<ArrayList<Tile>>();
+
     //Lists of used tiles on the board, would be iterated on during the activation phase
     public static ArrayList<ConveyorBeltTile> conveyorBelt2List;
     public static ArrayList<ConveyorBeltTile> conveyorBelt1List;
@@ -28,16 +31,13 @@ public class Board {
     public static ArrayList<CheckpointTile> checkpointList;
     public static ArrayList<EnergySpaceTile> energySpaceList;
     public static ArrayList<Tile> robotLaserList;
-    public void loadBoard(){}
     public void setTile(int column, int row, Tile tile){
-        board[column][row] = tile;
+        board.get(column).add(row, tile);
     }
-
     public static Tile getTile(Pair<Integer, Integer> position){
-        return board[position.getValue0()][position.getValue1()];
+        return board.get(position.getValue0()).get(position.getValue1());
     }
     public static int getColumns() {return columns;}
-
     public static int getRows() {return rows;}
     public int getCheckPointCount() {
         return checkPointCount;
@@ -48,18 +48,31 @@ public class Board {
     public void setCheckPointCount(int checkPointCount) {
         this.checkPointCount = checkPointCount;
     }
-    public Tile[][] getBoard() {
+    public ArrayList<ArrayList<Tile>> getBoard() {
         return board;
     }
 
+    // Old implementation of board using arrays instead of arrayList
+    //public Tile[][] getBoard() {return board;}
+    //public void setTile(int column, int row, Tile tile){board[column][row] = tile;}
+    //protected static Tile[][] board = new Tile[13][10];
+
     public void createBoard(String jsonMap) throws JsonProcessingException {
-        HashMap<String, String> convertedMap = JsonSerializer.deserializeJson(jsonMap.toString(), HashMap.class);
+        jsonMap.replaceAll("gameMap=", "");
+        jsonMap.replaceAll("\\{" , "");
+        jsonMap.replaceAll("}", "");
+        jsonMap.replaceAll("\\[", "");
+        jsonMap.replaceAll("]", "");
+        HashMap<String, String> convertedMap = JsonSerializer.deserializeJson(jsonMap, HashMap.class);
+
         var entrySet = convertedMap.entrySet();
         try {
-            for(int x = 0; x <= 13; x++){
-                for(int y = 0; y <= 10; y++){
+            for(int x = 0; x <= board.size(); x++){
+                //TODO: tweak this
+                for(int y = 0; y <= board.get(0).size(); y++){
                     for(var entry: entrySet) {
                         if(entry.getKey().equals("type")) {
+                            entrySet.iterator().next();
                             String input = entry.getValue();
                             switch(input) {
                                 case "Empty", "tbd" ->  setTile(x, y, new NormalTile(x, y));
