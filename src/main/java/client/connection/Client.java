@@ -18,7 +18,12 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -51,6 +56,8 @@ public class Client {
     private ObservableList<String> playersToChat;
     private ArrayList<Triplet<Integer, String, Integer>> otherPlayers = new ArrayList<>();
     private ArrayList<Pair<Integer, Boolean>> otherPlayersStatus = new ArrayList<>();
+
+    private ModelGame modelGame;
 
     private Client() {
         this.messageCreator = new MessageCreator();
@@ -135,10 +142,19 @@ public class Client {
                                 otherPlayers.add(new Triplet<>(message.getMessageBody().getClientID(),
                                         message.getMessageBody().getName(),
                                         message.getMessageBody().getFigure()));
+                                //TODO process the data input like giving the player his robot and stuff like that
                             }
                             if(message.getMessageType().equals(MessageType.PlayerStatus)){
                                 otherPlayersStatus.add(new Pair<>(message.getMessageBody().getClientID(),
                                         message.getMessageBody().isReady()));
+                            }
+                            if (message.getMessageType().equals(MessageType.SelectMap)){
+                                String[] maps = message.getMessageBody().getAvailableMaps();
+                                for (int i = 0; i < maps.length; i++) {
+                                    System.out.println(maps[i]);
+                                }
+                                sendMapMessage("hier soll mal die Map rein dann");
+
                             }
                             if(message.getMessageType().equals(MessageType.ReceivedChat)){
                                 Client.this.setMessage(message);
@@ -156,6 +172,16 @@ public class Client {
 
                             }
                             if(message.getMessageType().equals(MessageType.GameStarted)){
+                                //ObjectMapper mapper = new ObjectMapper();
+                                String send = new String(message.getMessageBody().getGameMap());
+                                //Map<String, Object> mapObject = mapper.readValue(send, new TypeReference<Map<String,Object>>(){});
+
+                                //String content = send.lines().collect(Collectors.joining());
+
+                                System.out.println(send);
+                                //modelGame.createMap(mapObject);
+
+                                //System.out.println(map);
                                 //GameBoard board = new GameBoard();
                                 //board.createBoard(message.getMessageBody());
                             }
@@ -205,6 +231,9 @@ public class Client {
     public void sendGroupMessage(String message){
         sendMessageToServer(messageCreator.generateSendChatMessage(message));
     }
+    public void sendMapMessage(String message) {
+        sendMessageToServer(messageCreator.generateMapSelectedMessage("DizzyHighway"));
+    }
 
     public void sendMessageToServer(Message message) {
         try {
@@ -237,5 +266,6 @@ public class Client {
         }
     }
 }
+
 
 

@@ -1,11 +1,10 @@
 package game.board;
 
-import game.player.Player;
-
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import org.javatuples.Pair;
+import game.player.Player;
 
 /**
  * @author Antoine, Firas

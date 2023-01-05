@@ -5,7 +5,6 @@ package game.card;
  * @version 1.0
  */
 
-import com.fasterxml.jackson.databind.Module;
 import game.player.Player;
 
 /**
@@ -48,4 +47,3 @@ public abstract class Card {
     public void applyEffect(Player player) throws Exception {}
 
 }
-

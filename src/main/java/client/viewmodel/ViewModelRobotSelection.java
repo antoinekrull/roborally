@@ -33,7 +33,7 @@ public class ViewModelRobotSelection {
     private ModelGame modelGame;
     @FXML
     private Button exitButton;
-    
+
     private List<Node> robots;
     private NotifyChangeSupport notifyChangeSupport;
 

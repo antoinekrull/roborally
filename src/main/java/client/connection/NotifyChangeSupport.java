@@ -2,9 +2,6 @@ package client.connection;
 
 import client.viewmodel.ViewModelGameWindow;
 import client.viewmodel.ViewModelLobby;
-import client.model.ModelGame;
-import client.model.ModelUser;
-import client.model.ModelChat;
 
 /**
  * Notifier class. Actively notifies specific instances for changes.

@@ -3,9 +3,11 @@ package game;
 import game.board.Board;
 import game.board.CheckpointTile;
 import game.board.PushPanelTile;
-import game.player.Player;
 import game.card.*;
+import game.player.Player;
 import server.PlayerList;
+import java.util.LinkedList;
+
 
 import java.util.ArrayList;
 
@@ -21,12 +23,15 @@ public class Game implements Runnable {
     public static TrojanDeck trojanDeck = new TrojanDeck();
     public static WormDeck wormDeck = new WormDeck();
     public static int currentRegister = 0;
+    private LinkedList<Integer> readyList = new LinkedList<>();
+    private String[] maps = {"DizzyHighway"};
+
 
     private static Game INSTANCE;
 
     private ArrayList<CheckpointTile> checkpointTileArrayList = null;
 
-    private Game() {}
+    public Game() {}
 
     public static Game getInstance() {
         if(INSTANCE == null) {
@@ -164,6 +169,24 @@ public class Game implements Runnable {
 
     private void activateRegister(Player player) throws Exception {
         player.getCardFromRegister(currentRegister).applyEffect(player);
+    }
+    public String[] getMaps(){return this.maps;}
+    public void addReady(int clientID) {readyList.add(clientID);}
+
+    public void removeReady(int clientID) {
+        for (int i = 0; i < readyList.size(); i++) {
+            if (readyList.get(i).equals(clientID)) {
+                readyList.remove(i);
+            }
+        }
+    }
+    public int getFirstReadyID() {
+        if(readyList.size() > 0) {
+            return readyList.getFirst();
+        }
+        else {
+            return -1;
+        }
     }
 
     @Override

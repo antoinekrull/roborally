@@ -6,7 +6,7 @@ import game.player.Player;
  * @author Antoine, Firas
  * @version 1.0
  */
-public class EnergySpaceTile extends Tile{
+public class EnergySpaceTile extends Tile {
 
     public EnergySpaceTile(int xCoordinate, int yCoordinate) {
         super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");

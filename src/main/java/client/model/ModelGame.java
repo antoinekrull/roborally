@@ -1,10 +1,14 @@
 package client.model;
 
 import client.connection.Client;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import game.board.Board;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Model for game
@@ -15,6 +19,7 @@ import javafx.collections.ObservableList;
 public class ModelGame {
 
     private static ModelGame modelGame;
+    public Board gameBoard;
     public SimpleIntegerProperty robotProperty;
     private Client client;
     private ObservableList<String> maps;
@@ -31,6 +36,14 @@ public class ModelGame {
         this.maps = FXCollections.observableArrayList("Dizzy Highway", "Extra Crispy", "Lost Bearings", "Death Trap");
         this.users = FXCollections.observableArrayList(client.getPlayersOnline());
         this.usersToSelect = FXCollections.observableArrayList(client.getPlayersToChat());
+        this.maps = FXCollections.observableArrayList();
+        this.users = FXCollections.observableArrayList();
+        this.gameBoard = new Board();
+        maps.add("Dizzy Highway");
+        maps.add("KackJavaFX");
+        /*users.add("Tomi");
+        users.add("Firas");
+        users.add("Molri");*/
     }
 
     public static ModelGame getInstance() {
@@ -43,9 +56,13 @@ public class ModelGame {
     public SimpleIntegerProperty robotProperty() {
         return robotProperty;
     }
+    public void addUser(String user) {this.users.add(user);}
 
     public void setRobotProperty(int robotProperty) {
         this.robotProperty.set(robotProperty);
+    }
+    public void createMap(String jsonMap) throws JsonProcessingException {
+        gameBoard.createBoard(jsonMap);
     }
 
     public BooleanProperty readyToPlayProperty() {
@@ -74,7 +91,6 @@ public class ModelGame {
         }
     }
     */
-
     public void setPlayerStatus(int userID) {
         //client.sendPlayerStatus or client.sendMessageToServer(userID, MessageType); true/false
     }

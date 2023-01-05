@@ -69,7 +69,7 @@ package communication;
             messageBody.setMap(map);
             return new Message(MessageType.MapSelected, messageBody);
         }
-        public Message generateGameStartedMessage(Object gameMap){
+        public Message generateGameStartedMessage(String gameMap){
             MessageBody messageBody = new MessageBody();
             messageBody.setGameMap(gameMap);
             return new Message(MessageType.GameStarted, messageBody);

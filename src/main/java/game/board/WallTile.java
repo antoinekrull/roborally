@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * @author Antoine, Firas
  * @version 1.0
  */
-public class WallTile extends Tile{
+public class WallTile extends Tile {
 
     private ArrayList<Direction> blockedDirections;
     public WallTile(int xCoordinate, int yCoordinate, ArrayList<Direction> blockedDirections) {
