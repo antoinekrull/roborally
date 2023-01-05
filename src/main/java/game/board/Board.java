@@ -68,7 +68,7 @@ public class Board {
         var entrySet = convertedMap.entrySet();
         try {
             for(int x = 0; x <= board.size(); x++){
-                //TODO: tweak this
+                //TODO: tweak this in case of new map with new dimensions
                 for(int y = 0; y <= board.get(0).size(); y++){
                     for(var entry: entrySet) {
                         if(entry.getKey().equals("type")) {
