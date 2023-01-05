@@ -52,6 +52,15 @@ public class Board {
         return board;
     }
 
+    //for testing purposes
+    public void testBoard() {
+        for(int x = 0; x <= board.size(); x++){
+            for(int y = 0; y <= board.get(x).size(); y++) {
+                System.out.println(board.get(x).get(y).getClass());
+            }
+        }
+    }
+
     // Old implementation of board using arrays instead of arrayList
     //public Tile[][] getBoard() {return board;}
     //public void setTile(int column, int row, Tile tile){board[column][row] = tile;}
@@ -68,8 +77,7 @@ public class Board {
         var entrySet = convertedMap.entrySet();
         try {
             for(int x = 0; x <= board.size(); x++){
-                //TODO: tweak this in case of new map with new dimensions
-                for(int y = 0; y <= board.get(0).size(); y++){
+                for(int y = 0; y <= board.get(x).size(); y++){
                     for(var entry: entrySet) {
                         if(entry.getKey().equals("type")) {
                             entrySet.iterator().next();
