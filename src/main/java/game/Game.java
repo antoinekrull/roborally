@@ -1,5 +1,6 @@
 package game;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.Board;
 import game.board.CheckpointTile;
 import game.board.PushPanelTile;
@@ -16,7 +17,7 @@ import static game.board.Board.robotLaserList;
 public class Game implements Runnable {
     private GamePhase currentGamePhase;
     public static PlayerList playerList;
-    private Board board;
+    public Board board = new Board();
     private Player activePlayer;
     public static SpamDeck spamDeck = new SpamDeck();
     public static VirusDeck virusDeck = new VirusDeck();
@@ -187,6 +188,11 @@ public class Game implements Runnable {
         else {
             return -1;
         }
+    }
+    //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    public void createBoard(String map) throws JsonProcessingException {
+        board.createBoard(map);
+        board.testBoard();
     }
 
     @Override

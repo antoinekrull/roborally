@@ -1,11 +1,17 @@
 package game.board;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import communication.JsonSerializer;
 import org.javatuples.Pair;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
 
@@ -54,8 +60,8 @@ public class Board {
 
     //for testing purposes
     public void testBoard() {
-        for(int x = 0; x <= board.size(); x++){
-            for(int y = 0; y <= board.get(x).size(); y++) {
+        for(int x = 0; x <= 13; x++){
+            for(int y = 0; y <= 10; y++) {
                 System.out.println(board.get(x).get(y).getClass());
             }
         }
@@ -67,13 +73,33 @@ public class Board {
     //protected static Tile[][] board = new Tile[13][10];
 
     public void createBoard(String jsonMap) throws JsonProcessingException {
-        jsonMap.replaceAll("gameMap=", "");
-        jsonMap.replaceAll("\\{" , "");
-        jsonMap.replaceAll("}", "");
-        jsonMap.replaceAll("\\[", "");
-        jsonMap.replaceAll("]", "");
-        HashMap<String, String> convertedMap = JsonSerializer.deserializeJson(jsonMap, HashMap.class);
+        //jsonMap = jsonMap.replaceAll("gameMap")
 
+        /*ObjectMapper mapper = new ObjectMapper();
+        try {
+            Map<String, String> map = mapper.readValue(jsonMap, Map.class);
+            for(String i: map.keySet()){
+                System.out.println("key: "+i+ " value: "+map.get(i));
+            }
+        } catch (IOException e) {
+            System.out.println("NANI");
+        }*/
+
+
+
+        jsonMap = jsonMap.lines().collect(Collectors.joining());
+        jsonMap = jsonMap.replaceAll(" ", "");
+        String[] result = jsonMap.replaceAll("^[^\\[]*|[^]]*$", "").split("(?<=\\])[^\\[]*");
+
+        System.out.println(Arrays.toString(result));
+        System.out.println(result[0]);
+        System.out.println(result[1]);
+        System.out.println(result[2]);
+        System.out.println(result[3]);
+
+
+
+        HashMap<String, String> convertedMap = JsonSerializer.deserializeJson(jsonMap, HashMap.class);
         var entrySet = convertedMap.entrySet();
         try {
             for(int x = 0; x <= 13; x++){
