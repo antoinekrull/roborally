@@ -76,8 +76,8 @@ public class Board {
 
         var entrySet = convertedMap.entrySet();
         try {
-            for(int x = 0; x <= 13; x++){
-                for(int y = 0; y <= 10; y++){
+            for(int x = 0; x < 13; x++){
+                for(int y = 0; y < 10; y++){
                     for(var entry: entrySet) {
                         if(entry.getKey().equals("type")) {
                             entrySet.iterator().next();
