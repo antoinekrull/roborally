@@ -6,19 +6,15 @@ import communication.MessageCreator;
 import communication.MessageType;
 import game.Game;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class HandleClient implements Runnable{
 
@@ -237,10 +233,19 @@ public class HandleClient implements Runnable{
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
                         setAlive(true);
                     } else if (incomingMessage.getMessageType() == MessageType.MapSelected) {
-                        Path pathtoFile = Paths.get("src/main/java/game/board/BoardModels/ExtraCrispy.json");
+
+                        InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream("/game/board/BoardModels/ExtraCrispy.json"));
+                        BufferedReader content = new BufferedReader(new InputStreamReader(file));
+                        String content1 = content.lines().collect(Collectors.joining());
+                        String message1 = JsonSerializer.serializeJson(content1);
+                        System.out.println(message1);
+
+
+
+                        /*Path pathtoFile = Paths.get("src/main/java/game/board/BoardModels/ExtraCrispy.json");
                         System.out.println(pathtoFile.toAbsolutePath());
-                        String map = new String(Files.readAllBytes(pathtoFile));
-                        write(messageCreator.generateGameStartedMessage(map));
+                        String map = new String(Files.readAllBytes(pathtoFile));*/
+                        write(messageCreator.generateGameStartedMessage(content1));
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
                         write(messageCreator.generatePlayerAddedMessage(incomingMessage.getMessageBody().getName(), incomingMessage.getMessageBody().getFigure(), this.clientID));
                     } else if(incomingMessage.getMessageType() == MessageType.SetStatus) {
