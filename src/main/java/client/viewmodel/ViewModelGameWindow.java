@@ -68,7 +68,7 @@ public class ViewModelGameWindow {
     }
 
     public void initialize() {
-        ArrayList<ArrayList<Tile>> map = modelGame.gameBoard.getBoard();
+        ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.gameBoard.getBoard();
         //placeTiles(map,13,10);
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());

@@ -3,8 +3,11 @@ package game;
 import game.board.Board;
 import game.board.PushPanelTile;
 import game.board.Direction;
+import game.board.Tile;
 import game.player.Player;
 import org.javatuples.Pair;
+
+import java.util.ArrayList;
 
 public class CollisionCalculator {
 
@@ -26,7 +29,7 @@ public class CollisionCalculator {
                 nextPosition.setAt1(nextPosition.getValue1() - 1);
             }
         }
-        if(board.getTile(nextPosition).isBlocking()) {
+        if(tileIsBlocking(board.getTile(nextPosition))) {
             result = true;
         }
         return result;
@@ -42,7 +45,7 @@ public class CollisionCalculator {
                 case NORTH-> {
                     for(int j = Board.laserTileList.get(i).getYCoordinate(); j >= 0; j--){
                         laserEndpoint.setAt1(j);
-                        if(Board.getTile(laserEndpoint).isBlocking()){
+                        if(tileIsBlocking(Board.getTile(laserEndpoint))){
                             break;
                         }
                          return (playerPosition.getValue0().equals(Board.laserTileList.get(i).getXCoordinate())
@@ -53,7 +56,7 @@ public class CollisionCalculator {
                 case SOUTH -> {
                     for(int j = Board.laserTileList.get(i).getYCoordinate(); j <= Board.getRows(); j++){
                     laserEndpoint.setAt1(j);
-                    if(Board.getTile(laserEndpoint).isBlocking()){
+                    if(tileIsBlocking(Board.getTile(laserEndpoint))){
                         break;
                     }
                     return (playerPosition.getValue0().equals(Board.laserTileList.get(i).getXCoordinate())
@@ -64,7 +67,7 @@ public class CollisionCalculator {
                 case EAST -> {
                     for(int j = Board.laserTileList.get(i).getXCoordinate(); j <= Board.getColumns(); j++){
                         laserEndpoint.setAt0(j);
-                        if(Board.getTile(laserEndpoint).isBlocking()){
+                        if(tileIsBlocking(Board.getTile(laserEndpoint))){
                             break;
                         }
                         return (playerPosition.getValue1().equals(Board.laserTileList.get(i).getYCoordinate())
@@ -75,7 +78,7 @@ public class CollisionCalculator {
                 case WEST -> {
                     for(int j = Board.laserTileList.get(i).getXCoordinate(); j >= 0; j--){
                         laserEndpoint.setAt0(j);
-                        if(Board.getTile(laserEndpoint).isBlocking()){
+                        if(tileIsBlocking(Board.getTile(laserEndpoint))){
                             break;
                         }
                         return (playerPosition.getValue1().equals(Board.laserTileList.get(i).getYCoordinate())
@@ -106,9 +109,20 @@ public class CollisionCalculator {
                 nextPosition.setAt1(nextPosition.getValue1() - 1);
             }
         }
-        if(board.getTile(nextPosition).isBlocking()) {
+        if(tileIsBlocking(board.getTile(nextPosition))) {
             result = true;
         }
         return result;
     }
+
+    private static boolean tileIsBlocking(ArrayList<Tile> tileList) {
+        boolean result = false;
+        if(tileList.size() == 1) {
+            result = tileList.get(0).isBlocking();
+        } else {
+            result = tileList.get(0).isBlocking() || tileList.get(1).isBlocking();
+        }
+        return result;
+    }
+
 }

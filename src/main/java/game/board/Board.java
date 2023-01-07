@@ -1,16 +1,12 @@
 package game.board;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import communication.JsonSerializer;
 import org.javatuples.Pair;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
@@ -26,7 +22,7 @@ public class Board {
     private int checkPointCount;
 
 
-    protected static ArrayList<ArrayList<Tile>> board = new ArrayList<ArrayList<Tile>>();
+    protected static ArrayList<ArrayList<ArrayList<Tile>>> board = new ArrayList<ArrayList<ArrayList<Tile>>>();
 
     //Lists of used tiles on the board, would be iterated on during the activation phase
     public static ArrayList<ConveyorBeltTile> conveyorBelt2List;
@@ -38,11 +34,22 @@ public class Board {
     public static ArrayList<EnergySpaceTile> energySpaceList;
     public static ArrayList<Tile> robotLaserList;
     public void setTile(int column, int row, Tile tile){
-        board.get(column).add(row, tile);
+        board.get(column).get(row).add(tile);
     }
-    public static Tile getTile(Pair<Integer, Integer> position){
-        return board.get(position.getValue0()).get(position.getValue1());
+    public static ArrayList<Tile> getTile(Pair<Integer, Integer> position){
+            return board.get(position.getValue0()).get(position.getValue1());
     }
+
+    public boolean tileIsBlocking(ArrayList<Tile> tileList) {
+        boolean result = false;
+        if(tileList.size() == 1) {
+            result = tileList.get(0).isBlocking();
+        } else {
+            result = tileList.get(0).isBlocking() || tileList.get(1).isBlocking();
+        }
+        return result;
+    }
+
     public static int getColumns() {return columns;}
     public static int getRows() {return rows;}
     public int getCheckPointCount() {
@@ -54,7 +61,7 @@ public class Board {
     public void setCheckPointCount(int checkPointCount) {
         this.checkPointCount = checkPointCount;
     }
-    public ArrayList<ArrayList<Tile>> getBoard() {
+    public ArrayList<ArrayList<ArrayList<Tile>>> getBoard() {
         return board;
     }
 
@@ -84,7 +91,11 @@ public class Board {
         } catch (IOException e) {
             System.out.println("NANI");
         }*/
+        board = JsonSerializer.deserializeJson(message.getMessageBody().getGameMap(), ArrayList.class);
 
+        System.out.println(board.get(9).get(0));
+        System.out.println(board.get(9).get(0).get(0));
+        System.out.println(board.get(9).get(1).get(0));
 
 
         jsonMap = jsonMap.lines().collect(Collectors.joining());

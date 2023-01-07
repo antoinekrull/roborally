@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.Board;
 import game.board.CheckpointTile;
 import game.board.PushPanelTile;
+import game.board.Tile;
 import game.card.*;
 import game.player.Player;
 import server.PlayerList;
@@ -114,13 +115,23 @@ public class Game implements Runnable {
 
     private void applyPushPanelEffects() throws Exception {
         for (int i = 0; i < playerList.size(); i++) {
-            if(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()) instanceof PushPanelTile){
+            if((pushPanelInTile(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition())))){
                 if(((PushPanelTile) board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()))
                         .getActiveRegisterList().contains(currentRegister)) {
-                    board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()).applyEffect(playerList.getPlayerFromList(i));
+                    applyTileEffects(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()), playerList.getPlayerFromList(i));
                 }
             }
         }
+    }
+
+    private boolean pushPanelInTile(ArrayList<Tile> tileList) {
+        boolean result = false;
+        if(tileList.size() == 1) {
+            result = tileList.get(0) instanceof PushPanelTile;
+        } else {
+            result = tileList.get(0) instanceof PushPanelTile || tileList.get(1) instanceof PushPanelTile;
+        }
+        return result;
     }
 
     //TODO: Implement this
@@ -187,6 +198,12 @@ public class Game implements Runnable {
         }
         else {
             return -1;
+        }
+    }
+
+    private void applyTileEffects(ArrayList<Tile> tileList, Player player) throws Exception {
+        for(int i = 0; i < tileList.size(); i++) {
+            tileList.get(i).applyEffect(player);
         }
     }
     //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

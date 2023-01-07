@@ -234,7 +234,7 @@ public class HandleClient implements Runnable{
                         setAlive(true);
                     } else if (incomingMessage.getMessageType() == MessageType.MapSelected) {
 
-                        InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream("/game/board/BoardModels/ExtraCrispy.json"));
+                        InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream("/maps/ExtraCrispy.json"));
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
                         String content1 = content.lines().collect(Collectors.joining());
                         String message1 = JsonSerializer.serializeJson(content1);
