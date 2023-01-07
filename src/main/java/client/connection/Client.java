@@ -169,10 +169,30 @@ public class Client {
                             }
                             if(message.getMessageType().equals(MessageType.GameStarted)){
                                 map = JsonSerializer.deserializeJson(message.getMessageBody().getGameMap(), ArrayList.class);
+                                ArrayList<ArrayList<ArrayList<String>>> test = new ArrayList<ArrayList<ArrayList<String>>>();
+                                test = JsonSerializer.deserializeJson(message.getMessageBody().getGameMap(), ArrayList.class);
+
 
                                 System.out.println(map.get(9).get(0));
-                                System.out.println(map.get(9).get(0).get(0));
-                                System.out.println(map.get(9).get(1).get(0));
+                                System.out.println(map.get(1).get(5));
+                                System.out.println(map.get(12).get(9));
+                                System.out.println(map.get(8).get(0));
+                                System.out.println(map.get(7).get(5));
+                                System.out.println(map.get(2).get(8));
+                                System.out.println(map.get(3).get(9));
+                                System.out.println(test.get(9).get(6));
+                                System.out.println(test.get(1).get(3));
+                                System.out.println(map.get(7).get(1).get(0));
+                                System.out.println(map.get(12).get(0).get(0));
+                                System.out.println(map.get(8).get(7).get(0));
+                                System.out.println(map.get(3).get(5));
+                                int typeIndexStartOff = test.get(1).get(2).indexOf("type=") + 5;
+                                System.out.println(1);
+                                int typeIndexCutoff = test.get(1).get(2).indexOf(",");
+                                System.out.println(2);
+                                System.out.println(test.get(1).get(2).get(0).getClass());
+                                String type = test.get(1).get(2).toString().substring(typeIndexStartOff, typeIndexCutoff);
+                                System.out.println(type);
                                 //System.out.println(message1.getMessageBody().getMessage());
 
                                 //Map<String, Object> mapObject = mapper.readValue(send, new TypeReference<Map<String,Object>>(){});

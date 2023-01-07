@@ -1,6 +1,7 @@
 package game.board;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import communication.JsonSerializer;
 import org.javatuples.Pair;
 
@@ -80,97 +81,71 @@ public class Board {
     //protected static Tile[][] board = new Tile[13][10];
 
     public void createBoard(String jsonMap) throws JsonProcessingException {
-        //jsonMap = jsonMap.replaceAll("gameMap")
 
-        /*ObjectMapper mapper = new ObjectMapper();
-        try {
-            Map<String, String> map = mapper.readValue(jsonMap, Map.class);
-            for(String i: map.keySet()){
-                System.out.println("key: "+i+ " value: "+map.get(i));
-            }
-        } catch (IOException e) {
-            System.out.println("NANI");
-        }*/
-        board = JsonSerializer.deserializeJson(message.getMessageBody().getGameMap(), ArrayList.class);
+        ArrayList<ArrayList<ArrayList<String>>> temp = JsonSerializer.deserializeJson(jsonMap, ArrayList.class);
 
-        System.out.println(board.get(9).get(0));
-        System.out.println(board.get(9).get(0).get(0));
-        System.out.println(board.get(9).get(1).get(0));
-
-
-        jsonMap = jsonMap.lines().collect(Collectors.joining());
-        jsonMap = jsonMap.replaceAll(" ", "");
-        String[] result = jsonMap.replaceAll("^[^\\[]*|[^]]*$", "").split("(?<=\\])[^\\[]*");
-
-        System.out.println(Arrays.toString(result));
-        System.out.println(result[0]);
-        System.out.println(result[1]);
-        System.out.println(result[2]);
-        System.out.println(result[3]);
-
-
-
-        HashMap<String, String> convertedMap = JsonSerializer.deserializeJson(jsonMap, HashMap.class);
-        var entrySet = convertedMap.entrySet();
         try {
             for(int x = 0; x < 13; x++){
                 for(int y = 0; y < 10; y++){
-                    for(var entry: entrySet) {
-                        if(entry.getKey().equals("type")) {
-                            entrySet.iterator().next();
-                            String input = entry.getValue();
-                            switch(input) {
-                                case "Empty", "tbd" ->  setTile(x, y, new NormalTile(x, y));
-                                case "EnergySpace" ->  {
-                                    setTile(x, y, new EnergySpaceTile(x, y));
-                                    energySpaceList.add(new EnergySpaceTile(x, y));
-                                }
-                                case "ConveyorBelt" -> {
-                                    ArrayList<Direction> directionIn = new ArrayList<>();
-                                    entrySet.iterator().next();
-                                    entrySet.iterator().next();
-                                    int velocity = parseInt(entry.getValue());
-                                    entrySet.iterator().next();
-                                    String[] directionArray = entry.getValue().split(",");
-                                    for(int i = 1; i < directionArray.length; i++) {
-                                        directionIn.add(parseDirection(directionArray[i]));
+                    if(temp.get(x).get(y).size() == 1) {
+                                int typeIndexStartoff = temp.get(x).get(y).get(0).indexOf("type=") + 5;
+                                int typeIndexCutoff = temp.get(x).get(y).get(0).indexOf(",");
+                                String type = temp.get(x).get(y).get(0).substring(typeIndexStartoff, typeIndexCutoff);
+                                switch(type) {
+                                    case "Empty", "tbd" ->  setTile(x, y, new NormalTile(x, y));
+                                    case "EnergySpace" ->  {
+                                        setTile(x, y, new EnergySpaceTile(x, y));
+                                        energySpaceList.add(new EnergySpaceTile(x, y));
                                     }
-                                    Direction directionOut = parseDirection(directionArray[0]);
-                                    setTile(x, y, new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
-                                    switch (velocity){
-                                        case 1: conveyorBelt1List.add(new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
-                                        case 2: conveyorBelt2List.add(new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
+                                    /*
+                                    case "ConveyorBelt" -> {
+                                        ArrayList<Direction> directionIn = new ArrayList<>();
+                                        int speed
+                                        int velocity = parseInt(entry.getValue());
+                                        entrySet.iterator().next();
+                                        String[] directionArray = entry.getValue().split(",");
+                                        for(int i = 1; i < directionArray.length; i++) {
+                                            directionIn.add(parseDirection(directionArray[i]));
+                                        }
+                                        Direction directionOut = parseDirection(directionArray[0]);
+                                        setTile(x, y, new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
+                                        switch (velocity){
+                                            case 1: conveyorBelt1List.add(new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
+                                            case 2: conveyorBelt2List.add(new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
+                                        }
                                     }
-                                }
-                                case "Wall" -> {
-                                    ArrayList<Direction> directionList = new ArrayList<>();
-                                    entrySet.iterator().next();
-                                    entrySet.iterator().next();
-                                    String[] directionArray = entry.getValue().split(",");
-                                    for(int i = 1; i < directionArray.length; i++) {
-                                        directionList.add(parseDirection(directionArray[i]));
+                                    case "Wall" -> {
+                                        ArrayList<Direction> directionList = new ArrayList<>();
+                                        entrySet.iterator().next();
+                                        entrySet.iterator().next();
+                                        String[] directionArray = entry.getValue().split(",");
+                                        for(int i = 1; i < directionArray.length; i++) {
+                                            directionList.add(parseDirection(directionArray[i]));
+                                        }
+                                        setTile(x, y, new WallTile(x, y, directionList));
                                     }
-                                    setTile(x, y, new WallTile(x, y, directionList));
+                                    case "Laser" -> {
+                                        entrySet.iterator().next();
+                                        entrySet.iterator().next();
+                                        String directionLaser = entry.getValue();
+                                        setTile(x, y, new LaserTile(x, y, parseDirection(entry.getValue())));
+                                        laserTileList.add(new LaserTile(x, y, parseDirection(entry.getValue())));
+                                    }
+                                    case "RestartPoint" -> {
+                                        entrySet.iterator().next();
+                                        entrySet.iterator().next();
+                                        setTile(x, y, new RebootTile(x, y, parseDirection(entry.getValue())));
+                                    }
+                                    case "CheckPoint" -> {
+                                        setTile(x, y, new CheckpointTile(x, y));
+                                        increaseCheckPointCount();
+                                        checkpointList.add(new CheckpointTile(x, y));
+                                    }
+
+                                     */
                                 }
-                                case "Laser" -> {
-                                    entrySet.iterator().next();
-                                    entrySet.iterator().next();
-                                    String directionLaser = entry.getValue();
-                                    setTile(x, y, new LaserTile(x, y, parseDirection(entry.getValue())));
-                                    laserTileList.add(new LaserTile(x, y, parseDirection(entry.getValue())));
-                                }
-                                case "RestartPoint" -> {
-                                    entrySet.iterator().next();
-                                    entrySet.iterator().next();
-                                    setTile(x, y, new RebootTile(x, y, parseDirection(entry.getValue())));
-                                }
-                                case "CheckPoint" -> {
-                                    setTile(x, y, new CheckpointTile(x, y));
-                                    increaseCheckPointCount();
-                                    checkpointList.add(new CheckpointTile(x, y));
-                                }
-                            }
-                        }
+                    } else if(temp.get(x).get(y).size() == 2) {
+
                     }
                 }
             }
