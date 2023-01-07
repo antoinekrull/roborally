@@ -7,6 +7,7 @@ import game.board.PushPanelTile;
 import game.board.Tile;
 import game.card.*;
 import game.player.Player;
+import org.javatuples.Pair;
 import server.PlayerList;
 import java.util.LinkedList;
 
@@ -27,7 +28,6 @@ public class Game implements Runnable {
     public static int currentRegister = 0;
     private LinkedList<Integer> readyList = new LinkedList<>();
     private String[] maps = {"DizzyHighway"};
-
 
     private static Game INSTANCE;
 
@@ -50,10 +50,6 @@ public class Game implements Runnable {
     }
     public void setPlayerList(PlayerList playerList) {
         this.playerList = playerList;
-    }
-
-    public void applyTileEffect() throws Exception {
-        board.getTile(activePlayer.getRobot().getCurrentPosition()).applyEffect(activePlayer);
     }
 
     private void applyAllTileEffects() throws Exception {
@@ -115,8 +111,9 @@ public class Game implements Runnable {
 
     private void applyPushPanelEffects() throws Exception {
         for (int i = 0; i < playerList.size(); i++) {
-            if((pushPanelInTile(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition())))){
-                if(((PushPanelTile) board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()))
+            if((pushPanelInTile(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition())).getValue0())){
+                int index = pushPanelInTile(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition())).getValue1();
+                if(((PushPanelTile) board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()).get(index))
                         .getActiveRegisterList().contains(currentRegister)) {
                     applyTileEffects(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()), playerList.getPlayerFromList(i));
                 }
@@ -124,14 +121,18 @@ public class Game implements Runnable {
         }
     }
 
-    private boolean pushPanelInTile(ArrayList<Tile> tileList) {
+    private Pair<Boolean, Integer> pushPanelInTile(ArrayList<Tile> tileList) {
         boolean result = false;
+        int index= -1;
         if(tileList.size() == 1) {
             result = tileList.get(0) instanceof PushPanelTile;
+            if(result){index =0;}
         } else {
             result = tileList.get(0) instanceof PushPanelTile || tileList.get(1) instanceof PushPanelTile;
+            if(tileList.get(0) instanceof PushPanelTile){index = 0;}
+            else if(tileList.get(1) instanceof PushPanelTile){index = 1;}
         }
-        return result;
+        return new Pair<>(result, index);
     }
 
     //TODO: Implement this
