@@ -264,7 +264,7 @@ public class ViewModelLobby {
             timeline.setCycleCount(Animation.INDEFINITE);
             timeline.play();
              */
-            //RoboRallyStart.switchScene("gamewindow.fxml");
+            RoboRallyStart.switchScene("gamewindow.fxml");
         }
         else if (this.ready.get()== true) {
             readyButton.setText("READY");
