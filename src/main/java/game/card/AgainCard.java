@@ -4,9 +4,9 @@ import game.player.Player;
 
 public class AgainCard extends Card{
 
-    private CardType cardType = CardType.PROGRAMMING_CARD;
 
     public AgainCard(){
+        cardType = CardType.PROGRAMMING_CARD;
         setCardName("Again");
     }
 
