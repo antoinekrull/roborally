@@ -67,7 +67,7 @@ public class Game implements Runnable {
                 }
             }
         }
-        applyPushPanelEffects();
+        //applyPushPanelEffects();
         for(int x = 0; x < Board.gearTileList.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.gearTileList.get(x).getPosition())) {
@@ -109,6 +109,7 @@ public class Game implements Runnable {
         }
     }
 
+    /*
     private void applyPushPanelEffects() throws Exception {
         for (int i = 0; i < playerList.size(); i++) {
             if((pushPanelInTile(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition())).getValue0())){
@@ -120,6 +121,7 @@ public class Game implements Runnable {
             }
         }
     }
+     */
 
     private Pair<Boolean, Integer> pushPanelInTile(ArrayList<Tile> tileList) {
         boolean result = false;

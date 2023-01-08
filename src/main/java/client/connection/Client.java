@@ -8,6 +8,8 @@ import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import game.Game;
+import game.board.Board;
+import game.board.NormalTile;
 import game.board.TestTile;
 import game.board.Tile;
 import javafx.beans.property.*;
@@ -173,8 +175,8 @@ public class Client {
                             }
                             if(message.getMessageType().equals(MessageType.GameStarted)){
 
-                                //GameBoard board = new GameBoard();
-                                //board.createBoard(message.getMessageBody());
+                                Board board = new Board();
+                                board.createBoard(message.getMessageBody().getGameMap());
                             }
                             //if (message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
                             //    if (message.getMessage().equals("accepted")) {
