@@ -239,10 +239,12 @@ public class ViewModelLobby {
     }
 
     public void readyButtonOnAction() throws IOException {
-        if (readyButton.getText().equals("READY")) {
+        if (this.ready.get()==false) {
             readyButton.setText("NOT READY");
             this.ready.set(true);
             modelGame.setPlayerStatus(modelUser.userIDProperty().get());
+            //modelGame.setPlayerStatus(modelUser.getUserID());
+            modelUser.sendSetStatus(true);
             /*long endTime = 2000;
             DateFormat timeFormat = new SimpleDateFormat( "HH:mm:ss" );
             final Timeline timeline = new Timeline(
@@ -262,14 +264,14 @@ public class ViewModelLobby {
             timeline.setCycleCount(Animation.INDEFINITE);
             timeline.play();
              */
-            RoboRallyStart.switchScene("gamewindow.fxml");
+            //RoboRallyStart.switchScene("gamewindow.fxml");
         }
-        if (readyButton.getText().equals("NOT READY")) {
+        else if (this.ready.get()== true) {
             readyButton.setText("READY");
             this.ready.set(false);
             modelGame.setPlayerStatus(modelUser.userIDProperty().get());
+            modelUser.sendSetStatus(false);
         }
-
         //resource is null
         /*
         FXMLLoader loader = FXMLLoader.load(getClass().getResource("lobby.fxml"));
@@ -292,7 +294,7 @@ public class ViewModelLobby {
     }
 
     public void setMap() {
-        //set map
+        //String map = mapItem1.getText();
         //map is Dizzy Highway
     }
 }

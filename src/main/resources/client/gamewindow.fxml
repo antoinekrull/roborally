@@ -372,7 +372,7 @@
                     <menus>
                       <Menu mnemonicParsing="false" text="Options">
                         <items>
-                           <MenuItem fx:id="exitMenuItem" onAction="#exit" mnemonicParsing="false"  text="Exit" />
+                           <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" text="Exit" />
                            <MenuItem mnemonicParsing="false" text="Help" />
                         </items>
                       </Menu>

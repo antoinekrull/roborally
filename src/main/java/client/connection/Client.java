@@ -1,12 +1,13 @@
 package client.connection;
 
-import client.model.ModelChat;
 import client.model.ModelGame;
-import client.model.ModelUser;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
+import game.Game;
+import game.board.TestTile;
+import game.board.Tile;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -19,6 +20,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -33,7 +35,7 @@ import java.util.ArrayList;
 
 public class Client {
 
-    private static Client client;
+    private static Client client = null;
     private Socket socket = null;
     private DataInputStream in = null;
     private DataOutputStream out = null;
@@ -41,6 +43,8 @@ public class Client {
     private BooleanProperty isAI;
     private ObjectProperty<Message> message;
     private IntegerProperty userID;
+    private Game game = new Game();
+    private ArrayList<ArrayList<ArrayList<TestTile>>> map;
 
     MessageCreator messageCreator;
     String address = "localhost";
@@ -52,6 +56,8 @@ public class Client {
     private ArrayList<Triplet<Integer, String, Integer>> otherPlayers = new ArrayList<>();
     private ArrayList<Pair<Integer, Boolean>> otherPlayersStatus = new ArrayList<>();
 
+    private ModelGame modelGame;
+
     private Client() {
         this.messageCreator = new MessageCreator();
         this.message = new SimpleObjectProperty<>();
@@ -59,9 +65,7 @@ public class Client {
         this.isAI = new SimpleBooleanProperty();
         this.playersOnline = FXCollections.observableArrayList("Tomi", "Firas", "Molri", "Anto");
         this.playersToChat = FXCollections.observableArrayList("All", "Tomi", "Firas", "Molri", "Anto");
-
         connected = new SimpleBooleanProperty();
-
         connectServer();
     }
 
@@ -108,7 +112,6 @@ public class Client {
         DataInputStream in = null;
         DataOutputStream out = null;
         Socket socket;
-
         ReadMessagesFromServer(Socket socket) {
             this.socket = socket;
         }
@@ -135,10 +138,19 @@ public class Client {
                                 otherPlayers.add(new Triplet<>(message.getMessageBody().getClientID(),
                                         message.getMessageBody().getName(),
                                         message.getMessageBody().getFigure()));
+                                //TODO process the data input like giving the player his robot and stuff like that
                             }
                             if(message.getMessageType().equals(MessageType.PlayerStatus)){
                                 otherPlayersStatus.add(new Pair<>(message.getMessageBody().getClientID(),
                                         message.getMessageBody().isReady()));
+                            }
+                            if (message.getMessageType().equals(MessageType.SelectMap)){
+                                String[] maps = message.getMessageBody().getAvailableMaps();
+                                for (int i = 0; i < maps.length; i++) {
+                                    System.out.println(maps[i]);
+                                }
+                                sendMapMessage("hier soll mal die Map rein dann");
+
                             }
                             if(message.getMessageType().equals(MessageType.ReceivedChat)){
                                 Client.this.setMessage(message);
@@ -156,6 +168,21 @@ public class Client {
 
                             }
                             if(message.getMessageType().equals(MessageType.GameStarted)){
+                                map = JsonSerializer.deserializeJson(message.getMessageBody().getGameMap(), ArrayList.class);
+
+                                System.out.println(map.get(9).get(0));
+                                System.out.println(map.get(9).get(0).get(0));
+                                System.out.println(map.get(9).get(1).get(0));
+                                //System.out.println(message1.getMessageBody().getMessage());
+
+                                //Map<String, Object> mapObject = mapper.readValue(send, new TypeReference<Map<String,Object>>(){});
+
+                                //String content = send.lines().collect(Collectors.joining());
+
+                                //System.out.println(send);
+                                //game.createBoard(send);
+
+                                //System.out.println(map);
                                 //GameBoard board = new GameBoard();
                                 //board.createBoard(message.getMessageBody());
                             }
@@ -205,6 +232,9 @@ public class Client {
     public void sendGroupMessage(String message){
         sendMessageToServer(messageCreator.generateSendChatMessage(message));
     }
+    public void sendMapMessage(String message) {
+        sendMessageToServer(messageCreator.generateMapSelectedMessage("DizzyHighway"));
+    }
 
     public void sendMessageToServer(Message message) {
         try {
@@ -237,5 +267,6 @@ public class Client {
         }
     }
 }
+
 
 

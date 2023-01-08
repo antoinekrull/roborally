@@ -5,7 +5,7 @@ import javafx.beans.property.*;
 
 
 /**
- * Model for user
+ * Model for login
  *
  * @author Tobias
  * @version 0.1
@@ -21,6 +21,7 @@ public class ModelUser {
 
     private Client client;
 
+
     private ModelUser() {
         client = Client.getInstance();
         connected = new SimpleBooleanProperty();
@@ -30,6 +31,7 @@ public class ModelUser {
         userID.bindBidirectional(client.userIDProperty());
         isAI = new SimpleBooleanProperty();
         isAI.bind(client.isAIProperty());
+
     }
 
     public static ModelUser getInstance() {
@@ -43,9 +45,19 @@ public class ModelUser {
         return username;
     }
 
-    public boolean getConnection() {return this.connected.get();}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
+    public boolean getConnection() {return this.connected.get();}
     public void reconnect() {client.reconnect();}
+
+    public void sendPlayerValues(String name, int figure) {
+        client.sendPlayerValuesMessage(name, figure);
+    }
+    public void sendSetStatus(Boolean status) {
+        client.sendSetStatusMessage(status);
+    }
 
     public IntegerProperty userIDProperty() {
         return userID;

@@ -6,7 +6,7 @@ import game.player.Player;
  * @author Antoine, Firas
  * @version 1.0
  */
-public class GearTile extends Tile{
+public class GearTile extends Tile {
     private RotationType rotationType;
     public GearTile(int xCoordinate, int yCoordinate) {
         super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");

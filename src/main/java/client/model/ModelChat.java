@@ -68,3 +68,4 @@ public class ModelChat {
         client.sendPrivateMessage(textfieldProperty.get(), toUser);
     }
 }
+

@@ -17,7 +17,7 @@ import javafx.util.Duration;
  * ViewModel for main menu
  *
  * @author Tobias
- * @version 0.1
+ * @version 1.0
  */
 
 public class ViewModelMainMenu {
@@ -73,6 +73,7 @@ public class ViewModelMainMenu {
                 timeline.play();
             }
         }
+
     }
 
     public void helpButtonOnAction() {

@@ -5,6 +5,9 @@ import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
 import communication.Message;
+import game.Game;
+import game.board.Board;
+import game.board.*;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -23,6 +26,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * ViewModel for gamescreen
@@ -44,13 +48,15 @@ public class ViewModelGameWindow {
     @FXML
     private MenuItem exitMenuItem;
     @FXML
-    private GridPane gameBoard;
+    private GridPane gameGrid;
 
     //buttons for cards
 
     private ModelChat modelChat;
     private ModelGame modelGame;
     private ModelUser modelUser;
+    private Board gameBoard;
+
     private NotifyChangeSupport notifyChangeSupport;
 
     public ViewModelGameWindow() {
@@ -62,6 +68,8 @@ public class ViewModelGameWindow {
     }
 
     public void initialize() {
+        ArrayList<ArrayList<Tile>> map = modelGame.gameBoard.getBoard();
+        //placeTiles(map,13,10);
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
         chatVBox.heightProperty().addListener(new ChangeListener<Number>() {@Override

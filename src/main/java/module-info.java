@@ -26,4 +26,10 @@ module com.example.knorrigekorrelatehp {
     opens server.model to javafx.controls, javafx.fxml, javafx.graphics;
     exports server.viewmodel;
     opens server.viewmodel to javafx.controls, javafx.fxml, javafx.graphics;
+    exports game.player;
+    opens game.player to javafx.graphics;
+    exports game;
+    opens game to javafx.graphics;
+    exports game.board;
+    opens game.board to javafx.graphics;
 }
