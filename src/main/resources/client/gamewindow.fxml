@@ -241,47 +241,47 @@
                     <RowConstraints minHeight="10.0" valignment="BOTTOM" vgrow="SOMETIMES" />
                   </rowConstraints>
                   <children>
-                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                    <ImageView fx:id="programCard1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                       <image>
                         <Image url="@../textures/cards/roborally_move3.jpg" />
                       </image>
                     </ImageView>
-                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+                    <ImageView fx:id="programCard2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
                       <image>
                         <Image url="@../textures/cards/roborally_move3.jpg" />
                       </image>
                     </ImageView>
-                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
+                    <ImageView fx:id="programCard3" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
                       <image>
                         <Image url="@../textures/cards/roborally_move3.jpg" />
                       </image>
                     </ImageView>
-                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                    <ImageView fx:id="programCard4" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
                       <image>
                         <Image url="@../textures/cards/roborally_move3.jpg" />
                       </image>
                     </ImageView>
-                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4">
+                    <ImageView fx:id="programCard5" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4">
                       <image>
                         <Image url="@../textures/cards/roborally_move3.jpg" />
                       </image>
                     </ImageView>
-                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5">
+                    <ImageView fx:id="programCard6" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5">
                       <image>
                         <Image url="@../textures/cards/roborally_move3.jpg" />
                       </image>
                     </ImageView>
-                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6">
+                    <ImageView fx:id="programCard7" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6">
                       <image>
                         <Image url="@../textures/cards/roborally_move3.jpg" />
                       </image>
                     </ImageView>
-                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7">
+                    <ImageView fx:id="programCard8" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7">
                       <image>
                         <Image url="@../textures/cards/roborally_move3.jpg" />
                       </image>
                     </ImageView>
-                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8">
+                    <ImageView fx:id="programCard9" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8">
                       <image>
                         <Image url="@../textures/cards/roborally_move3.jpg" />
                       </image>

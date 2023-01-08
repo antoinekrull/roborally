@@ -48,7 +48,11 @@ public class ViewModelGameWindow {
     @FXML
     private MenuItem exitMenuItem;
     @FXML
-    private GridPane gameGrid;
+    private GridPane gameboard;
+    @FXML
+    private ImageView programCard1, programCard2, programCard3, programCard4, programCard5, programCard6, programCard7, programCard8, programCard9;
+    @FXML
+    private GridPane programmingGrid;
 
     //buttons for cards
 
