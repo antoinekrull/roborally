@@ -37,7 +37,7 @@
           <children>
             <HBox GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
               <children>
-                <GridPane fx:id="gameBoard" minWidth="100.0" HBox.hgrow="ALWAYS">
+                <GridPane fx:id="gameboard" minWidth="100.0" HBox.hgrow="ALWAYS">
                   <columnConstraints>
                     <ColumnConstraints halignment="RIGHT" hgrow="ALWAYS" minWidth="50.0" />
                     <ColumnConstraints hgrow="ALWAYS" minWidth="50.0" />
@@ -210,22 +210,42 @@
                     <Region GridPane.columnIndex="13" GridPane.rowIndex="9" />
                   </children>
                 </GridPane>
-                <GridPane HBox.hgrow="ALWAYS">
-                  <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints fx:id="programspace" percentHeight="100.0" valignment="CENTER" vgrow="SOMETIMES" />
-                  </rowConstraints>
-                  <children>
-                    <Pane prefHeight="200.0" prefWidth="200.0" styleClass="programmierflaeche" />
-                  </children>
-                </GridPane>
+                        <StackPane HBox.hgrow="ALWAYS">
+                           <children>
+                      <GridPane fx:id="programmingGrid" hgap="10.0" StackPane.alignment="CENTER">
+                        <columnConstraints>
+                          <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints fx:id="programspace" percentHeight="100.0" valignment="CENTER" vgrow="SOMETIMES" />
+                        </rowConstraints>
+                                 <StackPane.margin>
+                                    <Insets />
+                                 </StackPane.margin>
+                                 <padding>
+                                    <Insets bottom="100.0" top="340.0" />
+                                 </padding>
+                      </GridPane>
+                    <Pane prefHeight="200.0" prefWidth="200.0" styleClass="programmierflaeche">
+                                 <children>
+                                    <ImageView fitWidth="870.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../textures/designelements/programmingFields.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </Pane>
+                           </children>
+                        </StackPane>
               </children>
             </HBox>
             <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
               <children>
-                <GridPane maxWidth="600.0" HBox.hgrow="ALWAYS">
+                <GridPane maxWidth="600.0" nodeOrientation="RIGHT_TO_LEFT" HBox.hgrow="ALWAYS">
                   <columnConstraints>
                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
@@ -243,47 +263,47 @@
                   <children>
                     <ImageView fx:id="programCard1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                       <image>
-                        <Image url="@../textures/cards/roborally_move3.jpg" />
+                        <Image url="@../textures/cards/Again.png" />
                       </image>
                     </ImageView>
                     <ImageView fx:id="programCard2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
                       <image>
-                        <Image url="@../textures/cards/roborally_move3.jpg" />
+                        <Image url="@../textures/cards/leftTurn.png" />
                       </image>
                     </ImageView>
                     <ImageView fx:id="programCard3" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
                       <image>
-                        <Image url="@../textures/cards/roborally_move3.jpg" />
+                        <Image url="@../textures/cards/Move3.png" />
                       </image>
                     </ImageView>
                     <ImageView fx:id="programCard4" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
                       <image>
-                        <Image url="@../textures/cards/roborally_move3.jpg" />
+                        <Image url="@../textures/cards/rightTurn.png" />
                       </image>
                     </ImageView>
                     <ImageView fx:id="programCard5" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4">
                       <image>
-                        <Image url="@../textures/cards/roborally_move3.jpg" />
+                        <Image url="@../textures/cards/Move2.png" />
                       </image>
                     </ImageView>
                     <ImageView fx:id="programCard6" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5">
                       <image>
-                        <Image url="@../textures/cards/roborally_move3.jpg" />
+                        <Image url="@../textures/cards/uTurn.png" />
                       </image>
                     </ImageView>
                     <ImageView fx:id="programCard7" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6">
                       <image>
-                        <Image url="@../textures/cards/roborally_move3.jpg" />
+                        <Image url="@../textures/cards/Move3.png" />
                       </image>
                     </ImageView>
                     <ImageView fx:id="programCard8" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7">
                       <image>
-                        <Image url="@../textures/cards/roborally_move3.jpg" />
+                        <Image url="@../textures/cards/Again.png" />
                       </image>
                     </ImageView>
                     <ImageView fx:id="programCard9" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8">
                       <image>
-                        <Image url="@../textures/cards/roborally_move3.jpg" />
+                        <Image url="@../textures/cards/rightTurn.png" />
                       </image>
                     </ImageView>
                   </children>

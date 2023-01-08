@@ -5,12 +5,14 @@ import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
 import communication.Message;
-import game.Game;
 import game.board.Board;
-import game.board.*;
+import game.board.Tile;
+import java.io.IOException;
+import java.util.ArrayList;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,15 +20,19 @@ import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * ViewModel for gamescreen
@@ -81,6 +87,15 @@ public class ViewModelGameWindow {
                 chatScrollPane.setVvalue((Double) newValue);
             }
         });
+        setOnDragDetected(programCard1, "programCard1");
+        setOnDragDetected(programCard2, "programCard1");
+        setOnDragDetected(programCard3, "programCard1");
+        setOnDragDetected(programCard4, "programCard1");
+        setOnDragDetected(programCard5, "programCard1");
+        setOnDragDetected(programCard6, "Image 6");
+        setOnDragDetected(programCard7, "Image 7");
+        setOnDragDetected(programCard8, "Image 8");
+        setOnDragDetected(programCard9, "Image 9");
     }
 
     public void receivedMessage() {
@@ -186,5 +201,65 @@ public class ViewModelGameWindow {
         Platform.exit();
         System.exit(0);
     }
+
+    private void setOnDragDetected(ImageView imageView, String data) {
+        imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent event) {
+                /* drag was detected, start a drag-and-drop gesture*/
+                /* allow any transfer mode */
+                Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
+
+                /* Put a string on a dragboard */
+                ClipboardContent content = new ClipboardContent();
+                content.putString(data);
+                db.setContent(content);
+
+                event.consume();
+            }
+        });
+
+
+// Set event handler for drag over on grid pane
+        programmingGrid.setOnDragOver(new EventHandler<DragEvent>() {
+public void handle(DragEvent event) {
+    /* data is dragged over the target */
+    /* accept it only if it is not dragged from the same node
+     * and if it has a string data */
+    if (event.getGestureSource() != programmingGrid &&
+    event.getDragboard().hasString()) {
+    /* allow for both copying and moving, whatever user chooses */
+    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+    }
+
+    event.consume();
+    }
+    });
+
+// Set event handler for drag dropped on grid pane
+        programmingGrid.setOnDragDropped(new EventHandler<DragEvent>() {
+    public void handle(DragEvent event) {
+    /* data dropped */
+    /* if there is a string data on dragboard, read it and use it */
+    Dragboard db = event.getDragboard();
+    boolean success = false;
+    if (db.hasString()) {
+    String data = db.getString();
+    if (data.equals("Image 1")) {
+    ImageView imageView = new ImageView(new Image("image1.png"));
+        programmingGrid.add(imageView, 0, 0);
+    } else if (data.equals("Image 2")) {
+    ImageView imageView = new ImageView(new Image("image2.png"));
+        programmingGrid.add(imageView, 0, 0);
+    }
+    success = true;
+    }
+    /* let the source know whether the string was successfully
+     * transferred and used */
+    event.setDropCompleted(success);
+
+    event.consume();
+    }
+    });
+
 
 }
