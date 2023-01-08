@@ -3,6 +3,7 @@ package server.connection;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
+import game.Game;
 import game.player.Player;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -24,6 +25,7 @@ public class Server {
 
     protected Socket socket;
     protected ServerSocket serverSocket;
+    private static Game game;
     public HashMap<Integer, Player> players = new HashMap<>();
     public HashMap<Integer, HandleClient> CLIENTS = new HashMap<>();
     //Message type instead of Strings
@@ -113,6 +115,7 @@ public class Server {
                             }
                         }
                         //added private message to work in chat
+                        //still need other players clientID to send message
                         if (isPrivate) {
                             int toUser = message.getMessageBody().getFrom();
                             for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
@@ -148,6 +151,14 @@ public class Server {
         }
     }
      */
+
+    public static Game getGameInstance(){
+        if (game == null) {
+            game = new Game();
+        }
+        return game;
+
+    }
 
     public synchronized int getUniqueID() {
         return uniqueID++;

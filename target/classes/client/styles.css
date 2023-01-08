@@ -1,0 +1,51 @@
+@font-face{
+    font-family: RacingSansOne;
+    src: url('RacingSansOne-Regular.ttf');
+}
+
+.mainmenubutton{
+-fx-background-image: url("../textures/designelements/buttonmainmenu.png");
+-fx-background-color: none;
+-fx-text-fill: white;
+-fx-background-repeat: none;
+-fx-background-size: cover;
+}
+
+.mainmenubutton:hover{
+-fx-text-fill: rgba(255, 86, 0, 1);
+-fx-effect: dropshadow(three-pass-box, rgba(255, 86, 0, 1), 15, 0.0, 0, 0);
+}
+
+.mainmenubackground{
+-fx-background-image: url("../textures/designelements/hauptmenueHintergrund.png");
+-fx-background-repeat: none;
+-fx-background-size: cover;
+}
+
+.menubar{
+-fx-background-color: none;
+-fx-background-image: url("../textures/designelements/menubarbackground.jpg");
+-fx-background-color: none;
+-fx-text-fill: white;
+-fx-background-size: auto;
+}
+
+.loginbackground{
+-fx-background-image: url("../textures/designelements/robotselectBackground.jpg");
+-fx-background-repeat: none;
+-fx-background-size: cover;
+}
+
+.lobbybackground{
+-fx-background-image: url("../textures/designelements/lobbyBackground.jpg");
+-fx-background-repeat: none;
+-fx-background-size: cover;
+-fx-background-color: none;
+}
+
+.roboterlabel{
+-fx-text-fill: transparent;
+}
+.roboterlabel:hover{
+-fx-text-fill: white;
+}
