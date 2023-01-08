@@ -583,6 +583,10 @@
       ],
       [
         {
+          "type": "Empty",
+          "isOnBoard": "1A"
+        },
+        {
           "type": "Laser",
           "isOnBoard": "1A",
           "orientations": [
@@ -608,6 +612,10 @@
         }
       ],
       [
+        {
+          "type": "Empty",
+          "isOnBoard": "1A"
+        },
         {
           "type": "Laser",
           "isOnBoard": "1A",
@@ -663,6 +671,10 @@
       ],
       [
         {
+          "type": "Empty",
+          "isOnBoard": "1A"
+        },
+        {
           "type": "Laser",
           "isOnBoard": "1A",
           "orientations": [
@@ -688,6 +700,10 @@
         }
       ],
       [
+        {
+          "type": "Empty",
+          "isOnBoard": "1A"
+        },
         {
           "type": "Laser",
           "isOnBoard": "1A",
