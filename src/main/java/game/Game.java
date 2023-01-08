@@ -1,14 +1,12 @@
 package game;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import game.board.Board;
-import game.board.CheckpointTile;
-import game.board.PushPanelTile;
-import game.board.Tile;
+import game.board.*;
 import game.card.*;
 import game.player.Player;
 import org.javatuples.Pair;
 import server.PlayerList;
+
 import java.util.LinkedList;
 
 
@@ -211,8 +209,8 @@ public class Game implements Runnable {
     }
     //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     public void createBoard(String map) throws JsonProcessingException {
-        board.createBoard(map);
-        board.testBoard();
+        //board.createBoard(map);
+        //board.testBoard();
     }
 
     @Override

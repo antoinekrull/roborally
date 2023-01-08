@@ -51,8 +51,8 @@ public class MessageBody {
         return gameMap;
     }
 
-    public void setGameMap(String gameMap) {
-        this.gameMap = gameMap;
+    public void setGameMap(String jsonMap) {
+        this.gameMap = jsonMap;
     }
 
     public String getGroup() {

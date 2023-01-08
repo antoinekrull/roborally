@@ -1,17 +1,11 @@
 package client.connection;
 
 import client.model.ModelGame;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
-import game.Game;
 import game.board.Board;
-import game.board.NormalTile;
-import game.board.TestTile;
-import game.board.Tile;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,11 +16,8 @@ import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 /**
  *
@@ -49,8 +40,6 @@ public class Client {
     private BooleanProperty isAI;
     private ObjectProperty<Message> message;
     private IntegerProperty userID;
-    private Game game = new Game();
-    private ArrayList<ArrayList<ArrayList<TestTile>>> map;
 
     MessageCreator messageCreator;
     String address = "localhost";
@@ -174,9 +163,9 @@ public class Client {
 
                             }
                             if(message.getMessageType().equals(MessageType.GameStarted)){
-
                                 Board board = new Board();
                                 board.createBoard(message.getMessageBody().getGameMap());
+                                board.testBoard();
                             }
                             //if (message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
                             //    if (message.getMessage().equals("accepted")) {

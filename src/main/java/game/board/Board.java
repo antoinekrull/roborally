@@ -2,13 +2,10 @@ package game.board;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import communication.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.javatuples.Pair;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.stream.Collectors;
 
 import static java.lang.Integer.parseInt;
 
@@ -22,31 +19,25 @@ public class Board {
 
     private int checkPointCount;
 
-    protected static Tile[][][] board = new Tile[13][10][2];
-    //protected static  ArrayList<Tile>[][] board = (ArrayList<Tile>[][]) new ArrayList[13][10];
-    //protected static ArrayList<ArrayList<ArrayList<Tile>>> board = new ArrayList<ArrayList<ArrayList<Tile>>>();
+
+    protected static ArrayList<ArrayList<ArrayList<Tile>>> board;
 
     //Lists of used tiles on the board, would be iterated on during the activation phase
-    public static ArrayList<ConveyorBeltTile> conveyorBelt2List = new ArrayList<>();
-    public static ArrayList<ConveyorBeltTile> conveyorBelt1List = new ArrayList<>();
-    public static ArrayList<PushPanelTile> pushPanelList = new ArrayList<>();
-    public static ArrayList<GearTile> gearTileList = new ArrayList<>();
-    public static ArrayList<LaserTile> laserTileList = new ArrayList<>();
-    public static ArrayList<CheckpointTile> checkpointList = new ArrayList<>();
-    public static ArrayList<EnergySpaceTile> energySpaceList = new ArrayList<>();
-    public static ArrayList<Tile> robotLaserList = new ArrayList<>();
-    public static ArrayList<RebootTile> rebootTileList = new ArrayList<>();
+    public static ArrayList<ConveyorBeltTile> conveyorBelt2List;
+    public static ArrayList<ConveyorBeltTile> conveyorBelt1List;
+    public static ArrayList<PushPanelTile> pushPanelList;
+    public static ArrayList<GearTile> gearTileList;
+    public static ArrayList<LaserTile> laserTileList;
+    public static ArrayList<CheckpointTile> checkpointList;
+    public static ArrayList<EnergySpaceTile> energySpaceList;
+    public static ArrayList<Tile> robotLaserList;
 
+    ArrayList<RebootTile> rebootTileList;
     public void setTile(int column, int row, Tile tile){
-        //board[column][row].add(tile);
-        if(board[column][row][0] == null) {
-            board[column][row][0] = tile;
-        } else {
-            board[column][row][1] = tile;
-        }
+        board.get(column).get(row).add(tile);
     }
-    public static Tile[] getTile(Pair<Integer, Integer> position){
-        return board[position.getValue0()][position.getValue1()];
+    public static ArrayList<Tile> getTile(Pair<Integer, Integer> position){
+            return board.get(position.getValue0()).get(position.getValue1());
     }
 
     public boolean tileIsBlocking(ArrayList<Tile> tileList) {
@@ -70,33 +61,37 @@ public class Board {
     public void setCheckPointCount(int checkPointCount) {
         this.checkPointCount = checkPointCount;
     }
-    public Tile[][][] getBoard() {
+    public ArrayList<ArrayList<ArrayList<Tile>>> getBoard() {
         return board;
     }
 
     //for testing purposes
     public void testBoard() {
-        for(int x = 0; x < 13; x++){
-            for(int y = 0; y < 10; y++) {
-                System.out.println(board[x][y]);
+        for(int x = 0; x < board.size(); x++){
+            for(int y = 0; y < 2; y++) {
+                System.out.println(board.get(x).get(y).get(0));
             }
         }
     }
 
-
-
+    // Old implementation of board using arrays instead of arrayList
+    //public Tile[][] getBoard() {return board;}
+    //public void setTile(int column, int row, Tile tile){board[column][row] = tile;}
+    //protected static Tile[][] board = new Tile[13][10];
 
     public void createBoard(String jsonMap) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ArrayList<ArrayList<ArrayList<TileElement>>> temp = objectMapper.readValue(jsonMap, new TypeReference<ArrayList<ArrayList<ArrayList<TileElement>>>>() {
+        });
+        System.out.println(temp.get(0).get(0).get(0).getType());
 
-        ArrayList<ArrayList<ArrayList<Object>>> temp = JsonSerializer.deserializeJson(jsonMap, ArrayList.class);
 
-
-        try {
+            try {
             for(int x = 0; x < 13; x++){
                 for(int y = 0; y < 10; y++){
                     if(temp.get(x).get(y).size() == 1) {
-                                String[] tileValues = temp.get(x).get(y).get(0).toString().split(",");
-                                String type = getValueFromString(tileValues[0]);
+                                TileElement tile = temp.get(x).get(y).get(0);
+                                String type = tile.getType();
                                 switch(type) {
                                     case "Empty", "tbd" ->  setTile(x, y, new NormalTile(x, y));
                                     case "EnergySpace" ->  {
@@ -106,17 +101,19 @@ public class Board {
                                     //TODO: directions fixen
                                     case "ConveyorBelt" -> {
                                         ArrayList<Direction> directionIn = new ArrayList<>();
-                                        int velocity = Integer.parseInt(getValueFromString(tileValues[2]));
-                                        tileValues[3] = tileValues[3].substring(tileValues[3].indexOf("=") + 2);
-                                        tileValues[4] = tileValues[4].substring(0, tileValues[4].indexOf("]"));
-                                        directionIn.add(parseDirection(tileValues[4]));
-                                        Direction directionOut = parseDirection(tileValues[3]);
+                                        int velocity = tile.getSpeed();
+                                        ArrayList<String> orientations = tile.getOrientations();
+                                        for(int i = 1; i < orientations.size(); i++) {
+                                            directionIn.add(parseDirection(orientations.get(i)));
+                                        }
+                                        /*Direction directionOut = parseDirection(directionArray[0]);
                                         setTile(x, y, new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
                                         switch (velocity){
                                             case 1: conveyorBelt1List.add(new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
                                             case 2: conveyorBelt2List.add(new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
-                                        }
+                                        }*/
                                     }
+                                    /*case "Wall" -> {
                                     //TODO: directions fixen
                                     case "Wall" -> {
                                         ArrayList<Direction> directionList = new ArrayList<>();
@@ -131,7 +128,7 @@ public class Board {
                                         System.out.println(directionLaser.substring(1, directionLaser.length() - 1));
                                         setTile(x, y, new LaserTile(x, y, parseDirection(directionLaser)));
                                         laserTileList.add(new LaserTile(x, y, parseDirection(directionLaser)));
-                                    }
+                                    }*/
                                     //TODO: needs to work with directions, once they have been added to json
                                     case "RestartPoint" -> {
                                         setTile(x, y, new RebootTile(x, y));
@@ -148,6 +145,7 @@ public class Board {
                         String[] tileValues2 = temp.get(x).get(y).get(1).toString().split(",");
                         String type1 = getValueFromString(tileValues1[0]);
                         String type2 = getValueFromString(tileValues2[0]);
+
                         switch (type1) {
                             case "Wall" -> {
                                 ArrayList<Direction> directionList = new ArrayList<>();
@@ -194,6 +192,7 @@ public class Board {
             e.printStackTrace();
         }
     }
+
     public Direction parseDirection(String direction) {
         Direction parsedDirection = null;
         switch (direction) {
@@ -204,8 +203,10 @@ public class Board {
         }
         return parsedDirection;
     }
+
     private String getValueFromString(String input) {
-        int typeIndexStartOff = input.indexOf("=") + 1;
+        int typeIndexStartOff = input.indexOf("=");
+        //int typeIndexCutoff = input.indexOf(",");
         String value = input.substring(typeIndexStartOff);
         value.replaceAll("\\[", "");
         value.replaceAll("]", "");
@@ -213,6 +214,7 @@ public class Board {
         value.replaceAll("}", "");
         return value;
     }
+
 }
 
 

@@ -115,12 +115,12 @@ public class CollisionCalculator {
         return result;
     }
 
-    private static boolean tileIsBlocking(Tile[] tileList) {
+    private static boolean tileIsBlocking(ArrayList<Tile> tileList) {
         boolean result = false;
-        if(tileList.length == 1) {
-            result = tileList[0].isBlocking();
+        if(tileList.size() == 1) {
+            result = tileList.get(0).isBlocking();
         } else {
-            result = tileList[0].isBlocking() || tileList[0].isBlocking();
+            result = tileList.get(0).isBlocking() || tileList.get(1).isBlocking();
         }
         return result;
     }
