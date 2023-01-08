@@ -34,6 +34,8 @@ public class Board {
     public static ArrayList<CheckpointTile> checkpointList;
     public static ArrayList<EnergySpaceTile> energySpaceList;
     public static ArrayList<Tile> robotLaserList;
+
+    ArrayList<RebootTile> rebootTileList;
     public void setTile(int column, int row, Tile tile){
         board.get(column).get(row).add(tile);
     }
@@ -82,28 +84,24 @@ public class Board {
 
     public void createBoard(String jsonMap) throws JsonProcessingException {
 
-        ArrayList<ArrayList<ArrayList<String>>> temp = JsonSerializer.deserializeJson(jsonMap, ArrayList.class);
+        ArrayList<ArrayList<ArrayList<Object>>> temp = JsonSerializer.deserializeJson(jsonMap, ArrayList.class);
 
         try {
             for(int x = 0; x < 13; x++){
                 for(int y = 0; y < 10; y++){
                     if(temp.get(x).get(y).size() == 1) {
-                                int typeIndexStartoff = temp.get(x).get(y).get(0).indexOf("type=") + 5;
-                                int typeIndexCutoff = temp.get(x).get(y).get(0).indexOf(",");
-                                String type = temp.get(x).get(y).get(0).substring(typeIndexStartoff, typeIndexCutoff);
+                                String[] tileValues = temp.get(x).get(y).get(0).toString().split(",");
+                                String type = getValueFromString(tileValues[0]);
                                 switch(type) {
                                     case "Empty", "tbd" ->  setTile(x, y, new NormalTile(x, y));
                                     case "EnergySpace" ->  {
                                         setTile(x, y, new EnergySpaceTile(x, y));
                                         energySpaceList.add(new EnergySpaceTile(x, y));
                                     }
-                                    /*
                                     case "ConveyorBelt" -> {
                                         ArrayList<Direction> directionIn = new ArrayList<>();
-                                        int speed
-                                        int velocity = parseInt(entry.getValue());
-                                        entrySet.iterator().next();
-                                        String[] directionArray = entry.getValue().split(",");
+                                        int velocity = Integer.parseInt(getValueFromString(tileValues[2]));
+                                        String[] directionArray = tileValues[3].split(",");
                                         for(int i = 1; i < directionArray.length; i++) {
                                             directionIn.add(parseDirection(directionArray[i]));
                                         }
@@ -116,36 +114,37 @@ public class Board {
                                     }
                                     case "Wall" -> {
                                         ArrayList<Direction> directionList = new ArrayList<>();
-                                        entrySet.iterator().next();
-                                        entrySet.iterator().next();
-                                        String[] directionArray = entry.getValue().split(",");
+                                        String[] directionArray = tileValues[2].split(",");
                                         for(int i = 1; i < directionArray.length; i++) {
                                             directionList.add(parseDirection(directionArray[i]));
                                         }
                                         setTile(x, y, new WallTile(x, y, directionList));
                                     }
                                     case "Laser" -> {
-                                        entrySet.iterator().next();
-                                        entrySet.iterator().next();
-                                        String directionLaser = entry.getValue();
-                                        setTile(x, y, new LaserTile(x, y, parseDirection(entry.getValue())));
-                                        laserTileList.add(new LaserTile(x, y, parseDirection(entry.getValue())));
+                                        String directionLaser = getValueFromString(tileValues[2]);
+                                        setTile(x, y, new LaserTile(x, y, parseDirection(directionLaser)));
+                                        laserTileList.add(new LaserTile(x, y, parseDirection(directionLaser)));
                                     }
+                                    //TODO: needs to work with directions, once they have been added to json
                                     case "RestartPoint" -> {
-                                        entrySet.iterator().next();
-                                        entrySet.iterator().next();
-                                        setTile(x, y, new RebootTile(x, y, parseDirection(entry.getValue())));
+                                        setTile(x, y, new RebootTile(x, y));
+                                        rebootTileList.add(new RebootTile(x, y));
                                     }
                                     case "CheckPoint" -> {
                                         setTile(x, y, new CheckpointTile(x, y));
                                         increaseCheckPointCount();
                                         checkpointList.add(new CheckpointTile(x, y));
                                     }
-
-                                     */
                                 }
                     } else if(temp.get(x).get(y).size() == 2) {
+                        String[] tileValues1 = temp.get(x).get(y).get(0).toString().split(",");
+                        String[] tileValues2 = temp.get(x).get(y).get(1).toString().split(",");
+                        String type1 = getValueFromString(tileValues1[0]);
+                        String type2 = getValueFromString(tileValues2[0]);
+                        String type = getValueFromString(tileValues1[0]) + getValueFromString(tileValues2[0]);
+                        switch (type) {
 
+                        }
                     }
                 }
             }
@@ -163,6 +162,17 @@ public class Board {
             case "bottom" -> {parsedDirection = Direction.SOUTH;}
         }
         return parsedDirection;
+    }
+
+    private String getValueFromString(String input) {
+        int typeIndexStartOff = input.indexOf("=");
+        int typeIndexCutoff = input.indexOf(",");
+        String value = input.substring(typeIndexStartOff, typeIndexCutoff);
+        value.replaceAll("\\[", "");
+        value.replaceAll("]", "");
+        value.replaceAll("\\{", "");
+        value.replaceAll("}", "");
+        return value;
     }
 
 }

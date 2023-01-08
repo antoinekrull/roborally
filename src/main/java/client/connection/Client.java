@@ -24,6 +24,7 @@ import java.lang.reflect.Array;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *
@@ -171,49 +172,7 @@ public class Client {
 
                             }
                             if(message.getMessageType().equals(MessageType.GameStarted)){
-                                map = JsonSerializer.deserializeJson(message.getMessageBody().getGameMap(), ArrayList.class);
-                                ArrayList<ArrayList<ArrayList<TestTile>>> test;
-                                test = JsonSerializer.deserializeJson(message.getMessageBody().getGameMap(), ArrayList.class);
-                                ObjectMapper mapper = new ObjectMapper();
-                                //List<TestTile> newTry = mapper.readValue(message.getMessageBody().getGameMap(),
-                                //        mapper.getTypeFactory().constructCollectionType(List.class, TestTile.class));
-                                TestTile[] myObjects = mapper.readValue(message.getMessageBody().getGameMap(), TestTile[].class);
-                                //String newerTry = JsonSerializer.deserializeJson(message.getMessageBody().getGameMap(), String.class);
 
-                                System.out.println(myObjects);
-                                /*
-                                System.out.println(map.get(9).get(0));
-                                System.out.println(map.get(1).get(5));
-                                System.out.println(map.get(12).get(9));
-                                System.out.println(map.get(8).get(0));
-                                System.out.println(map.get(7).get(5));
-                                System.out.println(map.get(2).get(8));
-                                System.out.println(map.get(3).get(9));
-                                System.out.println(test.get(9).get(6));
-                                System.out.println(test.get(1).get(3));
-                                System.out.println(map.get(7).get(1).get(0));
-                                System.out.println(map.get(12).get(0).get(0));
-                                System.out.println(map.get(8).get(7).get(0));
-                                System.out.println(map.get(3).get(5));
-                                int typeIndexStartOff = test.get(1).get(2).indexOf("type=") + 5;
-                                System.out.println(1);
-                                int typeIndexCutoff = map.get(1).get(2).indexOf(",");
-                                System.out.println(2);
-                                System.out.println(map.get(1).get(2).get(0));
-                                String type = test.get(1).get(2).get(0).getType();
-                                System.out.println(type); */
-
-
-                                //System.out.println(message1.getMessageBody().getMessage());
-
-                                //Map<String, Object> mapObject = mapper.readValue(send, new TypeReference<Map<String,Object>>(){});
-
-                                //String content = send.lines().collect(Collectors.joining());
-
-                                //System.out.println(send);
-                                //game.createBoard(send);
-
-                                //System.out.println(map);
                                 //GameBoard board = new GameBoard();
                                 //board.createBoard(message.getMessageBody());
                             }
