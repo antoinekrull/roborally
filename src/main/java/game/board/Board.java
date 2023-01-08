@@ -148,8 +148,44 @@ public class Board {
                         String[] tileValues2 = temp.get(x).get(y).get(1).toString().split(",");
                         String type1 = getValueFromString(tileValues1[0]);
                         String type2 = getValueFromString(tileValues2[0]);
-                        String type = getValueFromString(tileValues1[0]) + getValueFromString(tileValues2[0]);
-                        switch (type) {
+                        switch (type1) {
+                            case "Wall" -> {
+                                ArrayList<Direction> directionList = new ArrayList<>();
+                                String[] directionArray = tileValues1[2].split(",");
+                                for(int i = 1; i < directionArray.length; i++) {
+                                    directionList.add(parseDirection(directionArray[i]));
+                                }
+                                setTile(x, y, new WallTile(x, y, directionList));
+                            }
+                            case "ConveyorBelt" -> {
+                                ArrayList<Direction> directionIn = new ArrayList<>();
+                                int velocity = Integer.parseInt(getValueFromString(tileValues1[2]));
+                                String[] directionArray = tileValues1[3].split(",");
+                                for(int i = 1; i < directionArray.length; i++) {
+                                    directionIn.add(parseDirection(directionArray[i]));
+                                }
+                                Direction directionOut = parseDirection(directionArray[0]);
+                                setTile(x, y, new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
+                                switch (velocity){
+                                    case 1: conveyorBelt1List.add(new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
+                                    case 2: conveyorBelt2List.add(new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
+                                }
+                            }
+                            case "Empty" -> {setTile(x, y, new NormalTile(x, y));}
+                        }
+                        switch (type2) {
+                            case "Laser" -> {
+                                String directionLaser = getValueFromString(tileValues2[2]);
+                                setTile(x, y, new LaserTile(x, y, parseDirection(directionLaser)));
+                                laserTileList.add(new LaserTile(x, y, parseDirection(directionLaser)));
+                            }
+                            case "Empty" -> {
+                                setTile(x, y, new NormalTile(x, y));
+                            }
+                            case "EnergySpace" -> {
+                                setTile(x, y, new EnergySpaceTile(x, y));
+                                energySpaceList.add(new EnergySpaceTile(x, y));
+                            }
                         }
                     }
                 }
