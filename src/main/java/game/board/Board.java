@@ -91,7 +91,7 @@ public class Board {
         } catch (IOException e) {
             System.out.println("NANI");
         }*/
-        board = JsonSerializer.deserializeJson(message.getMessageBody().getGameMap(), ArrayList.class);
+        //board = JsonSerializer.deserializeJson(message.getMessageBody().getGameMap(), ArrayList.class);
 
         System.out.println(board.get(9).get(0));
         System.out.println(board.get(9).get(0).get(0));
