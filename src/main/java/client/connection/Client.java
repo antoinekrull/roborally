@@ -175,14 +175,12 @@ public class Client {
                                 ArrayList<ArrayList<ArrayList<TestTile>>> test;
                                 test = JsonSerializer.deserializeJson(message.getMessageBody().getGameMap(), ArrayList.class);
                                 ObjectMapper mapper = new ObjectMapper();
-                                /*ArrayList<TestTile> newTry = mapper.readValue(message.getMessageBody().getGameMap(),
-                                        mapper.getTypeFactory().constructCollectionType(ArrayList.class, String.class));*/
-                                String[] myObjects = mapper.readValue(message.getMessageBody().getGameMap(), String[].class);
+                                //List<TestTile> newTry = mapper.readValue(message.getMessageBody().getGameMap(),
+                                //        mapper.getTypeFactory().constructCollectionType(List.class, TestTile.class));
+                                TestTile[] myObjects = mapper.readValue(message.getMessageBody().getGameMap(), TestTile[].class);
                                 //String newerTry = JsonSerializer.deserializeJson(message.getMessageBody().getGameMap(), String.class);
 
-                                System.out.println(myObjects[1]);
-
-
+                                System.out.println(myObjects);
                                 /*
                                 System.out.println(map.get(9).get(0));
                                 System.out.println(map.get(1).get(5));

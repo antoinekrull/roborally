@@ -1,10 +1,12 @@
 package game.board;
 
 
-
-
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 //Testclass to see if the arraylist is working correctly
+@JsonFormat(shape = JsonFormat.Shape.ANY)
+@JsonPropertyOrder({ "type", "isOnBoard", "orientations", "velocity", "count" })
 public class TestTile {
 
     public String type;
