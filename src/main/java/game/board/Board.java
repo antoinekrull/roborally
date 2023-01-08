@@ -143,7 +143,6 @@ public class Board {
                         String type2 = getValueFromString(tileValues2[0]);
                         String type = getValueFromString(tileValues1[0]) + getValueFromString(tileValues2[0]);
                         switch (type) {
-
                         }
                     }
                 }
