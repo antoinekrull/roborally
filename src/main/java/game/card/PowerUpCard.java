@@ -5,6 +5,7 @@ import game.player.Player;
 public class PowerUpCard extends Card{
 
     public PowerUpCard(){
+        cardType = CardType.PROGRAMMING_CARD;
         setCardName("Power Up");
     }
 

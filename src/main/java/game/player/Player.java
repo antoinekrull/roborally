@@ -3,6 +3,7 @@ package game.player;
 import game.Game;
 import game.card.AgainCard;
 import game.card.Card;
+import game.card.CardType;
 import game.card.ProgrammingDeck;
 
 import java.util.ArrayList;
@@ -24,8 +25,6 @@ public class Player {
     private ArrayList<Card> hand;
     private Card[] cardRegister = new Card[5];
     private boolean[] statusRegister = new boolean[5];
-
-
     private ProgrammingDeck personalDiscardPile;
     private Robot robot;
 
@@ -67,44 +66,10 @@ public class Player {
     public Robot getRobot() {
         return robot;
     }
-    public Card discard(int index) {
-        Card discardedCard = hand.get(index);
-        personalDiscardPile.addCard(discardedCard);
-        hand.remove(index);
-        return discardedCard;
-    }
-    public ProgrammingDeck getPersonalDiscardPile() {
-        return personalDiscardPile;
-    }
-    public void refillDeck(){
-        robot.setDeck(personalDiscardPile);
-        robot.getDeck().shuffleDeck();
-    }
-    public void addCard(Card drawnCard) {
-        hand.add(drawnCard);
-    }
-    public void drawCard() {
-        if(robot.getDeck().getSize() > 0) {
-            hand.add(robot.getDeck().popCardFromDeck());
-        } else {
-            refillDeck();
-            hand.add(robot.getDeck().popCardFromDeck());
-        }
-    }
     public Card getCard(int index) {
         return hand.get(index);
     }
 
-    //TODO: Add GUI functionality / exceptions
-    public void playCard(Card card, int index) {
-        if(index == 0 && card instanceof AgainCard) {
-            System.out.println("You cant play this card in the first register, please try again!");
-        } else if(index > 0 || index < cardRegister.length){
-            System.out.println("The register has not been addressed properly, please try again!");
-        } else {
-            cardRegister[index] = card;
-        }
-    }
     public int getId() {
         return id;
     }
@@ -128,9 +93,62 @@ public class Player {
     public void setStatusRegister(boolean setter, int index) {
         statusRegister[index] = setter;
     }
+    public ProgrammingDeck getPersonalDiscardPile() {
+        return personalDiscardPile;
+    }
     public void setStatusRegister(boolean setAll) {
         for(boolean status: statusRegister ){
             status = setAll;
+        }
+    }
+    public void playPreparation(){
+        for(int i = 0; i <= 9 - getHand().size(); i++){
+            drawCard();
+        }
+    }
+    public void playUpgradePhase(){
+    }
+    public void playProgrammingPhase(){
+        //user decides which cards to play from his hand
+        //code needs input from the UI of each user to know which cards are played
+        //playCard(getHand().get(i), i);
+        //discard the rest of the programming cards
+        for(Card card: getHand()){
+            if(card.getCardType() == CardType.PROGRAMMING_CARD){
+                discard(getHand().indexOf(card));
+            }
+        }
+    }
+    public Card discard(int index) {
+        Card discardedCard = hand.get(index);
+        personalDiscardPile.addCard(discardedCard);
+        hand.remove(index);
+        return discardedCard;
+    }
+    public void refillDeck(){
+        robot.setDeck(personalDiscardPile);
+        robot.getDeck().shuffleDeck();
+    }
+    public void addCard(Card drawnCard) {
+        hand.add(drawnCard);
+    }
+    public void drawCard() {
+        if(robot.getDeck().getSize() > 0) {
+            hand.add(robot.getDeck().popCardFromDeck());
+        } else {
+            refillDeck();
+            hand.add(robot.getDeck().popCardFromDeck());
+        }
+    }
+
+    //TODO: Add GUI functionality / exceptions
+    public void playCard(Card card, int index) {
+        if(index == 0 && card instanceof AgainCard) {
+            System.out.println("You cant play this card in the first register, please try again!");
+        } else if(index > 0 || index < cardRegister.length){
+            System.out.println("The register has not been addressed properly, please try again!");
+        } else {
+            cardRegister[index] = card;
         }
     }
 

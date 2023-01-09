@@ -1,5 +1,7 @@
 package server;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
@@ -233,19 +235,32 @@ public class HandleClient implements Runnable{
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
                         setAlive(true);
                     } else if (incomingMessage.getMessageType() == MessageType.MapSelected) {
-
-                        InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream("/game/board/BoardModels/ExtraCrispy.json"));
+                        InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream("/maps/ExtraCrispy.json"));
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
-                        String content1 = content.lines().collect(Collectors.joining());
-                        String message1 = JsonSerializer.serializeJson(content1);
-                        System.out.println(message1);
+                        String jsonmap = content.lines().collect(Collectors.joining());
+
+                        /*PimmelTile[][][] tile = objectMapper.readValue(test, PimmelTile[][][].class);
+                        System.out.println(tile[0][0][0].getType());
+                        System.out.println(tile[0][1][0].getType());
+                        System.out.println(tile[0][2][0].getType());
+                        System.out.println(tile[1][3][0].getType());*/
 
 
 
-                        /*Path pathtoFile = Paths.get("src/main/java/game/board/BoardModels/ExtraCrispy.json");
-                        System.out.println(pathtoFile.toAbsolutePath());
-                        String map = new String(Files.readAllBytes(pathtoFile));*/
-                        write(messageCreator.generateGameStartedMessage(content1));
+
+                        /*TestTile[][][] tiles = objectMapper.readValue(new File("E:\\Programme\\knorrige-korrelate-hp\\src\\main\\resources\\maps\\ExtraCrispy.json"), new TypeReference<TestTile[][][]>() {
+                        });
+                        System.out.println(tiles[0][0][0].getType());*/
+                        //ArrayList<ArrayList<ArrayList<TestTile>>> map = objectMapper.readValue(test, new TypeReference<ArrayList<ArrayList<ArrayList<TestTile>>>>() {});
+                        //System.out.println(map.get(0).get(0).get(0).getType());
+
+
+
+
+
+                        //ArrayList<ArrayList<ArrayList<TestTile>>>
+
+                        write(messageCreator.generateGameStartedMessage(jsonmap));
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
                         write(messageCreator.generatePlayerAddedMessage(incomingMessage.getMessageBody().getName(), incomingMessage.getMessageBody().getFigure(), this.clientID));
                     } else if(incomingMessage.getMessageType() == MessageType.SetStatus) {
