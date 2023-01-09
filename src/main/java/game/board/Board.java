@@ -3,6 +3,7 @@ package game.board;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.geometry.Point2D;
 import org.javatuples.Pair;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class Board {
     private int checkPointCount;
 
 
-    protected static ArrayList<Tile>[][] board = new ArrayList[13][10];
+    protected static ArrayList<ArrayList<ArrayList<Tile>>> board = new ArrayList<ArrayList<ArrayList<Tile>>>();
 
     //Lists of used tiles on the board, would be iterated on during the activation phase
     public static ArrayList<ConveyorBeltTile> conveyorBelt2List = new ArrayList<>();
@@ -35,11 +36,8 @@ public class Board {
     public static ArrayList<StartTile> startTileList = new ArrayList<>();
     public static ArrayList<Antenna> antennaTileList = new ArrayList<>();
 
-    public void setTile(int column, int row, Tile tile){
-        board[column][row].add(tile);
-    }
     public static ArrayList<Tile> getTile(Pair<Integer, Integer> position){
-            return board[position.getValue0()][position.getValue1()];
+            return board.get(position.getValue0()).get(position.getValue1());
     }
 
     public boolean tileIsBlocking(ArrayList<Tile> tileList) {
@@ -63,43 +61,35 @@ public class Board {
     public void setCheckPointCount(int checkPointCount) {
         this.checkPointCount = checkPointCount;
     }
-    public ArrayList<Tile>[][] getBoard() {
+    public ArrayList<ArrayList<ArrayList<Tile>>> getBoard() {
         return board;
     }
 
     //for testing purposes
     public void testBoard() {
-        for(int x = 0; x < board.length; x++){
-            for(int y = 0; y < 2; y++) {
-                System.out.println(board[x][y].get(0));
+        int count = 0;
+        for(int x = 0; x < board.size(); x++){
+            for(int y = 0; y < board.get(x).size(); y++) {
+                System.out.println(board.get(x).get(y).get(0).getClass() +" on Coordinates: (" + x+" ,"+y+")");
             }
         }
     }
 
     public void createBoard(String jsonMap) throws JsonProcessingException {
-        //initializes board
-        for(int x = 0; x < 13; x++) {
-            for(int y = 0; y < 10; y++) {
-                board[x][y] = new ArrayList<>();
-            }
-        }
-
-
         ObjectMapper objectMapper = new ObjectMapper();
-        ArrayList<ArrayList<ArrayList<TileElement>>> temp = objectMapper.readValue(jsonMap, new TypeReference<ArrayList<ArrayList<ArrayList<TileElement>>>>() {
+        board = objectMapper.readValue(jsonMap, new TypeReference<ArrayList<ArrayList<ArrayList<Tile>>>>() {
         });
-        System.out.println(temp.get(0).get(0).get(0).getType());
 
             try {
             for(int x = 0; x < 13; x++){
                 for(int y = 0; y < 10; y++){
-                    if(temp.get(x).get(y).size() == 1) {
-                                TileElement tile = temp.get(x).get(y).get(0);
+                    if(board.get(x).get(y).size() == 1) {
+                                Tile tile = board.get(x).get(y).get(0);
                                 String type = tile.getType();
                                 switch(type) {
-                                    case "Empty", "tbd" ->  setTile(x, y, new NormalTile(x, y));
+                                    case "Empty", "tbd" ->  replaceTileInMap(board,x,y,tile, new NormalTile(x,y));
                                     case "EnergySpace" ->  {
-                                        setTile(x, y, new EnergySpaceTile(x, y));
+                                        replaceTileInMap(board,x,y,tile, new EnergySpaceTile(x,y));
                                         energySpaceList.add(new EnergySpaceTile(x, y));
                                     }
                                     case "ConveyorBelt" -> {
@@ -111,54 +101,55 @@ public class Board {
                                         }
                                         orientations.remove(orientations.size() - 1);
                                         Direction directionOut = parseDirection(orientations.get(orientations.size() - 1));
-                                        setTile(x, y, new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
+                                        replaceTileInMap(board,x,y,tile, new ConveyorBeltTile(x,y, velocity, directionIn, directionOut));
 
                                         switch (velocity){
                                             case 1: conveyorBelt1List.add(new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
                                             case 2: conveyorBelt2List.add(new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
                                         }
                                     }
+                                    //TODO: Wall und Laser sollte normalerweise nicht einzeln vorkommen können
                                     case "Wall" -> {
                                         ArrayList<Direction> directionList = new ArrayList<>();
                                         ArrayList<String> orientations = tile.getOrientations();
                                         for(int i = 1; i < directionList.size(); i++) {
                                             directionList.add(parseDirection(orientations.get(i)));
                                         }
-                                        setTile(x, y, new WallTile(x, y, directionList));
+                                        replaceTileInMap(board,x,y,tile, new WallTile(x,y,directionList));
                                     }
                                     case "Laser" -> {
                                         String directionLaser = tile.getOrientations().get(0);
-                                        setTile(x, y, new LaserTile(x, y, parseDirection(directionLaser)));
+                                        replaceTileInMap(board,x,y,tile, new LaserTile(x,y, parseDirection(directionLaser)));
                                         laserTileList.add(new LaserTile(x, y, parseDirection(directionLaser)));
                                     }
                                     //TODO: needs to work with directions, once they have been added to json
                                     case "RestartPoint" -> {
-                                        setTile(x, y, new RebootTile(x, y));
+                                        replaceTileInMap(board,x,y,tile, new RebootTile(x,y));
                                         rebootTileList.add(new RebootTile(x, y));
                                     }
                                     case "CheckPoint" -> {
-                                        setTile(x, y, new CheckpointTile(x, y));
+                                        replaceTileInMap(board,x,y,tile, new CheckpointTile(x,y));
                                         increaseCheckPointCount();
                                         checkpointList.add(new CheckpointTile(x, y));
                                     }
                                     case "StartPoint" -> {
-                                        setTile(x, y, new StartTile(x, y));
+                                        replaceTileInMap(board,x,y,tile, new StartTile(x,y));
                                     }
                                     case "Antenna" -> {
-                                        setTile(x, y, new Antenna(x, y));
+                                        replaceTileInMap(board,x,y,tile, new Antenna(x,y));
                                         antennaTileList.add(new Antenna(x, y));
                                     }
                                     //TODO: PushPanels need registers
                                     case "PushPanel" -> {
                                         String directionPushPanel = tile.getOrientations().get(0);
-                                        //setTile(x, y, new PushPanelTile(x, y, parseDirection(directionPushPanel)));
+                                        //replaceTileInMap(map,x,y,tile, new NormalTile(x,y, parseDirection(directionPushPanel));
                                         //pushPanelList.add(new PushPanelTile(x, y, parseDirection(directionPushPanel)));
                                     }
                                 }
-                    } else if(temp.get(x).get(y).size() == 2) {
-                        TileElement tile1 = temp.get(x).get(y).get(0);
+                    } else if(board.get(x).get(y).size() == 2) {
+                        Tile tile1 = board.get(x).get(y).get(0);
                         String type1 = tile1.getType();
-                        TileElement tile2 = temp.get(x).get(y).get(1);
+                        Tile tile2 = board.get(x).get(y).get(1);
                         String type2 = tile2.getType();
 
                         switch (type1) {
@@ -168,7 +159,7 @@ public class Board {
                                 for(int i = 1; i < directionList.size(); i++) {
                                     directionList.add(parseDirection(orientations.get(i)));
                                 }
-                                setTile(x, y, new WallTile(x, y, directionList));
+                                replaceTileInMap(board,x,y,tile1, new WallTile(x,y,directionList));
                             }
                             case "ConveyorBelt" -> {
                                 ArrayList<Direction> directionIn = new ArrayList<>();
@@ -179,26 +170,26 @@ public class Board {
                                 }
                                 orientations.remove(orientations.size() - 1);
                                 Direction directionOut = parseDirection(orientations.get(orientations.size() - 1));
-                                setTile(x, y, new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
+                                replaceTileInMap(board,x,y,tile1, new ConveyorBeltTile(x,y,velocity,directionIn,directionOut));
 
                                 switch (velocity){
                                     case 1: conveyorBelt1List.add(new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
                                     case 2: conveyorBelt2List.add(new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
                                 }
                             }
-                            case "Empty" -> {setTile(x, y, new NormalTile(x, y));}
+                            case "Empty" -> {replaceTileInMap(board,x,y,tile1, new NormalTile(x,y));}
                         }
                         switch (type2) {
                             case "Laser" -> {
                                 String directionLaser = tile2.getOrientations().get(0);
-                                setTile(x, y, new LaserTile(x, y, parseDirection(directionLaser)));
+                                replaceTileInMap(board,x,y,tile2, new LaserTile(x,y, parseDirection(directionLaser)));
                                 laserTileList.add(new LaserTile(x, y, parseDirection(directionLaser)));
                             }
                             case "Empty" -> {
-                                setTile(x, y, new NormalTile(x, y));
+                                replaceTileInMap(board,x,y,tile2, new NormalTile(x,y));
                             }
                             case "EnergySpace" -> {
-                                setTile(x, y, new EnergySpaceTile(x, y));
+                                replaceTileInMap(board,x,y,tile2, new EnergySpaceTile(x,y));
                                 energySpaceList.add(new EnergySpaceTile(x, y));
                             }
                         }
@@ -230,6 +221,15 @@ public class Board {
         value.replaceAll("\\{", "");
         value.replaceAll("}", "");
         return value;
+    }
+    private void replaceTileInMap (ArrayList<ArrayList<ArrayList<Tile>>> map, int x, int y, Tile tile, Object object) {
+        if (object instanceof Tile) {
+            int index = map.get(x).get(y).indexOf(tile);
+            map.get(x).get(y).remove(tile);
+            map.get(x).get(y).add(index, (Tile) object);
+        } else {
+            System.out.println("something went wrong with replacing the TileElement");
+        }
     }
 
 }

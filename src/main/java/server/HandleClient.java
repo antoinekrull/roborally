@@ -238,28 +238,6 @@ public class HandleClient implements Runnable{
                         InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream("/maps/ExtraCrispy.json"));
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
                         String jsonmap = content.lines().collect(Collectors.joining());
-
-                        /*PimmelTile[][][] tile = objectMapper.readValue(test, PimmelTile[][][].class);
-                        System.out.println(tile[0][0][0].getType());
-                        System.out.println(tile[0][1][0].getType());
-                        System.out.println(tile[0][2][0].getType());
-                        System.out.println(tile[1][3][0].getType());*/
-
-
-
-
-                        /*TestTile[][][] tiles = objectMapper.readValue(new File("E:\\Programme\\knorrige-korrelate-hp\\src\\main\\resources\\maps\\ExtraCrispy.json"), new TypeReference<TestTile[][][]>() {
-                        });
-                        System.out.println(tiles[0][0][0].getType());*/
-                        //ArrayList<ArrayList<ArrayList<TestTile>>> map = objectMapper.readValue(test, new TypeReference<ArrayList<ArrayList<ArrayList<TestTile>>>>() {});
-                        //System.out.println(map.get(0).get(0).get(0).getType());
-
-
-
-
-
-                        //ArrayList<ArrayList<ArrayList<TestTile>>>
-
                         write(messageCreator.generateGameStartedMessage(jsonmap));
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
                         write(messageCreator.generatePlayerAddedMessage(incomingMessage.getMessageBody().getName(), incomingMessage.getMessageBody().getFigure(), this.clientID));
