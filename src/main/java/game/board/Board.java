@@ -31,7 +31,9 @@ public class Board {
     public static ArrayList<CheckpointTile> checkpointList = new ArrayList<>();
     public static ArrayList<EnergySpaceTile> energySpaceList = new ArrayList<>();
     public static ArrayList<Tile> robotLaserList = new ArrayList<>();
-    ArrayList<RebootTile> rebootTileList = new ArrayList<>();
+    public static ArrayList<RebootTile> rebootTileList = new ArrayList<>();
+    public static ArrayList<StartTile> startTileList = new ArrayList<>();
+    public static ArrayList<Antenna> antennaTileList = new ArrayList<>();
 
     public void setTile(int column, int row, Tile tile){
         board[column][row].add(tile);
@@ -118,7 +120,7 @@ public class Board {
                                     }
                                     case "Wall" -> {
                                         ArrayList<Direction> directionList = new ArrayList<>();
-                                        ArrayList<String> orientations = tile.orientations;
+                                        ArrayList<String> orientations = tile.getOrientations();
                                         for(int i = 1; i < directionList.size(); i++) {
                                             directionList.add(parseDirection(orientations.get(i)));
                                         }
@@ -139,6 +141,19 @@ public class Board {
                                         increaseCheckPointCount();
                                         checkpointList.add(new CheckpointTile(x, y));
                                     }
+                                    case "StartPoint" -> {
+                                        setTile(x, y, new StartTile(x, y));
+                                    }
+                                    case "Antenna" -> {
+                                        setTile(x, y, new Antenna(x, y));
+                                        antennaTileList.add(new Antenna(x, y));
+                                    }
+                                    //TODO: PushPanels need registers
+                                    case "PushPanel" -> {
+                                        String directionPushPanel = tile.getOrientations().get(0);
+                                        //setTile(x, y, new PushPanelTile(x, y, parseDirection(directionPushPanel)));
+                                        //pushPanelList.add(new PushPanelTile(x, y, parseDirection(directionPushPanel)));
+                                    }
                                 }
                     } else if(temp.get(x).get(y).size() == 2) {
                         TileElement tile1 = temp.get(x).get(y).get(0);
@@ -149,7 +164,7 @@ public class Board {
                         switch (type1) {
                             case "Wall" -> {
                                 ArrayList<Direction> directionList = new ArrayList<>();
-                                ArrayList<String> orientations = tile1.orientations;
+                                ArrayList<String> orientations = tile1.getOrientations();
                                 for(int i = 1; i < directionList.size(); i++) {
                                     directionList.add(parseDirection(orientations.get(i)));
                                 }
