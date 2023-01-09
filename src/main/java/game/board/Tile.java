@@ -6,11 +6,66 @@ import javafx.scene.layout.GridPane;
 import org.javatuples.Pair;
 import game.player.Player;
 
+import java.util.ArrayList;
+
 /**
  * @author Antoine, Firas
  * @version 1.0
  */
-public abstract class Tile {
+public class Tile {
+
+    private ArrayList<String> orientations;
+
+    private String type;
+    private String isOnBoard;
+    private int speed;
+    private int count;
+    private ArrayList<Integer> registers;
+
+    public void setOrientations(ArrayList<String> orientations) {
+        this.orientations = orientations;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setIsOnBoard(String isOnBoard) {
+        this.isOnBoard = isOnBoard;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public String getType() {
+        return type;
+    }
+    public String getIsOnBoard() {
+        return isOnBoard;
+    }
+    public ArrayList<String> getOrientations() {
+        return orientations;
+    }
+    public int getSpeed() {
+        return speed;
+    }
+    public int getCount() {
+        return count;
+    }
+    public ArrayList<Integer> getRegisters() {
+        return registers;
+    }
+    public void setRegisters(ArrayList<Integer> registers) {
+        this.registers = registers;
+    }
+
+
+
     String path;
     protected int x;
     protected int y;
@@ -19,6 +74,9 @@ public abstract class Tile {
     protected boolean isDanger;
     protected boolean isBlocking;
     private Pair<Integer, Integer> position;
+
+
+    public Tile(){}
 
     public Tile(int xCoordinate, int yCoordinate, String path) {
         position = new Pair<>(xCoordinate, yCoordinate);
