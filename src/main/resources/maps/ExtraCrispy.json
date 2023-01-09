@@ -459,6 +459,10 @@
       ],
       [
         {
+          "type": "Empty",
+          "isOnBoard": "4A"
+        },
+        {
           "type": "Laser",
           "isOnBoard": "4A",
           "orientations": [
@@ -468,6 +472,10 @@
         }
       ],
       [
+        {
+          "type": "Empty",
+          "isOnBoard": "4A"
+        },
         {
           "type": "Laser",
           "isOnBoard": "4A",
@@ -510,6 +518,10 @@
         }
       ],
       [
+        {
+          "type": "Empty",
+          "isOnBoard": "4A"
+        },
         {
           "type": "Laser",
           "isOnBoard": "4A",
@@ -879,6 +891,10 @@
     [
       [
         {
+          "type": "Empty",
+          "isOnBoard": "4A"
+        },
+        {
           "type": "Laser",
           "isOnBoard": "4A",
           "orientations": [
@@ -921,6 +937,10 @@
       ],
       [
         {
+          "type": "Empty",
+          "isOnBoard": "4A"
+        },
+        {
           "type": "Laser",
           "isOnBoard": "4A",
           "orientations": [
@@ -930,6 +950,10 @@
         }
       ],
       [
+        {
+          "type": "Empty",
+          "isOnBoard": "4A"
+        },
         {
           "type": "Laser",
           "isOnBoard": "4A",

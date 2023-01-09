@@ -14,11 +14,13 @@ public abstract class Card {
 
     private String cardName;
     private boolean isActivated = false;
-
-
-
     protected boolean isDamageCard = false;
     private String cardEffect;
+    protected CardType cardType;
+
+    public CardType getCardType() {
+        return cardType;
+    }
     public String getCardName() {
         return cardName;
     }

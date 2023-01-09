@@ -6,7 +6,10 @@ import static game.Game.currentRegister;
 
 public class SpamCard extends Card {
     //play the top card of your programming deck this register
-    public SpamCard(){setCardName("Spam");}
+    public SpamCard(){
+        cardType = CardType.DAMAGE_CARD;
+        setCardName("Spam");
+    }
 
     @Override
     public void applyEffect(Player player) throws Exception {

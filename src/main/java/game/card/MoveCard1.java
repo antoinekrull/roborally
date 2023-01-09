@@ -8,6 +8,7 @@ public class MoveCard1 extends Card {
     int velocity = 1;
 
     public MoveCard1(){
+        cardType = CardType.PROGRAMMING_CARD;
         setCardName("Move 1");
     }
 
