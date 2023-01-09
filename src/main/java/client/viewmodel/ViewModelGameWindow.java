@@ -88,14 +88,14 @@ public class ViewModelGameWindow {
             }
         });
         setOnDragDetected(programCard1, "programCard1");
-        setOnDragDetected(programCard2, "programCard1");
-        setOnDragDetected(programCard3, "programCard1");
-        setOnDragDetected(programCard4, "programCard1");
-        setOnDragDetected(programCard5, "programCard1");
-        setOnDragDetected(programCard6, "Image 6");
-        setOnDragDetected(programCard7, "Image 7");
-        setOnDragDetected(programCard8, "Image 8");
-        setOnDragDetected(programCard9, "Image 9");
+        setOnDragDetected(programCard2, "programCard2");
+        setOnDragDetected(programCard3, "programCard3");
+        setOnDragDetected(programCard4, "programCard4");
+        setOnDragDetected(programCard5, "programCard5");
+        setOnDragDetected(programCard6, "programCard6");
+        setOnDragDetected(programCard7, "programCard7");
+        setOnDragDetected(programCard8, "programCard8");
+        setOnDragDetected(programCard9, "programCard9");
     }
 
     public void receivedMessage() {
@@ -203,63 +203,68 @@ public class ViewModelGameWindow {
     }
 
     private void setOnDragDetected(ImageView imageView, String data) {
-        imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
+        EventHandler<MouseEvent> dragDetectedHandler = new EventHandler<MouseEvent>() {
+            @Override
             public void handle(MouseEvent event) {
-                /* drag was detected, start a drag-and-drop gesture*/
-                /* allow any transfer mode */
                 Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
-
-                /* Put a string on a dragboard */
                 ClipboardContent content = new ClipboardContent();
                 content.putString(data);
                 db.setContent(content);
-
                 event.consume();
             }
-        });
+        };
+        EventHandler<DragEvent> dragOverHandler = new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                if (event.getGestureSource() != programmingGrid &&
+                    event.getDragboard().hasString()) {
+                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                }
+                event.consume();
+            }
+        };
+        EventHandler<DragEvent> dragDroppedHandler = new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if (db.hasString()) {
+                    String data = db.getString();
+                    ImageView imageView = null;
+                    switch (data) {
+                        case "Image 1":
+                            imageView = new ImageView(new Image("programCard1"));
+                            break;
+                        case "Image 2":
+                            imageView = new ImageView(new Image("programCard2"));
+                            break;
+                        //TODO: Add cases for the other 7 image views here
+                    }
+                    if (imageView != null) {
+                        programmingGrid.add(imageView, 0, 0);
+                        success = true;
+                    }
+                }
+                event.setDropCompleted(success);
+                event.consume();
+            }
+        };
 
-
-// Set event handler for drag over on grid pane
-        programmingGrid.setOnDragOver(new EventHandler<DragEvent>() {
-public void handle(DragEvent event) {
-    /* data is dragged over the target */
-    /* accept it only if it is not dragged from the same node
-     * and if it has a string data */
-    if (event.getGestureSource() != programmingGrid &&
-    event.getDragboard().hasString()) {
-    /* allow for both copying and moving, whatever user chooses */
-    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+        imageView.setOnDragDetected(dragDetectedHandler);
+        programmingGrid.setOnDragOver(dragOverHandler);
+        programmingGrid.setOnDragDropped(dragDroppedHandler);
     }
+/*
+This code sets up three event handlers for a JavaFX ImageView and a GridPane called programmingGrid.
 
-    event.consume();
-    }
-    });
+The first event handler is for the "drag detected" event on the ImageView. This event is triggered when the user begins a drag-and-drop gesture by pressing the mouse button on the ImageView. When this event occurs, the event handler creates a Dragboard and puts a string of data on it. The string of data is passed to the event handler as the data parameter. The Dragboard is then associated with the drag-and-drop gesture by calling startDragAndDrop() on the ImageView.
 
-// Set event handler for drag dropped on grid pane
-        programmingGrid.setOnDragDropped(new EventHandler<DragEvent>() {
-    public void handle(DragEvent event) {
-    /* data dropped */
-    /* if there is a string data on dragboard, read it and use it */
-    Dragboard db = event.getDragboard();
-    boolean success = false;
-    if (db.hasString()) {
-    String data = db.getString();
-    if (data.equals("Image 1")) {
-    ImageView imageView = new ImageView(new Image("image1.png"));
-        programmingGrid.add(imageView, 0, 0);
-    } else if (data.equals("Image 2")) {
-    ImageView imageView = new ImageView(new Image("image2.png"));
-        programmingGrid.add(imageView, 0, 0);
-    }
-    success = true;
-    }
-    /* let the source know whether the string was successfully
-     * transferred and used */
-    event.setDropCompleted(success);
+The second event handler is for the "drag over" event on the GridPane. This event is triggered when the user drags the data over the GridPane. The event handler checks that the drag-and-drop gesture is not originating from the GridPane itself and that the Dragboard has a string of data on it. If these conditions are met, the event handler calls acceptTransferModes() on the DragEvent to allow for both copying and moving of the data.
 
-    event.consume();
-    }
-    });
+The third event handler is for the "drag dropped" event on the GridPane. This event is triggered when the user drops the data onto the GridPane. The event handler checks that the Dragboard has a string of data on it. If this is the case, the event handler creates a new ImageView with the corresponding image based on the string data, and adds it to the GridPane. The event handler then sets the "drop completed" flag on the DragEvent to indicate whether the data was successfully transferred and used.
 
 
+
+
+ */
 }
