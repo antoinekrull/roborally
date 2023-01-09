@@ -1,14 +1,12 @@
 package game;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import game.board.Board;
-import game.board.CheckpointTile;
-import game.board.PushPanelTile;
-import game.board.Tile;
+import game.board.*;
 import game.card.*;
 import game.player.Player;
 import org.javatuples.Pair;
 import server.PlayerList;
+
 import java.util.LinkedList;
 
 
@@ -67,7 +65,7 @@ public class Game implements Runnable {
                 }
             }
         }
-        applyPushPanelEffects();
+        //applyPushPanelEffects();
         for(int x = 0; x < Board.gearTileList.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.gearTileList.get(x).getPosition())) {
@@ -109,6 +107,7 @@ public class Game implements Runnable {
         }
     }
 
+    /*
     private void applyPushPanelEffects() throws Exception {
         for (int i = 0; i < playerList.size(); i++) {
             if((pushPanelInTile(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition())).getValue0())){
@@ -120,6 +119,7 @@ public class Game implements Runnable {
             }
         }
     }
+     */
 
     private Pair<Boolean, Integer> pushPanelInTile(ArrayList<Tile> tileList) {
         boolean result = false;
@@ -209,8 +209,8 @@ public class Game implements Runnable {
     }
     //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     public void createBoard(String map) throws JsonProcessingException {
-        board.createBoard(map);
-        board.testBoard();
+        //board.createBoard(map);
+        //board.testBoard();
     }
 
     @Override

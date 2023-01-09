@@ -10,12 +10,12 @@ public class RebootTile extends Tile {
     private static int rebootTileIndex = 0;
     public Direction direction;
 
-    public RebootTile(int xCoordinate, int yCoordinate, Direction direction){
+    //TODO: Direction needs to be added to constructor
+    public RebootTile(int xCoordinate, int yCoordinate){
         super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
         this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
         isDanger = false;
         isBlocking = false;
-        this.direction = direction;
         setRebootTileIndex(rebootTileIndex++);
     }
 
@@ -24,6 +24,10 @@ public class RebootTile extends Tile {
     }
     public static int getRebootTileIndex() {
         return rebootTileIndex;
+    }
+
+    public void setDirection(Direction newDirection) {
+        direction = newDirection;
     }
 
     @Override

@@ -1,10 +1,12 @@
-
-  [
+[
     [
       [
         {
-          "type": "Empty",
-          "isOnBoard": "A"
+          "type": "RestartPoint",
+          "isOnBoard": "A",
+          "orientations": [
+            "right"
+          ]
         }
       ],
       [
@@ -76,7 +78,7 @@
         }
       ],
       [
-        [
+
           {
             "type": "Wall",
             "isOnBoard": "A",
@@ -88,7 +90,7 @@
             "type": "Empty",
             "isOnBoard": "A"
           }
-        ]
+
       ],
       [
         {
@@ -115,19 +117,17 @@
         }
       ],
       [
-        [
-          {
-            "type": "Wall",
-            "isOnBoard": "A",
-            "orientations": [
-              "bottom"
-            ]
-          },
-          {
-            "type": "Empty",
-            "isOnBoard": "A"
-          }
-        ]
+        {
+          "type": "Wall",
+          "isOnBoard": "A",
+          "orientations": [
+            "bottom"
+          ]
+        },
+        {
+          "type": "Empty",
+          "isOnBoard": "A"
+        }
       ],
       [
         {
@@ -173,7 +173,7 @@
         }
       ],
       [
-        [
+
           {
             "type": "Wall",
             "isOnBoard": "A",
@@ -185,10 +185,10 @@
             "type": "Empty",
             "isOnBoard": "A"
           }
-        ]
+
       ],
       [
-        [
+
           {
             "type": "Wall",
             "isOnBoard": "A",
@@ -200,7 +200,7 @@
             "type": "Empty",
             "isOnBoard": "A"
           }
-        ]
+
       ],
       [
         {
@@ -578,6 +578,10 @@
           "orientations": [
             "left"
           ]
+        },
+        {
+          "type": "Empty",
+          "isOnBoard": "4A"
         }
       ],
       [
@@ -839,6 +843,10 @@
           "orientations": [
             "right"
           ]
+        },
+        {
+          "type": "Empty",
+          "isOnBoard": "4A"
         }
       ],
       [
