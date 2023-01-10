@@ -79,7 +79,9 @@ public class Tile {
     public Tile(){}
 
     public Tile(int xCoordinate, int yCoordinate, String path) {
-        position = new Pair<>(xCoordinate, yCoordinate);
+        this.x = xCoordinate;
+        this.y = yCoordinate;
+        //position = new Pair<>(xCoordinate, yCoordinate);
     }
 
     public boolean isDanger() {
@@ -112,6 +114,6 @@ public class Tile {
         ImageView img = new ImageView();
         Image im = new Image(path,(double) width,(double) height,false,false);
         img.setImage(im);
-        tiles.add(img,x,y);
+        tiles.add(img,this.x,this.y);
     }
 }

@@ -65,7 +65,6 @@ public class ViewModelGameWindow {
     private ModelChat modelChat;
     private ModelGame modelGame;
     private ModelUser modelUser;
-    private Board gameBoard;
 
     private NotifyChangeSupport notifyChangeSupport;
 
@@ -78,6 +77,7 @@ public class ViewModelGameWindow {
     }
 
     public void initialize() {
+        //TODO: Tiles resizeable
         ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
         placeTiles(map);
 
@@ -206,7 +206,8 @@ public class ViewModelGameWindow {
         for (int x = 0; x < map.size(); x++){
             for (int y = 0; y < map.get(x).size(); y++) {
                 for (int i = 0; i < map.get(x).get(y).size(); i++){
-                    map.get(x).get(y).get(i).makeImage(gameGrid);
+                    System.out.println("x:"+x+" y: "+y);
+                    map.get(x).get(y).get(i).makeImage(gameboard);
                 }
             }
         }

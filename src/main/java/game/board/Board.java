@@ -146,6 +146,12 @@ public class Board {
                                         //replaceTileInMap(map,x,y,tile, new NormalTile(x,y, parseDirection(directionPushPanel));
                                         //pushPanelList.add(new PushPanelTile(x, y, parseDirection(directionPushPanel)));
                                     }
+                                    case "Pit" -> {
+                                        replaceTileInMap(board,x,y,tile, new PitTile(x,y));
+                                    }
+                                    case "Gear" -> {
+                                        replaceTileInMap(board,x,y,tile, new GearTile(x,y));
+                                    }
                                 }
                     } else if(board.get(x).get(y).size() == 2) {
                         Tile tile1 = board.get(x).get(y).get(0);
