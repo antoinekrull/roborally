@@ -5,7 +5,6 @@ import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
 import communication.Message;
-import game.board.Board;
 import game.board.Tile;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,8 +26,10 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -43,6 +44,8 @@ import javafx.scene.text.TextFlow;
 
 public class ViewModelGameWindow {
 
+    public ColumnConstraints gameboardTileColumn;
+    public Pane programspacePane;
     @FXML
     private Button chatButton;
     @FXML
@@ -59,6 +62,7 @@ public class ViewModelGameWindow {
     private ImageView programCard1, programCard2, programCard3, programCard4, programCard5, programCard6, programCard7, programCard8, programCard9;
     @FXML
     private GridPane programmingGrid;
+
 
     //buttons for cards
 
@@ -249,7 +253,7 @@ public class ViewModelGameWindow {
                         case "programCard2":
                             imageView = new ImageView(new Image("programCard2"));
                             break;
-                        //TODO: Add cases for the other 7 image views here
+                            //TODO: Add cases for the other 7 image views here
                     }
                     if (imageView != null) {
                         programmingGrid.add(imageView, 0, 0);
@@ -265,17 +269,7 @@ public class ViewModelGameWindow {
         programmingGrid.setOnDragOver(dragOverHandler);
         programmingGrid.setOnDragDropped(dragDroppedHandler);
     }
-/*
-This code sets up three event handlers for a JavaFX ImageView and a GridPane called programmingGrid.
-
-The first event handler is for the "drag detected" event on the ImageView. This event is triggered when the user begins a drag-and-drop gesture by pressing the mouse button on the ImageView. When this event occurs, the event handler creates a Dragboard and puts a string of data on it. The string of data is passed to the event handler as the data parameter. The Dragboard is then associated with the drag-and-drop gesture by calling startDragAndDrop() on the ImageView.
-
-The second event handler is for the "drag over" event on the GridPane. This event is triggered when the user drags the data over the GridPane. The event handler checks that the drag-and-drop gesture is not originating from the GridPane itself and that the Dragboard has a string of data on it. If these conditions are met, the event handler calls acceptTransferModes() on the DragEvent to allow for both copying and moving of the data.
-
-The third event handler is for the "drag dropped" event on the GridPane. This event is triggered when the user drops the data onto the GridPane. The event handler checks that the Dragboard has a string of data on it. If this is the case, the event handler creates a new ImageView with the corresponding image based on the string data, and adds it to the GridPane. The event handler then sets the "drop completed" flag on the DragEvent to indicate whether the data was successfully transferred and used.
 
 
 
-
- */
 }

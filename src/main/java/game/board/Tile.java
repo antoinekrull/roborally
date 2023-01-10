@@ -1,12 +1,11 @@
 package game.board;
 
+import game.player.Player;
+import java.util.ArrayList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import org.javatuples.Pair;
-import game.player.Player;
-
-import java.util.ArrayList;
 
 /**
  * @author Antoine, Firas
@@ -64,8 +63,6 @@ public class Tile {
         this.registers = registers;
     }
 
-
-
     String path;
     protected int x;
     protected int y;
@@ -112,8 +109,9 @@ public class Tile {
 
     public void makeImage(GridPane tiles){
         ImageView img = new ImageView();
-        Image im = new Image(path,(double) width,(double) height,false,false);
+        Image im = new Image(path,(double) height, 70,true,false);
         img.setImage(im);
         tiles.add(img,this.x,this.y);
+
     }
 }
