@@ -3,9 +3,12 @@ package client.model;
 import client.connection.Client;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.Board;
+import game.board.Tile;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+
+import java.util.ArrayList;
 
 /**
  * Model for game
@@ -23,6 +26,7 @@ public class ModelGame {
     private ObservableList<String> users;
     private ObservableList<String> usersToSelect;
     private BooleanProperty readyToPlay;
+    private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
 
 
 
@@ -60,6 +64,7 @@ public class ModelGame {
     }
     public void createMap(String jsonMap) throws JsonProcessingException {
         gameBoard.createBoard(jsonMap);
+        this.gameMap = gameBoard.getBoard();
     }
 
     public BooleanProperty readyToPlayProperty() {
@@ -76,6 +81,10 @@ public class ModelGame {
 
     public ObservableList<String> getUsersToSelect() {
         return usersToSelect;
+    }
+    public ArrayList<ArrayList<ArrayList<Tile>>> getGameMap() {
+        this.gameMap = gameBoard.getBoard();
+        return gameMap;
     }
 
     /*public void sendRobotSelection(int clientID) throws IOException {

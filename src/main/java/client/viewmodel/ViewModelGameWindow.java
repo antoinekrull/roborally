@@ -68,8 +68,9 @@ public class ViewModelGameWindow {
     }
 
     public void initialize() {
-        ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.gameBoard.getBoard();
-        //placeTiles(map,13,10);
+        ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
+        placeTiles(map);
+
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
         chatVBox.heightProperty().addListener(new ChangeListener<Number>() {@Override
@@ -181,6 +182,15 @@ public class ViewModelGameWindow {
         //send disconnect notification to server
         Platform.exit();
         System.exit(0);
+    }
+    private void placeTiles(ArrayList<ArrayList<ArrayList<Tile>>> map) {
+        for (int x = 0; x < map.size(); x++){
+            for (int y = 0; y < map.get(x).size(); y++) {
+                for (int i = 0; i < map.get(x).get(y).size(); i++){
+                    map.get(x).get(y).get(i).makeImage(gameGrid);
+                }
+            }
+        }
     }
 
 }

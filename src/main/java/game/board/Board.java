@@ -1,5 +1,6 @@
 package game.board;
 
+import client.model.ModelGame;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 
 import static java.lang.Integer.parseInt;
 
-/**
+/**0
  * @author Antoine, Moritz, Firas
  * @version 1.0
  */
