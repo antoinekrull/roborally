@@ -239,7 +239,7 @@ public class ViewModelLobby {
     }
 
     public void readyButtonOnAction() throws IOException {
-        if (this.ready.get()==false) {
+        if (!this.ready.get()) {
             readyButton.setText("NOT READY");
             this.ready.set(true);
             modelGame.setPlayerStatus(modelUser.userIDProperty().get());
@@ -266,7 +266,7 @@ public class ViewModelLobby {
              */
             RoboRallyStart.switchScene("gamewindow.fxml");
         }
-        else if (this.ready.get()== true) {
+        else if (this.ready.get()) {
             readyButton.setText("READY");
             this.ready.set(false);
             modelGame.setPlayerStatus(modelUser.userIDProperty().get());
