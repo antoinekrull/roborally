@@ -33,7 +33,7 @@
         </ImageView>
       </top>
       <left>
-        <GridPane alignment="TOP_CENTER" maxHeight="450.0" BorderPane.alignment="BOTTOM_LEFT">
+        <GridPane alignment="TOP_CENTER" maxHeight="400.0" minHeight="250.0" BorderPane.alignment="BOTTOM_LEFT">
           <columnConstraints>
             <ColumnConstraints halignment="LEFT" hgrow="ALWAYS" minWidth="200.0" prefWidth="300.0" />
           </columnConstraints>
@@ -44,9 +44,9 @@
             <RowConstraints minHeight="10.0" percentHeight="40.0" prefHeight="30.0" vgrow="SOMETIMES" />
           </rowConstraints>
           <children>
-            <VBox alignment="TOP_CENTER" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+            <VBox alignment="TOP_CENTER" minHeight="90.0" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
               <children>
-                <Label fx:id="statusLabel" textFill="WHITE">
+                <Label fx:id="statusLabel" textFill="RED">
                   <font>
                     <Font size="14.0" />
                   </font></Label>

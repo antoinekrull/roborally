@@ -232,10 +232,10 @@ public class ViewModelGameWindow {
                     String data = db.getString();
                     ImageView imageView = null;
                     switch (data) {
-                        case "Image 1":
-                            imageView = new ImageView(new Image("programCard1"));
+                        case "programCard1":
+                            imageView = new ImageView(new Image("../textures/cards/Again.png"));
                             break;
-                        case "Image 2":
+                        case "programCard2":
                             imageView = new ImageView(new Image("programCard2"));
                             break;
                         //TODO: Add cases for the other 7 image views here
