@@ -12,8 +12,8 @@ public class RebootTile extends Tile {
 
     //TODO: Direction needs to be added to constructor
     public RebootTile(int xCoordinate, int yCoordinate){
-        super(xCoordinate, yCoordinate, "/textures/gameboard/energySpace.png");
-        this.path = getClass().getResource("/textures/gameboard/energySpace.png").toString();
+        super(xCoordinate, yCoordinate, "/textures/gameboard/reboot.png");
+        this.path = getClass().getResource("/textures/gameboard/reboot.png").toString();
         isDanger = false;
         isBlocking = false;
         setRebootTileIndex(rebootTileIndex++);

@@ -4,8 +4,8 @@ package game.board;
 
 public class StartTile extends Tile{
     public StartTile(int xCoordinate, int yCoordinate){
-        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
-        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
+        super(xCoordinate, yCoordinate, "/textures/gameboard/reboot.png");
+        this.path = getClass().getResource("/textures/gameboard/reboot.png").toString();
         isDanger = false;
         isBlocking = false;
     }
