@@ -10,8 +10,8 @@ public class LaserTile extends Tile {
     private Direction los;
 
     public LaserTile(int xCoordinate, int yCoordinate, Direction LineOfSight) {
-        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
-        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
+        super(xCoordinate, yCoordinate, "textures/gameboard/laser.png");
+        this.path = getClass().getResource("textures/gameboard/laser.png").toString();
         isDanger = true;
         isBlocking = false;
         this.los = LineOfSight;
