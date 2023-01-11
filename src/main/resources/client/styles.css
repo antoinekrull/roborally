@@ -4,48 +4,63 @@
 }
 
 .mainmenubutton{
--fx-background-image: url("../textures/designelements/buttonmainmenu.png");
--fx-background-color: none;
--fx-text-fill: white;
--fx-background-repeat: none;
--fx-background-size: cover;
+    -fx-background-image: url("../textures/designelements/buttonmainmenu.png");
+    -fx-background-color: none;
+    -fx-text-fill: white;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
 }
 
 .mainmenubutton:hover{
--fx-text-fill: rgba(255, 86, 0, 1);
--fx-effect: dropshadow(three-pass-box, rgba(255, 86, 0, 1), 15, 0.0, 0, 0);
+    -fx-text-fill: rgba(255, 86, 0, 1);
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 86, 0, 1), 15, 0.0, 0, 0);
 }
 
 .mainmenubackground{
--fx-background-image: url("../textures/designelements/hauptmenueHintergrund.png");
--fx-background-repeat: none;
--fx-background-size: cover;
+    -fx-background-image: url("../textures/designelements/hauptmenueHintergrund.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
 }
 
 .menubar{
--fx-background-color: none;
--fx-background-image: url("../textures/designelements/menubarbackground.jpg");
--fx-background-color: none;
--fx-text-fill: white;
--fx-background-size: auto;
+    -fx-background-color: none;
+    -fx-background-image: url("../textures/designelements/menubarbackground.jpg");
+    -fx-background-color: none;
+    -fx-text-fill: white;
+    -fx-background-size: auto;
 }
 
 .loginbackground{
--fx-background-image: url("../textures/designelements/robotselectBackground.jpg");
--fx-background-repeat: none;
--fx-background-size: cover;
+    -fx-background-image: url("../textures/designelements/robotselectBackground.jpg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
 }
 
 .lobbybackground{
--fx-background-image: url("../textures/designelements/lobbyBackground.jpg");
--fx-background-repeat: none;
--fx-background-size: cover;
--fx-background-color: none;
+    -fx-background-image: url("../textures/designelements/lobbyBackground.jpg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover;
+    -fx-background-color: none;
 }
 
 .roboterlabel{
--fx-text-fill: transparent;
+    -fx-text-fill: transparent;
 }
 .roboterlabel:hover{
--fx-text-fill: white;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 86, 0, 1), 15, 0.0, 0, 0);
+}
+
+.gamewindowBackground{
+    -fx-background-image: url("../textures/designelements/gameboardHintergrund.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-color: none;
+}
+
+.programmierflaeche{
+    -fx-background-image: url("../textures/designelements/programmingFields.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: contain;
+    -fx-background-color: none;
 }
