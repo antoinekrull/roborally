@@ -1,5 +1,7 @@
 package server.connection;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
@@ -265,19 +267,10 @@ public class HandleClient implements Runnable{
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
                         setAlive(true);
                     } else if (incomingMessage.getMessageType() == MessageType.MapSelected) {
-
-                        InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream("/game/board/BoardModels/ExtraCrispy.json"));
+                        InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream("/maps/ExtraCrispy.json"));
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
-                        String content1 = content.lines().collect(Collectors.joining());
-                        String message1 = JsonSerializer.serializeJson(content1);
-                        System.out.println(message1);
-
-
-
-                        /*Path pathtoFile = Paths.get("src/main/java/game/board/BoardModels/ExtraCrispy.json");
-                        System.out.println(pathtoFile.toAbsolutePath());
-                        String map = new String(Files.readAllBytes(pathtoFile));*/
-                        write(messageCreator.generateGameStartedMessage(content1));
+                        String jsonmap = content.lines().collect(Collectors.joining());
+                        write(messageCreator.generateGameStartedMessage(jsonmap));
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
                         write(messageCreator.generatePlayerAddedMessage(incomingMessage.getMessageBody().getName(), incomingMessage.getMessageBody().getFigure(), this.clientID));
                     } else if(incomingMessage.getMessageType() == MessageType.SetStatus) {

@@ -1,6 +1,6 @@
 package communication;
 
-    /**
+/**
      * This class is used for communication between the server and the client by processing the client's input
      */
 
@@ -69,9 +69,9 @@ package communication;
             messageBody.setMap(map);
             return new Message(MessageType.MapSelected, messageBody);
         }
-        public Message generateGameStartedMessage(String gameMap){
+        public Message generateGameStartedMessage(String jsonMap){
             MessageBody messageBody = new MessageBody();
-            messageBody.setGameMap(gameMap);
+            messageBody.setGameMap(jsonMap);
             return new Message(MessageType.GameStarted, messageBody);
         }
         //method overload: if message is not a private message, the client doesn't specify a clientID and the

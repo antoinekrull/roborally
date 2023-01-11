@@ -8,6 +8,7 @@ public class TurnLeftCard extends Card {
     private final RotationType rotationType = RotationType.LEFT;
 
     public TurnLeftCard(){
+        cardType = CardType.PROGRAMMING_CARD;
         setCardName("Left Turn");
     }
 

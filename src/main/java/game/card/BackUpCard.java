@@ -4,6 +4,7 @@ public class BackUpCard extends Card {
     int velocity = -1;
 
     public BackUpCard(){
+        cardType = CardType.PROGRAMMING_CARD;
         setCardName("Move Back");
     }
 

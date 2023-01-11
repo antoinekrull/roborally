@@ -5,9 +5,7 @@ import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
-import game.Game;
-import game.board.TestTile;
-import game.board.Tile;
+import game.board.Board;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,7 +18,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -43,8 +40,6 @@ public class Client {
     private BooleanProperty isAI;
     private ObjectProperty<Message> message;
     private IntegerProperty userID;
-    private Game game = new Game();
-    private ArrayList<ArrayList<ArrayList<TestTile>>> map;
 
     MessageCreator messageCreator;
     String address = "localhost";
@@ -168,23 +163,9 @@ public class Client {
 
                             }
                             if(message.getMessageType().equals(MessageType.GameStarted)){
-                                map = JsonSerializer.deserializeJson(message.getMessageBody().getGameMap(), ArrayList.class);
-
-                                System.out.println(map.get(9).get(0));
-                                System.out.println(map.get(9).get(0).get(0));
-                                System.out.println(map.get(9).get(1).get(0));
-                                //System.out.println(message1.getMessageBody().getMessage());
-
-                                //Map<String, Object> mapObject = mapper.readValue(send, new TypeReference<Map<String,Object>>(){});
-
-                                //String content = send.lines().collect(Collectors.joining());
-
-                                //System.out.println(send);
-                                //game.createBoard(send);
-
-                                //System.out.println(map);
-                                //GameBoard board = new GameBoard();
-                                //board.createBoard(message.getMessageBody());
+                                Board board = new Board();
+                                board.createBoard(message.getMessageBody().getGameMap());
+                                board.testBoard();
                             }
                             //if (message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
                             //    if (message.getMessage().equals("accepted")) {
