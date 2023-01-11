@@ -9,7 +9,6 @@ import communication.MessageType;
 import game.Game;
 import game.player.Player;
 import game.player.Robot;
-import communication.*;
 import javafx.beans.property.SimpleBooleanProperty;
 
 import java.io.*;
