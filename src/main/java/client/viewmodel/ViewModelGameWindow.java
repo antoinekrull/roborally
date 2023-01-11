@@ -107,21 +107,25 @@ public class ViewModelGameWindow {
         setOnDragOver(programmingPane2);
         setOnDragOver(programmingPane3);
         setOnDragOver(programmingPane4);
+        setOnDragOver(programmingPane5);
 
         setOnDragEntered(programmingPane1);
         setOnDragEntered(programmingPane2);
         setOnDragEntered(programmingPane3);
         setOnDragEntered(programmingPane4);
+        setOnDragEntered(programmingPane5);
 
         setOnDragExited(programmingPane1);
         setOnDragExited(programmingPane2);
         setOnDragExited(programmingPane3);
         setOnDragExited(programmingPane4);
+        setOnDragExited(programmingPane5);
 
         setOnDragDropped(programmingPane1);
         setOnDragDropped(programmingPane2);
         setOnDragDropped(programmingPane3);
         setOnDragDropped(programmingPane4);
+        setOnDragDropped(programmingPane5);
     }
 
     public void receivedMessage() {
