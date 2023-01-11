@@ -105,27 +105,21 @@ public class ViewModelGameWindow {
         setOnDragOver(programmingPane2);
         setOnDragOver(programmingPane3);
         setOnDragOver(programmingPane4);
-        setOnDragOver(programmingPane5);
 
         setOnDragEntered(programmingPane1);
         setOnDragEntered(programmingPane2);
         setOnDragEntered(programmingPane3);
         setOnDragEntered(programmingPane4);
-        setOnDragEntered(programmingPane5);
 
         setOnDragExited(programmingPane1);
         setOnDragExited(programmingPane2);
         setOnDragExited(programmingPane3);
         setOnDragExited(programmingPane4);
-        setOnDragExited(programmingPane5);
 
         setOnDragDropped(programmingPane1);
         setOnDragDropped(programmingPane2);
         setOnDragDropped(programmingPane3);
         setOnDragDropped(programmingPane4);
-        setOnDragDropped(programmingPane5);
-
-
     }
 
     public void receivedMessage() {
@@ -309,29 +303,12 @@ public class ViewModelGameWindow {
                 //data dropped
                 System.out.println("Drag dropped");
 
-                /*
-                Dragboard db = event.getDragboard();
-                boolean success = false;
-                Node node = event.getPickResult().getIntersectedNode();
-                if (db.hasImage()) {
-                    Image data = db.getImage();
-                    Integer columnIndex = GridPane.getColumnIndex(node);
-                    Integer rowIndex = GridPane.getRowIndex(node);
-                    int x = columnIndex == null ? 0 : columnIndex;
-                    int y = rowIndex == null ? 0 : rowIndex;
-                    ImageView imageView = new ImageView(data);
-
-                    target.add(imageView, x, y);
-
-                    success = true;
-                }
-                */
                 boolean success = false;
                 Dragboard db = event.getDragboard();
                 if (db.hasImage()) {
                     Image data = db.getImage();
                     ImageView card = new ImageView(data);
-
+                    //add image from dragboard to slots (Pane)
                     target.getChildren().add(card);
 
                     success = true;
