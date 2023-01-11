@@ -163,9 +163,9 @@ public class Client {
 
                             }
                             if(message.getMessageType().equals(MessageType.GameStarted)){
+
                                 Board board = new Board();
                                 board.createBoard(message.getMessageBody().getGameMap());
-                                board.testBoard();
                             }
                             if(message.getMessageType().equals(MessageType.YourCards)){
 

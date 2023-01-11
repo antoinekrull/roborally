@@ -54,13 +54,7 @@
 .gamewindowBackground{
 -fx-background-image: url("../textures/designelements/gameboardHintergrund.png");
 -fx-background-repeat: no-repeat;
--fx-background-size: contain;
+-fx-background-size: cover;
 -fx-background-color: none;
 }
 
-.programmierflaeche{
--fx-background-image: url("../textures/designelements/Programierflaeche.png");
--fx-background-repeat: no-repeat;
--fx-background-size: contain;
--fx-background-color: none;
-}
