@@ -67,8 +67,8 @@ public class Tile {
 
 
     String path;
-    protected int x;
-    protected int y;
+    protected int xCoordinate;
+    protected int yCoordinate;
     protected int width;
     protected int height;
     protected boolean isDanger;
@@ -79,8 +79,8 @@ public class Tile {
     public Tile(){}
 
     public Tile(int xCoordinate, int yCoordinate, String path) {
-        this.x = xCoordinate;
-        this.y = yCoordinate;
+        this.xCoordinate = xCoordinate;
+        this.yCoordinate = yCoordinate;
         //position = new Pair<>(xCoordinate, yCoordinate);
     }
 
@@ -114,6 +114,6 @@ public class Tile {
         ImageView img = new ImageView();
         Image im = new Image(path,(double) width,(double) height,false,false);
         img.setImage(im);
-        tiles.add(img,this.x,this.y);
+        tiles.add(img,this.xCoordinate,this.yCoordinate);
     }
 }
