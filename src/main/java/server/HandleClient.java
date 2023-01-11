@@ -7,6 +7,8 @@ import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import game.Game;
+import game.player.Player;
+import game.player.Robot;
 
 import java.io.*;
 import java.net.Socket;
@@ -102,38 +104,6 @@ public class HandleClient implements Runnable{
         }
     }
 
-    /**
-     * Send info to client that he is connected to server.
-     *
-     * @param username Client who is connecting.
-     */
-    /*
-    public void grantAccess(String username) {
-        setUsername(username);
-        Message access = new Message();
-        access.setMessageType(MessageType.PlayerValues);
-        access.setMessageBody().setUsername("Server");
-        access.setMessageBody().setMessage("accepted");
-        writeTo(username, access);
-    }
-    */
-    /**
-     * Send info to client when username is already taken.
-     *
-     /* @param username Client who tries to log in.
-     */
-    /*
-    public void denyAccess(String username) {
-        setUsername(username);
-        Message access = new Message();
-        access.setMessageType(MessageType.PlayerValues);
-        access.setMessageBody("Server");
-        access.setMessageBody("The username " + username + " is already taken, choose another one");
-        writeTo(username, access);
-        setUsername("");
-    }
-     */
-
     public void setUsername(String username) {
         this.username = username;
     }
@@ -149,37 +119,11 @@ public class HandleClient implements Runnable{
         setAlive(false);
         accepted = false;
         setClientID(threadID);
-
         //send protocol version to client
         writeTo(getClientID(), messageCreator.generateHelloClientMessage(server.getProtocolVersion()));
 
         try {
-            String username ="";
-
-            /*while (username == "") {
-                if(JsonSerializer.deserializeJson(in.readUTF(), Message.class).getMessageType() == MessageType.PlayerValues) {
-                    username = JsonSerializer.deserializeJson(in.readUTF(), Message.class).getMessageBody().getName();
-                    if (!containsName(server.CLIENTS, username)) {
-                        //grantAccess(username);
-                    } else {
-                        //denyAccess(username);
-                        username = "";
-                    }
-                }
-            }*/
-
-            //Thread needs to sleep so that the chat form can load and the user sees his welcome message
-            /*Thread.sleep(1000);
-            //welcome message to server
-            String message = this.username +  " has entered the chat";
-            try {
-                server.messages.put(message);
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            }*/
-
             String line = "";
-
             //Accept client if his protocol version is correct
             while(!accepted) {
                 Message incomingMessage = JsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
@@ -240,6 +184,8 @@ public class HandleClient implements Runnable{
                         String jsonmap = content.lines().collect(Collectors.joining());
                         write(messageCreator.generateGameStartedMessage(jsonmap));
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
+                        server.players.add(new Player(incomingMessage.getMessageBody().getClientID(), incomingMessage.getMessageBody().getName()
+                                , new Robot(incomingMessage.getMessageBody().getFigure())));
                         write(messageCreator.generatePlayerAddedMessage(incomingMessage.getMessageBody().getName(), incomingMessage.getMessageBody().getFigure(), this.clientID));
                     } else if(incomingMessage.getMessageType() == MessageType.SetStatus) {
                         boolean ready = incomingMessage.getMessageBody().isReady();
@@ -268,7 +214,6 @@ public class HandleClient implements Runnable{
             String goodbyeMessage = "Server: " + this.threadID + " has left the chat!";
             System.out.println(goodbyeMessage);
             server.messages.put(goodbyeMessage);
-            server.players.remove(threadID);
             server.CLIENTS.remove(threadID);
             this.in.close();
             this.out.close();
