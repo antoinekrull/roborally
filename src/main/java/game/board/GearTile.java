@@ -9,8 +9,8 @@ import game.player.Player;
 public class GearTile extends Tile {
     private RotationType rotationType;
     public GearTile(int xCoordinate, int yCoordinate) {
-        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
-        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
+        super(xCoordinate, yCoordinate, "/textures/gameboard/gearsNachLinksDrehen.png");
+        this.path = getClass().getResource("/textures/gameboard/gearsNachLinksDrehen.png").toString();
         isDanger = false;
         isBlocking = false;
     }

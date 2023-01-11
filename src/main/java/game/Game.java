@@ -50,6 +50,12 @@ public class Game implements Runnable {
         this.playerList = playerList;
     }
 
+    public void initialisePlayerList(PlayerList playerList) {
+        for(int i = 0; i < playerList.size(); i++) {
+            this.playerList.add(playerList.get(i));
+        }
+    }
+
     private void applyAllTileEffects() throws Exception {
         for(int x = 0; x < Board.conveyorBelt2List.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
@@ -137,7 +143,7 @@ public class Game implements Runnable {
 
     //TODO: Implement this
     private PlayerList determinePriority() {
-        PlayerList priorityList = null;
+        PlayerList priorityList = playerList;
         return priorityList;
     }
 

@@ -4,6 +4,7 @@ package server;
 
 import communication.MessageCreator;
 import game.Game;
+import game.player.Robot;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import java.net.ServerSocket;
@@ -12,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 import game.player.Player;
+import org.javatuples.Triplet;
 
 /**
  * @author Antoine, Moritz, Dominic, Firas
@@ -38,7 +40,7 @@ public class ServerMain extends Application {
 
         protected Socket socket = null;
         protected ServerSocket server = null;
-        public HashMap<Integer, Player> players = new HashMap<>();
+        public PlayerList players = new PlayerList();
         public HashMap<Integer, HandleClient> CLIENTS = new HashMap<>();
         public final LinkedBlockingQueue<String> messages;
         public int uniqueID = 0;
@@ -104,6 +106,7 @@ public class ServerMain extends Application {
             return uniqueID++;
         }
         public String getProtocolVersion(){return this.protocolVersion;}
+
 
         public static Game getGameInstance(){
             if (game == null) {

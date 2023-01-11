@@ -5,20 +5,16 @@ import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
 import communication.Message;
-import game.board.Board;
 import game.board.Tile;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -35,6 +31,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 /**
  * ViewModel for gamescreen
  *
@@ -44,6 +43,8 @@ import javafx.scene.text.TextFlow;
 
 public class ViewModelGameWindow {
 
+    public ColumnConstraints gameboardTileColumn;
+    public Pane programspacePane;
     @FXML
     private Button chatButton;
     @FXML
@@ -68,7 +69,6 @@ public class ViewModelGameWindow {
     private ModelChat modelChat;
     private ModelGame modelGame;
     private ModelUser modelUser;
-    private Board gameBoard;
 
     private NotifyChangeSupport notifyChangeSupport;
 
@@ -81,8 +81,10 @@ public class ViewModelGameWindow {
     }
 
     public void initialize() {
-        ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.gameBoard.getBoard();
-        //placeTiles(map,13,10);
+        //TODO: Tiles resizeable
+        ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
+        placeTiles(map);
+
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
         chatVBox.heightProperty().addListener(new ChangeListener<Number>() {@Override
@@ -224,6 +226,17 @@ public class ViewModelGameWindow {
         //send disconnect notification to server
         Platform.exit();
         System.exit(0);
+    }
+
+    private void placeTiles(ArrayList<ArrayList<ArrayList<Tile>>> map) {
+        for (int x = 0; x < map.size(); x++){
+            for (int y = 0; y < map.get(x).size(); y++) {
+                for (int i = 0; i < map.get(x).get(y).size(); i++){
+                    System.out.println("x:"+x+" y: "+y);
+                    map.get(x).get(y).get(i).makeImage(gameboard);
+                }
+            }
+        }
     }
 
     public void setOnDragDetected(ImageView source) {

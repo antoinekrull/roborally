@@ -7,6 +7,8 @@ import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import game.Game;
+import game.player.Player;
+import game.player.Robot;
 import communication.*;
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -272,6 +274,8 @@ public class HandleClient implements Runnable{
                         String jsonmap = content.lines().collect(Collectors.joining());
                         write(messageCreator.generateGameStartedMessage(jsonmap));
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
+                        server.players.add(new Player(incomingMessage.getMessageBody().getClientID(), incomingMessage.getMessageBody().getName()
+                                , new Robot(incomingMessage.getMessageBody().getFigure())));
                         write(messageCreator.generatePlayerAddedMessage(incomingMessage.getMessageBody().getName(), incomingMessage.getMessageBody().getFigure(), this.clientID));
                     } else if(incomingMessage.getMessageType() == MessageType.SetStatus) {
                         boolean ready = incomingMessage.getMessageBody().isReady();
