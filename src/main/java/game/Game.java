@@ -137,7 +137,7 @@ public class Game implements Runnable {
 
     //TODO: Implement this
     private PlayerList determinePriority() {
-        PlayerList priorityList = null;
+        PlayerList priorityList = playerList;
         return priorityList;
     }
 
