@@ -167,6 +167,12 @@ public class Client {
                                 board.createBoard(message.getMessageBody().getGameMap());
                                 board.testBoard();
                             }
+                            if(message.getMessageType().equals(MessageType.YourCards)){
+
+                            }
+                            if(message.getMessageType().equals(MessageType.NotYourCards)){
+
+                            }
                             //if (message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
                             //    if (message.getMessage().equals("accepted")) {
                             //        loginController.goToChat(name);
