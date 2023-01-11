@@ -1,4 +1,6 @@
+/*
 package server;
+
 
 import communication.MessageCreator;
 import game.Game;
@@ -18,6 +20,7 @@ import org.javatuples.Triplet;
  * @version 1.0
  */
 
+/*
 public class ServerMain extends Application {
     int port;
     private static Game game;
@@ -52,6 +55,7 @@ public class ServerMain extends Application {
          * @param port Port where the server listens to.
          */
 
+/*
         public Server(int port) {
             this.messages = new LinkedBlockingQueue<>();
 
@@ -118,3 +122,4 @@ public class ServerMain extends Application {
     }
 }
 
+*/

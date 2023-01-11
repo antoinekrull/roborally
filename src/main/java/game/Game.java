@@ -5,8 +5,8 @@ import game.board.*;
 import game.card.*;
 import game.player.Player;
 import org.javatuples.Pair;
-import server.PlayerList;
-
+//import server.PlayerList;
+import server.connection.PlayerList;
 import java.util.LinkedList;
 
 

@@ -35,15 +35,15 @@
             <RowConstraints percentHeight="20.0" valignment="BOTTOM" vgrow="ALWAYS" />
           </rowConstraints>
           <children>
-                  <GridPane GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" />
-                        <ColumnConstraints hgrow="SOMETIMES" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
+            <GridPane GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" />
+                <ColumnConstraints hgrow="SOMETIMES" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+              <children>
                 <GridPane fx:id="gameboard" alignment="CENTER">
                   <columnConstraints>
                     <ColumnConstraints fx:id="gameboardTileColumn" halignment="CENTER" hgrow="ALWAYS" />
@@ -216,39 +216,46 @@
                     <Region GridPane.columnIndex="13" GridPane.rowIndex="9" />
                   </children>
                 </GridPane>
-                        <StackPane GridPane.columnIndex="1">
-                           <children>
-                      <GridPane fx:id="programmingGrid" hgap="10.0" StackPane.alignment="CENTER">
-                        <columnConstraints>
-                          <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
-                        </columnConstraints>
-                        <rowConstraints>
-                          <RowConstraints fx:id="programspace" percentHeight="100.0" valignment="CENTER" vgrow="SOMETIMES" />
-                        </rowConstraints>
-                                 <StackPane.margin>
-                                    <Insets />
-                                 </StackPane.margin>
-                                 <padding>
-                                    <Insets bottom="100.0" top="340.0" />
-                                 </padding>
-                      </GridPane>
+                <StackPane GridPane.columnIndex="1">
+                  <children>
                     <Pane fx:id="programspacePane" prefHeight="200.0" prefWidth="200.0" styleClass="programmierflaeche">
+                      <children>
+                        <ImageView fitWidth="${programmingGrid.width}" preserveRatio="true">
+                          <image>
+                            <Image url="@../textures/designelements/programmingFields.png" />
+                          </image>
+                        </ImageView>
+                      </children>
+                    </Pane>
+                    <GridPane fx:id="programmingGrid" hgap="10.0" StackPane.alignment="CENTER">
+                      <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                      </columnConstraints>
+                      <rowConstraints>
+                        <RowConstraints fx:id="programspace" percentHeight="100.0" valignment="CENTER" vgrow="SOMETIMES" />
+                      </rowConstraints>
+                      <StackPane.margin>
+                        <Insets />
+                      </StackPane.margin>
+                      <padding>
+                        <Insets bottom="100.0" top="340.0" />
+                      </padding>
                                  <children>
-                                    <ImageView fitWidth="${programmingGrid.width}" preserveRatio="true">
-                                       <image>
-                                          <Image url="@../textures/designelements/programmingFields.png" />
-                                       </image>
-                                    </ImageView>
+                                    <Pane fx:id="programmingPane1" prefHeight="200.0" prefWidth="200.0" />
+                                    <Pane fx:id="programmingPane2" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                                    <Pane fx:id="programmingPane3" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" />
+                                    <Pane fx:id="programmingPane4" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" />
+                                    <Pane fx:id="programmingPane5" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" />
                                  </children>
-                              </Pane>
-                           </children>
-                        </StackPane>
-                     </children>
-                  </GridPane>
+                    </GridPane>
+                  </children>
+                </StackPane>
+              </children>
+            </GridPane>
             <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
               <children>
                 <GridPane maxWidth="600.0" nodeOrientation="RIGHT_TO_LEFT" HBox.hgrow="ALWAYS">

@@ -1,4 +1,4 @@
-package server;
+package server.connection;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +9,7 @@ import communication.MessageType;
 import game.Game;
 import game.player.Player;
 import game.player.Robot;
+import javafx.beans.property.SimpleBooleanProperty;
 
 import java.io.*;
 import java.net.Socket;
@@ -28,13 +29,16 @@ public class HandleClient implements Runnable{
     private int clientID;
     private boolean exit;
     private boolean accepted;
-
     private boolean alive;
+    private SimpleBooleanProperty serverStatus;
     public String address;
     public int port;
     public Socket socket;
     private String username;
-    private ServerMain.Server server;
+    //private ServerMain.Server serverMain;
+
+    private Server server;
+
     private MessageCreator messageCreator;
     private Game game;
 
@@ -45,13 +49,25 @@ public class HandleClient implements Runnable{
      * @param port
      * @param socket
      */
-    public HandleClient(String address, int port, Socket socket, ServerMain.Server server, int threadID) {
+    public HandleClient(String address, int port, Socket socket, Server server, int threadID) {
         this.address = address;
         this.port = port;
         this.socket = socket;
         this.server = server;
         this.threadID = threadID;
         this.messageCreator = new MessageCreator();
+        //closes handler when stopServer method is called
+        serverStatus = new SimpleBooleanProperty();
+        serverStatus.bind(server.onlineProperty());
+        serverStatus.addListener(event -> {
+            if (!serverStatus.get()) {
+                try {
+                    closeHandler();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         this.game = server.getGameInstance();
         try {
             this.in = new DataInputStream(
@@ -81,6 +97,9 @@ public class HandleClient implements Runnable{
         }
     }
 
+
+    //messages stored in linkedblockingqueue (thread using linkedblockingqueue calls write method which should be enough)
+    /*
     public void writeTo(int id, Message message) {
         try {
             for (Map.Entry<Integer, HandleClient> client : server.CLIENTS.entrySet()) {
@@ -92,6 +111,8 @@ public class HandleClient implements Runnable{
             e.printStackTrace();
         }
     }
+     */
+
     public void aliveMessage(int id) {
         try {
             for (Map.Entry<Integer, HandleClient> client : server.CLIENTS.entrySet()) {
@@ -103,6 +124,38 @@ public class HandleClient implements Runnable{
             System.out.println("Client "+ id +" couldn't be reached");
         }
     }
+
+    /**
+     * Send info to client that he is connected to server.
+     *
+     * @param username Client who is connecting.
+     */
+    /*
+    public void grantAccess(String username) {
+        setUsername(username);
+        Message access = new Message();
+        access.setMessageType(MessageType.PlayerValues);
+        access.setMessageBody().setUsername("Server");
+        access.setMessageBody().setMessage("accepted");
+        writeTo(username, access);
+    }
+    */
+    /**
+     * Send info to client when username is already taken.
+     *
+     /* @param username Client who tries to log in.
+     */
+    /*
+    public void denyAccess(String username) {
+        setUsername(username);
+        Message access = new Message();
+        access.setMessageType(MessageType.PlayerValues);
+        access.setMessageBody("Server");
+        access.setMessageBody("The username " + username + " is already taken, choose another one");
+        writeTo(username, access);
+        setUsername("");
+    }
+     */
 
     public void setUsername(String username) {
         this.username = username;
@@ -119,11 +172,38 @@ public class HandleClient implements Runnable{
         setAlive(false);
         accepted = false;
         setClientID(threadID);
+
         //send protocol version to client
-        writeTo(getClientID(), messageCreator.generateHelloClientMessage(server.getProtocolVersion()));
+        //writeTo(getClientID(), messageCreator.generateHelloClientMessage(server.getProtocolVersion()));
+        write(messageCreator.generateHelloClientMessage(server.getProtocolVersion()));
 
         try {
+            String username ="";
+
+            /*while (username == "") {
+                if(JsonSerializer.deserializeJson(in.readUTF(), Message.class).getMessageType() == MessageType.PlayerValues) {
+                    username = JsonSerializer.deserializeJson(in.readUTF(), Message.class).getMessageBody().getName();
+                    if (!containsName(server.CLIENTS, username)) {
+                        //grantAccess(username);
+                    } else {
+                        //denyAccess(username);
+                        username = "";
+                    }
+                }
+            }*/
+
+            //Thread needs to sleep so that the chat form can load and the user sees his welcome message
+            /*Thread.sleep(1000);
+            //welcome message to server
+            String message = this.username +  " has entered the chat";
+            try {
+                server.messages.put(message);
+            } catch (InterruptedException e) {
+                System.out.println(e.getMessage());
+            }*/
+
             String line = "";
+
             //Accept client if his protocol version is correct
             while(!accepted) {
                 Message incomingMessage = JsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
@@ -131,7 +211,8 @@ public class HandleClient implements Runnable{
                     if (incomingMessage.getMessageType() == MessageType.HelloServer) {
                         if(incomingMessage.getMessageBody().getProtocol().equals(server.getProtocolVersion())){
                             accepted = true;
-                            writeTo(clientID, messageCreator.generateWelcomeMessage(clientID));
+                            //writeTo(clientID, messageCreator.generateWelcomeMessage(clientID));
+                            write(messageCreator.generateWelcomeMessage(clientID));
                         } else{
                             //TODO message for client, that its version is not compatible
                             System.out.println("Client version is not correct: "
@@ -167,14 +248,22 @@ public class HandleClient implements Runnable{
 
             while (accepted) {
                 Message incomingMessage = JsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
+                line = incomingMessage.getMessageBody().getMessage();
+                String line_formatted = this.username + ":  " + line;
                 try {
+                    //String changed to Message type (protocol, from: sender): added to linkedblockingqueue
                     if (incomingMessage.getMessageType() == MessageType.SendChat && incomingMessage.getMessageBody().getTo() == -1) {
-                        line = incomingMessage.getMessageBody().getMessage();
-                        String line_formatted = this.username + ":  " + line;
-                        server.messages.put(line_formatted);
+                        int clientID = getClientID();
+                        server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, clientID, false));
+                        //server.broadcast(clientID, messageCreator.generateReceivedChatMessage(line_formatted, clientID, false));
                     } else if (incomingMessage.getMessageType() == MessageType.SendChat) {
                         if (server.CLIENTS.containsKey(incomingMessage.getMessageBody().getTo())) {
-                            writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);
+                            //String changed to Message type (protocol, from: to send): added to linkedblockingqueue
+                            int toUser = incomingMessage.getMessageBody().getTo();
+                            server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
+                            //int toUser = getClientID();
+                            //server.sendTo(toUser, messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
+                            //writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
                         setAlive(true);
@@ -211,9 +300,11 @@ public class HandleClient implements Runnable{
     }
     private void closeConnection(){
         try {
+            //changed String to Message to match with other messages (added generateGoodbyeMessage to MessageCreator)
             String goodbyeMessage = "Server: " + this.threadID + " has left the chat!";
             System.out.println(goodbyeMessage);
-            server.messages.put(goodbyeMessage);
+            server.messages.put(messageCreator.generateGoodbyeMessage(clientID, goodbyeMessage));
+            server.players.remove(threadID);
             server.CLIENTS.remove(threadID);
             this.in.close();
             this.out.close();
@@ -222,6 +313,19 @@ public class HandleClient implements Runnable{
             System.out.println("Error while closing Connection" + e.getMessage());
         }
 
+    }
+
+    //when server is stopped, close handlers
+    public void closeHandler() throws IOException {
+        if (in != null) {
+            in.close();
+        }
+        if (out != null) {
+            out.close();
+        }
+        if (socket != null) {
+            socket.close();
+        }
     }
 
     public int getClientID() {

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="server.viewmodel.ViewModelServer">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Options">
+            <items>
+              <MenuItem fx:id="closeMenuItem" onAction="#closeApplication" mnemonicParsing="false" text="Close" />
+                  <MenuItem mnemonicParsing="false" text="Help" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <VBox alignment="CENTER" spacing="35.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Server Status: " HBox.hgrow="ALWAYS" />
+                  <Label fx:id="serverstatus" text="Offline" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+            <Button fx:id="startserver" onAction="#startServerOnAction" mnemonicParsing="false" text="Start Server" VBox.vgrow="ALWAYS" />
+            <Button fx:id="stopserver" onAction="#stopServerOnAction" mnemonicParsing="false" text="Stop Server" VBox.vgrow="ALWAYS" />
+         </children>
+      </VBox>
+   </center>
+</BorderPane>
