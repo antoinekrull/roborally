@@ -235,5 +235,12 @@ package communication;
             messageBody.setClientID(clientID);
             return new Message(MessageType.GameFinished, messageBody);
         }
+
+        public Message generateGoodbyeMessage(int clientID, String message){
+            MessageBody messageBody = new MessageBody();
+            messageBody.setClientID(clientID);
+            messageBody.setMessage(message);
+            return new Message(MessageType.Goodbye, messageBody);
+        }
     }
 

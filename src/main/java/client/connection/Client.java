@@ -195,6 +195,12 @@ public class Client {
                                 System.out.println(CollisionCalculator.checkRobotCollision(player1));
                                 System.out.println(CollisionCalculator.checkRobotCollision(player2));
                             }
+                            if(message.getMessageType().equals(MessageType.YourCards)){
+
+                            }
+                            if(message.getMessageType().equals(MessageType.NotYourCards)){
+
+                            }
                             //if (message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
                             //    if (message.getMessage().equals("accepted")) {
                             //        loginController.goToChat(name);

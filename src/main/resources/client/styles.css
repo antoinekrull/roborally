@@ -46,6 +46,7 @@
 .roboterlabel{
 -fx-text-fill: transparent;
 }
+
 .roboterlabel:hover{
 -fx-text-fill: white;
 -fx-effect: dropshadow(three-pass-box, rgba(255, 86, 0, 1), 15, 0.0, 0, 0);
@@ -54,7 +55,13 @@
 .gamewindowBackground{
 -fx-background-image: url("../textures/designelements/gameboardHintergrund.png");
 -fx-background-repeat: no-repeat;
--fx-background-size: cover;
+-fx-background-size: contain;
 -fx-background-color: none;
 }
 
+.programmierflaeche{
+-fx-background-image: url("../textures/designelements/Programierflaeche.png");
+-fx-background-repeat: no-repeat;
+-fx-background-size: contain;
+-fx-background-color: none;
+}

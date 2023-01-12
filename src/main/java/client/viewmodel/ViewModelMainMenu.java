@@ -14,10 +14,10 @@ import javafx.scene.media.MediaView;
 import javafx.util.Duration;
 
 /**
- * ViewModel for start window
+ * ViewModel for main menu
  *
  * @author Tobias
- * @version 0.1
+ * @version 1.0
  */
 
 public class ViewModelMainMenu {
