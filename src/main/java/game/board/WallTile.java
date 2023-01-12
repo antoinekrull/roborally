@@ -39,7 +39,6 @@ public class WallTile extends Tile {
         img.setImage(im);
         for (int i = 0; i < this.blockedDirections.size(); i++) {
             Direction dir = this.blockedDirections.get(i);
-            System.out.println(dir);
             int rot = 0;
             switch (dir) {
                 case NORTH -> rot = 180;

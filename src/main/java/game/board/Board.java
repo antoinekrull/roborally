@@ -120,8 +120,8 @@ public class Board {
                                     }
                                     case "Laser" -> {
                                         String directionLaser = tile.getOrientations().get(0);
-                                        replaceTileInMap(board,x,y,tile, new LaserTile(x,y, parseDirection(directionLaser)));
-                                        laserTileList.add(new LaserTile(x, y, parseDirection(directionLaser)));
+                                        replaceTileInMap(board,x,y,tile, new LaserTile(x,y, parseDirection(directionLaser), false));
+                                        laserTileList.add(new LaserTile(x, y, parseDirection(directionLaser), false));
                                     }
                                     //TODO: needs to work with directions, once they have been added to json
                                     case "RestartPoint" -> {
@@ -189,8 +189,14 @@ public class Board {
                         switch (type2) {
                             case "Laser" -> {
                                 String directionLaser = tile2.getOrientations().get(0);
-                                replaceTileInMap(board,x,y,tile2, new LaserTile(x,y, parseDirection(directionLaser)));
-                                laserTileList.add(new LaserTile(x, y, parseDirection(directionLaser)));
+                                if(type1.equals("Wall")){
+                                    replaceTileInMap(board,x,y,tile2, new LaserTile(x,y, parseDirection(directionLaser), true));
+                                    laserTileList.add(new LaserTile(x, y, parseDirection(directionLaser), true));
+                                }
+                                else {
+                                    replaceTileInMap(board, x, y, tile2, new LaserTile(x, y, parseDirection(directionLaser), false));
+                                }
+
                             }
                             case "Empty" -> {
                                 replaceTileInMap(board,x,y,tile2, new NormalTile(x,y));
