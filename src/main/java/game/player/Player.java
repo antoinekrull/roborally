@@ -166,6 +166,7 @@ public class Player {
         return result;
     }
 
+    //if timer ran out all unfilled registers of player get filled with random cards
     public void fillRegisterWithRandomCards() {
         Random random = new Random();
         for(int x = hand.size(); x > getEmptyRegisterAmount(); x-- ) {
@@ -200,6 +201,13 @@ public class Player {
                 personalDiscardPile.addCard(cardRegister[i]);
             }
             setCardRegister(null, i);
+        }
+    }
+
+    //for testing purposes
+    public void printHand() {
+        for(int i = 0; i < hand.size(); i++) {
+            System.out.println(hand.get(i).getCardName());
         }
     }
 

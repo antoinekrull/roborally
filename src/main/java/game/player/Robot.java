@@ -62,8 +62,6 @@ public class Robot {
     public void setDeck(ProgrammingDeck deck){
         this.deck = deck;
     }
-    public void determineTileEffect(Tile tile){}
-    public void checkCollision(){}
     public void reboot(int rebootTileIndex){}
     public boolean getRebootStatus() {return isRebooted;}
     public void setRebootStatus(boolean rebooted) {isRebooted = rebooted;}

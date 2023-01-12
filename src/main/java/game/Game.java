@@ -24,6 +24,8 @@ public class Game implements Runnable {
     public static TrojanDeck trojanDeck = new TrojanDeck();
     public static WormDeck wormDeck = new WormDeck();
     public static int currentRegister = 0;
+
+    //TODO: Remove this?
     private LinkedList<Integer> readyList = new LinkedList<>();
     private String[] maps = {"DizzyHighway"};
 
@@ -50,12 +52,6 @@ public class Game implements Runnable {
         this.playerList = playerList;
     }
 
-    public void initialisePlayerList(PlayerList playerList) {
-        for(int i = 0; i < playerList.size(); i++) {
-            this.playerList.add(playerList.get(i));
-        }
-    }
-
     private void applyAllTileEffects() throws Exception {
         for(int x = 0; x < Board.conveyorBelt2List.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
@@ -71,7 +67,7 @@ public class Game implements Runnable {
                 }
             }
         }
-        //applyPushPanelEffects();
+        applyPushPanelEffects();
         for(int x = 0; x < Board.gearTileList.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.gearTileList.get(x).getPosition())) {
@@ -79,7 +75,7 @@ public class Game implements Runnable {
                 }
             }
         }
-        //TODO: Might need to be changed
+        //TODO: needs to be changed
         for(int x = 0; x < Board.laserTileList.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.laserTileList.get(x).getPosition())) {
@@ -113,7 +109,6 @@ public class Game implements Runnable {
         }
     }
 
-    /*
     private void applyPushPanelEffects() throws Exception {
         for (int i = 0; i < playerList.size(); i++) {
             if((pushPanelInTile(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition())).getValue0())){
@@ -125,7 +120,12 @@ public class Game implements Runnable {
             }
         }
     }
-     */
+
+    private void applyTileEffects(ArrayList<Tile> tileList, Player player) throws Exception {
+        for (int i = 0; i < tileList.size(); i++) {
+            tileList.get(i).applyEffect(player);
+        }
+    }
 
     private Pair<Boolean, Integer> pushPanelInTile(ArrayList<Tile> tileList) {
         boolean result = false;
@@ -208,11 +208,6 @@ public class Game implements Runnable {
         }
     }
 
-    private void applyTileEffects(ArrayList<Tile> tileList, Player player) throws Exception {
-        for(int i = 0; i < tileList.size(); i++) {
-            tileList.get(i).applyEffect(player);
-        }
-    }
     //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     public void createBoard(String map) throws JsonProcessingException {
         //board.createBoard(map);
@@ -232,4 +227,6 @@ public class Game implements Runnable {
             }
         }
     }
+
+
 }

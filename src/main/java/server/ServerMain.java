@@ -103,13 +103,12 @@ public class ServerMain extends Application {
         }
         public String getProtocolVersion(){return this.protocolVersion;}
 
-
+        //TODO: Ask Domi about game initialization
         public static Game getGameInstance(){
             if (game == null) {
                 game = new Game();
             }
             return game;
-
         }
 
     }

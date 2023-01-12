@@ -140,11 +140,11 @@ public class Board {
                                         replaceTileInMap(board,x,y,tile, new Antenna(x,y));
                                         antennaTileList.add(new Antenna(x, y));
                                     }
-                                    //TODO: PushPanels need registers
                                     case "PushPanel" -> {
+                                        ArrayList<Integer> registerList = tile.getRegisters();
                                         String directionPushPanel = tile.getOrientations().get(0);
-                                        //replaceTileInMap(map,x,y,tile, new NormalTile(x,y, parseDirection(directionPushPanel));
-                                        //pushPanelList.add(new PushPanelTile(x, y, parseDirection(directionPushPanel)));
+                                        replaceTileInMap(board,x,y,tile, new PushPanelTile(x,y, parseDirection(directionPushPanel), registerList));
+                                        pushPanelList.add(new PushPanelTile(x, y, parseDirection(directionPushPanel), registerList));
                                     }
                                     case "Pit" -> {
                                         replaceTileInMap(board,x,y,tile, new PitTile(x,y));
