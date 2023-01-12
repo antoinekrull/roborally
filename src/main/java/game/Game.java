@@ -111,11 +111,11 @@ public class Game implements Runnable {
 
     private void applyPushPanelEffects() throws Exception {
         for (int i = 0; i < playerList.size(); i++) {
-            if((pushPanelInTile(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition())).getValue0())){
-                int index = pushPanelInTile(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition())).getValue1();
-                if(((PushPanelTile) board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()).get(index))
+            if((pushPanelInTile(board.getTile(playerList.get(i).getRobot().getCurrentPosition())).getValue0())){
+                int index = pushPanelInTile(board.getTile(playerList.get(i).getRobot().getCurrentPosition())).getValue1();
+                if(((PushPanelTile) board.getTile(playerList.get(i).getRobot().getCurrentPosition()).get(index))
                         .getActiveRegisterList().contains(currentRegister)) {
-                    applyTileEffects(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()), playerList.getPlayerFromList(i));
+                    applyTileEffects(board.getTile(playerList.get(i).getRobot().getCurrentPosition()), playerList.getPlayerFromList(i));
                 }
             }
         }
@@ -164,14 +164,17 @@ public class Game implements Runnable {
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
         playerList.setPlayersPlaying(true);
         while(!playerList.playersAreReady()) {
+            System.out.println("Waiting for players to be ready");
             Thread.sleep(10000);
         }
     }
 
-    private void runActivationPhase() throws Exception {
+    //TODO: Make this private once testing in console is done
+    public void runActivationPhase() throws Exception {
         int playerRegisterLength = 5;
         while(!playerList.allPlayerRegistersActivated()) {
             for(int i = 0; i < playerList.size(); i++) {
+                System.out.println("Activating registers");
                 activateRegister(playerList.get(i));
                 playerList.get(i).setStatusRegister(true, currentRegister);
             }
@@ -179,9 +182,11 @@ public class Game implements Runnable {
             //checks if all registers have been activated
             if(currentRegister == playerRegisterLength) {
                 for(int i = 0; i < playerList.size(); i++) {
+                    System.out.println("Emptying card registers");
                     playerList.get(i).emptyAllCardRegisters();
                 }
             }
+            System.out.println("Applying tile effects");
             applyAllTileEffects();
         }
     }
@@ -216,11 +221,15 @@ public class Game implements Runnable {
 
     @Override
     public void run() {
+        System.out.println("This game is running");
         playerList.setPlayerReadiness(false);
         while(true) {
+            System.out.println("This game is running the Upgrade Phase now");
             runUpgradePhase();
             try {
+                System.out.println("This game is running the Programming Phase now");
                 runProgrammingPhase(playerList);
+                System.out.println("This game is running the Activation Phase now");
                 runActivationPhase();
             } catch (Exception e) {
                 throw new RuntimeException(e);

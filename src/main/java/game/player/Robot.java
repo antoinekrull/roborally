@@ -16,7 +16,7 @@ public class Robot {
     //currently only for DizzyHighWay, initialize position method needs to be implemented to set parameters
     private Direction direction;
     private Pair<Integer, Integer> currentPosition;
-    private ProgrammingDeck deck;
+    private ProgrammingDeck deck = new ProgrammingDeck();
     private boolean isRebooted = false;
     private int activeRegister;
 

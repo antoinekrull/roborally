@@ -5,12 +5,17 @@ import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
+import game.Game;
 import game.board.Board;
+import game.board.Direction;
+import game.player.Player;
+import game.player.Robot;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
+import server.PlayerList;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -166,6 +171,25 @@ public class Client {
 
                                 Board board = new Board();
                                 board.createBoard(message.getMessageBody().getGameMap());
+                                Game game = new Game();
+                                Player player1 = new Player(1, "player1", new Robot(1));
+                                Player player2 = new Player(2, "player1", new Robot(2));
+                                PlayerList playerList = new PlayerList();
+                                playerList.add(player1);
+                                playerList.add(player2);
+                                player1.getRobot().setDirection(Direction.EAST);
+                                player1.getRobot().setCurrentPosition(new Pair<>(1, 1));
+                                player2.getRobot().setDirection(Direction.NORTH);
+                                player2.getRobot().setCurrentPosition(new Pair<>(2, 2));
+                                game.setPlayerList(playerList);
+                                game.setBoard(board);
+                                player1.playPreparation();
+                                player2.playPreparation();
+                                player1.printHand();
+                                player1.fillRegisterWithRandomCards();
+                                player2.fillRegisterWithRandomCards();
+                                player1.printRegister();
+                                game.runActivationPhase();
                             }
                             //if (message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
                             //    if (message.getMessage().equals("accepted")) {

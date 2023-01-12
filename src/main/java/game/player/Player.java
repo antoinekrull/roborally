@@ -102,7 +102,7 @@ public class Player {
         }
     }
     public void playPreparation(){
-        for(int i = 0; i <= 9 - getHand().size(); i++){
+        for(int i = 0; i < 9; i++){
             drawCard();
         }
     }
@@ -169,10 +169,10 @@ public class Player {
     //if timer ran out all unfilled registers of player get filled with random cards
     public void fillRegisterWithRandomCards() {
         Random random = new Random();
-        for(int x = hand.size(); x > getEmptyRegisterAmount(); x-- ) {
+        for(int x = 0; x < getEmptyRegisterAmount(); x++) {
             for(int y = 0; y < cardRegister.length; y++) {
                 if(cardRegister[y] == null) {
-                    cardRegister[y] = discard(random.nextInt(x));
+                    cardRegister[y] = discard(random.nextInt(hand.size()));
                 }
             }
         }
@@ -211,4 +211,9 @@ public class Player {
         }
     }
 
+    public void printRegister() {
+        for(int i = 0; i < cardRegister.length; i++) {
+           System.out.println(cardRegister[i].getCardName());
+        }
+    }
 }
