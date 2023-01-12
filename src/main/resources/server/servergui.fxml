@@ -5,26 +5,38 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="server.viewmodel.ViewModelServer">
+
+<BorderPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="server.viewmodel.ViewModelServer">
    <top>
-      <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="Options">
-            <items>
-              <MenuItem fx:id="closeMenuItem" onAction="#closeApplication" mnemonicParsing="false" text="Close" />
-                  <MenuItem mnemonicParsing="false" text="Help" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
+      <VBox alignment="TOP_CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <MenuBar fx:id="menubar">
+              <menus>
+                <Menu mnemonicParsing="false" text="Options">
+                  <items>
+                    <MenuItem fx:id="closeMenuItem" mnemonicParsing="false" onAction="#closeApplication" text="Close" />
+                        <MenuItem mnemonicParsing="false" text="Help" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
+               <image>
+                  <Image url="@../textures/designelements/Robo-Rally-2017-Header-Avalon-Hill-Hasbro-Rezension-topaz-2.png" />
+               </image>
+            </ImageView>
+         </children>
+      </VBox>
    </top>
    <center>
-      <VBox alignment="CENTER" spacing="35.0" BorderPane.alignment="CENTER">
+      <VBox alignment="CENTER" minHeight="150.0" spacing="35.0" BorderPane.alignment="CENTER">
          <children>
             <HBox alignment="CENTER">
                <children>
@@ -32,8 +44,8 @@
                   <Label fx:id="serverstatus" text="Offline" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <Button fx:id="startserver" onAction="#startServerOnAction" mnemonicParsing="false" text="Start Server" VBox.vgrow="ALWAYS" />
-            <Button fx:id="stopserver" onAction="#stopServerOnAction" mnemonicParsing="false" text="Stop Server" VBox.vgrow="ALWAYS" />
+            <Button fx:id="startserver" mnemonicParsing="false" onAction="#startServerOnAction" text="Start Server" VBox.vgrow="ALWAYS" />
+            <Button fx:id="stopserver" mnemonicParsing="false" onAction="#stopServerOnAction" text="Stop Server" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
    </center>
