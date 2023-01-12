@@ -16,7 +16,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
-import server.PlayerList;
+import server.connection.PlayerList;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
