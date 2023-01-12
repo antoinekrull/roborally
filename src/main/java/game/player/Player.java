@@ -101,8 +101,9 @@ public class Player {
             status = setAll;
         }
     }
-    public void playPreparation(){
-        for(int i = 0; i < 9; i++){
+    public void drawFullHand(){
+        int cardsToDraw = 9 - hand.size();
+        for(int i = 0; i < cardsToDraw; i++){
             drawCard();
         }
     }

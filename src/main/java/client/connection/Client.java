@@ -5,6 +5,7 @@ import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
+import game.CollisionCalculator;
 import game.Game;
 import game.board.Board;
 import game.board.Direction;
@@ -172,24 +173,27 @@ public class Client {
                                 Board board = new Board();
                                 board.createBoard(message.getMessageBody().getGameMap());
                                 Game game = new Game();
+                                game.setBoard(board);
+                                CollisionCalculator.setBoard(board);
                                 Player player1 = new Player(1, "player1", new Robot(1));
                                 Player player2 = new Player(2, "player1", new Robot(2));
                                 PlayerList playerList = new PlayerList();
                                 playerList.add(player1);
                                 playerList.add(player2);
                                 player1.getRobot().setDirection(Direction.EAST);
-                                player1.getRobot().setCurrentPosition(new Pair<>(1, 1));
+                                player1.getRobot().setCurrentPosition(new Pair<>(6, 7));
                                 player2.getRobot().setDirection(Direction.NORTH);
-                                player2.getRobot().setCurrentPosition(new Pair<>(2, 2));
+                                player2.getRobot().setCurrentPosition(new Pair<>(9, 9));
                                 game.setPlayerList(playerList);
-                                game.setBoard(board);
-                                player1.playPreparation();
-                                player2.playPreparation();
+                                player1.drawFullHand();
+                                player2.drawFullHand();
                                 player1.printHand();
                                 player1.fillRegisterWithRandomCards();
                                 player2.fillRegisterWithRandomCards();
                                 player1.printRegister();
                                 game.runActivationPhase();
+                                System.out.println(CollisionCalculator.checkRobotCollision(player1));
+                                System.out.println(CollisionCalculator.checkRobotCollision(player2));
                             }
                             //if (message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
                             //    if (message.getMessage().equals("accepted")) {
