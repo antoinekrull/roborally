@@ -2,6 +2,8 @@ package game.board;
 
 import game.player.Player;
 import java.util.ArrayList;
+
+import javafx.geometry.Orientation;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;

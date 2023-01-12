@@ -113,7 +113,7 @@ public class Board {
                                     case "Wall" -> {
                                         ArrayList<Direction> directionList = new ArrayList<>();
                                         ArrayList<String> orientations = tile.getOrientations();
-                                        for(int i = 1; i < directionList.size(); i++) {
+                                        for(int i = 0; i < orientations.size(); i++) {
                                             directionList.add(parseDirection(orientations.get(i)));
                                         }
                                         replaceTileInMap(board,x,y,tile, new WallTile(x,y,directionList));
@@ -163,7 +163,7 @@ public class Board {
                             case "Wall" -> {
                                 ArrayList<Direction> directionList = new ArrayList<>();
                                 ArrayList<String> orientations = tile1.getOrientations();
-                                for(int i = 1; i < directionList.size(); i++) {
+                                for(int i = 0; i < orientations.size(); i++) {
                                     directionList.add(parseDirection(orientations.get(i)));
                                 }
                                 replaceTileInMap(board,x,y,tile1, new WallTile(x,y,directionList));
@@ -217,17 +217,7 @@ public class Board {
             case "bottom" -> {parsedDirection = Direction.SOUTH;}
         }
         return parsedDirection;
-    }
 
-    private String getValueFromString(String input) {
-        int typeIndexStartOff = input.indexOf("=");
-        //int typeIndexCutoff = input.indexOf(",");
-        String value = input.substring(typeIndexStartOff);
-        value.replaceAll("\\[", "");
-        value.replaceAll("]", "");
-        value.replaceAll("\\{", "");
-        value.replaceAll("}", "");
-        return value;
     }
     private void replaceTileInMap (ArrayList<ArrayList<ArrayList<Tile>>> map, int x, int y, Tile tile, Object object) {
         if (object instanceof Tile) {
