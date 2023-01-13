@@ -250,17 +250,5 @@ import server.connection.PlayerList;
             messageBody.setMessage(message);
             return new Message(MessageType.Goodbye, messageBody);
         }
-
-        public Message generatePlayerListMessage(PlayerList players) {
-            MessageBody messageBody = new MessageBody();
-            messageBody.setPlayers(players);
-            return new Message(MessageType.PlayerList, messageBody);
-        }
-
-        public Message generateAcceptedMessage(boolean accepted) {
-            MessageBody messageBody = new MessageBody();
-            messageBody.setAccepted(accepted);
-            return new Message(MessageType.Accepted, messageBody);
-        }
 }
 

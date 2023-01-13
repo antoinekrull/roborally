@@ -61,7 +61,7 @@ public class Client {
         this.playersToChat = FXCollections.observableArrayList("All");
         this.playerIDs = FXCollections.observableArrayList();
         this.connected = new SimpleBooleanProperty();
-        this.accepted = new SimpleBooleanProperty();
+        this.accepted = new SimpleBooleanProperty(true);
         connectServer();
     }
 
@@ -165,10 +165,8 @@ public class Client {
                             if(message.getMessageType().equals(MessageType.Welcome)){
                                 Client.this.setUserID(message.getMessageBody().getClientID());
                             }
-                            if(message.getMessageType().equals(MessageType.Accepted)) {
-                                Client.this.setAcceptedProperty();
-                            }
                             if(message.getMessageType().equals(MessageType.PlayerAdded)){
+                                Client.this.setAcceptedProperty();
                                 int clientID = message.getMessageBody().getClientID();
                                 String username = message.getMessageBody().getName();
                                 Client.this.addPlayer(username, clientID);
@@ -186,17 +184,6 @@ public class Client {
                                     System.out.println("PlayersIDs Pair List:\n" + "Player Username: " + playerIDs.get(i).getKey() + " Player ID: " + playerIDs.get(i).getValue());
                                 }
                                 System.out.println("\n");
-                            }
-                            if(message.getMessageType().equals(MessageType.PlayerList)) {
-                                PlayerList playerList = message.getMessageBody().getPlayers();
-                                Client.this.setPlayer(playerList);
-                                System.out.println("Client: setPlayer Method:");
-                                for(int i = 0; i < playerList.size(); i++) {
-                                    System.out.println(playerList.get(i).getUsername());
-                                }
-                                for(int i = 0; i < playerList.size(); i++) {
-                                    System.out.println(playerList.get(i).getId());
-                                }
                             }
                             if(message.getMessageType().equals(MessageType.PlayerStatus)){
 

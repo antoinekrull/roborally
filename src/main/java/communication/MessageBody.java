@@ -40,8 +40,6 @@ public class MessageBody {
     private String source;
     private String gameMap; //TODO: must be a jsonObject, think about implementation
     private int number;
-    private PlayerList players;
-    private boolean accepted;
 
     public int getNumber() {
         return number;
@@ -281,21 +279,5 @@ public class MessageBody {
 
     public void setProtocol(String protocol) {
         this.protocol = protocol;
-    }
-
-    public PlayerList getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(PlayerList players) {
-        this.players = players;
-    }
-
-    public void setAccepted(boolean accepted) {
-        this.accepted = accepted;
-    }
-
-    public boolean getAccepted() {
-        return accepted;
     }
 }

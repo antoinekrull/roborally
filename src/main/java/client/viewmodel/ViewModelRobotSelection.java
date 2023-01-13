@@ -103,24 +103,15 @@ public class ViewModelRobotSelection {
 
             System.out.println("ViewModelRobotSelection: usernameButtonOnAction\n" + "Send Information");
             System.out.println(modelUser.getVerification());
-            System.out.println(robot +" " + username + "\n");
+            System.out.println(robot + " " + username + "\n");
 
-            Timeline timeline = new Timeline(new KeyFrame(
-                    Duration.millis(1000),
-                    event -> {
-                        try {
-                            if(modelUser.getVerification()) {
-                                RoboRallyStart.switchScene("lobby.fxml");
-
-                                System.out.println("Switching to lobby\n");
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }));
-            timeline.play();
+            if (modelUser.getVerification()) {
+                RoboRallyStart.switchScene("lobby.fxml");
+                System.out.println("Switching to lobby\n");
+            }
         }
     }
+
     public void exit() throws IOException {
         //send disconnect notification to server
         Platform.exit();

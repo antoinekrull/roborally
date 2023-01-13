@@ -283,8 +283,6 @@ public class HandleClient implements Runnable{
                             System.out.println("zero players reached\n");
                             server.players.add(new Player(incomingMessage.getMessageBody().getClientID(), incomingMessage.getMessageBody().getName()
                                     , new Robot(incomingMessage.getMessageBody().getFigure())));
-                            Message acceptedMessage = messageCreator.generateAcceptedMessage(true);
-                            write(acceptedMessage);
                             Message playerValuesMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
                             server.sendPlayerValuesToAll(getClientID(), playerValuesMessage);
                             System.out.println("Added because 0 players\n");
@@ -302,12 +300,8 @@ public class HandleClient implements Runnable{
                             if (!taken) {
                                 server.players.add(new Player(incomingMessage.getMessageBody().getClientID(), incomingMessage.getMessageBody().getName()
                                         , new Robot(incomingMessage.getMessageBody().getFigure())));
-                                Message acceptedMessage = messageCreator.generateAcceptedMessage(true);
-                                write(acceptedMessage);
                                 Message playerValuesMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
                                 server.sendPlayerValuesToAll(getClientID(), playerValuesMessage);
-                                Message playerListMessage = messageCreator.generatePlayerListMessage(server.players);
-                                write(playerListMessage);
                                 System.out.println("new player\n");
                             }
                         }
