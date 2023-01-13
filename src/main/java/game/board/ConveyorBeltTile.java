@@ -24,14 +24,13 @@ public class ConveyorBeltTile extends Tile {
 
     public ConveyorBeltTile(int xCoordinate, int yCoordinate, int velocity, ArrayList<Direction> directionIn, Direction directionOut) {
         super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
+        setType("ConveyorBelt");
         isDanger = false;
         isBlocking = false;
         this.velocity = velocity;
         this.directionIn = directionIn;
         this.directionOut = directionOut;
         setVariant(this.directionIn, this.directionOut);
-
-
     }
 
     public int getVelocity() { return velocity; }
@@ -46,6 +45,7 @@ public class ConveyorBeltTile extends Tile {
     public void setDirectionOut(Direction directionOut) {
         this.directionOut = directionOut;
     }
+    public Variant getVariant() {return variant;}
 
     @Override
     public void applyEffect(Player player) throws Exception {
@@ -78,36 +78,32 @@ public class ConveyorBeltTile extends Tile {
             case CURVE -> {
                 switch (directionOut) {
                     case NORTH -> {
-                        rot = 270;
                         if (directionIn.get(0) != Direction.EAST) {
                             img.setScaleX(-1);
-                        }
+                            rot = 90;
+                        } else rot = 270;
                     }
                     case EAST -> {
-                        rot = 0;
                         if (directionIn.get(0) != Direction.SOUTH) {
-                            img.setScaleX(-1);
+                            img.setScaleY(-1);
                         }
                     }
                     case SOUTH -> {
-                        rot = 90;
                         if (directionIn.get(0) != Direction.WEST) {
                             img.setScaleX(-1);
-                        }
+                            rot = 270;
+                        } else rot = 90;
                     }
                     case WEST -> {
-                        rot = 180;
                         if (directionIn.get(0) != Direction.NORTH) {
                             img.setScaleX(-1);
-                        }
+                        }else rot = 180;
                     }
                 }
-
-                img.setRotate(rot);
-                tiles.add(img, this.xCoordinate, this.yCoordinate);
-
             }
         }
+        img.setRotate(rot);
+        tiles.add(img, this.xCoordinate, this.yCoordinate);
     }
     private void setVariant(ArrayList<Direction> in, Direction out){
         if (in.size() == 1){

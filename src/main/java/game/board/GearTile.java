@@ -11,6 +11,7 @@ public class GearTile extends Tile {
     public GearTile(int xCoordinate, int yCoordinate) {
         super(xCoordinate, yCoordinate, "/textures/gameboard/gearsNachLinksDrehen.png");
         this.path = getClass().getResource("/textures/gameboard/gearsNachLinksDrehen.png").toString();
+        setType("Gear");
         isDanger = false;
         isBlocking = false;
     }

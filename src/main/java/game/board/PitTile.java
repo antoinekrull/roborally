@@ -13,6 +13,7 @@ public class PitTile extends Tile {
     public PitTile(int xCoordinate, int yCoordinate) {
         super(xCoordinate, yCoordinate, "/textures/gameboard/pit.png");
         this.path = getClass().getResource("/textures/gameboard/pit.png").toString();
+        setType("Pit");
         isDanger = true;
         isBlocking = false;
     }

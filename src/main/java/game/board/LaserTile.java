@@ -22,6 +22,7 @@ public class LaserTile extends Tile {
             this.path = getClass().getResource("/textures/gameboard/laser.png").toString();
         }
         this.onWall = onWall;
+        setType("Laser");
         isDanger = true;
         isBlocking = false;
         this.los = LineOfSight;

@@ -84,126 +84,82 @@ public class Board {
             try {
             for(int x = 0; x < 13; x++){
                 for(int y = 0; y < 10; y++){
-                    if(board.get(x).get(y).size() == 1) {
-                                Tile tile = board.get(x).get(y).get(0);
-                                String type = tile.getType();
-                                switch(type) {
-                                    case "Empty", "tbd" ->  replaceTileInMap(board,x,y,tile, new NormalTile(x,y));
-                                    case "EnergySpace" ->  {
-                                        replaceTileInMap(board,x,y,tile, new EnergySpaceTile(x,y));
-                                        energySpaceList.add(new EnergySpaceTile(x, y));
-                                    }
-                                    case "ConveyorBelt" -> {
-                                        ArrayList<Direction> directionIn = new ArrayList<>();
-                                        int velocity = tile.getSpeed();
-                                        ArrayList<String> orientations = tile.getOrientations();
-                                        for(int i = 0; i < orientations.size(); i++) {
-                                            directionIn.add(parseDirection(orientations.get(i)));
-                                        }
-                                        orientations.remove(orientations.size() - 1);
-                                        Direction directionOut = parseDirection(orientations.get(orientations.size() - 1));
-                                        replaceTileInMap(board,x,y,tile, new ConveyorBeltTile(x,y, velocity, directionIn, directionOut));
-
-                                        switch (velocity){
-                                            case 1: conveyorBelt1List.add(new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
-                                            case 2: conveyorBelt2List.add(new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
-                                        }
-                                    }
-                                    //TODO: Wall und Laser sollte normalerweise nicht einzeln vorkommen können
-                                    case "Wall" -> {
-                                        ArrayList<Direction> directionList = new ArrayList<>();
-                                        ArrayList<String> orientations = tile.getOrientations();
-                                        for(int i = 0; i < orientations.size(); i++) {
-                                            directionList.add(parseDirection(orientations.get(i)));
-                                        }
-                                        replaceTileInMap(board,x,y,tile, new WallTile(x,y,directionList));
-                                    }
-                                    case "Laser" -> {
-                                        String directionLaser = tile.getOrientations().get(0);
-                                        replaceTileInMap(board,x,y,tile, new LaserTile(x,y, parseDirection(directionLaser), false));
-                                        laserTileList.add(new LaserTile(x, y, parseDirection(directionLaser), false));
-                                    }
-                                    //TODO: needs to work with directions, once they have been added to json
-                                    case "RestartPoint" -> {
-                                        replaceTileInMap(board,x,y,tile, new RebootTile(x,y));
-                                        rebootTileList.add(new RebootTile(x, y));
-                                    }
-                                    case "CheckPoint" -> {
-                                        replaceTileInMap(board,x,y,tile, new CheckpointTile(x,y));
-                                        increaseCheckPointCount();
-                                        checkpointList.add(new CheckpointTile(x, y));
-                                    }
-                                    case "StartPoint" -> {
-                                        replaceTileInMap(board,x,y,tile, new StartTile(x,y));
-                                    }
-                                    case "Antenna" -> {
-                                        replaceTileInMap(board,x,y,tile, new Antenna(x,y));
-                                        antennaTileList.add(new Antenna(x, y));
-                                    }
-                                    //TODO: PushPanels need registers
-                                    case "PushPanel" -> {
-                                        String directionPushPanel = tile.getOrientations().get(0);
-                                        //replaceTileInMap(map,x,y,tile, new NormalTile(x,y, parseDirection(directionPushPanel));
-                                        //pushPanelList.add(new PushPanelTile(x, y, parseDirection(directionPushPanel)));
-                                    }
-                                    case "Pit" -> {
-                                        replaceTileInMap(board,x,y,tile, new PitTile(x,y));
-                                    }
-                                    case "Gear" -> {
-                                        replaceTileInMap(board,x,y,tile, new GearTile(x,y));
-                                    }
-                                }
-                    } else if(board.get(x).get(y).size() == 2) {
-                        Tile tile1 = board.get(x).get(y).get(0);
-                        String type1 = tile1.getType();
-                        Tile tile2 = board.get(x).get(y).get(1);
-                        String type2 = tile2.getType();
-
-                        switch (type1) {
-                            case "Wall" -> {
-                                ArrayList<Direction> directionList = new ArrayList<>();
-                                ArrayList<String> orientations = tile1.getOrientations();
-                                for(int i = 0; i < orientations.size(); i++) {
-                                    directionList.add(parseDirection(orientations.get(i)));
-                                }
-                                replaceTileInMap(board,x,y,tile1, new WallTile(x,y,directionList));
+                    for(int i = 0; i < board.get(x).get(y).size(); i++) {
+                        Tile tile = board.get(x).get(y).get(i);
+                        String type = tile.getType();
+                        switch (type) {
+                            case "Empty", "tbd" -> replaceTileInMap(board, x, y, tile, new NormalTile(x, y));
+                            case "EnergySpace" -> {
+                                replaceTileInMap(board, x, y, tile, new EnergySpaceTile(x, y));
+                                energySpaceList.add(new EnergySpaceTile(x, y));
                             }
                             case "ConveyorBelt" -> {
-                                ArrayList<Direction> directionIn = new ArrayList<>();
-                                int velocity = tile1.getSpeed();
-                                ArrayList<String> orientations = tile1.getOrientations();
-                                for(int i = 1; i < orientations.size(); i++) {
-                                    directionIn.add(parseDirection(orientations.get(i)));
+                                ArrayList<Direction> in = new ArrayList<>();
+                                int velocity = tile.getSpeed();
+                                ArrayList<String> orientations = tile.getOrientations();
+                                Direction out = parseDirection(orientations.get(0));
+                                for (int t = 1; t < orientations.size(); t++) {
+                                    in.add(parseDirection(orientations.get(t)));
                                 }
-                                orientations.remove(orientations.size() - 1);
-                                Direction directionOut = parseDirection(orientations.get(orientations.size() - 1));
-                                replaceTileInMap(board,x,y,tile1, new ConveyorBeltTile(x,y,velocity,directionIn,directionOut));
+                                System.out.println("Hallo ich bin ein Conveyorbelt mit in: "+ in.get(0)+" und out: "+ out);
+                                ConveyorBeltTile conveyor = new ConveyorBeltTile(x, y, velocity, in, out);
+                                replaceTileInMap(board, x, y, tile, conveyor);
 
-                                switch (velocity){
-                                    case 1: conveyorBelt1List.add(new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
-                                    case 2: conveyorBelt2List.add(new ConveyorBeltTile(x, y, velocity, directionIn, directionOut));
+                                switch (velocity) {
+                                    case 1:
+                                        conveyorBelt1List.add(conveyor);
+                                    case 2:
+                                        conveyorBelt2List.add(conveyor);
                                 }
                             }
-                            case "Empty" -> {replaceTileInMap(board,x,y,tile1, new NormalTile(x,y));}
-                        }
-                        switch (type2) {
+                            //TODO: Wall und Laser sollte normalerweise nicht einzeln vorkommen können
+                            case "Wall" -> {
+                                ArrayList<Direction> directionList = new ArrayList<>();
+                                ArrayList<String> orientations = tile.getOrientations();
+                                for (int t = 0; t < orientations.size(); t++) {
+                                    directionList.add(parseDirection(orientations.get(t)));
+                                }
+                                replaceTileInMap(board, x, y, tile, new WallTile(x, y, directionList));
+                            }
                             case "Laser" -> {
-                                String directionLaser = tile2.getOrientations().get(0);
-                                if(type1.equals("Wall")){
-                                    replaceTileInMap(board,x,y,tile2, new LaserTile(x,y, parseDirection(directionLaser), true));
+                                String directionLaser = tile.getOrientations().get(0);
+                                if(board.get(x).get(y).get(0).getType().equals("Wall")){
+                                    replaceTileInMap(board,x,y,tile, new LaserTile(x,y, parseDirection(directionLaser), true));
                                     laserTileList.add(new LaserTile(x, y, parseDirection(directionLaser), true));
                                 }
                                 else {
-                                    replaceTileInMap(board, x, y, tile2, new LaserTile(x, y, parseDirection(directionLaser), false));
+                                    replaceTileInMap(board, x, y, tile, new LaserTile(x, y, parseDirection(directionLaser), false));
                                 }
 
                             }
-                            case "Empty" -> {
-                                replaceTileInMap(board,x,y,tile2, new NormalTile(x,y));
+                            //TODO: needs to work with directions, once they have been added to json
+                            case "RestartPoint" -> {
+                                replaceTileInMap(board, x, y, tile, new RebootTile(x, y));
+                                rebootTileList.add(new RebootTile(x, y));
                             }
-                            case "EnergySpace" -> {
-                                replaceTileInMap(board,x,y,tile2, new EnergySpaceTile(x,y));
-                                energySpaceList.add(new EnergySpaceTile(x, y));
+                            case "CheckPoint" -> {
+                                replaceTileInMap(board, x, y, tile, new CheckpointTile(x, y));
+                                increaseCheckPointCount();
+                                checkpointList.add(new CheckpointTile(x, y));
+                            }
+                            case "StartPoint" -> {
+                                replaceTileInMap(board, x, y, tile, new StartTile(x, y));
+                            }
+                            case "Antenna" -> {
+                                replaceTileInMap(board, x, y, tile, new Antenna(x, y));
+                                antennaTileList.add(new Antenna(x, y));
+                            }
+                            //TODO: PushPanels need registers
+                            case "PushPanel" -> {
+                                String directionPushPanel = tile.getOrientations().get(0);
+                                //replaceTileInMap(map,x,y,tile, new NormalTile(x,y, parseDirection(directionPushPanel));
+                                //pushPanelList.add(new PushPanelTile(x, y, parseDirection(directionPushPanel)));
+                            }
+                            case "Pit" -> {
+                                replaceTileInMap(board, x, y, tile, new PitTile(x, y));
+                            }
+                            case "Gear" -> {
+                                replaceTileInMap(board, x, y, tile, new GearTile(x, y));
                             }
                         }
                     }
