@@ -123,12 +123,17 @@ public class Board {
                             case "Laser" -> {
                                 String directionLaser = tile.getOrientations().get(0);
                                 if(board.get(x).get(y).get(0).getType().equals("Wall")){
-                                    replaceTileInMap(board,x,y,tile, new LaserTile(x,y, parseDirection(directionLaser), true));
-                                    laserTileList.add(new LaserTile(x, y, parseDirection(directionLaser), true));
+                                    LaserTile laser = new LaserTile(x,y, parseDirection(directionLaser), true);
+                                    replaceTileInMap(board,x,y,tile, laser);
+                                    laserTileList.add(laser);
+
                                 }
                                 else {
-                                    replaceTileInMap(board, x, y, tile, new LaserTile(x, y, parseDirection(directionLaser), false));
+                                    LaserTile laser = new LaserTile(x,y, parseDirection(directionLaser), false);
+                                    replaceTileInMap(board, x, y, tile, laser);
+                                    laserTileList.add(laser);
                                 }
+
 
                             }
                             //TODO: needs to work with directions, once they have been added to json
