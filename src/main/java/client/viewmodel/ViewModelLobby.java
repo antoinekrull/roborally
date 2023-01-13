@@ -54,6 +54,8 @@ public class ViewModelLobby {
     private Button readyButton;
     @FXML
     private Label timeLabel;
+    @FXML
+    private Button mapButton;
 
     private BooleanProperty ready;
     private ModelChat modelChat;
@@ -154,7 +156,6 @@ public class ViewModelLobby {
             groupMessageToChat(groupMessage);
         }
     }
-
     public void chatButtonOnAction() {
         String user = usersChoiceBox.getSelectionModel().getSelectedItem();
         int userID = modelUser.userIDProperty().get();
@@ -236,6 +237,10 @@ public class ViewModelLobby {
             }
         });
     }
+    public void mapButtonOnAction() throws IOException{
+        modelUser.sendMapSelected(mapsChoiceBox.getSelectionModel().getSelectedItem());
+        RoboRallyStart.switchScene("gamewindow.fxml");
+    }
 
     public void readyButtonOnAction() throws IOException {
         if (!this.ready.get()) {
@@ -266,7 +271,7 @@ public class ViewModelLobby {
             timeline.setCycleCount(Animation.INDEFINITE);
             timeline.play();
              */
-            //RoboRallyStart.switchScene("gamewindow.fxml");
+
         }
         else if (this.ready.get()) {
             readyButton.setText("READY");
@@ -284,6 +289,7 @@ public class ViewModelLobby {
         */
         ;
     }
+
 
     public void exit() throws IOException {
         //send disconnect notification to server

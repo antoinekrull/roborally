@@ -41,6 +41,7 @@ public class Client {
     private BooleanProperty isAI;
     private ObjectProperty<Message> message;
     private IntegerProperty userID;
+    private Boolean prioPlayer = false;
 
     MessageCreator messageCreator;
     String address = "localhost";
@@ -147,11 +148,11 @@ public class Client {
                                         message.getMessageBody().isReady()));
                             }
                             if (message.getMessageType().equals(MessageType.SelectMap)){
+                                prioPlayer = true;
                                 String [] temp = message.getMessageBody().getAvailableMaps();
                                 for (int i = 0; i < temp.length; i++) {
                                     maps.add(temp[i]);
                                 }
-                                //sendMapMessage("hier soll mal die Map rein dann");
 
                             }
                             if(message.getMessageType().equals(MessageType.ReceivedChat)){
@@ -170,7 +171,6 @@ public class Client {
 
                             }
                             if(message.getMessageType().equals(MessageType.GameStarted)){
-
                                 Board board = new Board();
                                 board.createBoard(message.getMessageBody().getGameMap());
                             }
@@ -218,6 +218,9 @@ public class Client {
         sendMessageToServer(messageCreator.generatePlayerValuesMessage(name, figure));
     }
     public void sendSetStatusMessage(boolean ready){
+        if (!ready) {
+            prioPlayer = false;
+        }
         sendMessageToServer(messageCreator.generateSetStatusMessage(ready));
     }
     public void sendPrivateMessage(String message, int to){
@@ -226,8 +229,10 @@ public class Client {
     public void sendGroupMessage(String message){
         sendMessageToServer(messageCreator.generateSendChatMessage(message));
     }
-    public void sendMapMessage(String message) {
-        sendMessageToServer(messageCreator.generateMapSelectedMessage(message));
+    public void sendMapSelected(String map) {
+        if (prioPlayer) {
+            sendMessageToServer(messageCreator.generateMapSelectedMessage(map));
+        }
     }
 
     public void sendMessageToServer(Message message) {

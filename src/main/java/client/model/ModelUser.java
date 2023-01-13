@@ -58,6 +58,9 @@ public class ModelUser {
     public void sendSetStatus(Boolean status) {
         client.sendSetStatusMessage(status);
     }
+    public void sendMapSelected(String map) {
+        client.sendMapSelected(map);
+    }
 
     public IntegerProperty userIDProperty() {
         return userID;

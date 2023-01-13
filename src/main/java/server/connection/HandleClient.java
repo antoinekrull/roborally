@@ -267,13 +267,15 @@ public class HandleClient implements Runnable{
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
                         setAlive(true);
+
                     } else if (incomingMessage.getMessageType() == MessageType.MapSelected) {
-                        String fileName = "/maps/"+incomingMessage.getMessageBody()+".json";
+                        String fileName = "/maps/"+incomingMessage.getMessageBody().getMap()+".json";
                         System.out.println(fileName);
                         InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream(fileName));
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
                         String jsonmap = content.lines().collect(Collectors.joining());
                         write(messageCreator.generateGameStartedMessage(jsonmap));
+
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
                         server.players.add(new Player(incomingMessage.getMessageBody().getClientID(), incomingMessage.getMessageBody().getName()
                                 , new Robot(incomingMessage.getMessageBody().getFigure())));

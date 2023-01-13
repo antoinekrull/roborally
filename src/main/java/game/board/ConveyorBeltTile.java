@@ -69,10 +69,10 @@ public class ConveyorBeltTile extends Tile {
         switch (variant) {
             case STRAIGHT -> {
                 switch (directionOut) {
-                    case NORTH -> rot = 270;
-                    case EAST -> rot = 0;
-                    case SOUTH -> rot = 90;
-                    case WEST -> rot = 180;
+                    case NORTH -> rot = 0;
+                    case EAST -> rot = 90;
+                    case SOUTH -> rot = 180;
+                    case WEST -> rot = 270;
                 }
             }
             case CURVE -> {
@@ -150,7 +150,8 @@ public class ConveyorBeltTile extends Tile {
         }
         else if (in.size() == 2) {
             //path to T-Section conveyor belt
-            //this.path = getClass().getResource("").toString();
+            this.variant = Variant.TSECTION;
+            this.path = getClass().getResource("/textures/gameboard/foerderbandAnimatedKurve.gif").toString();
             //TODO: create right rotation for t-section coveyor belt
         }
         else if (in.size()==3) {

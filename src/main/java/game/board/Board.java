@@ -78,8 +78,9 @@ public class Board {
 
     public void createBoard(String jsonMap) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        board = objectMapper.readValue(jsonMap, new TypeReference<ArrayList<ArrayList<ArrayList<Tile>>>>() {
-        });
+        Map map = objectMapper.readValue(jsonMap, Map.class);
+        board = map.getGameMap();
+        //board = objectMapper.readValue(jsonMap, new TypeReference<ArrayList<ArrayList<ArrayList<Tile>>>>() {
 
             try {
             for(int x = 0; x < 13; x++){
