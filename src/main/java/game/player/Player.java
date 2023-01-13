@@ -167,13 +167,16 @@ public class Player {
         return result;
     }
 
-    //if timer ran out all unfilled registers of player get filled with random cards
+    //if timer runs out all unfilled registers of player get filled with random cards
     public void fillRegisterWithRandomCards() {
         Random random = new Random();
         for(int x = 0; x < getEmptyRegisterAmount(); x++) {
             for(int y = 0; y < cardRegister.length; y++) {
                 if(cardRegister[y] == null) {
-                    cardRegister[y] = discard(random.nextInt(hand.size()));
+                    if(hand.size() > 0) {
+                        cardRegister[y] = discard(random.nextInt(hand.size()));
+                    }
+                    System.out.println("Hand too empty to fill all registers");
                 }
             }
         }
@@ -212,9 +215,13 @@ public class Player {
         }
     }
 
-    public void printRegister() {
+    public void printRegisters() {
         for(int i = 0; i < cardRegister.length; i++) {
-           System.out.println(cardRegister[i].getCardName());
+            if(cardRegister[i] == null) {
+                System.out.println("null");
+            } else {
+                System.out.println(cardRegister[i].getCardName());
+            }
         }
     }
 }

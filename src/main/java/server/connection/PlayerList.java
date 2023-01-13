@@ -139,4 +139,14 @@ public class PlayerList {
         }
         return result;
     }
+
+    public PlayerList getUnreadyPlayers() {
+        PlayerList unreadyPlayers = new PlayerList();
+        for(int i = 0; i < playerList.size(); i++) {
+            if(!playerList.get(i).isReady()) {
+                unreadyPlayers.add(playerList.get(i));
+            }
+        }
+        return  unreadyPlayers;
+    }
 }

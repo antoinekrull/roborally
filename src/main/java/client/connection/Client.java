@@ -191,10 +191,12 @@ public class Client {
                                 player1.printHand();
                                 player1.fillRegisterWithRandomCards();
                                 player2.fillRegisterWithRandomCards();
-                                player1.printRegister();
+                                player1.printRegisters();
                                 game.runActivationPhase();
+                                player1.printRegisters();
                                 System.out.println(CollisionCalculator.checkRobotCollision(player1));
                                 System.out.println(CollisionCalculator.checkRobotCollision(player2));
+                                game.runTimer();
                             }
                             if(message.getMessageType().equals(MessageType.YourCards)){
 
