@@ -97,7 +97,7 @@ public class Board {
                                         ArrayList<Direction> directionIn = new ArrayList<>();
                                         int velocity = tile.getSpeed();
                                         ArrayList<String> orientations = tile.getOrientations();
-                                        for(int i = 1; i < orientations.size(); i++) {
+                                        for(int i = 0; i < orientations.size(); i++) {
                                             directionIn.add(parseDirection(orientations.get(i)));
                                         }
                                         orientations.remove(orientations.size() - 1);

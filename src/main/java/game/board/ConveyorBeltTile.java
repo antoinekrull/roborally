@@ -29,19 +29,8 @@ public class ConveyorBeltTile extends Tile {
         this.velocity = velocity;
         this.directionIn = directionIn;
         this.directionOut = directionOut;
-        //TODO: Create getVariant method to check for variant of the conveyorbelt
-        //getVariant();
-        switch (this.variant) {
-            case STRAIGHT ->
-                this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
+        setVariant(this.directionIn, this.directionOut);
 
-            case CURVE -> getClass().getResource("/textures/gameboard/foerderbandAnimatedKurve.gif").toString();
-            //TODO: create gif of T-Section Conveyorbelt
-            //case TSECTION ->
-            //TODO: create gif of Cross formed Conveyorbelt
-            //case CROSS ->
-
-        }
 
     }
 
@@ -74,7 +63,7 @@ public class ConveyorBeltTile extends Tile {
     @Override
     public void makeImage(GridPane tiles) {
         ImageView img = new ImageView();
-        Image im = new Image(path,(double) height, 70,true,false);
+        Image im = new Image(path, (double) height, 70, true, false);
         img.setImage(im);
         int rot = 0;
         switch (variant) {
@@ -114,9 +103,64 @@ public class ConveyorBeltTile extends Tile {
                     }
                 }
 
-        img.setRotate(rot);
-        tiles.add(img,this.xCoordinate,this.yCoordinate);
+                img.setRotate(rot);
+                tiles.add(img, this.xCoordinate, this.yCoordinate);
 
+            }
+        }
     }
+    private void setVariant(ArrayList<Direction> in, Direction out){
+        if (in.size() == 1){
+            switch (in.get(0)) {
+                case NORTH -> {
+                    if(out == Direction.SOUTH){
+                        this.variant = Variant.STRAIGHT;
+                        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
+                    }
+                    else {this.variant = Variant.CURVE;
+                        this.path = getClass().getResource("/textures/gameboard/foerderbandAnimatedKurve.gif").toString();}
+
+
+                }
+                case EAST -> {
+                    if(out == Direction.WEST){
+                        this.variant = Variant.STRAIGHT;
+                        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
+                    }
+                    else {this.variant = Variant.CURVE;
+                        this.path = getClass().getResource("/textures/gameboard/foerderbandAnimatedKurve.gif").toString();
+                    }
+
+                }
+                case SOUTH -> {
+                    if(out == Direction.NORTH){
+                        this.variant = Variant.STRAIGHT;
+                        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
+                    }
+                    else {this.variant = Variant.CURVE;
+                        this.path = getClass().getResource("/textures/gameboard/foerderbandAnimatedKurve.gif").toString();}
+
+                }
+                case WEST -> {
+                    if(out == Direction.EAST){
+                        this.variant = Variant.STRAIGHT;
+                        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
+                    }
+                    else {this.variant = Variant.CURVE;
+                        this.path = getClass().getResource("/textures/gameboard/foerderbandAnimatedKurve.gif").toString();}
+
+                }
+            }
+        }
+        else if (in.size() == 2) {
+            //path to T-Section conveyor belt
+            //this.path = getClass().getResource("").toString();
+            //TODO: create right rotation for t-section coveyor belt
+        }
+        else if (in.size()==3) {
+            //path to Cross conveyor belt
+            //this.path = getClass().getResource("").toString();
+            //TODO: create right rotation for cross version of conveyor belt
+        }
     }
 }
