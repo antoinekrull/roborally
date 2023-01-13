@@ -125,38 +125,6 @@ public class HandleClient implements Runnable{
         }
     }
 
-    /**
-     * Send info to client that he is connected to server.
-     *
-     * @param username Client who is connecting.
-     */
-    /*
-    public void grantAccess(String username) {
-        setUsername(username);
-        Message access = new Message();
-        access.setMessageType(MessageType.PlayerValues);
-        access.setMessageBody().setUsername("Server");
-        access.setMessageBody().setMessage("accepted");
-        writeTo(username, access);
-    }
-    */
-    /**
-     * Send info to client when username is already taken.
-     *
-     /* @param username Client who tries to log in.
-     */
-    /*
-    public void denyAccess(String username) {
-        setUsername(username);
-        Message access = new Message();
-        access.setMessageType(MessageType.PlayerValues);
-        access.setMessageBody("Server");
-        access.setMessageBody("The username " + username + " is already taken, choose another one");
-        writeTo(username, access);
-        setUsername("");
-    }
-     */
-
     public void setUsername(String username) {
         this.username = username;
     }
