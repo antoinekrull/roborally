@@ -97,7 +97,7 @@ public class Board {
                                         ArrayList<Direction> directionIn = new ArrayList<>();
                                         int velocity = tile.getSpeed();
                                         ArrayList<String> orientations = tile.getOrientations();
-                                        for(int i = 1; i < orientations.size(); i++) {
+                                        for(int i = 0; i < orientations.size(); i++) {
                                             directionIn.add(parseDirection(orientations.get(i)));
                                         }
                                         orientations.remove(orientations.size() - 1);
@@ -113,7 +113,7 @@ public class Board {
                                     case "Wall" -> {
                                         ArrayList<Direction> directionList = new ArrayList<>();
                                         ArrayList<String> orientations = tile.getOrientations();
-                                        for(int i = 1; i < directionList.size(); i++) {
+                                        for(int i = 0; i < directionList.size(); i++) {
                                             directionList.add(parseDirection(orientations.get(i)));
                                         }
                                         replaceTileInMap(board,x,y,tile, new WallTile(x,y,directionList));
@@ -163,7 +163,7 @@ public class Board {
                             case "Wall" -> {
                                 ArrayList<Direction> directionList = new ArrayList<>();
                                 ArrayList<String> orientations = tile1.getOrientations();
-                                for(int i = 1; i < directionList.size(); i++) {
+                                for(int i = 0; i < directionList.size(); i++) {
                                     directionList.add(parseDirection(orientations.get(i)));
                                 }
                                 replaceTileInMap(board,x,y,tile1, new WallTile(x,y,directionList));
@@ -172,7 +172,7 @@ public class Board {
                                 ArrayList<Direction> directionIn = new ArrayList<>();
                                 int velocity = tile1.getSpeed();
                                 ArrayList<String> orientations = tile1.getOrientations();
-                                for(int i = 1; i < orientations.size(); i++) {
+                                for(int i = 0; i < orientations.size(); i++) {
                                     directionIn.add(parseDirection(orientations.get(i)));
                                 }
                                 orientations.remove(orientations.size() - 1);

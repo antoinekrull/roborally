@@ -172,11 +172,12 @@ public class Client {
 
                                 Board board = new Board();
                                 board.createBoard(message.getMessageBody().getGameMap());
+
                                 Game game = new Game();
                                 game.setBoard(board);
                                 CollisionCalculator.setBoard(board);
                                 Player player1 = new Player(1, "player1", new Robot(1));
-                                Player player2 = new Player(2, "player1", new Robot(2));
+                                Player player2 = new Player(2, "player2", new Robot(2));
                                 PlayerList playerList = new PlayerList();
                                 playerList.add(player1);
                                 playerList.add(player2);
