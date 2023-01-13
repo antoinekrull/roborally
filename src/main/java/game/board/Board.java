@@ -101,7 +101,6 @@ public class Board {
                                 for (int t = 1; t < orientations.size(); t++) {
                                     in.add(parseDirection(orientations.get(t)));
                                 }
-                                System.out.println("Hallo ich bin ein Conveyorbelt mit in: "+ in.get(0)+" und out: "+ out);
                                 ConveyorBeltTile conveyor = new ConveyorBeltTile(x, y, velocity, in, out);
                                 replaceTileInMap(board, x, y, tile, conveyor);
 
