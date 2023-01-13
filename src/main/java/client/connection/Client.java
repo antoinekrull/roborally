@@ -44,7 +44,7 @@ public class Client {
     MessageCreator messageCreator;
     String address = "localhost";
     int port = 3000;
-    private String protocolVersion = "Version 0.1";
+    private String protocolVersion = "Version 1.0";
     private String group = "KnorrigeKorrelate";
     private ObservableList<String> playersOnline;
     private ObservableList<String> playersToChat;
