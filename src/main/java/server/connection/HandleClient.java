@@ -268,7 +268,9 @@ public class HandleClient implements Runnable{
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
                         setAlive(true);
                     } else if (incomingMessage.getMessageType() == MessageType.MapSelected) {
-                        InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream("/maps/ExtraCrispy.json"));
+                        String fileName = "/maps/"+incomingMessage.getMessageBody()+".json";
+                        System.out.println(fileName);
+                        InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream(fileName));
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
                         String jsonmap = content.lines().collect(Collectors.joining());
                         write(messageCreator.generateGameStartedMessage(jsonmap));

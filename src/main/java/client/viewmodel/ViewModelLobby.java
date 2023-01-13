@@ -77,7 +77,6 @@ public class ViewModelLobby {
         this.ready = new SimpleBooleanProperty();
         this.userList.setItems(modelGame.getUsers());
         this.usersChoiceBox.setValue(modelGame.getUsersToSelect().get(0));
-        this.mapsChoiceBox.setValue(modelGame.getMaps().get(0));
         this.usersChoiceBox.setItems(modelGame.getUsersToSelect());
         this.mapsChoiceBox.setItems(modelGame.getMaps());
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
@@ -242,9 +241,12 @@ public class ViewModelLobby {
         if (!this.ready.get()) {
             readyButton.setText("NOT READY");
             this.ready.set(true);
-            modelGame.setPlayerStatus(modelUser.userIDProperty().get());
-            //modelGame.setPlayerStatus(modelUser.getUserID());
+            //modelGame.setPlayerStatus(modelUser.userIDProperty().get());
+            modelGame.setPlayerStatus(modelUser.userIDProperty().get(), true);
             modelUser.sendSetStatus(true);
+            if(modelGame.getReadyList().size() >= 2) {
+                System.out.println("lets start");
+            }
             /*long endTime = 2000;
             DateFormat timeFormat = new SimpleDateFormat( "HH:mm:ss" );
             final Timeline timeline = new Timeline(
@@ -264,12 +266,12 @@ public class ViewModelLobby {
             timeline.setCycleCount(Animation.INDEFINITE);
             timeline.play();
              */
-            RoboRallyStart.switchScene("gamewindow.fxml");
+            //RoboRallyStart.switchScene("gamewindow.fxml");
         }
         else if (this.ready.get()) {
             readyButton.setText("READY");
             this.ready.set(false);
-            modelGame.setPlayerStatus(modelUser.userIDProperty().get());
+            modelGame.setPlayerStatus(modelUser.userIDProperty().get(), false);
             modelUser.sendSetStatus(false);
         }
         //resource is null

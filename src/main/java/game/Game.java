@@ -24,8 +24,9 @@ public class Game implements Runnable {
     public static TrojanDeck trojanDeck = new TrojanDeck();
     public static WormDeck wormDeck = new WormDeck();
     public static int currentRegister = 0;
+
     private LinkedList<Integer> readyList = new LinkedList<>();
-    private String[] maps = {"DizzyHighway"};
+    private String[] maps = {"DizzyHighway", "ExtraCrispy", "DeathTrap", "LostBearings"};
 
     private static Game INSTANCE;
 
@@ -207,6 +208,10 @@ public class Game implements Runnable {
             return -1;
         }
     }
+    public LinkedList<Integer> getReadyList() {
+        return readyList;
+    }
+
 
     private void applyTileEffects(ArrayList<Tile> tileList, Player player) throws Exception {
         for(int i = 0; i < tileList.size(); i++) {

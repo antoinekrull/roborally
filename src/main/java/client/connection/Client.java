@@ -6,6 +6,7 @@ import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import game.board.Board;
+import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -50,6 +51,8 @@ public class Client {
     private ObservableList<String> playersToChat;
     private ArrayList<Triplet<Integer, String, Integer>> otherPlayers = new ArrayList<>();
     private ArrayList<Pair<Integer, Boolean>> otherPlayersStatus = new ArrayList<>();
+    private ObservableList<String> maps;
+
 
     private ModelGame modelGame;
 
@@ -58,6 +61,7 @@ public class Client {
         this.message = new SimpleObjectProperty<>();
         this.userID = new SimpleIntegerProperty();
         this.isAI = new SimpleBooleanProperty();
+        this.maps = FXCollections.observableArrayList();
         this.playersOnline = FXCollections.observableArrayList("Tomi", "Firas", "Molri", "Anto");
         this.playersToChat = FXCollections.observableArrayList("All", "Tomi", "Firas", "Molri", "Anto");
         connected = new SimpleBooleanProperty();
@@ -102,6 +106,9 @@ public class Client {
     public BooleanProperty connectedProperty() {
         return connected;
     }
+    public ObservableList<String> getMaps() {
+        return maps;
+    }
 
     private class ReadMessagesFromServer implements Runnable {
         DataInputStream in = null;
@@ -140,11 +147,11 @@ public class Client {
                                         message.getMessageBody().isReady()));
                             }
                             if (message.getMessageType().equals(MessageType.SelectMap)){
-                                String[] maps = message.getMessageBody().getAvailableMaps();
-                                for (int i = 0; i < maps.length; i++) {
-                                    System.out.println(maps[i]);
+                                String [] temp = message.getMessageBody().getAvailableMaps();
+                                for (int i = 0; i < temp.length; i++) {
+                                    maps.add(temp[i]);
                                 }
-                                sendMapMessage("hier soll mal die Map rein dann");
+                                //sendMapMessage("hier soll mal die Map rein dann");
 
                             }
                             if(message.getMessageType().equals(MessageType.ReceivedChat)){
@@ -220,7 +227,7 @@ public class Client {
         sendMessageToServer(messageCreator.generateSendChatMessage(message));
     }
     public void sendMapMessage(String message) {
-        sendMessageToServer(messageCreator.generateMapSelectedMessage("DizzyHighway"));
+        sendMessageToServer(messageCreator.generateMapSelectedMessage(message));
     }
 
     public void sendMessageToServer(Message message) {

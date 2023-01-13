@@ -2,6 +2,7 @@ package client.model;
 
 import client.connection.Client;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import game.Game;
 import game.board.Board;
 import game.board.Tile;
 import javafx.beans.property.*;
@@ -22,26 +23,36 @@ public class ModelGame {
     public Board gameBoard;
     public SimpleIntegerProperty robotProperty;
     private Client client;
+
+    public void setMaps(ObservableList<String> maps) {
+        this.maps = maps;
+    }
+
     private ObservableList<String> maps;
     private ObservableList<String> users;
+
+    public ObservableList<Integer> getReadyList() {
+        return readyList;
+    }
+
+    private ObservableList<Integer> readyList;
     private ObservableList<String> usersToSelect;
     private BooleanProperty readyToPlay;
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
+    private Game game;
 
 
 
     private ModelGame() {
         client = Client.getInstance();
         this.robotProperty = new SimpleIntegerProperty();
+        this.readyList = FXCollections.observableArrayList();
         this.readyToPlay = new SimpleBooleanProperty();
-        this.maps = FXCollections.observableArrayList("Dizzy Highway", "Extra Crispy", "Lost Bearings", "Death Trap");
         this.users = FXCollections.observableArrayList(client.getPlayersOnline());
         this.usersToSelect = FXCollections.observableArrayList(client.getPlayersToChat());
-        this.maps = FXCollections.observableArrayList();
+        this.maps = client.getMaps();
         this.users = FXCollections.observableArrayList();
         this.gameBoard = new Board();
-        maps.add("Dizzy Highway");
-        maps.add("KackJavaFX");
         /*users.add("Tomi");
         users.add("Firas");
         users.add("Molri");*/
@@ -97,7 +108,7 @@ public class ModelGame {
         }
     }
     */
-    public void setPlayerStatus(int userID) {
+    public void setPlayerStatus(int userID, boolean ready) {
         //client.sendPlayerStatus or client.sendMessageToServer(userID, MessageType); true/false
     }
 
