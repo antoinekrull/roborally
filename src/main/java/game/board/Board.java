@@ -112,7 +112,6 @@ public class Board {
                                         conveyorBelt2List.add(conveyor);
                                 }
                             }
-                            //TODO: Wall und Laser sollte normalerweise nicht einzeln vorkommen können
                             case "Wall" -> {
                                 ArrayList<Direction> directionList = new ArrayList<>();
                                 ArrayList<String> orientations = tile.getOrientations();
@@ -134,8 +133,6 @@ public class Board {
                                     replaceTileInMap(board, x, y, tile, laser);
                                     laserTileList.add(laser);
                                 }
-
-
                             }
                             //TODO: needs to work with directions, once they have been added to json
                             case "RestartPoint" -> {
