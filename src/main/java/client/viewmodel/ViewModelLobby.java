@@ -89,6 +89,8 @@ public class ViewModelLobby {
          */
         Platform.runLater(() -> chatTextfield.requestFocus());
 
+        Platform.runLater(() -> userList.refresh());
+
         /*
          * Adjusts VBox height and updates ScrollPane to latest message.
          */
@@ -162,20 +164,12 @@ public class ViewModelLobby {
         if(user.equals("All")) {
             modelChat.sendGroupMessage();
             addToChat(chatTextfield.getText(), false);
-            System.out.println("chatbutton pressed for  All");
         }
         else {
-            int userID = 0;
-            for (int i = 0; i < modelGame.getPlayerIDs().size(); i++) {
-                if (user.equals(modelGame.getPlayerIDs().get(i).getKey())) {
-                    userID = modelGame.getPlayerIDs().get(i).getValue();
-                    break;
-                }
-            }
+            int userNumber = usersChoiceBox.getSelectionModel().getSelectedIndex();
+            int userID = modelGame.getPlayerIDs().get(userNumber-1).getValue1();
             modelChat.sendPrivateMessage(userID);
             addToChat(chatTextfield.getText(), true);
-            System.out.println("chatbutton pressed for " + userID + " " + user);
-
         }
     }
 

@@ -73,8 +73,4 @@ public class ModelUser {
     public boolean getVerification() {
         return this.accepted.get();
     }
-
-    /*public void sendUsername() {
-        client.sendUsername(usernameProperty.get());
-    }*/
 }

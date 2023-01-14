@@ -7,7 +7,7 @@ import game.board.Tile;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.util.Pair;
+import org.javatuples.Triplet;
 
 import java.util.ArrayList;
 
@@ -26,7 +26,7 @@ public class ModelGame {
     private ObservableList<String> maps;
     private ObservableList<String> users;
     private ObservableList<String> usersToSelect;
-    private ObservableList<Pair<String, Integer>> playerIDs;
+    private ObservableList<Triplet<String, Integer, Boolean>> playerIDs;
     private BooleanProperty readyToPlay;
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
 
@@ -37,9 +37,9 @@ public class ModelGame {
         this.robotProperty = new SimpleIntegerProperty();
         this.readyToPlay = new SimpleBooleanProperty();
         this.maps = FXCollections.observableArrayList("Dizzy Highway", "Extra Crispy", "Lost Bearings", "Death Trap");
-        this.users = FXCollections.observableArrayList(client.getPlayersOnline());
-        this.usersToSelect = FXCollections.observableArrayList(client.getPlayersToChat());
-        this.playerIDs = FXCollections.observableArrayList(client.getPlayerIDs());
+        this.users = client.getPlayersOnline();
+        this.usersToSelect = client.getPlayersToChat();
+        this.playerIDs = client.getPlayerIDs();
         this.gameBoard = new Board();
     }
 
@@ -84,7 +84,7 @@ public class ModelGame {
         return gameMap;
     }
 
-    public ObservableList<Pair<String, Integer>> getPlayerIDs() {
+    public ObservableList<Triplet<String, Integer, Boolean>> getPlayerIDs() {
         return playerIDs;
     }
 

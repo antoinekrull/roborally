@@ -39,7 +39,7 @@ public class ViewModelRobotSelection {
     private Label errorLabelRobotSelection;
 
     private List<Node> robots;
-    private NotifyChangeSupport notifyChangeSupport;
+
 
     private ModelUser modelUser;
     private ModelGame modelGame;
@@ -47,7 +47,6 @@ public class ViewModelRobotSelection {
     public ViewModelRobotSelection() {
         this.modelUser = ModelUser.getInstance();
         this.modelGame = ModelGame.getInstance();
-        notifyChangeSupport = NotifyChangeSupport.getInstance();
     }
 
     /**
@@ -101,14 +100,19 @@ public class ViewModelRobotSelection {
         if (robot != 0 && !username.isEmpty()) {
             modelGame.sendPlayerInformation(username);
 
-            System.out.println("ViewModelRobotSelection: usernameButtonOnAction\n" + "Send Information");
-            System.out.println(modelUser.getVerification());
-            System.out.println(robot + " " + username + "\n");
+            Timeline timeline = new Timeline(new KeyFrame(
+                    Duration.millis(500),
+                    event -> {
+                        try {
+                            if (modelUser.getVerification()) {
+                                RoboRallyStart.switchScene("lobby.fxml");
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }));
+            timeline.play();
 
-            if (modelUser.getVerification()) {
-                RoboRallyStart.switchScene("lobby.fxml");
-                System.out.println("Switching to lobby\n");
-            }
         }
     }
 

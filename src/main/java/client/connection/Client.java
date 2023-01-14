@@ -5,18 +5,18 @@ import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import game.board.Board;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.util.Pair;
-import server.connection.PlayerList;
+import org.javatuples.Triplet;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
+
 
 
 /**
@@ -49,7 +49,7 @@ public class Client {
     private String group = "KnorrigeKorrelate";
     private ObservableList<String> playersOnline;
     private ObservableList<String> playersToChat;
-    private ObservableList<Pair<String, Integer>> playerIDs;
+    private ObservableList<Triplet<String, Integer, Boolean>> playerIDs;
 
 
     private Client() {
@@ -61,7 +61,7 @@ public class Client {
         this.playersToChat = FXCollections.observableArrayList("All");
         this.playerIDs = FXCollections.observableArrayList();
         this.connected = new SimpleBooleanProperty();
-        this.accepted = new SimpleBooleanProperty(true);
+        this.accepted = new SimpleBooleanProperty();
         connectServer();
     }
 
@@ -96,7 +96,7 @@ public class Client {
         this.userID.set(userID);
     }
 
-    public ObservableList<Pair<String, Integer>> getPlayerIDs() {
+    public ObservableList<Triplet<String, Integer, Boolean>> getPlayerIDs() {
         return playerIDs;
     }
 
@@ -117,26 +117,9 @@ public class Client {
     }
 
    public void addPlayer(String username, int clientID) {
-        System.out.println("Client: addPlayer");
-        System.out.println(username+ " " + client);
         this.playersOnline.add(username);
         this.playersToChat.add(username);
-        this.playerIDs.add(new Pair<>(username, clientID));
-   }
-
-   public void setPlayer(PlayerList playerList) {
-        ArrayList<String> playerNames = new ArrayList<>();
-        ArrayList<Pair<String, Integer>> playerInfo = new ArrayList<>();
-        for (int i = 0; i < playerList.size(); i++) {
-            playerNames.add(playerList.get(i).getUsername());
-            playerInfo.add(new Pair<>(playerList.get(i).getUsername(), playerList.get(i).getId()));
-            System.out.println("Client: setPlayer Method:");
-            System.out.println(playerList.get(i).getUsername());
-            System.out.println(playerList.get(i).getId());
-        }
-        this.playersOnline.addAll(playerNames);
-        this.playersToChat.addAll(playerNames);
-        this.playerIDs.setAll(playerInfo);
+        this.playerIDs.add(new Triplet<>(username, clientID, false));
    }
 
     private class ReadMessagesFromServer implements Runnable {
@@ -166,24 +149,16 @@ public class Client {
                                 Client.this.setUserID(message.getMessageBody().getClientID());
                             }
                             if(message.getMessageType().equals(MessageType.PlayerAdded)){
-                                Client.this.setAcceptedProperty();
                                 int clientID = message.getMessageBody().getClientID();
-                                String username = message.getMessageBody().getName();
-                                Client.this.addPlayer(username, clientID);
-                                System.out.println("Client: MessageAdded part");
-                                System.out.println("ClientID: " + clientID + " and Username: " + username + "\n");
-                                for (int i = 0; i < playersOnline.size(); i++) {
-                                    System.out.println("PlayersOnline List:\n" + playersOnline.get(i));
+                                if (Client.this.userIDProperty().get() == clientID){
+                                    if (!Client.this.accepted.get()) {
+                                        Client.this.setAcceptedProperty();
+                                    }
                                 }
-                                System.out.println("\n");
-                                for (int i = 0; i < playersToChat.size(); i++) {
-                                    System.out.println("PlayersToChat List: \n" + playersToChat.get(i));
+                                else {
+                                    String username = message.getMessageBody().getName();
+                                    Platform.runLater(() -> Client.this.addPlayer(username, clientID));
                                 }
-                                System.out.println("\n");
-                                for (int i = 0; i < playerIDs.size(); i++) {
-                                    System.out.println("PlayersIDs Pair List:\n" + "Player Username: " + playerIDs.get(i).getKey() + " Player ID: " + playerIDs.get(i).getValue());
-                                }
-                                System.out.println("\n");
                             }
                             if(message.getMessageType().equals(MessageType.PlayerStatus)){
 
@@ -264,11 +239,9 @@ public class Client {
     }
     public void sendPrivateMessage(String message, int to){
         sendMessageToServer(messageCreator.generateSendChatMessage(message, to));
-        System.out.println("private message");
     }
     public void sendGroupMessage(String message){
         sendMessageToServer(messageCreator.generateSendChatMessage(message));
-        System.out.println("group message");
     }
     public void sendMapMessage(String message) {
         sendMessageToServer(messageCreator.generateMapSelectedMessage("DizzyHighway"));

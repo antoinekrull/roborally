@@ -273,18 +273,20 @@ public class HandleClient implements Runnable{
                         String jsonmap = content.lines().collect(Collectors.joining());
                         write(messageCreator.generateGameStartedMessage(jsonmap));
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
-                        System.out.println("HandleClient: Accepting messages");
+                        System.out.println("HandleClient: PlayerValues");
                         System.out.println("message incoming: " + incomingMessage.getMessageType());
-                        System.out.println("content: " + incomingMessage.getMessageBody().getFigure() + " " + incomingMessage.getMessageBody().getName() + "\n");
+                        System.out.println("content: " + incomingMessage.getMessageBody().getFigure() + " " + incomingMessage.getMessageBody().getName());
                         this.username = incomingMessage.getMessageBody().getName();
                         System.out.println("Username registered from server: " + this.username + "\n");
                         int figure = incomingMessage.getMessageBody().getFigure();
                         if (server.players.size() == 0) {
-                            System.out.println("zero players reached\n");
-                            server.players.add(new Player(incomingMessage.getMessageBody().getClientID(), incomingMessage.getMessageBody().getName()
+                            System.out.println("zero players reached");
+
+                            Message robotAcceptedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
+                            write(robotAcceptedMessage);
+
+                            server.players.add(new Player(getClientID(), incomingMessage.getMessageBody().getName()
                                     , new Robot(incomingMessage.getMessageBody().getFigure())));
-                            Message playerValuesMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
-                            server.sendPlayerValuesToAll(getClientID(), playerValuesMessage);
                             System.out.println("Added because 0 players\n");
                         }
                         else {
@@ -298,10 +300,21 @@ public class HandleClient implements Runnable{
                                 }
                             }
                             if (!taken) {
-                                server.players.add(new Player(incomingMessage.getMessageBody().getClientID(), incomingMessage.getMessageBody().getName()
+
+                                Message robotAcceptedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
+                                write(robotAcceptedMessage);
+
+                                server.players.add(new Player(getClientID(), incomingMessage.getMessageBody().getName()
                                         , new Robot(incomingMessage.getMessageBody().getFigure())));
-                                Message playerValuesMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
-                                server.sendPlayerValuesToAll(getClientID(), playerValuesMessage);
+                                Message playerAddedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
+                                server.sendPlayerValuesToAll(getClientID(), playerAddedMessage);
+
+                                for(int i = 0; i < server.players.size(); i++) {
+                                    if(server.players.get(i).getId() != getClientID()) {
+                                        Message addOtherPlayer = messageCreator.generatePlayerAddedMessage(server.players.get(i).getUsername(),server.players.get(i).getRobot().getFigure(), server.players.get(i).getId());
+                                        write(addOtherPlayer);
+                                    }
+                                }
                                 System.out.println("new player\n");
                             }
                         }
