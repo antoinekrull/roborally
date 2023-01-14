@@ -40,7 +40,6 @@ public class ViewModelRobotSelection {
 
     private List<Node> robots;
 
-
     private ModelUser modelUser;
     private ModelGame modelGame;
 

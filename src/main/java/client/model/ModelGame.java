@@ -1,6 +1,7 @@
 package client.model;
 
 import client.connection.Client;
+import client.playerlist.PlayerList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.Board;
 import game.board.Tile;
@@ -24,11 +25,9 @@ public class ModelGame {
     public SimpleIntegerProperty robotProperty;
     private Client client;
     private ObservableList<String> maps;
-    private ObservableList<String> users;
-    private ObservableList<String> usersToSelect;
-    private ObservableList<Triplet<String, Integer, Boolean>> playerIDs;
     private BooleanProperty readyToPlay;
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
+    private PlayerList playerList;
 
 
 
@@ -37,10 +36,8 @@ public class ModelGame {
         this.robotProperty = new SimpleIntegerProperty();
         this.readyToPlay = new SimpleBooleanProperty();
         this.maps = FXCollections.observableArrayList("Dizzy Highway", "Extra Crispy", "Lost Bearings", "Death Trap");
-        this.users = client.getPlayersOnline();
-        this.usersToSelect = client.getPlayersToChat();
-        this.playerIDs = client.getPlayerIDs();
         this.gameBoard = new Board();
+        this.playerList = client.getPlayerList();
     }
 
     public static ModelGame getInstance() {
@@ -48,6 +45,10 @@ public class ModelGame {
             modelGame = new ModelGame();
         }
         return modelGame;
+    }
+
+    public PlayerList getPlayerList() {
+        return playerList;
     }
 
     public SimpleIntegerProperty robotProperty() {
@@ -72,22 +73,10 @@ public class ModelGame {
         return maps;
     }
 
-    public ObservableList<String> getUsers() {
-        return users;
-    }
-
-    public ObservableList<String> getUsersToSelect() {
-        return usersToSelect;
-    }
     public ArrayList<ArrayList<ArrayList<Tile>>> getGameMap() {
         this.gameMap = gameBoard.getBoard();
         return gameMap;
     }
-
-    public ObservableList<Triplet<String, Integer, Boolean>> getPlayerIDs() {
-        return playerIDs;
-    }
-
     public void sendPlayerInformation(String nickname) {
         client.sendPlayerValuesMessage(nickname, robotProperty.get());
     }

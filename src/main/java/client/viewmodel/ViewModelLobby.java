@@ -6,16 +6,22 @@ import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
 import java.io.IOException;
+
+import client.playerlist.PlayerList;
+import client.ui.PlayerListCell;
 import communication.Message;
+import game.player.Player;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -45,11 +51,11 @@ public class ViewModelLobby {
     @FXML
     private MenuItem helpMenuItem;
     @FXML
-    private ListView<String> userList;
+    private ListView<Player> userList;
     @FXML
     private ChoiceBox<String> mapsChoiceBox;
     @FXML
-    private ChoiceBox<String> usersChoiceBox;
+    private ChoiceBox<Player> usersChoiceBox;
     @FXML
     private Button readyButton;
     @FXML
@@ -75,11 +81,11 @@ public class ViewModelLobby {
      */
     public void initialize() {
         this.ready = new SimpleBooleanProperty();
-        this.userList.setItems(modelGame.getUsers());
-        this.usersChoiceBox.setValue(modelGame.getUsersToSelect().get(0));
+        this.userList.setItems(modelGame.getPlayerList().getPlayerList());
+        this.usersChoiceBox.setValue(modelGame.getPlayerList().getPlayerList().get(0));
+        this.usersChoiceBox.setItems(modelGame.getPlayerList().getPlayerList());
         this.mapsChoiceBox.setValue(modelGame.getMaps().get(0));
-        this.usersChoiceBox.setItems(modelGame.getUsersToSelect());
-        this.mapsChoiceBox.setItems(modelGame.getMaps());
+
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
         ready.bindBidirectional(modelGame.readyToPlayProperty());
@@ -89,6 +95,9 @@ public class ViewModelLobby {
          */
         Platform.runLater(() -> chatTextfield.requestFocus());
 
+        /*
+         * refreshes ListView when change happens
+         */
         Platform.runLater(() -> userList.refresh());
 
         /*
@@ -102,29 +111,28 @@ public class ViewModelLobby {
         });
 
         /*
+         * Custom Cells for ListView to show specific attributes of player
+         */
+        userList.setCellFactory(listView -> new PlayerListCell());
+
+        /*
          * Mouse event for player's ListView to update choice box.
          * Cell with item updates ChoiceBox with current item.
          * If cell is empty, ChoiceBox is updated to 'All'.
          */
-        userList.setCellFactory(lv -> {
-            ListCell<String> cell = new ListCell<>() {
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText(item);
-                }
-            };
-            cell.setOnMouseClicked(e -> {
-                if (!cell.isEmpty()) {
+        userList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (!userList.getSelectionModel().getSelectedItems().isEmpty()) {
                     usersChoiceBox.setValue(userList.getSelectionModel().getSelectedItem());
-                    e.consume();
+                    event.consume();
                 }
                 else {
-                    usersChoiceBox.setValue("All");
+                    //usersChoiceBox.setValue();
                 }
-            });
-            return cell;
+            }
         });
+
 
         /*
          * Automatically selects item in ListView after changing item in ChoiceBox
@@ -133,7 +141,7 @@ public class ViewModelLobby {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 if(usersChoiceBox.getSelectionModel().getSelectedIndex() != 0) {
-                    userList.getSelectionModel().select(usersChoiceBox.getSelectionModel().getSelectedIndex()-1);
+                    userList.getSelectionModel().select(usersChoiceBox.getSelectionModel().getSelectedIndex());
                 }
             }
         });
@@ -146,59 +154,33 @@ public class ViewModelLobby {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         assert message != null;
         if (message.getMessageBody().isPrivate()) {
             String privateMessage = message.getMessageBody().getMessage();
-            privateMessageToChat(privateMessage);
+            privateMessageToChat(privateMessage, true);
         }
         else {
             String groupMessage = message.getMessageBody().getMessage();
-            groupMessageToChat(groupMessage);
+            groupMessageToChat(groupMessage, true);
         }
     }
 
     public void chatButtonOnAction() {
-        String user = usersChoiceBox.getSelectionModel().getSelectedItem();
+        String user = usersChoiceBox.getSelectionModel().getSelectedItem().getUsername();
 
-        if(user.equals("All")) {
+        if(user.equals("Group")) {
             modelChat.sendGroupMessage();
-            addToChat(chatTextfield.getText(), false);
+            groupMessageToChat(chatTextfield.getText(), false);
         }
         else {
             int userNumber = usersChoiceBox.getSelectionModel().getSelectedIndex();
-            int userID = modelGame.getPlayerIDs().get(userNumber-1).getValue1();
+            int userID = modelGame.getPlayerList().getPlayerList().get(userNumber).getId();
             modelChat.sendPrivateMessage(userID);
-            addToChat(chatTextfield.getText(), true);
+            privateMessageToChat(chatTextfield.getText(), false);
         }
     }
 
-    public void addToChat(String message, Boolean isPrivate) {
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new Insets(5, 5, 5, 10));
-
-        Text text = new Text(message);
-        TextFlow textFlow = new TextFlow(text);
-        if(!isPrivate) {
-            textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
-                    "fx-background-radius: 40px; -fx-opacity: 100;");
-        }
-        else {
-            textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(208,167,15);" +
-                    "fx-background-radius: 40px; -fx-opacity: 100;");
-        }
-        textFlow.setPadding(new Insets(5, 10, 5, 10));
-        text.setFill(Color.color(0.934, 0.945, 0.996));
-
-        hBox.getChildren().add(textFlow);
-        chatVBox.getChildren().add(hBox);
-
-        chatTextfield.clear();
-        chatTextfield.requestFocus();
-    }
-
-    public void groupMessageToChat(String groupMessage) {
+    public void groupMessageToChat(String groupMessage, boolean received) {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setPadding(new Insets(5, 5, 5, 10));
@@ -211,34 +193,49 @@ public class ViewModelLobby {
         text.setFill(Color.color(0.934, 0.945, 0.996));
 
         hBox.getChildren().add(textFlow);
+        if (!received) {
+            chatVBox.getChildren().add(hBox);
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                chatVBox.getChildren().add(hBox);
-            }
-        });
+            chatTextfield.clear();
+            chatTextfield.requestFocus();
+        }
+        else {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    chatVBox.getChildren().add(hBox);
+                }
+            });
+        }
     }
 
-    public void privateMessageToChat(String privateMessage) {
+    public void privateMessageToChat(String privateMessage, boolean received) {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setPadding(new Insets(5, 5, 5, 10));
 
         Text text = new Text(privateMessage);
         TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(208,167,15);" +
+        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(213,170,16);" +
                 "fx-background-radius: 40px; -fx-opacity: 100;");
         textFlow.setPadding(new Insets(5, 10, 5, 10));
         text.setFill(Color.color(0.934, 0.945, 0.996));
 
         hBox.getChildren().add(textFlow);
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                chatVBox.getChildren().add(hBox);
-            }
-        });
+        if (!received) {
+            chatVBox.getChildren().add(hBox);
+
+            chatTextfield.clear();
+            chatTextfield.requestFocus();
+        }
+        else {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    chatVBox.getChildren().add(hBox);
+                }
+            });
+        }
     }
 
     public void readyButtonOnAction() throws IOException {
