@@ -62,7 +62,6 @@ public class Client {
         this.playerIDs = FXCollections.observableArrayList();
         this.connected = new SimpleBooleanProperty();
         this.accepted = new SimpleBooleanProperty();
-        connectServer();
     }
 
     public static Client getInstance() {
@@ -255,7 +254,7 @@ public class Client {
         }
     }
 
-    private void connectServer() {
+    public void connectServer() {
         if (!connected.get()) {
             try {
                 socket = new Socket(address, port);

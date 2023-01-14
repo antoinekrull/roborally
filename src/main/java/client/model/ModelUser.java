@@ -73,4 +73,8 @@ public class ModelUser {
     public boolean getVerification() {
         return this.accepted.get();
     }
+
+    public void connect() {
+        client.connectServer();
+    }
 }
