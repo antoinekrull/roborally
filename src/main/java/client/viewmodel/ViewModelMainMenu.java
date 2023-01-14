@@ -35,11 +35,9 @@ public class ViewModelMainMenu {
 
     private ModelUser modelUser;
 
-    private NotifyChangeSupport notifyChangeSupport;
 
     public ViewModelMainMenu() {
         modelUser = ModelUser.getInstance();
-        notifyChangeSupport = NotifyChangeSupport.getInstance();
     }
     public void initialize() {
         //Background-Video:
@@ -54,6 +52,7 @@ public class ViewModelMainMenu {
     }
 
     public void joinButtonOnAction() throws IOException {
+        modelUser.connect();
         if (modelUser.getConnection()){
             RoboRallyStart.switchScene("login.fxml");
         } else {

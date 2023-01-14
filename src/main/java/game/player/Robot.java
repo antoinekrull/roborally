@@ -26,7 +26,7 @@ public class Robot {
 
     public Robot(int figure) {
         this.figure = figure;
-        deck.createDeck();
+        //deck.createDeck();
         energyCubes = 0;
         currentObjective = 1;
     }

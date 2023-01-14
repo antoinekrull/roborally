@@ -7,6 +7,7 @@ import game.board.Tile;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.javatuples.Triplet;
 
 import java.util.ArrayList;
 
@@ -25,6 +26,7 @@ public class ModelGame {
     private ObservableList<String> maps;
     private ObservableList<String> users;
     private ObservableList<String> usersToSelect;
+    private ObservableList<Triplet<String, Integer, Boolean>> playerIDs;
     private BooleanProperty readyToPlay;
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
 
@@ -35,16 +37,10 @@ public class ModelGame {
         this.robotProperty = new SimpleIntegerProperty();
         this.readyToPlay = new SimpleBooleanProperty();
         this.maps = FXCollections.observableArrayList("Dizzy Highway", "Extra Crispy", "Lost Bearings", "Death Trap");
-        this.users = FXCollections.observableArrayList(client.getPlayersOnline());
-        this.usersToSelect = FXCollections.observableArrayList(client.getPlayersToChat());
-        this.maps = FXCollections.observableArrayList();
-        this.users = FXCollections.observableArrayList();
+        this.users = client.getPlayersOnline();
+        this.usersToSelect = client.getPlayersToChat();
+        this.playerIDs = client.getPlayerIDs();
         this.gameBoard = new Board();
-        maps.add("Dizzy Highway");
-        maps.add("KackJavaFX");
-        /*users.add("Tomi");
-        users.add("Firas");
-        users.add("Molri");*/
     }
 
     public static ModelGame getInstance() {
@@ -57,7 +53,8 @@ public class ModelGame {
     public SimpleIntegerProperty robotProperty() {
         return robotProperty;
     }
-    public void addUser(String user) {this.users.add(user);}
+
+    //public void addUser(String user) {this.users.add(user);}
 
     public void setRobotProperty(int robotProperty) {
         this.robotProperty.set(robotProperty);
@@ -87,16 +84,14 @@ public class ModelGame {
         return gameMap;
     }
 
-    /*public void sendRobotSelection(int clientID) throws IOException {
-        boolean result = clientService.sendSelection(clientID, modelGame.getRobot());
-        if (!result) {
-            //setSelectionResult("Please choose another robot");
-        }
-        else {
-            ScreenController.switchScene("lobby.fxml");
-        }
+    public ObservableList<Triplet<String, Integer, Boolean>> getPlayerIDs() {
+        return playerIDs;
     }
-    */
+
+    public void sendPlayerInformation(String nickname) {
+        client.sendPlayerValuesMessage(nickname, robotProperty.get());
+    }
+
     public void setPlayerStatus(int userID) {
         //client.sendPlayerStatus or client.sendMessageToServer(userID, MessageType); true/false
     }
