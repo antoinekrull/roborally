@@ -160,7 +160,7 @@ public class Board {
                                 replaceTileInMap(board, x, y, tile, new PitTile(x, y));
                             }
                             case "Gear" -> {
-                                replaceTileInMap(board, x, y, tile, new GearTile(x, y, RotationType.LEFT));
+                                replaceTileInMap(board, x, y, tile, new GearTile(x, y, parseDirection(tile.getOrientations().get(0))));
                             }
                         }
                     }
@@ -178,6 +178,8 @@ public class Board {
             case "right" -> {parsedDirection = Direction.EAST;}
             case "top" -> {parsedDirection = Direction.NORTH;}
             case "bottom" -> {parsedDirection = Direction.SOUTH;}
+            case "clockwise" -> {parsedDirection = Direction.RIGHT;}
+            case "counterclockwise" -> {parsedDirection = Direction.LEFT;}
         }
         return parsedDirection;
 

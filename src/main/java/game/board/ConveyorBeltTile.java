@@ -17,7 +17,7 @@ public class ConveyorBeltTile extends Tile {
     private ArrayList<Direction> directionIn;
     private Direction directionOut;
     private enum Variant {
-        STRAIGHT, CURVE, TSECTION, CROSS
+        STRAIGHT, CURVE, TSECTION
     }
     private Variant variant;
 
@@ -30,7 +30,7 @@ public class ConveyorBeltTile extends Tile {
         this.velocity = velocity;
         this.directionIn = directionIn;
         this.directionOut = directionOut;
-        setVariant(this.directionIn, this.directionOut);
+        setVariant(this.directionIn, this.directionOut, velocity);
     }
 
     public int getVelocity() { return velocity; }
@@ -46,6 +46,13 @@ public class ConveyorBeltTile extends Tile {
         this.directionOut = directionOut;
     }
     public Variant getVariant() {return variant;}
+    private final String pathToStraight = "/textures/gameboard/foerderbandGeradeAnimated.gif";
+    private final String pathToFastStraight = "/textures/gameboard/foerderbandGeradeAnimatedROT_Schnell.gif";
+    private final String pathToCurve ="/textures/gameboard/foerderbandAnimatedKurve.gif";
+    private final String pathToFastCurve = "/textures/gameboard/foerderbandAnimatedKurveROT.gif";
+    private final String pathToTSection = "/textures/gameboard/AnimatedConveyorBelt_T.gif";
+    private final String pathToFastTSection = "/textures/gameboard/AnimatedConveyorBelt_T_ROT.gif";
+
 
     @Override
     public void applyEffect(Player player) throws Exception {
@@ -101,63 +108,88 @@ public class ConveyorBeltTile extends Tile {
                     }
                 }
             }
+            case TSECTION -> {
+                switch (directionOut) {
+                    case NORTH -> {
+                        if(directionIn.contains(Direction.WEST)) {
+                            img.setScaleX(-1);
+                        }
+                    }
+                    case EAST -> {
+                        if(directionIn.contains(Direction.NORTH)) {
+                            img.setScaleX(-1);
+                            rot = 90;
+                        }
+                    }
+                    case SOUTH -> {
+                        if(directionIn.contains(Direction.EAST)) {
+                            img.setScaleY(-1);
+                        }
+                    }
+                    case WEST -> {
+                        if(directionIn.contains(Direction.SOUTH)){
+                            img.setScaleX(-1);
+                            rot = 270;
+                        }
+                    }
+                }
+            }
         }
         img.setRotate(rot);
         tiles.add(img, this.xCoordinate, this.yCoordinate);
     }
-    private void setVariant(ArrayList<Direction> in, Direction out){
+
+    private void setVariant(ArrayList<Direction> in, Direction out, int velocity){
         if (in.size() == 1){
             switch (in.get(0)) {
                 case NORTH -> {
                     if(out == Direction.SOUTH){
                         this.variant = Variant.STRAIGHT;
-                        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
                     }
-                    else {this.variant = Variant.CURVE;
-                        this.path = getClass().getResource("/textures/gameboard/foerderbandAnimatedKurve.gif").toString();}
+                    else {this.variant = Variant.CURVE;}
 
 
                 }
                 case EAST -> {
-                    if(out == Direction.WEST){
-                        this.variant = Variant.STRAIGHT;
-                        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
-                    }
-                    else {this.variant = Variant.CURVE;
-                        this.path = getClass().getResource("/textures/gameboard/foerderbandAnimatedKurve.gif").toString();
-                    }
+                    if(out == Direction.WEST){this.variant = Variant.STRAIGHT;}
+                    else {this.variant = Variant.CURVE;}
 
                 }
                 case SOUTH -> {
-                    if(out == Direction.NORTH){
-                        this.variant = Variant.STRAIGHT;
-                        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
-                    }
-                    else {this.variant = Variant.CURVE;
-                        this.path = getClass().getResource("/textures/gameboard/foerderbandAnimatedKurve.gif").toString();}
+                    if(out == Direction.NORTH){this.variant = Variant.STRAIGHT;}
+                    else {this.variant = Variant.CURVE;}
 
                 }
                 case WEST -> {
-                    if(out == Direction.EAST){
-                        this.variant = Variant.STRAIGHT;
-                        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
+                    if(out == Direction.EAST){this.variant = Variant.STRAIGHT;}
+                    else {this.variant = Variant.CURVE;}
+                }
+            }
+            switch(variant){
+                case STRAIGHT ->{
+                    switch (velocity){
+                        case 1 -> this.path = getClass().getResource(pathToStraight).toString();
+                        case 2 -> this.path = getClass().getResource(pathToFastStraight).toString();
                     }
-                    else {this.variant = Variant.CURVE;
-                        this.path = getClass().getResource("/textures/gameboard/foerderbandAnimatedKurve.gif").toString();}
-
+                }
+                case CURVE -> {
+                    switch (velocity){
+                        case 1 -> this.path = getClass().getResource(pathToCurve).toString();
+                        case 2 -> this.path = getClass().getResource(pathToFastCurve).toString();
+                    }
                 }
             }
         }
         else if (in.size() == 2) {
             //path to T-Section conveyor belt
             this.variant = Variant.TSECTION;
-            this.path = getClass().getResource("/textures/gameboard/foerderbandAnimatedKurve.gif").toString();
-            //TODO: create right rotation for t-section coveyor belt
+            switch (velocity) {
+                case 1 ->this.path = getClass().getResource(pathToTSection).toString();
+                case 2 ->this.path = getClass().getResource(pathToFastTSection).toString();
+            }
         }
-        else if (in.size()==3) {
-            //path to Cross conveyor belt
-            //this.path = getClass().getResource("").toString();
-            //TODO: create right rotation for cross version of conveyor belt
+        else {
+            System.out.println("irgendwas stimmt mit Conveyorbelt nicht :/");
         }
     }
 }
