@@ -932,7 +932,7 @@
         {
           "type": "ConveyorBelt",
           "isOnBoard": "4A",
-          "speed": 1,
+          "speed": 2,
           "orientations": [
             "left",
             "right"
@@ -979,7 +979,7 @@
         {
           "type": "ConveyorBelt",
           "isOnBoard": "4A",
-          "speed": 1,
+          "speed": 2,
           "orientations": [
             "left",
             "right"
@@ -1050,7 +1050,7 @@
         {
           "type": "ConveyorBelt",
           "isOnBoard": "4A",
-          "speed": 1,
+          "speed": 2,
           "orientations": [
             "bottom",
             "top"
@@ -1061,7 +1061,7 @@
         {
           "type": "ConveyorBelt",
           "isOnBoard": "4A",
-          "speed": 1,
+          "speed": 2,
           "orientations": [
             "bottom",
             "top"
@@ -1072,7 +1072,7 @@
         {
           "type": "ConveyorBelt",
           "isOnBoard": "4A",
-          "speed": 1,
+          "speed": 2,
           "orientations": [
             "left",
             "top"
@@ -1096,7 +1096,7 @@
         {
           "type": "ConveyorBelt",
           "isOnBoard": "4A",
-          "speed": 1,
+          "speed": 2,
           "orientations": [
             "left",
             "bottom"
@@ -1107,7 +1107,7 @@
         {
           "type": "ConveyorBelt",
           "isOnBoard": "4A",
-          "speed": 1,
+          "speed": 2,
           "orientations": [
             "top",
             "bottom"
@@ -1118,7 +1118,7 @@
         {
           "type": "ConveyorBelt",
           "isOnBoard": "4A",
-          "speed": 1,
+          "speed": 2,
           "orientations": [
             "top",
             "bottom"
@@ -1129,7 +1129,7 @@
         {
           "type": "ConveyorBelt",
           "isOnBoard": "4A",
-          "speed": 1,
+          "speed": 2,
           "orientations": [
             "top",
             "bottom"

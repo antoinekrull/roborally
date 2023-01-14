@@ -822,7 +822,7 @@
           {
             "type": "ConveyorBelt",
             "isOnBoard": "1A",
-            "speed": 1,
+            "speed": 2,
             "orientations": [
               "bottom",
               "top"
@@ -851,7 +851,7 @@
           {
             "type": "ConveyorBelt",
             "isOnBoard": "1A",
-            "speed": 1,
+            "speed": 2,
             "orientations": [
               "top",
               "bottom"
