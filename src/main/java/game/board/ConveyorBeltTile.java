@@ -116,20 +116,20 @@ public class ConveyorBeltTile extends Tile {
                         }
                     }
                     case EAST -> {
+                        rot = 90;
                         if(directionIn.contains(Direction.NORTH)) {
                             img.setScaleX(-1);
-                            rot = 90;
                         }
                     }
                     case SOUTH -> {
                         if(directionIn.contains(Direction.EAST)) {
                             img.setScaleY(-1);
-                        }
+                        } else rot = 180;
                     }
                     case WEST -> {
+                        rot = 270;
                         if(directionIn.contains(Direction.SOUTH)){
                             img.setScaleX(-1);
-                            rot = 270;
                         }
                     }
                 }

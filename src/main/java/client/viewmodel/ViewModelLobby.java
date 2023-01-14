@@ -253,7 +253,6 @@ public class ViewModelLobby {
             readyButton.setText("NOT READY");
             this.ready.set(true);
             //modelGame.setPlayerStatus(modelUser.userIDProperty().get());
-            modelGame.setPlayerStatus(modelUser.userIDProperty().get(), true);
             modelUser.sendSetStatus(true);
             if(modelGame.getReadyList().size() >= 2) {
                 System.out.println("lets start");
@@ -282,7 +281,6 @@ public class ViewModelLobby {
         else if (this.ready.get()) {
             readyButton.setText("READY");
             this.ready.set(false);
-            modelGame.setPlayerStatus(modelUser.userIDProperty().get(), false);
             modelUser.sendSetStatus(false);
         }
         //resource is null

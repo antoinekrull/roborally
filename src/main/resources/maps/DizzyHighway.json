@@ -379,7 +379,7 @@
           "isOnBoard": "5B",
           "speed": 2,
           "orientations": [
-            "bottom",
+            "right",
             "left",
             "top"
           ]
@@ -387,13 +387,8 @@
       ],
       [
         {
-          "type": "ConveyorBelt",
-          "isOnBoard": "5B",
-          "speed": 2,
-          "orientations": [
-            "top",
-            "bottom"
-          ]
+          "type": "Empty",
+          "isOnBoard": "5B"
         }
       ]
     ],
