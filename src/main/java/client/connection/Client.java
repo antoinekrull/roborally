@@ -1,15 +1,14 @@
 package client.connection;
 
-import client.model.ModelGame;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import game.board.Board;
+import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.javatuples.Pair;
 import org.javatuples.Triplet;
 
 import java.io.BufferedInputStream;
@@ -17,7 +16,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
+
+
 
 /**
  *
@@ -37,6 +37,7 @@ public class Client {
     private DataInputStream in = null;
     private DataOutputStream out = null;
     private BooleanProperty connected;
+    private BooleanProperty accepted;
     private BooleanProperty isAI;
     private ObjectProperty<Message> message;
     private IntegerProperty userID;
@@ -48,19 +49,19 @@ public class Client {
     private String group = "KnorrigeKorrelate";
     private ObservableList<String> playersOnline;
     private ObservableList<String> playersToChat;
-    private ArrayList<Triplet<Integer, String, Integer>> otherPlayers = new ArrayList<>();
-    private ArrayList<Pair<Integer, Boolean>> otherPlayersStatus = new ArrayList<>();
+    private ObservableList<Triplet<String, Integer, Boolean>> playerIDs;
 
-    private ModelGame modelGame;
 
     private Client() {
         this.messageCreator = new MessageCreator();
         this.message = new SimpleObjectProperty<>();
         this.userID = new SimpleIntegerProperty();
         this.isAI = new SimpleBooleanProperty();
-        this.playersOnline = FXCollections.observableArrayList("Tomi", "Firas", "Molri", "Anto");
-        this.playersToChat = FXCollections.observableArrayList("All", "Tomi", "Firas", "Molri", "Anto");
-        connected = new SimpleBooleanProperty();
+        this.playersOnline = FXCollections.observableArrayList();
+        this.playersToChat = FXCollections.observableArrayList("All");
+        this.playerIDs = FXCollections.observableArrayList();
+        this.connected = new SimpleBooleanProperty();
+        this.accepted = new SimpleBooleanProperty();
         connectServer();
     }
 
@@ -95,6 +96,10 @@ public class Client {
         this.userID.set(userID);
     }
 
+    public ObservableList<Triplet<String, Integer, Boolean>> getPlayerIDs() {
+        return playerIDs;
+    }
+
     public BooleanProperty isAIProperty() {
         return isAI;
     }
@@ -102,6 +107,20 @@ public class Client {
     public BooleanProperty connectedProperty() {
         return connected;
     }
+
+    public BooleanProperty acceptedProperty() {
+        return accepted;
+    }
+
+    public void setAcceptedProperty() {
+        this.accepted.set(true);
+    }
+
+   public void addPlayer(String username, int clientID) {
+        this.playersOnline.add(username);
+        this.playersToChat.add(username);
+        this.playerIDs.add(new Triplet<>(username, clientID, false));
+   }
 
     private class ReadMessagesFromServer implements Runnable {
         DataInputStream in = null;
@@ -130,14 +149,19 @@ public class Client {
                                 Client.this.setUserID(message.getMessageBody().getClientID());
                             }
                             if(message.getMessageType().equals(MessageType.PlayerAdded)){
-                                otherPlayers.add(new Triplet<>(message.getMessageBody().getClientID(),
-                                        message.getMessageBody().getName(),
-                                        message.getMessageBody().getFigure()));
-                                //TODO process the data input like giving the player his robot and stuff like that
+                                int clientID = message.getMessageBody().getClientID();
+                                if (Client.this.userIDProperty().get() == clientID){
+                                    if (!Client.this.accepted.get()) {
+                                        Client.this.setAcceptedProperty();
+                                    }
+                                }
+                                else {
+                                    String username = message.getMessageBody().getName();
+                                    Platform.runLater(() -> Client.this.addPlayer(username, clientID));
+                                }
                             }
                             if(message.getMessageType().equals(MessageType.PlayerStatus)){
-                                otherPlayersStatus.add(new Pair<>(message.getMessageBody().getClientID(),
-                                        message.getMessageBody().isReady()));
+
                             }
                             if (message.getMessageType().equals(MessageType.SelectMap)){
                                 String[] maps = message.getMessageBody().getAvailableMaps();

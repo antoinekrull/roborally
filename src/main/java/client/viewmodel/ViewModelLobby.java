@@ -89,6 +89,8 @@ public class ViewModelLobby {
          */
         Platform.runLater(() -> chatTextfield.requestFocus());
 
+        Platform.runLater(() -> userList.refresh());
+
         /*
          * Adjusts VBox height and updates ScrollPane to latest message.
          */
@@ -105,7 +107,7 @@ public class ViewModelLobby {
          * If cell is empty, ChoiceBox is updated to 'All'.
          */
         userList.setCellFactory(lv -> {
-            ListCell<String> cell = new ListCell<String>() {
+            ListCell<String> cell = new ListCell<>() {
                 @Override
                 protected void updateItem(String item, boolean empty) {
                     super.updateItem(item, empty);
@@ -158,13 +160,14 @@ public class ViewModelLobby {
 
     public void chatButtonOnAction() {
         String user = usersChoiceBox.getSelectionModel().getSelectedItem();
-        int userID = modelUser.userIDProperty().get();
 
         if(user.equals("All")) {
             modelChat.sendGroupMessage();
             addToChat(chatTextfield.getText(), false);
         }
         else {
+            int userNumber = usersChoiceBox.getSelectionModel().getSelectedIndex();
+            int userID = modelGame.getPlayerIDs().get(userNumber-1).getValue1();
             modelChat.sendPrivateMessage(userID);
             addToChat(chatTextfield.getText(), true);
         }
@@ -280,7 +283,6 @@ public class ViewModelLobby {
         currentStage.setScene(new Scene(root, 1650, 1000));
         currentStage.show();
         */
-        ;
     }
 
     public void exit() throws IOException {
