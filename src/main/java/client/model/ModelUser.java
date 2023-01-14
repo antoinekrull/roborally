@@ -14,6 +14,7 @@ public class ModelUser {
 
     private static ModelUser modelUser;
     private BooleanProperty connected;
+    private BooleanProperty accepted;
     private String username;
     private IntegerProperty userID;
     private StringProperty usernameProperty;
@@ -26,6 +27,8 @@ public class ModelUser {
         client = Client.getInstance();
         connected = new SimpleBooleanProperty();
         connected.bind(client.connectedProperty());
+        accepted = new SimpleBooleanProperty();
+        accepted.bind(client.acceptedProperty());
         usernameProperty = new SimpleStringProperty("");
         userID = new SimpleIntegerProperty();
         userID.bindBidirectional(client.userIDProperty());
@@ -70,7 +73,11 @@ public class ModelUser {
         return usernameProperty;
     }
 
-    /*public void sendUsername() {
-        client.sendUsername(usernameProperty.get());
-    }*/
+    public boolean getVerification() {
+        return this.accepted.get();
+    }
+
+    public void connect() {
+        client.connectServer();
+    }
 }

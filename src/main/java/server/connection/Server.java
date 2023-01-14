@@ -153,6 +153,16 @@ public class Server {
     }
      */
 
+    public void sendPlayerValuesToAll(int clientID, Message message) {
+        for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+            if (client.getKey() != clientID) {
+                client.getValue().write(message);
+                System.out.println("send to: " + client.getValue().getUsername() + " with id: " + client.getValue().getClientID());
+            }
+        }
+        System.out.println("sendPlayerValuesToAll: " + " from " + message.getMessageBody().getClientID() + ", " + "with figure: " + message.getMessageBody().getFigure() + ", with name: " + message.getMessageBody().getName() + ", with id: " + message.getMessageBody().getClientID() + "\n");
+    }
+
     public static Game getGameInstance(){
         if (game == null) {
             game = new Game();

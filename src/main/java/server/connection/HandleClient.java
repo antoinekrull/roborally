@@ -178,7 +178,7 @@ public class HandleClient implements Runnable{
         write(messageCreator.generateHelloClientMessage(server.getProtocolVersion()));
 
         try {
-            String username ="";
+            //String username ="";
 
             /*while (username == "") {
                 if(JsonSerializer.deserializeJson(in.readUTF(), Message.class).getMessageType() == MessageType.PlayerValues) {
@@ -202,7 +202,7 @@ public class HandleClient implements Runnable{
                 System.out.println(e.getMessage());
             }*/
 
-            String line = "";
+            String line;
 
             //Accept client if his protocol version is correct
             while(!accepted) {
@@ -277,21 +277,62 @@ public class HandleClient implements Runnable{
                         write(messageCreator.generateGameStartedMessage(jsonmap));
 
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
-                        server.players.add(new Player(incomingMessage.getMessageBody().getClientID(), incomingMessage.getMessageBody().getName()
-                                , new Robot(incomingMessage.getMessageBody().getFigure())));
-                        write(messageCreator.generatePlayerAddedMessage(incomingMessage.getMessageBody().getName(), incomingMessage.getMessageBody().getFigure(), this.clientID));
+                        System.out.println("HandleClient: PlayerValues");
+                        System.out.println("message incoming: " + incomingMessage.getMessageType());
+                        System.out.println("content: " + incomingMessage.getMessageBody().getFigure() + " " + incomingMessage.getMessageBody().getName());
+                        this.username = incomingMessage.getMessageBody().getName();
+                        System.out.println("Username registered from server: " + this.username + "\n");
+                        int figure = incomingMessage.getMessageBody().getFigure();
+                        if (server.players.size() == 0) {
+                            System.out.println("zero players reached");
+
+                            Message robotAcceptedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
+                            write(robotAcceptedMessage);
+
+                            server.players.add(new Player(getClientID(), incomingMessage.getMessageBody().getName()
+                                    , new Robot(incomingMessage.getMessageBody().getFigure())));
+                            System.out.println("Added because 0 players\n");
+                        }
+                        else {
+                            boolean taken = false;
+                            for (int i = 0; i < server.players.size(); i++) {
+                                if (server.players.get(i).getRobot().getFigure() == figure) {
+                                    taken = true;
+                                    write(messageCreator.generateErrorMessage("Your figure was already chosen. Choose another one."));
+                                    System.out.println("Double figures\n");
+                                    break;
+                                }
+                            }
+                            if (!taken) {
+
+                                Message robotAcceptedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
+                                write(robotAcceptedMessage);
+
+                                server.players.add(new Player(getClientID(), incomingMessage.getMessageBody().getName()
+                                        , new Robot(incomingMessage.getMessageBody().getFigure())));
+                                Message playerAddedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
+                                server.sendPlayerValuesToAll(getClientID(), playerAddedMessage);
+
+                                for(int i = 0; i < server.players.size(); i++) {
+                                    if(server.players.get(i).getId() != getClientID()) {
+                                        Message addOtherPlayer = messageCreator.generatePlayerAddedMessage(server.players.get(i).getUsername(),server.players.get(i).getRobot().getFigure(), server.players.get(i).getId());
+                                        write(addOtherPlayer);
+                                    }
+                                }
+                                System.out.println("new player\n");
+                            }
+                        }
                     } else if(incomingMessage.getMessageType() == MessageType.SetStatus) {
                         boolean ready = incomingMessage.getMessageBody().isReady();
                         if(ready){
                             game.addReady(clientID);
-                            if(game.getFirstReadyID()==clientID){
+                            if(game.getFirstReadyID() == clientID){
                                 write(messageCreator.generateSelectMapMessage(game.getMaps()));
                             }
                         } else {
                             game.removeReady(clientID);
                         }
                         write(messageCreator.generatePlayerStatusMessage(clientID,ready));
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -302,6 +343,7 @@ public class HandleClient implements Runnable{
             //System.out.println("Client disconnected");
         }
     }
+
     private void closeConnection(){
         try {
             //changed String to Message to match with other messages (added generateGoodbyeMessage to MessageCreator)
