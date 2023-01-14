@@ -12,11 +12,14 @@ import java.util.*;
 
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static game.board.Board.robotLaserList;
 
 public class Game implements Runnable {
     private GamePhase currentGamePhase;
+    private Timer timer = new Timer();
     public static PlayerList playerList;
     public Board board = new Board();
     private Player activePlayer;
@@ -158,7 +161,22 @@ public class Game implements Runnable {
     }
 
     //TODO: Implement this
-    private void runTimer(){}
+    public void runTimer() {
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                PlayerList unreadyPlayers = playerList.getUnreadyPlayers();
+                for (int i = 0; i < unreadyPlayers.size(); i++) {
+                    unreadyPlayers.get(i).fillRegisterWithRandomCards();
+
+                    // for testing purposes
+                    unreadyPlayers.get(i).printRegisters();
+                    System.out.println("Time ran through");
+                }
+            }
+        };
+        timer.schedule(timerTask, 30000);
+    }
 
     public GamePhase getCurrentGamePhase() {
         return currentGamePhase;
@@ -246,6 +264,4 @@ public class Game implements Runnable {
             }
         }
     }
-
-
 }
