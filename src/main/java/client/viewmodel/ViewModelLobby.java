@@ -238,8 +238,11 @@ public class ViewModelLobby {
         });
     }
     public void mapButtonOnAction() throws IOException{
-        modelUser.sendMapSelected(mapsChoiceBox.getSelectionModel().getSelectedItem());
-        RoboRallyStart.switchScene("gamewindow.fxml");
+        String map = mapsChoiceBox.getSelectionModel().getSelectedItem();
+        if (map != null) {
+            modelUser.sendMapSelected(map);
+            RoboRallyStart.switchScene("gamewindow.fxml");
+        }
     }
 
     public void readyButtonOnAction() throws IOException {

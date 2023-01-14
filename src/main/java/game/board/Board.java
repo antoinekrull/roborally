@@ -81,6 +81,7 @@ public class Board {
         Map map = objectMapper.readValue(jsonMap, Map.class);
         board = map.getGameMap();
         //board = objectMapper.readValue(jsonMap, new TypeReference<ArrayList<ArrayList<ArrayList<Tile>>>>() {
+        System.out.println("Board mit größe ("+board.size()+", "+board.get(0).size()+") erstellt!");
 
             try {
             for(int x = 0; x < 13; x++){
@@ -122,17 +123,16 @@ public class Board {
                             }
                             case "Laser" -> {
                                 String directionLaser = tile.getOrientations().get(0);
+                                LaserTile laser;
                                 if(board.get(x).get(y).get(0).getType().equals("Wall")){
-                                    LaserTile laser = new LaserTile(x,y, parseDirection(directionLaser), true);
-                                    replaceTileInMap(board,x,y,tile, laser);
-                                    laserTileList.add(laser);
+                                    laser = new LaserTile(x, y, parseDirection(directionLaser), true);
 
                                 }
                                 else {
-                                    LaserTile laser = new LaserTile(x,y, parseDirection(directionLaser), false);
-                                    replaceTileInMap(board, x, y, tile, laser);
-                                    laserTileList.add(laser);
+                                    laser = new LaserTile(x, y, parseDirection(directionLaser), false);
                                 }
+                                replaceTileInMap(board,x,y,tile, laser);
+                                laserTileList.add(laser);
                             }
                             //TODO: needs to work with directions, once they have been added to json
                             case "RestartPoint" -> {
@@ -154,8 +154,12 @@ public class Board {
                             //TODO: PushPanels need registers
                             case "PushPanel" -> {
                                 String directionPushPanel = tile.getOrientations().get(0);
-                                //replaceTileInMap(map,x,y,tile, new NormalTile(x,y, parseDirection(directionPushPanel));
-                                //pushPanelList.add(new PushPanelTile(x, y, parseDirection(directionPushPanel)));
+                                ArrayList<Integer> registers = new ArrayList<>();
+                                registers.add(2);
+                                registers.add(4);
+                                PushPanelTile pushTile = new PushPanelTile(x,y, parseDirection(directionPushPanel),registers);
+                                replaceTileInMap(board,x,y,tile, pushTile);
+                                pushPanelList.add(pushTile);
                             }
                             case "Pit" -> {
                                 replaceTileInMap(board, x, y, tile, new PitTile(x, y));

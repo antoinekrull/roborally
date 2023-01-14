@@ -83,12 +83,7 @@
           "orientations": [
             "top"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "Start A"
         }
-
       ],
       [
         {
@@ -121,10 +116,6 @@
           "orientations": [
             "bottom"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "Start A"
         }
       ],
       [
@@ -177,10 +168,6 @@
           "orientations": [
             "right"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "Start A"
         }
       ],
       [
@@ -190,10 +177,6 @@
           "orientations": [
             "right"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "Start A"
         }
       ],
       [
@@ -385,7 +368,8 @@
           "speed": 2,
           "orientations": [
             "bottom",
-            "top"
+            "top",
+            "left"
           ]
         }
       ],

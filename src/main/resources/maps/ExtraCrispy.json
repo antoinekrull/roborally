@@ -86,12 +86,7 @@
           "orientations": [
             "top"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "A"
         }
-
       ],
       [
         {
@@ -124,10 +119,6 @@
           "orientations": [
             "bottom"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "A"
         }
       ],
       [
@@ -181,12 +172,7 @@
           "orientations": [
             "right"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "A"
         }
-
       ],
       [
 
@@ -196,12 +182,7 @@
           "orientations": [
             "right"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "A"
         }
-
       ],
       [
         {
@@ -279,10 +260,6 @@
           "orientations": [
             "bottom"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "4A"
         }
       ],
       [
@@ -433,6 +410,20 @@
         }
       ],
       [
+        {
+          "type": "Wall",
+          "isOnBoard": "4A",
+          "orientations": [
+            "top"
+          ]
+        },
+        {
+          "type": "Laser",
+          "isOnBoard": "4A",
+          "orientations": [
+            "bottom"
+          ]
+        },
         {
           "type": "CheckPoint",
           "isOnBoard": "4A",
@@ -507,6 +498,20 @@
       ],
       [
         {
+          "type": "Wall",
+          "isOnBoard": "4A",
+          "orientations": [
+            "bottom"
+          ]
+        },
+        {
+          "type": "Laser",
+          "isOnBoard": "4A",
+          "orientations": [
+            "top"
+          ]
+        },
+        {
           "type": "CheckPoint",
           "isOnBoard": "4A",
           "count": 2
@@ -579,10 +584,6 @@
           "orientations": [
             "left"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "4A"
         }
       ],
       [
@@ -844,10 +845,6 @@
           "orientations": [
             "right"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "4A"
         }
       ],
       [
@@ -911,6 +908,20 @@
         }
       ],
       [
+        {
+          "type": "Wall",
+          "isOnBoard": "4A",
+          "orientations": [
+            "top"
+          ]
+        },
+        {
+          "type": "Laser",
+          "isOnBoard": "4A",
+          "orientations": [
+            "bottom"
+          ]
+        },
         {
           "type": "CheckPoint",
           "isOnBoard": "4A",
@@ -984,6 +995,20 @@
         }
       ],
       [
+        {
+          "type": "Wall",
+          "isOnBoard": "4A",
+          "orientations": [
+            "bottom"
+          ]
+        },
+        {
+          "type": "Laser",
+          "isOnBoard": "4A",
+          "orientations": [
+            "top"
+          ]
+        },
         {
           "type": "CheckPoint",
           "isOnBoard": "4A",
@@ -1144,10 +1169,6 @@
           "orientations": [
             "top"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "4A"
         }
       ],
       [
@@ -1157,10 +1178,6 @@
           "orientations": [
             "bottom"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "4A"
         }
       ],
       [
