@@ -4,9 +4,12 @@ import game.player.Robot;
 import game.player.Player;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class PlayerList {
+public class PlayerList implements Iterator<Player> {
     private ArrayList<Player> playerList = new ArrayList<>();
+    private int count = 0;
 
     /**
      * Checks if player is in game.
@@ -14,7 +17,7 @@ public class PlayerList {
      * @param robot Player who is checked.
      * @return answer Returns if player is in game.
      */
-        public boolean playerIsInList(Robot robot) {
+    public boolean playerIsInList(Robot robot) {
         int indexOfPlayer = -1;
         boolean answer = false;
         for (int i = 0; i < playerList.size(); i++) {
@@ -29,20 +32,10 @@ public class PlayerList {
         return answer;
     }
 
-    public boolean playerIsInList(int id) {
-        int indexOfPlayer = -1;
-        boolean answer = false;
-        for (int i = 0; i < playerList.size(); i++) {
-            if (playerList.get(i).getId() == id) {
-                indexOfPlayer = i;
-                break;
-            }
-        }
-        if (indexOfPlayer > -1) {
-            answer = true;
-        }
-        return answer;
+    public ArrayList<Player> getPlayerList(){
+        return playerList;
     }
+
 
     public boolean playersAreReady() {
         int readyCount = 0;
@@ -138,5 +131,22 @@ public class PlayerList {
             result = true;
         }
         return result;
+    }
+
+    @Override
+    public boolean hasNext() {
+        if (count < playerList.size()){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Player next() {
+        if (count == playerList.size())
+            throw new NoSuchElementException();
+
+        count++;
+        return playerList.get(count - 1);
     }
 }
