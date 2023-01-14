@@ -1,6 +1,7 @@
 package game.board;
 
 import game.player.Player;
+import javafx.scene.layout.GridPane;
 
 /**
  * @author Antoine, Firas
@@ -8,9 +9,16 @@ import game.player.Player;
  */
 public class GearTile extends Tile {
     private RotationType rotationType;
-    public GearTile(int xCoordinate, int yCoordinate) {
+    public GearTile(int xCoordinate, int yCoordinate, RotationType rotation) {
         super(xCoordinate, yCoordinate, "/textures/gameboard/gearsNachLinksDrehen.png");
-        this.path = getClass().getResource("/textures/gameboard/gearsNachLinksDrehen.png").toString();
+        this.rotationType = rotation;
+        if (rotationType == RotationType.LEFT) {
+            this.path = getClass().getResource("/textures/gameboard/gearsNachLinksDrehen.png").toString();
+        }
+        else {
+            this.path = getClass().getResource("/textures/gameboard/gearsNachLinksDrehen.png").toString();
+        }
+
         setType("Gear");
         isDanger = false;
         isBlocking = false;
@@ -40,5 +48,9 @@ public class GearTile extends Tile {
         } else {
             throw new Exception("Invalid rotation type");
         }
+    }
+    @Override
+    public void makeImage(GridPane tiles) {
+
     }
 }

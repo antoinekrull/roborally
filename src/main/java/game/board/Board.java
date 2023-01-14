@@ -1,10 +1,7 @@
 package game.board;
 
-import client.model.ModelGame;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.geometry.Point2D;
 import org.javatuples.Pair;
 
 import java.util.ArrayList;
@@ -78,14 +75,14 @@ public class Board {
 
     public void createBoard(String jsonMap) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        Map map = objectMapper.readValue(jsonMap, Map.class);
+        MapDeserializer map = objectMapper.readValue(jsonMap, MapDeserializer.class);
         board = map.getGameMap();
         //board = objectMapper.readValue(jsonMap, new TypeReference<ArrayList<ArrayList<ArrayList<Tile>>>>() {
         System.out.println("Board mit größe ("+board.size()+", "+board.get(0).size()+") erstellt!");
 
             try {
-            for(int x = 0; x < 13; x++){
-                for(int y = 0; y < 10; y++){
+            for(int x = 0; x < board.size(); x++){
+                for(int y = 0; y < board.get(x).size(); y++){
                     for(int i = 0; i < board.get(x).get(y).size(); i++) {
                         Tile tile = board.get(x).get(y).get(i);
                         String type = tile.getType();
@@ -154,9 +151,7 @@ public class Board {
                             //TODO: PushPanels need registers
                             case "PushPanel" -> {
                                 String directionPushPanel = tile.getOrientations().get(0);
-                                ArrayList<Integer> registers = new ArrayList<>();
-                                registers.add(2);
-                                registers.add(4);
+                                ArrayList<Integer> registers = tile.getRegisters();
                                 PushPanelTile pushTile = new PushPanelTile(x,y, parseDirection(directionPushPanel),registers);
                                 replaceTileInMap(board,x,y,tile, pushTile);
                                 pushPanelList.add(pushTile);
@@ -165,7 +160,7 @@ public class Board {
                                 replaceTileInMap(board, x, y, tile, new PitTile(x, y));
                             }
                             case "Gear" -> {
-                                replaceTileInMap(board, x, y, tile, new GearTile(x, y));
+                                replaceTileInMap(board, x, y, tile, new GearTile(x, y, RotationType.LEFT));
                             }
                         }
                     }
