@@ -37,8 +37,8 @@
           <children>
             <GridPane GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" />
-                <ColumnConstraints hgrow="SOMETIMES" />
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="70.0" />
+                <ColumnConstraints hgrow="SOMETIMES" percentWidth="30.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
@@ -330,18 +330,23 @@
         </GridPane>
       </center>
       <top>
-        <VBox maxHeight="180.0" spacing="60.0" BorderPane.alignment="CENTER">
+        <VBox spacing="60.0" BorderPane.alignment="CENTER">
           <children>
-            <MenuBar styleClass="menubar">
-              <menus>
-                <Menu mnemonicParsing="false" text="Options">
-                  <items>
-                    <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#exit" text="Exit" />
-                    <MenuItem mnemonicParsing="false" text="Help" />
-                  </items>
-                </Menu>
-              </menus>
-            </MenuBar>
+                  <StackPane>
+                     <children>
+                  <MenuBar styleClass="menubar">
+                    <menus>
+                      <Menu mnemonicParsing="false" text="Options">
+                        <items>
+                          <MenuItem fx:id="exitMenuItem" mnemonicParsing="false" onAction="#exit" text="Exit" />
+                          <MenuItem mnemonicParsing="false" text="Help" />
+                        </items>
+                      </Menu>
+                    </menus>
+                  </MenuBar>
+                        <Label text="??? Turn - 00:00 left" />
+                     </children>
+                  </StackPane>
             <GridPane VBox.vgrow="ALWAYS">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
