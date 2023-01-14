@@ -4,10 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.*;
 import game.card.*;
 import game.player.Player;
+import game.player.Robot;
 import org.javatuples.Pair;
-//import server.PlayerList;
 import server.connection.PlayerList;
-import java.util.LinkedList;
+
+import java.util.*;
 
 
 import java.util.ArrayList;
@@ -141,10 +142,19 @@ public class Game implements Runnable {
         return new Pair<>(result, index);
     }
 
-    //TODO: Implement this
-    private PlayerList determinePriority() {
-        PlayerList priorityList = playerList;
-        return priorityList;
+    private ArrayList<Robot> determinePriority() {
+        Pair<Integer, Integer> antennaPosition = Board.antenna.getPosition();
+        ArrayList<Robot> roboList = new ArrayList<>();
+        for (PlayerList it = playerList; it.hasNext(); ) {
+            Player player = it.next();
+            roboList.add(player.getRobot());
+        }
+        roboList.sort((r1, r2) -> {
+            double dist1 = Math.sqrt(Math.pow(r1.getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(r1.getCurrentPosition().getValue1() - antennaPosition.getValue1(), 2));
+            double dist2 = Math.sqrt(Math.pow(r2.getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(r2.getCurrentPosition().getValue1(), 2));
+            return Double.compare(dist1, dist2);
+        });
+        return roboList;
     }
 
     //TODO: Implement this
