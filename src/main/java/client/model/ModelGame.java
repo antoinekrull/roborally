@@ -8,7 +8,6 @@ import game.board.Tile;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.javatuples.Triplet;
 
 import java.util.ArrayList;
 
@@ -21,9 +20,10 @@ import java.util.ArrayList;
 public class ModelGame {
 
     private static ModelGame modelGame;
-    public Board gameBoard;
-    public SimpleIntegerProperty robotProperty;
     private Client client;
+    private Board gameBoard;
+    private SimpleIntegerProperty robotProperty;
+    private SimpleStringProperty errorMessage;
     private ObservableList<String> maps;
     private BooleanProperty readyToPlay;
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
@@ -38,6 +38,8 @@ public class ModelGame {
         this.maps = FXCollections.observableArrayList("Dizzy Highway", "Extra Crispy", "Lost Bearings", "Death Trap");
         this.gameBoard = new Board();
         this.playerList = client.getPlayerList();
+        this.errorMessage = new SimpleStringProperty();
+        errorMessage.bind(client.errorMessageProperty());
     }
 
     public static ModelGame getInstance() {
@@ -64,7 +66,9 @@ public class ModelGame {
         gameBoard.createBoard(jsonMap);
         this.gameMap = gameBoard.getBoard();
     }
-
+    public SimpleStringProperty errorMessageProperty() {
+        return errorMessage;
+    }
     public BooleanProperty readyToPlayProperty() {
         return readyToPlay;
     }

@@ -10,9 +10,6 @@ import game.player.Player;
 import game.player.Robot;
 import javafx.application.Platform;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import org.javatuples.Triplet;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -44,6 +41,7 @@ public class Client {
     private BooleanProperty isAI;
     private ObjectProperty<Message> message;
     private IntegerProperty userID;
+    private StringProperty errorMessage;
 
     MessageCreator messageCreator;
     String address = "localhost";
@@ -61,6 +59,7 @@ public class Client {
         this.connected = new SimpleBooleanProperty();
         this.accepted = new SimpleBooleanProperty();
         this.playerList = new PlayerList();
+        this.errorMessage = new SimpleStringProperty();
     }
 
     public static Client getInstance() {
@@ -104,6 +103,18 @@ public class Client {
 
     public PlayerList getPlayerList() {
         return playerList;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage.get();
+    }
+
+    public StringProperty errorMessageProperty() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage.set(errorMessage);
     }
 
     private class ReadMessagesFromServer implements Runnable {
@@ -173,7 +184,8 @@ public class Client {
                                 Client.this.setMessage(message);
                             }
                             if(message.getMessageType().equals(MessageType.Error)){
-                                System.out.println(message.getMessageBody().getMessage());
+                                String errorMessage = message.getMessageBody().getMessage();
+                                Client.this.setErrorMessage(errorMessage);
                             }
                             if(message.getMessageType().equals(MessageType.CardPlayed)){
 
