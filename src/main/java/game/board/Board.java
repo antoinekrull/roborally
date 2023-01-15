@@ -132,7 +132,6 @@ public class Board {
                                         directionsWall.add(parseDirection(orientations.get(t)));
                                     }
                                     for (int s = 0; s < directionsWall.size();s++) {
-                                        System.out.println(angelCalculation(directionLaser,directionsWall.get(s)));
                                         if(angelCalculation(directionLaser, directionsWall.get(s)) == 180) {
                                             onWall = true;
                                         }
