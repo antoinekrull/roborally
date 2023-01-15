@@ -87,11 +87,14 @@ public class Game implements Runnable {
                 }
             }
         }
-
-        for(int x = 0; x < robotLaserList.size(); x++) {
-            for(int y = 0; y < playerList.size(); y++) {
-                if(playerList.get(y).getRobot().getCurrentPosition().equals(robotLaserList.get(x).getPosition())) {
-                    playerList.get(y).addCard(game.Game.spamDeck.popCardFromDeck());
+        //robotLaser
+        computeRobotLaserPositions();
+        for(int i = 0; i < playerList.size(); i++){
+            for(int x = 0; x < robotLaserList.size(); x++) {
+                for(int y = 0; y < robotLaserList.get(x).size(); y++) {
+                    if(playerList.get(i).getRobot().getCurrentPosition().equals(robotLaserList.get(y))) {
+                        playerList.get(i).addCard(game.Game.spamDeck.popCardFromDeck());
+                    }
                 }
             }
         }
@@ -158,6 +161,85 @@ public class Game implements Runnable {
             return Double.compare(dist1, dist2);
         });
         return roboList;
+    }
+
+    private void computeRobotLaserPositions(){
+        //initializes the robotLaserList with the current robot positions
+        for (int i = 0; i < playerList.size(); i++) {
+            //initializes the robotLaserList with the current robot positions
+            robotLaserList.add(new ArrayList<>());
+            robotLaserList.get(i).add(playerList.get(i).getRobot().getCurrentPosition());
+            //determines the current tile positions with robot lasers
+            Pair<Integer, Integer> currentPosition;
+            switch(playerList.get(i).getRobot().getDirection()){
+                case EAST -> {
+                    currentPosition = playerList.get(i).getRobot().getCurrentPosition();
+                    currentPosition.setAt0(currentPosition.getValue0() + 1);
+                    while(!board.tileIsBlocking(board.getTile(currentPosition))){
+                        robotLaserList.get(i).add(currentPosition);
+                        if(TileTakenByRobot(currentPosition)){
+                            break;
+                        }
+                        currentPosition.setAt0(currentPosition.getValue0() + 1);
+                        if(currentPosition.getValue0() > board.getBoard().size()){
+                           break;
+                        }
+                    }
+                }
+                case SOUTH -> {
+                    currentPosition = playerList.get(i).getRobot().getCurrentPosition();
+                    currentPosition.setAt1(currentPosition.getValue1() + 1);
+                    while(!board.tileIsBlocking(board.getTile(currentPosition))){
+                        robotLaserList.get(i).add(currentPosition);
+                        if(TileTakenByRobot(currentPosition)){
+                            break;
+                        }
+                        currentPosition.setAt0(currentPosition.getValue1() + 1);
+                        if(currentPosition.getValue1() > board.getBoard().get(i).size()){
+                            break;
+                        }
+                    }
+                }
+                case WEST -> {
+                    currentPosition = playerList.get(i).getRobot().getCurrentPosition();
+                    currentPosition.setAt0(currentPosition.getValue0() - 1);
+                    while(!board.tileIsBlocking(board.getTile(currentPosition))){
+                        robotLaserList.get(i).add(currentPosition);
+                        if(TileTakenByRobot(currentPosition)){
+                            break;
+                        }
+                        currentPosition.setAt0(currentPosition.getValue0() - 1);
+                        if(currentPosition.getValue0() < 0){
+                            break;
+                        }
+                    }
+                }
+                case NORTH -> {
+                    currentPosition = playerList.get(i).getRobot().getCurrentPosition();
+                    currentPosition.setAt1(currentPosition.getValue1() - 1);
+                    while(!board.tileIsBlocking(board.getTile(currentPosition))){
+                        robotLaserList.get(i).add(currentPosition);
+                        if(TileTakenByRobot(currentPosition)){
+                            break;
+                        }
+                        currentPosition.setAt1(currentPosition.getValue1() - 1);
+                        if(currentPosition.getValue1() < 0){
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean TileTakenByRobot(Pair<Integer, Integer> position){
+        boolean result = false;
+        for(int i = 0; i < playerList.size(); i++){
+            if(position.equals(playerList.get(i).getRobot().getCurrentPosition())){
+                result = true;
+            }
+        }
+        return result;
     }
 
     //TODO: Implement this

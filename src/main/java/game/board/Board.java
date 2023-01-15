@@ -32,7 +32,7 @@ public class Board {
     public static ArrayList<LaserTile> laserTileList = new ArrayList<>();
     public static ArrayList<CheckpointTile> checkpointList = new ArrayList<>();
     public static ArrayList<EnergySpaceTile> energySpaceList = new ArrayList<>();
-    public static ArrayList<Tile> robotLaserList = new ArrayList<>();
+    public static ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
     public static ArrayList<RebootTile> rebootTileList = new ArrayList<>();
     public static ArrayList<StartTile> startTileList = new ArrayList<>();
     public static Antenna antenna;
