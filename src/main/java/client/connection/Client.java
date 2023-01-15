@@ -167,6 +167,7 @@ public class Client {
                         }
                         if (message.getMessageType().equals(MessageType.SelectMap)) {
                             prioPlayer = true;
+                            //TODO: if client looses prio because he removes ready or looses connection, he isn`t allowed to change map
                             String[] temp = message.getMessageBody().getAvailableMaps();
                             for (int i = 0; i < temp.length; i++) {
                                 maps.add(temp[i]);
