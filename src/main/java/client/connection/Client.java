@@ -1,16 +1,22 @@
 package client.connection;
 
+import client.model.ModelGame;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
+import game.CollisionCalculator;
+import game.Game;
 import game.board.Board;
-import javafx.application.Platform;
-import javafx.beans.Observable;
+import game.board.Direction;
+import game.player.Player;
+import game.player.Robot;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.javatuples.Pair;
 import org.javatuples.Triplet;
+import server.connection.PlayerList;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -37,33 +43,31 @@ public class Client {
     private DataInputStream in = null;
     private DataOutputStream out = null;
     private BooleanProperty connected;
-    private BooleanProperty accepted;
     private BooleanProperty isAI;
     private ObjectProperty<Message> message;
     private IntegerProperty userID;
-    private Boolean prioPlayer = false;
 
     MessageCreator messageCreator;
     String address = "localhost";
     int port = 3000;
-    private String protocolVersion = "Version 1.0";
+    private String protocolVersion = "Version 0.1";
     private String group = "KnorrigeKorrelate";
     private ObservableList<String> playersOnline;
     private ObservableList<String> playersToChat;
-    private ObservableList<Triplet<String, Integer, Boolean>> playerIDs;
-    private ObservableList<String> maps;
+    private ArrayList<Triplet<Integer, String, Integer>> otherPlayers = new ArrayList<>();
+    private ArrayList<Pair<Integer, Boolean>> otherPlayersStatus = new ArrayList<>();
+
+    private ModelGame modelGame;
 
     private Client() {
         this.messageCreator = new MessageCreator();
         this.message = new SimpleObjectProperty<>();
         this.userID = new SimpleIntegerProperty();
         this.isAI = new SimpleBooleanProperty();
-        this.maps = FXCollections.observableArrayList();
-        this.playersOnline = FXCollections.observableArrayList();
-        this.playersToChat = FXCollections.observableArrayList("All");
-        this.playerIDs = FXCollections.observableArrayList();
-        this.connected = new SimpleBooleanProperty();
-        this.accepted = new SimpleBooleanProperty();
+        this.playersOnline = FXCollections.observableArrayList("Tomi", "Firas", "Molri", "Anto");
+        this.playersToChat = FXCollections.observableArrayList("All", "Tomi", "Firas", "Molri", "Anto");
+        connected = new SimpleBooleanProperty();
+        connectServer();
     }
 
     public static Client getInstance() {
@@ -97,10 +101,6 @@ public class Client {
         this.userID.set(userID);
     }
 
-    public ObservableList<Triplet<String, Integer, Boolean>> getPlayerIDs() {
-        return playerIDs;
-    }
-
     public BooleanProperty isAIProperty() {
         return isAI;
     }
@@ -108,23 +108,6 @@ public class Client {
     public BooleanProperty connectedProperty() {
         return connected;
     }
-    public ObservableList<String> getMaps() {
-        return maps;
-    }
-
-    public BooleanProperty acceptedProperty() {
-        return accepted;
-    }
-
-    public void setAcceptedProperty() {
-        this.accepted.set(true);
-    }
-
-   public void addPlayer(String username, int clientID) {
-        this.playersOnline.add(username);
-        this.playersToChat.add(username);
-        this.playerIDs.add(new Triplet<>(username, clientID, false));
-   }
 
     private class ReadMessagesFromServer implements Runnable {
         DataInputStream in = null;
@@ -153,26 +136,21 @@ public class Client {
                                 Client.this.setUserID(message.getMessageBody().getClientID());
                             }
                             if(message.getMessageType().equals(MessageType.PlayerAdded)){
-                                int clientID = message.getMessageBody().getClientID();
-                                if (Client.this.userIDProperty().get() == clientID){
-                                    if (!Client.this.accepted.get()) {
-                                        Client.this.setAcceptedProperty();
-                                    }
-                                }
-                                else {
-                                    String username = message.getMessageBody().getName();
-                                    Platform.runLater(() -> Client.this.addPlayer(username, clientID));
-                                }
+                                otherPlayers.add(new Triplet<>(message.getMessageBody().getClientID(),
+                                        message.getMessageBody().getName(),
+                                        message.getMessageBody().getFigure()));
+                                //TODO process the data input like giving the player his robot and stuff like that
                             }
                             if(message.getMessageType().equals(MessageType.PlayerStatus)){
-
+                                otherPlayersStatus.add(new Pair<>(message.getMessageBody().getClientID(),
+                                        message.getMessageBody().isReady()));
                             }
                             if (message.getMessageType().equals(MessageType.SelectMap)){
-                                prioPlayer = true;
-                                String [] temp = message.getMessageBody().getAvailableMaps();
-                                for (int i = 0; i < temp.length; i++) {
-                                    maps.add(temp[i]);
+                                String[] maps = message.getMessageBody().getAvailableMaps();
+                                for (int i = 0; i < maps.length; i++) {
+                                    System.out.println(maps[i]);
                                 }
+                                sendMapMessage("hier soll mal die Map rein dann");
 
                             }
                             if(message.getMessageType().equals(MessageType.ReceivedChat)){
@@ -191,8 +169,34 @@ public class Client {
 
                             }
                             if(message.getMessageType().equals(MessageType.GameStarted)){
+
                                 Board board = new Board();
                                 board.createBoard(message.getMessageBody().getGameMap());
+
+                                Game game = new Game();
+                                game.setBoard(board);
+                                CollisionCalculator.setBoard(board);
+                                Player player1 = new Player(1, "player1", new Robot(1));
+                                Player player2 = new Player(2, "player2", new Robot(2));
+                                PlayerList playerList = new PlayerList();
+                                playerList.add(player1);
+                                playerList.add(player2);
+                                player1.getRobot().setDirection(Direction.EAST);
+                                player1.getRobot().setCurrentPosition(new Pair<>(6, 7));
+                                player2.getRobot().setDirection(Direction.NORTH);
+                                player2.getRobot().setCurrentPosition(new Pair<>(9, 9));
+                                game.setPlayerList(playerList);
+                                player1.drawFullHand();
+                                player2.drawFullHand();
+                                player1.printHand();
+                                player1.fillRegisterWithRandomCards();
+                                player2.fillRegisterWithRandomCards();
+                                player1.printRegisters();
+                                game.runActivationPhase();
+                                player1.printRegisters();
+                                System.out.println(CollisionCalculator.checkRobotCollision(player1));
+                                System.out.println(CollisionCalculator.checkRobotCollision(player2));
+                                game.runTimer();
                             }
                             if(message.getMessageType().equals(MessageType.YourCards)){
 
@@ -238,9 +242,6 @@ public class Client {
         sendMessageToServer(messageCreator.generatePlayerValuesMessage(name, figure));
     }
     public void sendSetStatusMessage(boolean ready){
-        if (!ready) {
-            prioPlayer = false;
-        }
         sendMessageToServer(messageCreator.generateSetStatusMessage(ready));
     }
     public void sendPrivateMessage(String message, int to){
@@ -249,10 +250,8 @@ public class Client {
     public void sendGroupMessage(String message){
         sendMessageToServer(messageCreator.generateSendChatMessage(message));
     }
-    public void sendMapSelected(String map) {
-        if (prioPlayer) {
-            sendMessageToServer(messageCreator.generateMapSelectedMessage(map));
-        }
+    public void sendMapMessage(String message) {
+        sendMessageToServer(messageCreator.generateMapSelectedMessage("DizzyHighway"));
     }
 
     public void sendMessageToServer(Message message) {
@@ -263,7 +262,7 @@ public class Client {
         }
     }
 
-    public void connectServer() {
+    private void connectServer() {
         if (!connected.get()) {
             try {
                 socket = new Socket(address, port);

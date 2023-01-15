@@ -10,7 +10,7 @@ import java.util.LinkedList;
 
 public abstract class Deck {
 
-    protected LinkedList<Card> deck;
+    protected LinkedList<Card> deck = new LinkedList<>();
 
     public Deck() {
         deck = new LinkedList<Card>();

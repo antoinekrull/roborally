@@ -4,18 +4,22 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.*;
 import game.card.*;
 import game.player.Player;
+import game.player.Robot;
 import org.javatuples.Pair;
-//import server.PlayerList;
 import server.connection.PlayerList;
-import java.util.LinkedList;
+
+import java.util.*;
 
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static game.board.Board.robotLaserList;
 
 public class Game implements Runnable {
     private GamePhase currentGamePhase;
+    private Timer timer = new Timer();
     public static PlayerList playerList;
     public Board board = new Board();
     private Player activePlayer;
@@ -25,8 +29,9 @@ public class Game implements Runnable {
     public static WormDeck wormDeck = new WormDeck();
     public static int currentRegister = 0;
 
+    //TODO: Remove this?
     private LinkedList<Integer> readyList = new LinkedList<>();
-    private String[] maps = {"DizzyHighway", "ExtraCrispy", "DeathTrap", "LostBearings"};
+    private String[] maps = {"DizzyHighway"};
 
     private static Game INSTANCE;
 
@@ -51,12 +56,6 @@ public class Game implements Runnable {
         this.playerList = playerList;
     }
 
-    public void initialisePlayerList(PlayerList playerList) {
-        for(int i = 0; i < playerList.size(); i++) {
-            this.playerList.add(playerList.get(i));
-        }
-    }
-
     private void applyAllTileEffects() throws Exception {
         for(int x = 0; x < Board.conveyorBelt2List.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
@@ -72,7 +71,7 @@ public class Game implements Runnable {
                 }
             }
         }
-        //applyPushPanelEffects();
+        applyPushPanelEffects();
         for(int x = 0; x < Board.gearTileList.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.gearTileList.get(x).getPosition())) {
@@ -80,7 +79,7 @@ public class Game implements Runnable {
                 }
             }
         }
-        //TODO: Might need to be changed
+        //TODO: needs to be changed (?)
         for(int x = 0; x < Board.laserTileList.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.laserTileList.get(x).getPosition())) {
@@ -88,11 +87,14 @@ public class Game implements Runnable {
                 }
             }
         }
-
-        for(int x = 0; x < robotLaserList.size(); x++) {
-            for(int y = 0; y < playerList.size(); y++) {
-                if(playerList.get(y).getRobot().getCurrentPosition().equals(robotLaserList.get(x).getPosition())) {
-                    playerList.get(y).addCard(game.Game.spamDeck.popCardFromDeck());
+        //robotLaser
+        computeRobotLaserPositions();
+        for(int i = 0; i < playerList.size(); i++){
+            for(int x = 0; x < robotLaserList.size(); x++) {
+                for(int y = 0; y < robotLaserList.get(x).size(); y++) {
+                    if(playerList.get(i).getRobot().getCurrentPosition().equals(robotLaserList.get(y))) {
+                        playerList.get(i).addCard(game.Game.spamDeck.popCardFromDeck());
+                    }
                 }
             }
         }
@@ -114,19 +116,23 @@ public class Game implements Runnable {
         }
     }
 
-    /*
     private void applyPushPanelEffects() throws Exception {
         for (int i = 0; i < playerList.size(); i++) {
-            if((pushPanelInTile(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition())).getValue0())){
-                int index = pushPanelInTile(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition())).getValue1();
-                if(((PushPanelTile) board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()).get(index))
+            if((pushPanelInTile(board.getTile(playerList.get(i).getRobot().getCurrentPosition())).getValue0())){
+                int index = pushPanelInTile(board.getTile(playerList.get(i).getRobot().getCurrentPosition())).getValue1();
+                if(((PushPanelTile) board.getTile(playerList.get(i).getRobot().getCurrentPosition()).get(index))
                         .getActiveRegisterList().contains(currentRegister)) {
-                    applyTileEffects(board.getTile(playerList.getPlayerFromList(i).getRobot().getCurrentPosition()), playerList.getPlayerFromList(i));
+                    applyTileEffects(board.getTile(playerList.get(i).getRobot().getCurrentPosition()), playerList.getPlayerFromList(i));
                 }
             }
         }
     }
-     */
+
+    private void applyTileEffects(ArrayList<Tile> tileList, Player player) throws Exception {
+        for (int i = 0; i < tileList.size(); i++) {
+            tileList.get(i).applyEffect(player);
+        }
+    }
 
     private Pair<Boolean, Integer> pushPanelInTile(ArrayList<Tile> tileList) {
         boolean result = false;
@@ -142,14 +148,117 @@ public class Game implements Runnable {
         return new Pair<>(result, index);
     }
 
-    //TODO: Implement this
-    private PlayerList determinePriority() {
-        PlayerList priorityList = playerList;
-        return priorityList;
+    private ArrayList<Robot> determinePriority() {
+        Pair<Integer, Integer> antennaPosition = Board.antenna.getPosition();
+        ArrayList<Robot> roboList = new ArrayList<>();
+        for (PlayerList it = playerList; it.hasNext(); ) {
+            Player player = it.next();
+            roboList.add(player.getRobot());
+        }
+        roboList.sort((r1, r2) -> {
+            double dist1 = Math.sqrt(Math.pow(r1.getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(r1.getCurrentPosition().getValue1() - antennaPosition.getValue1(), 2));
+            double dist2 = Math.sqrt(Math.pow(r2.getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(r2.getCurrentPosition().getValue1(), 2));
+            return Double.compare(dist1, dist2);
+        });
+        return roboList;
+    }
+
+    private void computeRobotLaserPositions(){
+        //initializes the robotLaserList with the current robot positions
+        for (int i = 0; i < playerList.size(); i++) {
+            //initializes the robotLaserList with the current robot positions
+            robotLaserList.add(new ArrayList<>());
+            robotLaserList.get(i).add(playerList.get(i).getRobot().getCurrentPosition());
+            //determines the current tile positions with robot lasers
+            Pair<Integer, Integer> currentPosition;
+            switch(playerList.get(i).getRobot().getDirection()){
+                case EAST -> {
+                    currentPosition = playerList.get(i).getRobot().getCurrentPosition();
+                    currentPosition.setAt0(currentPosition.getValue0() + 1);
+                    while(!board.tileIsBlocking(board.getTile(currentPosition))){
+                        robotLaserList.get(i).add(currentPosition);
+                        if(TileTakenByRobot(currentPosition)){
+                            break;
+                        }
+                        currentPosition.setAt0(currentPosition.getValue0() + 1);
+                        if(currentPosition.getValue0() > board.getBoard().size()){
+                           break;
+                        }
+                    }
+                }
+                case SOUTH -> {
+                    currentPosition = playerList.get(i).getRobot().getCurrentPosition();
+                    currentPosition.setAt1(currentPosition.getValue1() + 1);
+                    while(!board.tileIsBlocking(board.getTile(currentPosition))){
+                        robotLaserList.get(i).add(currentPosition);
+                        if(TileTakenByRobot(currentPosition)){
+                            break;
+                        }
+                        currentPosition.setAt0(currentPosition.getValue1() + 1);
+                        if(currentPosition.getValue1() > board.getBoard().get(i).size()){
+                            break;
+                        }
+                    }
+                }
+                case WEST -> {
+                    currentPosition = playerList.get(i).getRobot().getCurrentPosition();
+                    currentPosition.setAt0(currentPosition.getValue0() - 1);
+                    while(!board.tileIsBlocking(board.getTile(currentPosition))){
+                        robotLaserList.get(i).add(currentPosition);
+                        if(TileTakenByRobot(currentPosition)){
+                            break;
+                        }
+                        currentPosition.setAt0(currentPosition.getValue0() - 1);
+                        if(currentPosition.getValue0() < 0){
+                            break;
+                        }
+                    }
+                }
+                case NORTH -> {
+                    currentPosition = playerList.get(i).getRobot().getCurrentPosition();
+                    currentPosition.setAt1(currentPosition.getValue1() - 1);
+                    while(!board.tileIsBlocking(board.getTile(currentPosition))){
+                        robotLaserList.get(i).add(currentPosition);
+                        if(TileTakenByRobot(currentPosition)){
+                            break;
+                        }
+                        currentPosition.setAt1(currentPosition.getValue1() - 1);
+                        if(currentPosition.getValue1() < 0){
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean TileTakenByRobot(Pair<Integer, Integer> position){
+        boolean result = false;
+        for(int i = 0; i < playerList.size(); i++){
+            if(position.equals(playerList.get(i).getRobot().getCurrentPosition())){
+                result = true;
+            }
+        }
+        return result;
     }
 
     //TODO: Implement this
-    private void runTimer(){}
+    public void runTimer() {
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                PlayerList unreadyPlayers = playerList.getUnreadyPlayers();
+                for (int i = 0; i < unreadyPlayers.size(); i++) {
+                    unreadyPlayers.get(i).fillRegisterWithRandomCards();
+
+                    // for testing purposes
+                    unreadyPlayers.get(i).printRegisters();
+                    System.out.println("Time ran through");
+                }
+            }
+        };
+        timer.schedule(timerTask, 30000);
+    }
 
     public GamePhase getCurrentGamePhase() {
         return currentGamePhase;
@@ -165,14 +274,17 @@ public class Game implements Runnable {
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
         playerList.setPlayersPlaying(true);
         while(!playerList.playersAreReady()) {
+            System.out.println("Waiting for players to be ready");
             Thread.sleep(10000);
         }
     }
 
-    private void runActivationPhase() throws Exception {
+    //TODO: Make this private once testing in console is done
+    public void runActivationPhase() throws Exception {
         int playerRegisterLength = 5;
         while(!playerList.allPlayerRegistersActivated()) {
             for(int i = 0; i < playerList.size(); i++) {
+                System.out.println("Activating registers");
                 activateRegister(playerList.get(i));
                 playerList.get(i).setStatusRegister(true, currentRegister);
             }
@@ -180,9 +292,11 @@ public class Game implements Runnable {
             //checks if all registers have been activated
             if(currentRegister == playerRegisterLength) {
                 for(int i = 0; i < playerList.size(); i++) {
+                    System.out.println("Emptying card registers");
                     playerList.get(i).emptyAllCardRegisters();
                 }
             }
+            System.out.println("Applying tile effects");
             applyAllTileEffects();
         }
     }
@@ -208,16 +322,7 @@ public class Game implements Runnable {
             return -1;
         }
     }
-    public LinkedList<Integer> getReadyList() {
-        return readyList;
-    }
 
-
-    private void applyTileEffects(ArrayList<Tile> tileList, Player player) throws Exception {
-        for(int i = 0; i < tileList.size(); i++) {
-            tileList.get(i).applyEffect(player);
-        }
-    }
     //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     public void createBoard(String map) throws JsonProcessingException {
         //board.createBoard(map);
@@ -226,11 +331,15 @@ public class Game implements Runnable {
 
     @Override
     public void run() {
+        System.out.println("This game is running");
         playerList.setPlayerReadiness(false);
         while(true) {
+            System.out.println("This game is running the Upgrade Phase now");
             runUpgradePhase();
             try {
+                System.out.println("This game is running the Programming Phase now");
                 runProgrammingPhase(playerList);
+                System.out.println("This game is running the Activation Phase now");
                 runActivationPhase();
             } catch (Exception e) {
                 throw new RuntimeException(e);

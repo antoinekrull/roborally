@@ -7,12 +7,6 @@ import server.connection.PlayerList;
      */
 
     public class MessageCreator {
-    //TODO: Rework message creator
-        private final String escapeCharacter = "!";
-        private String directMessage = "dm";
-        private String joinSession = "join";
-        private String leaveSession = "quit";
-        private String startGame = "start";
 
         public Message generateHelloClientMessage(String protocolVersion){
             MessageBody messageBody = new MessageBody();

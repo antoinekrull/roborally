@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class CollisionCalculator {
 
-    static Board board;
+    static Board board = new Board();
     public static boolean checkRobotCollision(Player player){
         boolean result = false;
         Pair<Integer, Integer> nextPosition = player.getRobot().getCurrentPosition();
@@ -123,6 +123,10 @@ public class CollisionCalculator {
             result = tileList.get(0).isBlocking() || tileList.get(1).isBlocking();
         }
         return result;
+    }
+
+    public static void setBoard(Board newBoard) {
+        board = newBoard;
     }
 
 }

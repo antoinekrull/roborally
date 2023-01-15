@@ -101,8 +101,9 @@ public class Player {
             status = setAll;
         }
     }
-    public void playPreparation(){
-        for(int i = 0; i <= 9 - getHand().size(); i++){
+    public void drawFullHand(){
+        int cardsToDraw = 9 - hand.size();
+        for(int i = 0; i < cardsToDraw; i++){
             drawCard();
         }
     }
@@ -166,12 +167,16 @@ public class Player {
         return result;
     }
 
+    //if timer runs out all unfilled registers of player get filled with random cards
     public void fillRegisterWithRandomCards() {
         Random random = new Random();
-        for(int x = hand.size(); x > getEmptyRegisterAmount(); x-- ) {
+        for(int x = 0; x < getEmptyRegisterAmount(); x++) {
             for(int y = 0; y < cardRegister.length; y++) {
                 if(cardRegister[y] == null) {
-                    cardRegister[y] = discard(random.nextInt(x));
+                    if(hand.size() > 0) {
+                        cardRegister[y] = discard(random.nextInt(hand.size()));
+                    }
+                    System.out.println("Hand too empty to fill all registers");
                 }
             }
         }
@@ -203,4 +208,20 @@ public class Player {
         }
     }
 
+    //for testing purposes
+    public void printHand() {
+        for(int i = 0; i < hand.size(); i++) {
+            System.out.println(hand.get(i).getCardName());
+        }
+    }
+
+    public void printRegisters() {
+        for(int i = 0; i < cardRegister.length; i++) {
+            if(cardRegister[i] == null) {
+                System.out.println("null");
+            } else {
+                System.out.println(cardRegister[i].getCardName());
+            }
+        }
+    }
 }

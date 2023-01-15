@@ -2,7 +2,6 @@ package game.player;
 
 import game.card.Card;
 import game.card.CardType;
-import game.player.Player;
 
 public class AI_Player extends Player {
     public AI_Player(int id, String username, Robot robot) {
@@ -10,7 +9,7 @@ public class AI_Player extends Player {
     }
     public void playTurn(){
         //preparation
-        playPreparation();
+        drawFullHand();
         //UPGRADE PHASE
         playUpgradePhase();
         //PROGRAMMING PHASE
@@ -18,7 +17,7 @@ public class AI_Player extends Player {
         //ACTIVATION PHASE
     }
     @Override
-    public void playPreparation(){
+    public void drawFullHand(){
         for(int i = 0; i <= 9 - getHand().size(); i++){
             drawCard();
         }

@@ -12,7 +12,10 @@ public class AgainCard extends Card{
 
     @Override
     public void applyEffect(Player player) throws Exception {
-        int previousRegister = player.getCurrentRegister(this) - 1;
-        player.getCardFromRegister(previousRegister).applyEffect(player);
+        if (player.getCurrentRegister(this) == 0) {
+        } else {
+            int previousRegister = player.getCurrentRegister(this) - 1;
+            player.getCardFromRegister(previousRegister).applyEffect(player);
+        }
     }
 }
