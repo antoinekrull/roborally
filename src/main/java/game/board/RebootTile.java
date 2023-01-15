@@ -43,9 +43,7 @@ public class RebootTile extends Tile {
         player.getPersonalDiscardPile().addCard(spamDeck.popCardFromDeck());
         //discard all cards in your programming deck, activation is cancelled
         player.setStatusRegister(true);
-        for(int i = 0; i < 5; i++){
-            player.getPersonalDiscardPile().addCard(player.getCardFromRegister(i));
-        }
+        player.emptyAllCardRegisters();
         //discard all cards in hand
         while(player.getHand().size()>0){
             player.getPersonalDiscardPile().addCard(player.getHand().get(0));
