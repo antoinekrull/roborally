@@ -14,6 +14,6 @@ public class SpamCard extends Card {
     @Override
     public void applyEffect(Player player) throws Exception {
         Card topProgrammingCard = player.getRobot().getDeck().popCardFromDeck();
-        player.setCardRegister(this , currentRegister);
+        player.setCardRegister(topProgrammingCard , currentRegister);
     }
 }
