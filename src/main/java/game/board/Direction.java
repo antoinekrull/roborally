@@ -5,6 +5,6 @@ public enum Direction {
     SOUTH,
     WEST,
     EAST,
-    COUNTERCLOCKWISE,
-    CLOCKWISE
+    LEFT,
+    RIGHT
 }
