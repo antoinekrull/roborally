@@ -268,6 +268,39 @@ public class Game implements Runnable {
         this.currentGamePhase = currentGamePhase;
     }
 
+    //TODO: finish this once client server connection allows for it
+    public void pickStartLocationForRobot(Player player, int x, int y) {
+        Pair<Integer, Integer> input = new Pair<>(x, y);
+        player.getRobot().setCurrentPosition(input);
+        player.setReady(true);
+    }
+
+    public void setStartDirectionForRobot(String input) {
+        switch(input) {
+            case "Deathtrap" -> {
+                for(int i = 0; i < playerList.size(); i++) {
+                    playerList.get(i).getRobot().setDirection(Direction.WEST);
+                }
+            }
+            case "DizzyHighway", "ExtraCrispy", "LostBearings" -> {
+                for(int i = 0; i < playerList.size(); i++) {
+                    playerList.get(i).getRobot().setDirection(Direction.EAST);
+                }
+            }
+        }
+    }
+
+    public void runSetupPhase() {
+        System.out.println(maps[0]);
+        playerList.setPlayerReadiness(false);
+        while(!playerList.playersAreReady()) {
+            //pickStartLocationForRobot();
+        }
+        //map name logic
+        setStartDirectionForRobot(maps[0]);
+
+    }
+
     private void runUpgradePhase(){
 
     }
