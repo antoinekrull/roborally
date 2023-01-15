@@ -270,7 +270,6 @@ public class HandleClient implements Runnable{
 
                     } else if (incomingMessage.getMessageType() == MessageType.MapSelected) {
                         String fileName = "/maps/"+incomingMessage.getMessageBody().getMap()+".json";
-                        System.out.println(fileName);
                         InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream(fileName));
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
                         String jsonmap = content.lines().collect(Collectors.joining());
