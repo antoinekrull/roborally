@@ -178,19 +178,6 @@ public class HandleClient implements Runnable{
         write(messageCreator.generateHelloClientMessage(server.getProtocolVersion()));
 
         try {
-            //String username ="";
-
-            /*while (username == "") {
-                if(JsonSerializer.deserializeJson(in.readUTF(), Message.class).getMessageType() == MessageType.PlayerValues) {
-                    username = JsonSerializer.deserializeJson(in.readUTF(), Message.class).getMessageBody().getName();
-                    if (!containsName(server.CLIENTS, username)) {
-                        //grantAccess(username);
-                    } else {
-                        //denyAccess(username);
-                        username = "";
-                    }
-                }
-            }*/
 
             String line;
 
@@ -257,11 +244,12 @@ public class HandleClient implements Runnable{
                         setAlive(true);
 
                     } else if (incomingMessage.getMessageType() == MessageType.MapSelected) {
-                        String fileName = "/maps/"+incomingMessage.getMessageBody().getMap()+".json";
+                        String map = incomingMessage.getMessageBody().getMap();
+                        String fileName = "/maps/"+map+".json";
                         InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream(fileName));
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
                         String jsonmap = content.lines().collect(Collectors.joining());
-                        write(messageCreator.generateGameStartedMessage(jsonmap));
+                        write(messageCreator.generateMapSelectedMessage(map));
 
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
                         System.out.println("HandleClient: PlayerValues");

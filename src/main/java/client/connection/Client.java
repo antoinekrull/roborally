@@ -172,6 +172,11 @@ public class Client {
                                 maps.add(temp[i]);
                             }
                         }
+                        if (message.getMessageType().equals(MessageType.MapSelected)) {
+                            String map = message.getMessageBody().getMap();
+                            Message mapMessage = messageCreator.generateSendChatMessage("Selected map: " + map);
+                            Client.this.setMessage(mapMessage);
+                        }
                         if (message.getMessageType().equals(MessageType.ReceivedChat)) {
                             Client.this.setMessage(message);
                         }

@@ -159,7 +159,6 @@ public class Board {
                                 replaceTileInMap(board, x, y, tile, new Antenna(x, y));
                                 antennaTileList.add(new Antenna(x, y));
                             }
-                            //TODO: PushPanels need registers
                             case "PushPanel" -> {
                                 String directionPushPanel = tile.getOrientations().get(0);
                                 ArrayList<Integer> registers = tile.getRegisters();

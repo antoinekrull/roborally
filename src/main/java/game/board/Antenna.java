@@ -1,6 +1,5 @@
 package game.board;
 
-//TODO: Apply the correct texture file
 
 public class Antenna extends Tile{
     public Antenna(int xCoordinate, int yCoordinate){

@@ -22,7 +22,7 @@ public class PushPanelTile extends Tile {
             this.path = getClass().getResource("/textures/gameboard/pushPanel.png").toString();
         }
         else {
-            //TODO: change picture with new push panel
+            //TODO: change picture with new push panel with registers
             this.path = getClass().getResource("/textures/gameboard/pushPanel.png").toString();
         }
 
