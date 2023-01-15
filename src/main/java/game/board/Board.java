@@ -2,6 +2,7 @@ package game.board;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.geometry.Orientation;
 import org.javatuples.Pair;
 
 import java.util.ArrayList;
@@ -116,18 +117,29 @@ public class Board {
                                 for (int t = 0; t < orientations.size(); t++) {
                                     directionList.add(parseDirection(orientations.get(t)));
                                 }
-                                replaceTileInMap(board, x, y, tile, new WallTile(x, y, directionList));
+                                WallTile wall = new WallTile(x, y, directionList);
+                                wall.setOrientations(orientations);
+                                replaceTileInMap(board, x, y, tile, wall);
                             }
                             case "Laser" -> {
-                                String directionLaser = tile.getOrientations().get(0);
+                                Direction directionLaser = parseDirection(tile.getOrientations().get(0));
                                 LaserTile laser;
+                                boolean onWall = false;
                                 if(board.get(x).get(y).get(0).getType().equals("Wall")){
-                                    laser = new LaserTile(x, y, parseDirection(directionLaser), true);
+                                    ArrayList<Direction> directionsWall = new ArrayList<>();
+                                    ArrayList<String> orientations = board.get(x).get(y).get(0).getOrientations();
+                                    for (int t = 0; t < orientations.size(); t++) {
+                                        directionsWall.add(parseDirection(orientations.get(t)));
+                                    }
+                                    for (int s = 0; s < directionsWall.size();s++) {
+                                        System.out.println(angelCalculation(directionLaser,directionsWall.get(s)));
+                                        if(angelCalculation(directionLaser, directionsWall.get(s)) == 180) {
+                                            onWall = true;
+                                        }
+                                    }
+                                }
+                                laser = new LaserTile(x, y, directionLaser, onWall);
 
-                                }
-                                else {
-                                    laser = new LaserTile(x, y, parseDirection(directionLaser), false);
-                                }
                                 replaceTileInMap(board,x,y,tile, laser);
                                 laserTileList.add(laser);
                             }
@@ -192,6 +204,24 @@ public class Board {
         } else {
             System.out.println("something went wrong with replacing the TileElement");
         }
+    }
+    public int angelCalculation(Direction direct1, Direction direct2){
+        int angel1 = 0;
+        int angel2 = 0;
+        System.out.println("1: "+ direct1+" 2: "+direct2);
+        switch (direct1){
+            case NORTH -> angel1 =0;
+            case EAST -> angel1 = 90;
+            case SOUTH -> angel1 = 180;
+            case WEST -> angel1 = 270;
+        }
+        switch (direct2) {
+            case NORTH -> angel2 =0;
+            case EAST -> angel2 = 90;
+            case SOUTH -> angel2 = 180;
+            case WEST -> angel2 = 270;
+        }
+        return Math.abs(angel1 - angel2);
     }
 
 }
