@@ -79,7 +79,7 @@ public class Game implements Runnable {
                 }
             }
         }
-        //TODO: needs to be changed
+        //TODO: needs to be changed (?)
         for(int x = 0; x < Board.laserTileList.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.laserTileList.get(x).getPosition())) {
