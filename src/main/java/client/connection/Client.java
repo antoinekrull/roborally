@@ -135,96 +135,74 @@ public class Client {
         }
 
         public void run() {
-            if (socket!=null) {
-                try {
-                    in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-                    out = new DataOutputStream(socket.getOutputStream());
-                    while (socket.isConnected()) {
-                        try {
-                            Message message = JsonSerializer.deserializeJson(in.readUTF(), Message.class);
-                            if(message.getMessageType().equals(MessageType.Alive)){
-                                sendAliveMessage();
-                            }
-                            if(message.getMessageType().equals(MessageType.HelloClient)){
-                                System.out.println(message.getMessageBody().getProtocol());
-                                sendHelloServerMessage(group, isAI.get(), protocolVersion);
-                            }
-                            if(message.getMessageType().equals(MessageType.Welcome)){
-                                Client.this.setUserID(message.getMessageBody().getClientID());
-                            }
-                            if(message.getMessageType().equals(MessageType.PlayerAdded)){
-                                int clientID = message.getMessageBody().getClientID();
-                                if (Client.this.userIDProperty().get() == clientID){
-                                    if (!Client.this.accepted.get()) {
-                                        Client.this.setAcceptedProperty();
-                                    }
+            try {
+                in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+                out = new DataOutputStream(socket.getOutputStream());
+                String receiveMessage;
+                while (true) {
+                    if((receiveMessage =in.readUTF()) != null) {
+                        Message message = JsonSerializer.deserializeJson(receiveMessage, Message.class);
+                        if (message.getMessageType().equals(MessageType.Alive)) {
+                            sendAliveMessage();
+                        }
+                        if (message.getMessageType().equals(MessageType.HelloClient)) {
+                            sendHelloServerMessage(group, isAI.get(), protocolVersion);
+                        }
+                        if (message.getMessageType().equals(MessageType.Welcome)) {
+                            Client.this.setUserID(message.getMessageBody().getClientID());
+                        }
+                        if (message.getMessageType().equals(MessageType.PlayerAdded)) {
+                            int clientID = message.getMessageBody().getClientID();
+                            if (Client.this.userIDProperty().get() == clientID) {
+                                if (!Client.this.accepted.get()) {
+                                    Client.this.setAcceptedProperty();
                                 }
-                                else {
-                                    String username = message.getMessageBody().getName();
-                                    Platform.runLater(() -> Client.this.addPlayer(username, clientID));
-                                }
+                            } else {
+                                String username = message.getMessageBody().getName();
+                                Platform.runLater(() -> Client.this.addPlayer(username, clientID));
                             }
-                            if(message.getMessageType().equals(MessageType.PlayerStatus)){
+                        }
+                        if (message.getMessageType().equals(MessageType.PlayerStatus)) {
 
+                        }
+                        if (message.getMessageType().equals(MessageType.SelectMap)) {
+                            prioPlayer = true;
+                            String[] temp = message.getMessageBody().getAvailableMaps();
+                            for (int i = 0; i < temp.length; i++) {
+                                maps.add(temp[i]);
                             }
-                            if (message.getMessageType().equals(MessageType.SelectMap)){
-                                prioPlayer = true;
-                                String [] temp = message.getMessageBody().getAvailableMaps();
-                                for (int i = 0; i < temp.length; i++) {
-                                    maps.add(temp[i]);
-                                }
+                        }
+                        if (message.getMessageType().equals(MessageType.ReceivedChat)) {
+                            Client.this.setMessage(message);
+                        }
+                        if (message.getMessageType().equals(MessageType.Error)) {
+                            System.out.println(message.getMessageBody().getError());
+                        }
+                        if (message.getMessageType().equals(MessageType.CardPlayed)) {
 
-                            }
-                            if(message.getMessageType().equals(MessageType.ReceivedChat)){
-                                Client.this.setMessage(message);
-                            }
-                            if(message.getMessageType().equals(MessageType.Error)){
-                                System.out.println(message.getMessageBody().getMessage());
-                            }
-                            if(message.getMessageType().equals(MessageType.CardPlayed)){
+                        }
+                        if (message.getMessageType().equals(MessageType.CurrentPlayer)) {
 
-                            }
-                            if(message.getMessageType().equals(MessageType.CurrentPlayer)){
+                        }
+                        if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
 
-                            }
-                            if(message.getMessageType().equals(MessageType.StartingPointTaken)){
+                        }
+                        if (message.getMessageType().equals(MessageType.GameStarted)) {
+                            Board board = new Board();
+                            board.createBoard(message.getMessageBody().getGameMap());
+                        }
+                        if (message.getMessageType().equals(MessageType.YourCards)) {
 
-                            }
-                            if(message.getMessageType().equals(MessageType.GameStarted)){
-                                Board board = new Board();
-                                board.createBoard(message.getMessageBody().getGameMap());
-                            }
-                            if(message.getMessageType().equals(MessageType.YourCards)){
+                        }
+                        if (message.getMessageType().equals(MessageType.NotYourCards)) {
 
-                            }
-                            if(message.getMessageType().equals(MessageType.NotYourCards)){
-
-                            }
-                            //if (message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
-                            //    if (message.getMessage().equals("accepted")) {
-                            //        loginController.goToChat(name);
-                            //    } else {
-                            //        setName("");
-                            //        loginController.setMessage(message.getMessage());
-                            //    }
-                            //}
-                            //if (accessible && !message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
-                            //    MESSAGES.put(message.getMessage());
-                            //}
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
                     }
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
                 }
-            }else {
-
+            } catch (IOException e) {
+                System.out.println("Lost connection to server");
             }
-
         }
-
     }
 
     //maybe are these methods redundant, but they are kept until everything is implemented for them to be there

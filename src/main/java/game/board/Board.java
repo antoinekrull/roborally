@@ -208,7 +208,6 @@ public class Board {
     public int angelCalculation(Direction direct1, Direction direct2){
         int angel1 = 0;
         int angel2 = 0;
-        System.out.println("1: "+ direct1+" 2: "+direct2);
         switch (direct1){
             case NORTH -> angel1 =0;
             case EAST -> angel1 = 90;

@@ -192,16 +192,6 @@ public class HandleClient implements Runnable{
                 }
             }*/
 
-            //Thread needs to sleep so that the chat form can load and the user sees his welcome message
-            /*Thread.sleep(1000);
-            //welcome message to server
-            String message = this.username +  " has entered the chat";
-            try {
-                server.messages.put(message);
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            }*/
-
             String line;
 
             //Accept client if his protocol version is correct
@@ -214,10 +204,8 @@ public class HandleClient implements Runnable{
                             //writeTo(clientID, messageCreator.generateWelcomeMessage(clientID));
                             write(messageCreator.generateWelcomeMessage(clientID));
                         } else{
-                            //TODO message for client, that its version is not compatible
-                            System.out.println("Client version is not correct: "
-                                    +incomingMessage.getMessageBody().getProtocol()
-                                    + " but it should be: "+server.getProtocolVersion());
+                            write(messageCreator.generateErrorMessage("Please check your protocol version. This server runs with: "+ server.getProtocolVersion()));
+                            closeConnection();
                         }
                     }
                 } catch (Exception e){
@@ -345,10 +333,6 @@ public class HandleClient implements Runnable{
 
     private void closeConnection(){
         try {
-            //changed String to Message to match with other messages (added generateGoodbyeMessage to MessageCreator)
-            String goodbyeMessage = "Server: " + this.threadID + " has left the chat!";
-            System.out.println(goodbyeMessage);
-            server.messages.put(messageCreator.generateGoodbyeMessage(clientID, goodbyeMessage));
             server.players.remove(threadID);
             server.CLIENTS.remove(threadID);
             this.in.close();
