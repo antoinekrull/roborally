@@ -59,7 +59,6 @@
                     <ColumnConstraints hgrow="ALWAYS" />
                     <ColumnConstraints hgrow="ALWAYS" />
                     <ColumnConstraints hgrow="ALWAYS" />
-                    <ColumnConstraints hgrow="ALWAYS" />
                   </columnConstraints>
                   <rowConstraints>
                     <RowConstraints vgrow="ALWAYS" />
@@ -204,16 +203,6 @@
                     <Region GridPane.columnIndex="12" GridPane.rowIndex="7" />
                     <Region GridPane.columnIndex="12" GridPane.rowIndex="8" />
                     <Region GridPane.columnIndex="12" GridPane.rowIndex="9" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="0" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="1" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="2" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="3" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="4" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="5" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="6" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="7" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="8" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="9" />
                   </children>
                 </GridPane>
                 <StackPane GridPane.columnIndex="1">
@@ -256,7 +245,7 @@
                 </StackPane>
               </children>
             </GridPane>
-            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
+            <HBox fx:id="handGrid" alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
               <children>
                 <GridPane maxWidth="600.0" nodeOrientation="RIGHT_TO_LEFT" HBox.hgrow="ALWAYS">
                   <columnConstraints>

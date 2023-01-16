@@ -15,6 +15,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -34,7 +35,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import client.player.PlayerList;
 
 /**
  * ViewModel for gamescreen
@@ -45,7 +45,7 @@ import client.player.PlayerList;
 
 public class ViewModelGameWindow {
 
-    public ColumnConstraints gameboardTileColumn;
+    public static ColumnConstraints gameboardTileColumn;
     public Pane programspacePane;
     @FXML
     private Button chatButton;
@@ -65,12 +65,17 @@ public class ViewModelGameWindow {
     private GridPane programmingGrid;
     @FXML
     private Pane programmingPane1, programmingPane2, programmingPane3, programmingPane4, programmingPane5;
+    @FXML
+    private GridPane handGrid;
 
     //buttons for cards
 
     private ModelChat modelChat;
     private ModelGame modelGame;
     private ModelUser modelUser;
+
+    private int height = 150;
+    private int columnIndex;
 
     private NotifyChangeSupport notifyChangeSupport;
 
@@ -132,6 +137,12 @@ public class ViewModelGameWindow {
         setOnDragDropped(programmingPane3);
         setOnDragDropped(programmingPane4);
         setOnDragDropped(programmingPane5);
+
+        onRightClickRemoveProgrammingcard(programmingPane1);
+        onRightClickRemoveProgrammingcard(programmingPane2);
+        onRightClickRemoveProgrammingcard(programmingPane3);
+        onRightClickRemoveProgrammingcard(programmingPane4);
+        onRightClickRemoveProgrammingcard(programmingPane5);
     }
 
     public void receivedMessage() {
@@ -177,7 +188,8 @@ public class ViewModelGameWindow {
 
         Text text = new Text(message);
         TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
+        textFlow.setStyle(
+            "-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
                 "fx-background-radius: 40px; -fx-opacity: 100;");
         textFlow.setPadding(new Insets(5, 10, 5, 10));
         text.setFill(Color.color(0.934, 0.945, 0.996));
@@ -196,7 +208,8 @@ public class ViewModelGameWindow {
 
         Text text = new Text(privateMessage);
         TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
+        textFlow.setStyle(
+            "-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
                 "fx-background-radius: 40px; -fx-opacity: 100;");
         textFlow.setPadding(new Insets(5, 10, 5, 10));
         text.setFill(Color.color(0.934, 0.945, 0.996));
@@ -218,7 +231,8 @@ public class ViewModelGameWindow {
 
         Text text = new Text(groupMessage);
         TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(208,167,15);" +
+        textFlow.setStyle(
+            "-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(208,167,15);" +
                 "fx-background-radius: 40px; -fx-opacity: 100;");
         textFlow.setPadding(new Insets(5, 10, 5, 10));
         text.setFill(Color.color(0.934, 0.945, 0.996));
@@ -229,8 +243,10 @@ public class ViewModelGameWindow {
             public void run() {
                 chatVBox.getChildren().add(hBox);
             }
-        });;
+        });
+        ;
     }
+
 
     public void exit() throws IOException {
         //send disconnect notification to server
@@ -249,13 +265,17 @@ public class ViewModelGameWindow {
         }
     }
 
+    /*
+
+
     private void placeRobots(PlayerList playerList) {
         for (int x = 0; x < playerList.getPlayerList().size(); x++){
             playerList.getPlayerList().get(x).getRobot().makeImage(gameboard);
         }
     }
-
+    */
     public void setOnDragDetected(ImageView source) {
+
         source.setOnDragDetected(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -271,6 +291,9 @@ public class ViewModelGameWindow {
                 db.setContent(content);
 
                 event.consume();
+                columnIndex = handGrid.getChildren().indexOf(source);
+                ((ImageView) handGrid.getChildren().get(columnIndex)).setImage(null);
+                System.out.println(columnIndex);
 
             }
         });
@@ -281,9 +304,7 @@ public class ViewModelGameWindow {
             @Override
             public void handle(DragEvent event) {
                 //data is dragged over target
-                System.out.println("Dragged over");
-
-                //accept it only if itis not dragged from the same node and if it hasImage
+                //accept it only if it is not dragged from the same node and if it hasImage
                 if (event.getGestureSource() != target && event.getDragboard().hasImage()) {
                     //allow for copying and moving
                     event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
@@ -299,7 +320,6 @@ public class ViewModelGameWindow {
             @Override
             public void handle(DragEvent event) {
                 //drag-and-drop gesture entered target
-                System.out.println("Drag entered");
                 //Show entering visually
                 if (event.getGestureSource() != target && event.getDragboard().hasImage()) {
                     target.setStyle("-fx-border-color: green;");
@@ -315,7 +335,6 @@ public class ViewModelGameWindow {
             @Override
             public void handle(DragEvent event) {
                 //mouse moves out of enntered area
-                System.out.println("Drag exited");
                 //remove visuals
                 target.setStyle("-fx-border-color: transparent;");
 
@@ -330,146 +349,43 @@ public class ViewModelGameWindow {
             @Override
             public void handle(DragEvent event) {
                 //data dropped
-                System.out.println("Drag dropped");
-
                 boolean success = false;
-                Dragboard db = event.getDragboard();
-                if (db.hasImage()) {
-                    Image data = db.getImage();
-                    ImageView card = new ImageView(data);
-                    //add image from dragboard to slots (Pane)
-                    target.getChildren().add(card);
-
-                    success = true;
-                }
-                event.setDropCompleted(success);
-                event.consume();
-            }
-        });
-    }
-
-    /*
-    public void setOnDragDetected(ImageView imageView, String data) {
-        imageView.setOnDragDetected(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent event) {
-                //drag was detected, start a drag-and-drop gesture
-                //allow any transfer mode
-                Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
-
-                //Put a string on a dragboard
-                ClipboardContent content = new ClipboardContent();
-                content.putString(data);
-                db.setContent(content);
-
-                event.consume();
-            }
-        });
-
-
-        //Set event handler for drag over on grid pane
-        programmingGrid.setOnDragOver(new EventHandler<DragEvent>() {
-            public void handle(DragEvent event) {
-                //data is dragged over the target
-                //accept it only if it is not dragged from the same node and if it has a string data
-                if (event.getGestureSource() != programmingGrid &&
-                        event.getDragboard().hasString()) {
-                    //allow for both copying and moving, whatever user chooses
-                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                }
-                event.consume();
-            }
-        });
-
-        //Set event handler for drag dropped on grid pane
-        programmingGrid.setOnDragDropped(new EventHandler<DragEvent>() {
-            public void handle(DragEvent event) {
-                //data dropped
-                //if there is a string data on dragboard, read it and use it
-                Dragboard db = event.getDragboard();
-                boolean success = false;
-                Node node = event.getPickResult().getIntersectedNode();
-                if (db.hasString()) {
-                    String data = db.getString();
-                    Integer columnIndex = GridPane.getColumnIndex(node);
-                    Integer rowIndex = GridPane.getRowIndex(node);
-                    int x = columnIndex == null ? 0 : columnIndex;
-                    int y = rowIndex == null ? 0 : rowIndex;
-                    ImageView imageView = new ImageView(new Image(data));
-
-                    programmingGrid.add(imageView, x, y);
-
-                    success = true;
-                }
-                //let the source know whether the string was successfully transferred and used
-                event.setDropCompleted(success);
-
-                event.consume();
-            }
-        });
-    }
-
-
-    public void setOnDragDetected(ImageView imageView, String data) {
-        EventHandler<MouseEvent> dragDetectedHandler = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Dragboard db = imageView.startDragAndDrop(TransferMode.ANY);
-                ClipboardContent content = new ClipboardContent();
-                content.putString(imageView.toString());
-                db.setContent(content);
-                event.consume();
-            }
-        };
-        EventHandler<DragEvent> dragOverHandler = new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                if (event.getGestureSource() != programmingGrid &&
-                        event.getDragboard().hasString()) {
-                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                }
-                event.consume();
-            }
-        };
-        EventHandler<DragEvent> dragDroppedHandler = new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                Dragboard db = event.getDragboard();
-                boolean success = false;
-                if (db.hasString()) {
-                    String card = db.getString();
-                    ImageView imageView = switch (card) {
-                        case "programCard1" -> new ImageView(new Image(data));
-                        case "programCard2" -> new ImageView(new Image(data));
-                        case "programCard3" -> new ImageView(new Image(data));
-                        case "programCard4" -> new ImageView(new Image(data));
-                        case "programCard5" -> new ImageView(new Image(data));
-                        case "programCard6" -> new ImageView(new Image(data));
-                        case "programCard7" -> new ImageView(new Image(data));
-                        case "programCard8" -> new ImageView(new Image(data));
-                        case "programCard9" -> new ImageView(new Image(data));
-                        default -> null;
-                    };
-                    if (imageView != null) {
-                        programmingGrid.add(imageView, 0, 0);
+                if (target.getChildren().isEmpty()) {
+                    Dragboard db = event.getDragboard();
+                    if (db.hasImage()) {
+                        Image data = db.getImage();
+                        ImageView card = new ImageView(data);
+                        card.setFitHeight(height);
+                        card.setPreserveRatio(true);
+                        //add image from dragboard to slots (Pane)
+                        target.getChildren().add(card);
                         success = true;
+                        handGrid.getChildren().remove(columnIndex);
+                        System.out.println("Success");
+                    }
+
+                    event.setDropCompleted(success);
+                    event.consume();
+                } else {
+                    Dragboard db = event.getDragboard();
+                    if (db.hasImage()) {
+                        Image data = db.getImage();
+                        ((ImageView)handGrid.getChildren().get(columnIndex)).setImage(data);
+                        System.out.println(columnIndex);
                     }
                 }
-                event.setDropCompleted(success);
-                event.consume();
             }
-        };
-        imageView.setOnDragDetected(dragDetectedHandler);
-        programmingGrid.setOnDragOver(dragOverHandler);
-        programmingGrid.setOnDragDropped(dragDroppedHandler);
+        });
     }
-
-This code sets up three event handlers for a JavaFX ImageView and a GridPane called programmingGrid.
-
-The first event handler is for the "drag detected" event on the ImageView. This event is triggered when the user begins a drag-and-drop gesture by pressing the mouse button on the ImageView. When this event occurs, the event handler creates a Dragboard and puts a string of data on it. The string of data is passed to the event handler as the data parameter. The Dragboard is then associated with the drag-and-drop gesture by calling startDragAndDrop() on the ImageView.
-
-The second event handler is for the "drag over" event on the GridPane. This event is triggered when the user drags the data over the GridPane. The event handler checks that the drag-and-drop gesture is not originating from the GridPane itself and that the Dragboard has a string of data on it. If these conditions are met, the event handler calls acceptTransferModes() on the DragEvent to allow for both copying and moving of the data.
-
-The third event handler is for the "drag dropped" event on the GridPane. This event is triggered when the user drops the data onto the GridPane. The event handler checks that the Dragboard has a string of data on it. If this is the case, the event handler creates a new ImageView with the corresponding image based on the string data, and adds it to the GridPane. The event handler then sets the "drop completed" flag on the DragEvent to indicate whether the data was successfully transferred and used.
-
- */
+    public void onRightClickRemoveProgrammingcard (Pane pane) {
+        pane.setOnMousePressed(event -> {
+            if (event.isSecondaryButtonDown()) {
+                for(Node child : pane.getChildren()) {
+                    handGrid.add(child, 0, 0);
+                }
+                pane.getChildren().clear();
+            }
+        });
+    }
 }
+
