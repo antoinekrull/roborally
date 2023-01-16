@@ -189,7 +189,8 @@ public class Client {
                             Client.this.setMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.Error)) {
-                            System.out.println(message.getMessageBody().getError());
+                            String error = message.getMessageBody().getError();
+                            Platform.runLater(() -> Client.this.setErrorMessage(error));
                         }
                         if (message.getMessageType().equals(MessageType.CardPlayed)) {
 

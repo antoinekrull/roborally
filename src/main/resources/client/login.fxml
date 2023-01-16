@@ -166,6 +166,9 @@
                </BorderPane.margin>
             </VBox>
          </left>
+         <center>
+            <ImageView fx:id="robotImage" fitHeight="453.0" fitWidth="405.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER" />
+         </center>
       </BorderPane>
    </children>
 </StackPane>

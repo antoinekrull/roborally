@@ -126,11 +126,14 @@ public class ViewModelLobby {
             @Override
             public void handle(MouseEvent event) {
                 if (!userList.getSelectionModel().getSelectedItems().isEmpty()) {
-                    usersChoiceBox.setValue(userList.getSelectionModel().getSelectedItem());
-                    event.consume();
-                }
-                else {
-                    //usersChoiceBox.setValue();
+                    if (userList.getSelectionModel().getSelectedIndex() != 0) {
+                        usersChoiceBox.setValue(userList.getSelectionModel().getSelectedItem());
+                        event.consume();
+                    }
+                    else {
+                        usersChoiceBox.setValue(userList.getItems().get(0));
+                        event.consume();
+                    }
                 }
             }
         });

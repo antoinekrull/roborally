@@ -1,6 +1,7 @@
 package client.ui;
 
 import client.player.Player;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;
@@ -33,19 +34,30 @@ public class PlayerListCell extends ListCell<Player> {
             setGraphic(null);
         }
         else {
-            name.setText(item.getUsername());
-            robot.setText("Roboter " + (item.getRobot() != null
-                            ? item.getRobot().getFigure()
-                            : 0)
-            );
-            int robo = item.getRobot().getFigure();
-            switch(robo) {
+            if (item.getUsername().equals("Group")) {
+                name.setText("Active Player List");
+                name.setStyle("-fx-font-weight: bold;" + "-fx-text-fill: red;" + "-fx-font-size: 22px;");
+                layout.setAlignment(Pos.CENTER);
+                layout.setStyle("-fx-background-color: #000000;");
+                robot.setText("");
+            }
+            else {
+                name.setText(item.getUsername());
+                name.setStyle("-fx-font-weight: bold;");
+                robot.setText("Roboter " + (item.getRobot() != null
+                        ? item.getRobot().getFigure()
+                        : 0));
+            }
+
+            /*
+            switch(item.getRobot().getFigure()) {
+                case -1: robotImage.setImage(null);
                 case 1: robotImage.setImage(new Image(""));
-                case 2: robotImage.setImage(new Image(""));;
-                case 3: robotImage.setImage(new Image(""));;
-                case 4: robotImage.setImage(new Image(""));;
-                case 5: robotImage.setImage(new Image(""));;
-                case 6: robotImage.setImage(new Image(""));;
+                case 2: robotImage.setImage(new Image(""));
+                case 3: robotImage.setImage(new Image(""));
+                case 4: robotImage.setImage(new Image(""));
+                case 5: robotImage.setImage(new Image(""));
+                case 6: robotImage.setImage(new Image(""));
             }
             if (item.isReady()) {
                 readyImage.setImage(new Image(""));
@@ -53,6 +65,8 @@ public class PlayerListCell extends ListCell<Player> {
             else {
                 readyImage.setImage(null);
             }
+             */
+
             setGraphic(layout);
         }
     }

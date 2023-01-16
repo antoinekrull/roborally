@@ -16,6 +16,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 /**
@@ -37,6 +39,8 @@ public class ViewModelRobotSelection {
     private Button exitButton;
     @FXML
     private Label errorLabelRobotSelection;
+    @FXML
+    private ImageView robotImage;
 
     private List<Node> robots;
     private PlayerList playerList;
@@ -61,27 +65,55 @@ public class ViewModelRobotSelection {
         robot1.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(1);
             applyStyle(robot1);
+            addRobotImageToView(robot1);
         });
         robot2.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(2);
             applyStyle(robot2);
+            addRobotImageToView(robot2);
         });
         robot3.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(3);
             applyStyle(robot3);
+            addRobotImageToView(robot3);
         });
         robot4.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(4);
             applyStyle(robot4);
+            addRobotImageToView(robot4);
         });
         robot5.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(5);
             applyStyle(robot5);
+            addRobotImageToView(robot5);
         });
         robot6.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(6);
             applyStyle(robot6);
+            addRobotImageToView(robot6);
         });
+    }
+
+    private void addRobotImageToView(Label robot) {
+        if (robot.getText().equals("Roboter 1")) {
+            robotImage.setImage(new Image("src/main/resources/textures/robots/Robot_1_bunt.png"));
+        }
+        if (robot.getText().equals("Roboter 2")) {
+            robotImage.setImage(new Image("src/main/resources/textures/robots/Robot_1_bunt.png"));
+        }
+        if (robot.getText().equals("Roboter 3")) {
+            robotImage.setImage(new Image("src/main/resources/textures/robots/Robot_1_bunt.png"));
+        }
+        if (robot.getText().equals("Roboter 4")) {
+            robotImage.setImage(new Image("src/main/resources/textures/robots/Robot_1_bunt.png"));
+        }
+        if (robot.getText().equals("Roboter 5")) {
+            robotImage.setImage(new Image("src/main/resources/textures/robots/Robot_1_bunt.png"));
+        }
+        if (robot.getText().equals("Roboter 6")) {
+            robotImage.setImage(new Image("src/main/resources/textures/robots/Robot_1_bunt.png"));
+        }
+
     }
 
     //When selecting a robot, the robot gets highlighted, but only the selected one

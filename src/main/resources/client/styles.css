@@ -58,3 +58,7 @@
 -fx-background-size: contain;
 -fx-background-color: none;
 }
+
+.errorLabelRobotSelection{
+-fx-text-fill: red;
+}

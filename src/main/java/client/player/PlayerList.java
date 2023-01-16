@@ -1,6 +1,6 @@
 package client.player;
 
-import client.player.Player;
+import game.player.Robot;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -9,7 +9,7 @@ public class PlayerList {
 
     public PlayerList() {
         playerList = FXCollections.observableArrayList();
-        playerList.add(new Player(-1, "Group", null));
+        playerList.add(new Player(-1, "Group", new Robot(-1)));
     }
 
     public ObservableList<Player> getPlayerList() {
