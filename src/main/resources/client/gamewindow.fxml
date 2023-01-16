@@ -74,7 +74,7 @@
                   </rowConstraints>
                   <children>
                     <Region GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                    <Region GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <Region fx:id="region0_1" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                     <Region GridPane.columnIndex="0" GridPane.rowIndex="2" />
                     <Region GridPane.columnIndex="0" GridPane.rowIndex="3" />
                     <Region GridPane.columnIndex="0" GridPane.rowIndex="4" />

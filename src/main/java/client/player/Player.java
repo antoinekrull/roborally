@@ -6,6 +6,10 @@ import game.card.Card;
 import game.card.CardType;
 import game.card.ProgrammingDeck;
 import game.player.Robot;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
@@ -17,20 +21,20 @@ import java.util.Random;
  */
 public class Player {
 
-    private String username;
-    private int score;
     private int id;
-    private boolean isPlaying;
-    private boolean isReady;
+    private String username;
     private Robot robot;
+    private BooleanProperty isReady;
+    private BooleanProperty isPlaying;
+    private IntegerProperty score;
 
     public Player(int id, String username, Robot robot) {
         this.id = id;
         this.username = username;
         this.robot = robot;
-        this.score = 0;
-        isPlaying = false;
-        isReady = false;
+        this.score = new SimpleIntegerProperty();
+        this.isPlaying = new SimpleBooleanProperty();
+        this.isReady = new SimpleBooleanProperty();
     }
 
     public String getUsername() {
@@ -41,14 +45,6 @@ public class Player {
         this.username = username;
     }
 
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
     public int getId() {
         return id;
     }
@@ -57,20 +53,40 @@ public class Player {
         this.id = id;
     }
 
-    public boolean isPlaying() {
-        return isPlaying;
-    }
-
-    public void setPlaying(boolean playing) {
-        isPlaying = playing;
-    }
-
-    public boolean isReady() {
+    public BooleanProperty isReadyProperty() {
         return isReady;
     }
 
-    public void setReady(boolean ready) {
-        isReady = ready;
+    public void setIsReady(boolean isReady) {
+        this.isReady.set(isReady);
+    }
+
+    public boolean isReady() {
+        return isReady.get();
+    }
+
+    public boolean isPlaying() {
+        return isPlaying.get();
+    }
+
+    public BooleanProperty isPlayingProperty() {
+        return isPlaying;
+    }
+
+    public void setIsPlaying(boolean isPlaying) {
+        this.isPlaying.set(isPlaying);
+    }
+
+    public int getScore() {
+        return score.get();
+    }
+
+    public IntegerProperty scoreProperty() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score.set(score);
     }
 
     public Robot getRobot() {

@@ -27,11 +27,7 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -67,6 +63,8 @@ public class ViewModelGameWindow {
     private Pane programmingPane1, programmingPane2, programmingPane3, programmingPane4, programmingPane5;
     @FXML
     private GridPane handGrid;
+    @FXML
+    private Region region0_1;
 
     //buttons for cards
 
@@ -143,6 +141,31 @@ public class ViewModelGameWindow {
         onRightClickRemoveProgrammingcard(programmingPane3);
         onRightClickRemoveProgrammingcard(programmingPane4);
         onRightClickRemoveProgrammingcard(programmingPane5);
+
+        region0_1.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Integer colIndex = GridPane.getColumnIndex(region0_1);
+                Integer rowIndex = GridPane.getRowIndex(region0_1);
+                System.out.println(colIndex + " " + rowIndex);
+            }
+        });
+
+        gameboard.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Node target = (Node) event.getTarget();
+                if (target != gameboard) {
+                    Node parent;
+                    while ((parent = target.getParent()) != gameboard) {
+                        target = parent;
+                    }
+                }
+                Integer colIndex = GridPane.getColumnIndex(target);
+                Integer rowIndex = GridPane.getRowIndex(target);
+                System.out.println(colIndex + " " + rowIndex);
+            }
+        });
     }
 
     public void receivedMessage() {

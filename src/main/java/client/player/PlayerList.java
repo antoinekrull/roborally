@@ -27,4 +27,42 @@ public class PlayerList {
             }
         }
     }
+
+    public void changePlayerStatus(int clientID, boolean ready) {
+        for (int i = 0; i < playerList.size(); i++) {
+            if (playerList.get(i).getId() == clientID) {
+                playerList.get(i).setIsReady(ready);
+            }
+        }
+    }
+
+    public Player getPlayer(int clientID) {
+        Player player = null;
+        for (int i = 0; i < playerList.size(); i++) {
+            if (playerList.get(i).getId() == clientID) {
+                player = playerList.get(i);
+            }
+        }
+        return player;
+    }
+
+    public int getPlayerIndex(int clientID) {
+        int index = 0;
+        for (int i = 0; i < playerList.size(); i++) {
+            if (playerList.get(i).getId() == clientID) {
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    public boolean containsPlayer(int clientID) {
+        boolean contains = false;
+        for (int i = 0; i < playerList.size(); i++) {
+            if (playerList.get(i).getId() == clientID) {
+                contains = true;
+            }
+        }
+        return contains;
+    }
 }

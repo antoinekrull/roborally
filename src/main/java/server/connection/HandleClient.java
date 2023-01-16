@@ -264,7 +264,7 @@ public class HandleClient implements Runnable{
                         } else {
                             game.removeReady(clientID);
                         }
-                        write(messageCreator.generatePlayerStatusMessage(clientID,ready));
+                        write(messageCreator.generatePlayerStatusMessage(clientID, ready));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

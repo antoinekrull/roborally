@@ -6,19 +6,13 @@ import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import game.board.Board;
-import game.board.Direction;
-import game.card.*;
 import game.player.Robot;
 import client.player.Player;
-import game.player.Robot;
 import javafx.application.Platform;
-import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.javatuples.Pair;
-
-import org.javatuples.Triplet;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -147,7 +141,7 @@ public class Client {
                 out = new DataOutputStream(socket.getOutputStream());
                 String receiveMessage;
                 while (true) {
-                    if((receiveMessage =in.readUTF()) != null) {
+                    if((receiveMessage = in.readUTF()) != null) {
                         Message message = JsonSerializer.deserializeJson(receiveMessage, Message.class);
                         if (message.getMessageType().equals(MessageType.Alive)) {
                             sendAliveMessage();
@@ -168,11 +162,15 @@ public class Client {
                             else {
                                 String username = message.getMessageBody().getName();
                                 int figure = message.getMessageBody().getFigure();
-                                Platform.runLater(() -> Client.this.getPlayerList().add(new Player(clientID, username, new Robot(figure))));
+                                if (!playerList.containsPlayer(clientID)) {
+                                    Platform.runLater(() -> Client.this.getPlayerList().add(new Player(clientID, username, new Robot(figure))));
+                                }
                             }
                         }
                         if (message.getMessageType().equals(MessageType.PlayerStatus)) {
-
+                            int clientID = message.getMessageBody().getClientID();
+                            boolean ready = message.getMessageBody().isReady();
+                            playerList.changePlayerStatus(clientID, ready);
                         }
                         if (message.getMessageType().equals(MessageType.SelectMap)) {
                             prioPlayer = true;
