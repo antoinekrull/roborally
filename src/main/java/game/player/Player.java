@@ -69,7 +69,6 @@ public class Player {
     public Card getCard(int index) {
         return hand.get(index);
     }
-
     public int getId() {
         return id;
     }
@@ -82,7 +81,6 @@ public class Player {
     public int getCurrentRegister(Card currentCard){
         return ArrayUtils.indexOf(cardRegister, currentCard);
     }
-
     //This method is used to add a card to a specified register. It should not be used by the player
     public void setCardRegister(Card card, int index) {
         cardRegister[index] = card;
@@ -224,4 +222,10 @@ public class Player {
             }
         }
     }
+}
+    @Override
+    public String toString() {
+        return username;
+    }
+
 }

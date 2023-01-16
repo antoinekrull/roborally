@@ -14,6 +14,7 @@ public class ModelUser {
 
     private static ModelUser modelUser;
     private BooleanProperty connected;
+    private BooleanProperty accepted;
     private String username;
     private IntegerProperty userID;
     private StringProperty usernameProperty;
@@ -26,12 +27,13 @@ public class ModelUser {
         client = Client.getInstance();
         connected = new SimpleBooleanProperty();
         connected.bind(client.connectedProperty());
+        accepted = new SimpleBooleanProperty();
+        accepted.bind(client.acceptedProperty());
         usernameProperty = new SimpleStringProperty("");
         userID = new SimpleIntegerProperty();
         userID.bindBidirectional(client.userIDProperty());
         isAI = new SimpleBooleanProperty();
         isAI.bind(client.isAIProperty());
-
     }
 
     public static ModelUser getInstance() {
@@ -58,6 +60,9 @@ public class ModelUser {
     public void sendSetStatus(Boolean status) {
         client.sendSetStatusMessage(status);
     }
+    public void sendMapSelected(String map) {
+        client.sendMapSelected(map);
+    }
 
     public IntegerProperty userIDProperty() {
         return userID;
@@ -67,7 +72,11 @@ public class ModelUser {
         return usernameProperty;
     }
 
-    /*public void sendUsername() {
-        client.sendUsername(usernameProperty.get());
-    }*/
+    public boolean getVerification() {
+        return this.accepted.get();
+    }
+
+    public void connect() {
+        client.connectServer();
+    }
 }

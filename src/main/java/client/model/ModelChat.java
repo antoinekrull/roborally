@@ -62,10 +62,12 @@ public class ModelChat {
 
     public void sendGroupMessage() {
         client.sendGroupMessage(textfieldProperty.get());
+        System.out.println("send group message");
     }
 
     public void sendPrivateMessage(int toUser) {
         client.sendPrivateMessage(textfieldProperty.get(), toUser);
+        System.out.println("send private message");
     }
 }
 

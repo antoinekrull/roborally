@@ -30,7 +30,7 @@ public class Game implements Runnable {
 
     //TODO: Remove this?
     private LinkedList<Integer> readyList = new LinkedList<>();
-    private String[] maps = {"DizzyHighway"};
+    private String[] maps = {"DizzyHighway", "ExtraCrispy", "DeathTrap", "LostBearings"};
 
     private static Game INSTANCE;
 
@@ -230,6 +230,10 @@ public class Game implements Runnable {
             return -1;
         }
     }
+    public LinkedList<Integer> getReadyList() {
+        return readyList;
+    }
+
 
     //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     public void createBoard(String map) throws JsonProcessingException {

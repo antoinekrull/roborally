@@ -14,6 +14,7 @@ public class RebootTile extends Tile {
     public RebootTile(int xCoordinate, int yCoordinate){
         super(xCoordinate, yCoordinate, "/textures/gameboard/reboot.png");
         this.path = getClass().getResource("/textures/gameboard/reboot.png").toString();
+        setType("RestartPoint");
         isDanger = false;
         isBlocking = false;
         setRebootTileIndex(rebootTileIndex++);

@@ -1,7 +1,11 @@
 package game.player;
-import game.board.Tile;
+
 import game.board.Direction;
+import game.board.Tile;
 import game.card.ProgrammingDeck;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import org.javatuples.Pair;
 
 /**
@@ -22,7 +26,7 @@ public class Robot {
 
     public Robot(int figure) {
         this.figure = figure;
-        deck.createDeck();
+        //deck.createDeck();
         energyCubes = 0;
         currentObjective = 1;
     }
@@ -70,6 +74,14 @@ public class Robot {
 
     public void shootLaser(Player player) throws Exception {
         //checkRobotLaserCollision(player);
+    }
+
+    public void makeImage(GridPane tiles){
+        ImageView img = new ImageView();
+        String path = "/textures/robots/Robot_" + figure + "_bunt.png";
+        Image im = new Image(path,70, 70,true,false);
+        img.setImage(im);
+        tiles.add(img,currentPosition.getValue0(), currentPosition.getValue1());
     }
 
 }
