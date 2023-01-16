@@ -4,8 +4,10 @@ import client.connection.NotifyChangeSupport;
 import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
+import client.player.ClientPlayer;
 import communication.Message;
 import game.board.Tile;
+import game.player.Robot;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.application.Platform;
@@ -13,7 +15,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -80,6 +81,7 @@ public class ViewModelGameWindow {
 
     private int height = 150;
     private int columnIndex;
+
 
     private NotifyChangeSupport notifyChangeSupport;
 
@@ -150,24 +152,7 @@ public class ViewModelGameWindow {
         onRightClickRemoveProgrammingcard(programmingPane4);
         onRightClickRemoveProgrammingcard(programmingPane5);
 
-
-
-        gameboard.setOnMouseClicked(event -> {
-            double x = event.getX();
-            double y = event.getY();
-            for (Node node : gameboard.getChildren()) {
-                if (node instanceof Region) {
-                    Bounds bounds = node.getBoundsInParent();
-                    if (bounds.contains(x, y)) {
-                        int columnIndex = GridPane.getColumnIndex(node);
-                        int rowIndex = GridPane.getRowIndex(node);
-                        System.out.println("colIndex: " + columnIndex + ", rowIndex: " + rowIndex);
-                    }
-                }
-            }
-        });
-
-        //selectStarttile(gameboard, new ClientPlayer(1, "Ralf", new Robot(1)));
+        selectStarttile(gameboard, new ClientPlayer(1, "Ralf", new Robot(1)));
     }
 
     public void receivedMessage() {
@@ -291,20 +276,27 @@ public class ViewModelGameWindow {
     }
 
 
-//    public void selectStarttile (GridPane gameboard, ClientPlayer player) {
-//        Image im = new Image("C:\\Users\\bened\\IdeaProjects\\knorrige-korrelate-hp\\src\\main\\resources\\textures\\robots\\Robot_1_bunt.png");
-//        ImageView img = new ImageView(im);
-//        gameboard.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-//            if (event.getButton() == MouseButton.PRIMARY){
-//                Node source = (Node) event.getSource();
-//                Integer colIndex = GridPane.getColumnIndex(source);
-//                Integer rowIndex = GridPane.getRowIndex(source);
-//                GridPane.setConstraints(img, colIndex, rowIndex);
-//                gameboard.getChildren().add(img);
-//            }
-//            }
-//            );
-//    }
+    public void selectStarttile (GridPane gameboard, ClientPlayer player) {
+        Image im = new Image("C:\\Users\\bened\\IdeaProjects\\knorrige-korrelate-hp\\src\\main\\resources\\textures\\robots\\Robot_1_bunt.png", 50, 50, true, true);
+        ImageView img = new ImageView(im);
+        gameboard.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Node target = (Node) event.getTarget();
+                if (target != gameboard) {
+                    Node parent;
+                    while ((parent = target.getParent()) != gameboard) {
+                        target = parent;
+                    }
+                }
+                Integer colIndex = GridPane.getColumnIndex(target);
+                Integer rowIndex = GridPane.getRowIndex(target);
+                System.out.println(colIndex + " " + rowIndex);
+                gameboard.add(img, colIndex, rowIndex);
+            }
+            }
+            );
+    }
 
     public void setOnDragDetected(ImageView source) {
 
