@@ -9,6 +9,7 @@ import game.CollisionCalculator;
 import game.Game;
 import game.board.Board;
 import game.board.Direction;
+import game.card.BackUpCard;
 import game.card.MoveCard1;
 import game.card.MoveCard2;
 import game.card.MoveCard3;
@@ -187,19 +188,12 @@ public class Client {
                                 player1.getRobot().setCurrentPosition(new Pair<>(2, 2));
                                 player2.getRobot().setCurrentPosition(new Pair<>(9, 9));
                                 game.setPlayerList(playerList);
-                                player1.drawFullHand();
-                                player2.drawFullHand();
-                                player1.printHand();
+                                BackUpCard backUp = new BackUpCard();
                                 System.out.println("---");
-                                player1.fillRegisterWithRandomCards();
-                                player2.fillRegisterWithRandomCards();
-                                player1.printRegisters();
-                                System.out.println("---");
-                                game.runActivationPhase();
-                                player1.printRegisters();
-                                System.out.println("---");
-                                System.out.println(CollisionCalculator.checkRobotCollision(player1));
-                                System.out.println(CollisionCalculator.checkRobotCollision(player2));
+                                System.out.println(CollisionCalculator.checkReverseRobotCollision(player1));
+                                System.out.println(player1.getRobot().getCurrentPosition());
+                                backUp.applyEffect(player1);
+                                System.out.println(player1.getRobot().getCurrentPosition());
                             }
                             if(message.getMessageType().equals(MessageType.YourCards)){
 
