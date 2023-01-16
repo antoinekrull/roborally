@@ -240,6 +240,7 @@ public class HandleClient implements Runnable{
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
                         String jsonmap = content.lines().collect(Collectors.joining());
                         write(messageCreator.generateGameStartedMessage(jsonmap));
+                        //should board be created here? on server side?
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
                         server.players.add(new Player(incomingMessage.getMessageBody().getClientID(), incomingMessage.getMessageBody().getName()
                                 , new Robot(incomingMessage.getMessageBody().getFigure())));

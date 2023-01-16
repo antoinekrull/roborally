@@ -9,10 +9,7 @@ import game.CollisionCalculator;
 import game.Game;
 import game.board.Board;
 import game.board.Direction;
-import game.card.BackUpCard;
-import game.card.MoveCard1;
-import game.card.MoveCard2;
-import game.card.MoveCard3;
+import game.card.*;
 import game.player.Player;
 import game.player.Robot;
 import javafx.beans.property.*;
@@ -188,12 +185,15 @@ public class Client {
                                 player1.getRobot().setCurrentPosition(new Pair<>(2, 2));
                                 player2.getRobot().setCurrentPosition(new Pair<>(9, 9));
                                 game.setPlayerList(playerList);
-                                BackUpCard backUp = new BackUpCard();
-                                System.out.println("---");
-                                System.out.println(CollisionCalculator.checkReverseRobotCollision(player1));
-                                System.out.println(player1.getRobot().getCurrentPosition());
-                                backUp.applyEffect(player1);
-                                System.out.println(player1.getRobot().getCurrentPosition());
+                                TurnRightCard right = new TurnRightCard();
+                                TurnLeftCard left = new TurnLeftCard();
+                                player1.getRobot().setDirection(Direction.NORTH);
+                                right.applyEffect(player1);
+                                System.out.println(player1.getRobot().getDirection());
+                                player1.getRobot().setDirection(Direction.NORTH);
+                                left.applyEffect(player1);
+                                System.out.println(player1.getRobot().getDirection());
+
                             }
                             if(message.getMessageType().equals(MessageType.YourCards)){
 
