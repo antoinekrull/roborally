@@ -9,6 +9,7 @@ import communication.Message;
 import game.board.Tile;
 import game.player.Robot;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -277,7 +278,8 @@ public class ViewModelGameWindow {
 
 
     public void selectStarttile (GridPane gameboard, ClientPlayer player) {
-        Image im = new Image("C:\\Users\\bened\\IdeaProjects\\knorrige-korrelate-hp\\src\\main\\resources\\textures\\robots\\Robot_1_bunt.png", 50, 50, true, true);
+        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_1_bunt.png");
+        Image im = new Image(input, 50, 50, true, true);
         ImageView img = new ImageView(im);
         gameboard.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
