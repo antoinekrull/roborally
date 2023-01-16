@@ -5,9 +5,10 @@ import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
-import game.CollisionCalculator;
-import game.Game;
 import game.board.Board;
+import game.board.Direction;
+import game.card.*;
+import game.player.Robot;
 import client.player.Player;
 import game.player.Robot;
 import javafx.application.Platform;
@@ -15,6 +16,8 @@ import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.javatuples.Pair;
+
 import org.javatuples.Triplet;
 
 import java.io.BufferedInputStream;
@@ -48,6 +51,8 @@ public class Client {
     private IntegerProperty userID;
     private StringProperty errorMessage;
     private Boolean prioPlayer = false;
+
+    public static ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
 
     MessageCreator messageCreator;
     String address = "localhost";
@@ -175,7 +180,6 @@ public class Client {
                             String[] temp = message.getMessageBody().getAvailableMaps();
                             for (int i = 0; i < temp.length; i++) {
                                 maps.add(temp[i]);
-                                System.out.println(maps.get(i));
                             }
                         }
                         if (message.getMessageType().equals(MessageType.MapSelected)) {

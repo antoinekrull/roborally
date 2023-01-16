@@ -1,6 +1,7 @@
 package game.player;
 
 import game.Game;
+import game.board.Direction;
 import game.card.AgainCard;
 import game.card.Card;
 import game.card.CardType;
@@ -32,6 +33,7 @@ public class Player {
         this.id = id;
         this.username = username;
         this.robot = robot;
+        robot.setDirection(Direction.NORTH);
         this.hand = new ArrayList<Card>();
         this.score = 0;
         this.personalDiscardPile = new ProgrammingDeck();
@@ -205,6 +207,10 @@ public class Player {
             setCardRegister(null, i);
         }
     }
+    @Override
+    public String toString() {
+        return username;
+    }
 
     //for testing purposes
     public void printHand() {
@@ -222,9 +228,4 @@ public class Player {
             }
         }
     }
-    @Override
-    public String toString() {
-        return username;
-    }
-
 }

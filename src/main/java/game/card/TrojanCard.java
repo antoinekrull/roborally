@@ -11,10 +11,9 @@ public class TrojanCard extends Card{
     }
     @Override
     public void applyEffect(Player player) throws Exception {
-        player.addCard(Game.spamDeck.popCardFromDeck());
-        player.addCard(Game.spamDeck.popCardFromDeck());
+        player.getHand().add(Game.spamDeck.popCardFromDeck());
+        player.getHand().add(Game.spamDeck.popCardFromDeck());
         Card topProgrammingCard = player.getRobot().getDeck().popCardFromDeck();
-        //TODO: Fix this
-        //player.getRobot().setRegister(player.getRobot().getActiveRegister(), topProgrammingCard);
+        player.setCardRegister(topProgrammingCard, player.getRobot().getActiveRegister());
     }
 }
