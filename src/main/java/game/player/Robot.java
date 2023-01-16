@@ -19,6 +19,7 @@ public class Robot {
     private int currentObjective;
     //currently only for DizzyHighWay, initialize position method needs to be implemented to set parameters
     private Direction direction;
+    //note that the board has no normal coordinates, 0/0 is on the top left
     private Pair<Integer, Integer> currentPosition;
     private ProgrammingDeck deck = new ProgrammingDeck();
     private boolean isRebooted = false;
@@ -36,6 +37,15 @@ public class Robot {
     }
     public void setCurrentPosition(Pair<Integer, Integer> currentPosition) {
         this.currentPosition = currentPosition;
+        if(currentPosition.getValue0() < 13) {
+            this.currentPosition = currentPosition.setAt0(13);
+        } else if(currentPosition.getValue0() > 0) {
+            this.currentPosition = currentPosition.setAt0(0);
+        } else if(currentPosition.getValue1() < 10) {
+            this.currentPosition = currentPosition.setAt1(10);
+        } else if(currentPosition.getValue1() > 0) {
+            this.currentPosition = currentPosition.setAt1(0);
+        }
     }
     public int getCurrentObjective() {
         return currentObjective;

@@ -4,10 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.*;
 import game.card.*;
 import game.player.Player;
+import game.player.Robot;
 import org.javatuples.Pair;
-//import server.PlayerList;
 import server.connection.PlayerList;
-import java.util.LinkedList;
+
+import java.util.*;
 
 
 import java.util.ArrayList;
@@ -56,13 +57,15 @@ public class Game implements Runnable {
     }
 
     private void applyAllTileEffects() throws Exception {
-        for(int x = 0; x < Board.conveyorBelt2List.size(); x++) {
-            for(int y = 0; y < playerList.size(); y++) {
-                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.conveyorBelt2List.get(x).getPosition())) {
-                    Board.conveyorBelt2List.get(x).applyEffect(playerList.get(y));
+        try {
+            for(int x = 0; x < Board.conveyorBelt2List.size(); x++) {
+                for(int y = 0; y < playerList.size(); y++) {
+                    if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.conveyorBelt2List.get(x).getPosition())) {
+                        Board.conveyorBelt2List.get(x).applyEffect(playerList.get(y));
+                    }
                 }
             }
-        }
+
         for(int x = 0; x < Board.conveyorBelt1List.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.conveyorBelt1List.get(x).getPosition())) {
@@ -78,7 +81,7 @@ public class Game implements Runnable {
                 }
             }
         }
-        //TODO: needs to be changed
+        //TODO: needs to be changed (?)
         for(int x = 0; x < Board.laserTileList.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.laserTileList.get(x).getPosition())) {
@@ -86,11 +89,14 @@ public class Game implements Runnable {
                 }
             }
         }
-
-        for(int x = 0; x < robotLaserList.size(); x++) {
-            for(int y = 0; y < playerList.size(); y++) {
-                if(playerList.get(y).getRobot().getCurrentPosition().equals(robotLaserList.get(x).getPosition())) {
-                    playerList.get(y).addCard(game.Game.spamDeck.popCardFromDeck());
+        //robotLaser
+        computeRobotLaserPositions();
+        for(int i = 0; i < playerList.size(); i++){
+            for(int x = 0; x < robotLaserList.size(); x++) {
+                for(int y = 0; y < robotLaserList.get(x).size(); y++) {
+                    if(playerList.get(i).getRobot().getCurrentPosition().equals(robotLaserList.get(y))) {
+                        playerList.get(i).addCard(game.Game.spamDeck.popCardFromDeck());
+                    }
                 }
             }
         }
@@ -109,6 +115,9 @@ public class Game implements Runnable {
                     Board.checkpointList.get(x).applyEffect(playerList.get(y));
                 }
             }
+        }
+        } catch(IndexOutOfBoundsException e) {
+            System.out.println("You're Robot can not move past this point");
         }
     }
 
@@ -144,10 +153,98 @@ public class Game implements Runnable {
         return new Pair<>(result, index);
     }
 
-    //TODO: Implement this
-    private PlayerList determinePriority() {
-        PlayerList priorityList = playerList;
-        return priorityList;
+    private ArrayList<Robot> determinePriority() {
+        Pair<Integer, Integer> antennaPosition = Board.antenna.getPosition();
+        ArrayList<Robot> roboList = new ArrayList<>();
+        for (PlayerList it = playerList; it.hasNext(); ) {
+            Player player = it.next();
+            roboList.add(player.getRobot());
+        }
+        roboList.sort((r1, r2) -> {
+            double dist1 = Math.sqrt(Math.pow(r1.getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(r1.getCurrentPosition().getValue1() - antennaPosition.getValue1(), 2));
+            double dist2 = Math.sqrt(Math.pow(r2.getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(r2.getCurrentPosition().getValue1(), 2));
+            return Double.compare(dist1, dist2);
+        });
+        return roboList;
+    }
+
+    private void computeRobotLaserPositions(){
+        //initializes the robotLaserList with the current robot positions
+        for (int i = 0; i < playerList.size(); i++) {
+            //initializes the robotLaserList with the current robot positions
+            robotLaserList.add(new ArrayList<>());
+            robotLaserList.get(i).add(playerList.get(i).getRobot().getCurrentPosition());
+            //determines the current tile positions with robot lasers
+            Pair<Integer, Integer> currentPosition;
+            switch(playerList.get(i).getRobot().getDirection()){
+                case EAST -> {
+                    currentPosition = playerList.get(i).getRobot().getCurrentPosition();
+                    currentPosition.setAt0(currentPosition.getValue0() + 1);
+                    while(!board.tileIsBlocking(board.getTile(currentPosition))){
+                        robotLaserList.get(i).add(currentPosition);
+                        if(TileTakenByRobot(currentPosition)){
+                            break;
+                        }
+                        currentPosition.setAt0(currentPosition.getValue0() + 1);
+                        if(currentPosition.getValue0() > board.getBoard().size()){
+                           break;
+                        }
+                    }
+                }
+                case SOUTH -> {
+                    currentPosition = playerList.get(i).getRobot().getCurrentPosition();
+                    currentPosition.setAt1(currentPosition.getValue1() + 1);
+                    while(!board.tileIsBlocking(board.getTile(currentPosition))){
+                        robotLaserList.get(i).add(currentPosition);
+                        if(TileTakenByRobot(currentPosition)){
+                            break;
+                        }
+                        currentPosition.setAt0(currentPosition.getValue1() + 1);
+                        if(currentPosition.getValue1() > board.getBoard().get(i).size()){
+                            break;
+                        }
+                    }
+                }
+                case WEST -> {
+                    currentPosition = playerList.get(i).getRobot().getCurrentPosition();
+                    currentPosition.setAt0(currentPosition.getValue0() - 1);
+                    while(!board.tileIsBlocking(board.getTile(currentPosition))){
+                        robotLaserList.get(i).add(currentPosition);
+                        if(TileTakenByRobot(currentPosition)){
+                            break;
+                        }
+                        currentPosition.setAt0(currentPosition.getValue0() - 1);
+                        if(currentPosition.getValue0() < 0){
+                            break;
+                        }
+                    }
+                }
+                case NORTH -> {
+                    currentPosition = playerList.get(i).getRobot().getCurrentPosition();
+                    currentPosition.setAt1(currentPosition.getValue1() - 1);
+                    while(!board.tileIsBlocking(board.getTile(currentPosition))){
+                        robotLaserList.get(i).add(currentPosition);
+                        if(TileTakenByRobot(currentPosition)){
+                            break;
+                        }
+                        currentPosition.setAt1(currentPosition.getValue1() - 1);
+                        if(currentPosition.getValue1() < 0){
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean TileTakenByRobot(Pair<Integer, Integer> position){
+        boolean result = false;
+        for(int i = 0; i < playerList.size(); i++){
+            if(position.equals(playerList.get(i).getRobot().getCurrentPosition())){
+                result = true;
+            }
+        }
+        return result;
     }
 
     //TODO: Implement this
@@ -174,6 +271,39 @@ public class Game implements Runnable {
 
     private void setCurrentGamePhase(GamePhase currentGamePhase) {
         this.currentGamePhase = currentGamePhase;
+    }
+
+    //TODO: finish this once client server connection allows for it
+    public void pickStartLocationForRobot(Player player, int x, int y) {
+        Pair<Integer, Integer> input = new Pair<>(x, y);
+        player.getRobot().setCurrentPosition(input);
+        player.setReady(true);
+    }
+
+    public void setStartDirectionForRobot(String input) {
+        switch(input) {
+            case "Deathtrap" -> {
+                for(int i = 0; i < playerList.size(); i++) {
+                    playerList.get(i).getRobot().setDirection(Direction.WEST);
+                }
+            }
+            case "DizzyHighway", "ExtraCrispy", "LostBearings" -> {
+                for(int i = 0; i < playerList.size(); i++) {
+                    playerList.get(i).getRobot().setDirection(Direction.EAST);
+                }
+            }
+        }
+    }
+
+    public void runSetupPhase() {
+        System.out.println(maps[0]);
+        playerList.setPlayerReadiness(false);
+        while(!playerList.playersAreReady()) {
+            //pickStartLocationForRobot();
+        }
+        //map name logic
+        setStartDirectionForRobot(maps[0]);
+
     }
 
     private void runUpgradePhase(){
@@ -210,7 +340,11 @@ public class Game implements Runnable {
     }
 
     private void activateRegister(Player player) throws Exception {
-        player.getCardFromRegister(currentRegister).applyEffect(player);
+        try{
+            player.getCardFromRegister(currentRegister).applyEffect(player);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("This register was not activated because you're Robot can not move past this point");
+        }
     }
     public String[] getMaps(){return this.maps;}
     public void addReady(int clientID) {readyList.add(clientID);}

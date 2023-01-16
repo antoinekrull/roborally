@@ -33,10 +33,15 @@ public class Board {
     public static ArrayList<Tile> robotLaserList = new ArrayList<>();
     public static ArrayList<RebootTile> rebootTileList = new ArrayList<>();
     public static ArrayList<StartTile> startTileList = new ArrayList<>();
-    public static ArrayList<Antenna> antennaTileList = new ArrayList<>();
+    public static Antenna antenna;
 
     public static ArrayList<Tile> getTile(Pair<Integer, Integer> position){
+        try {
             return board.get(position.getValue0()).get(position.getValue1());
+        } catch(IndexOutOfBoundsException e) {
+            System.out.println("This tile is invalid");
+            return null;
+        }
     }
 
     public boolean tileIsBlocking(ArrayList<Tile> tileList) {

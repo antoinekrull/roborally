@@ -34,6 +34,30 @@ public class CollisionCalculator {
         }
         return result;
     }
+
+    public static boolean checkReverseRobotCollision(Player player){
+        boolean result = false;
+        Pair<Integer, Integer> nextPosition = player.getRobot().getCurrentPosition();
+        switch(player.getRobot().getDirection()){
+            case NORTH -> {
+                nextPosition.setAt0(nextPosition.getValue0() - 1);
+            }
+            case SOUTH -> {
+                nextPosition.setAt0(nextPosition.getValue0() + 1);
+            }
+            case EAST -> {
+                nextPosition.setAt1(nextPosition.getValue1() - 1);
+            }
+            case WEST -> {
+                nextPosition.setAt1(nextPosition.getValue1() + 1);
+            }
+        }
+        if(tileIsBlocking(board.getTile(nextPosition))) {
+            result = true;
+        }
+        return result;
+    }
+
     public static boolean checkLaserCollision(Player player){
         Pair<Integer, Integer> playerPosition = player.getRobot().getCurrentPosition();
 
