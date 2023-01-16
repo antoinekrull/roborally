@@ -173,6 +173,7 @@ public class Client {
                             String[] temp = message.getMessageBody().getAvailableMaps();
                             for (int i = 0; i < temp.length; i++) {
                                 maps.add(temp[i]);
+                                System.out.println(maps.get(i));
                             }
                         }
                         if (message.getMessageType().equals(MessageType.MapSelected)) {

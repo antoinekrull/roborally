@@ -236,7 +236,7 @@ public class HandleClient implements Runnable{
                             server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
                             //int toUser = getClientID();
                             //server.sendTo(toUser, messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
-                            //writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);
+                            ///writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
                         setAlive(true);
@@ -248,6 +248,7 @@ public class HandleClient implements Runnable{
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
                         String jsonmap = content.lines().collect(Collectors.joining());
                         write(messageCreator.generateMapSelectedMessage(map));
+                        write(messageCreator.generateGameStartedMessage(jsonmap));
 
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
                         this.username = incomingMessage.getMessageBody().getName();

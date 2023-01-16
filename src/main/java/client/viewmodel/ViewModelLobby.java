@@ -85,7 +85,8 @@ public class ViewModelLobby {
         this.userList.setItems(modelGame.getPlayerList().getPlayerList());
         this.usersChoiceBox.setValue(modelGame.getPlayerList().getPlayerList().get(0));
         this.usersChoiceBox.setItems(modelGame.getPlayerList().getPlayerList());
-        this.mapsChoiceBox.setValue(modelGame.getMaps().get(0));
+        this.mapsChoiceBox.setItems(modelGame.getMaps());
+        //this.mapsChoiceBox.setValue(modelGame.getMaps().get(0));
 
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
@@ -239,6 +240,7 @@ public class ViewModelLobby {
         }
     }
     public void mapButtonOnAction() throws IOException{
+
         String map = mapsChoiceBox.getSelectionModel().getSelectedItem();
         if (map != null) {
             modelUser.sendMapSelected(map);
@@ -275,7 +277,7 @@ public class ViewModelLobby {
             timeline.setCycleCount(Animation.INDEFINITE);
             timeline.play();
              */
-            RoboRallyStart.switchScene("gamewindow.fxml");
+            //RoboRallyStart.switchScene("gamewindow.fxml");
         }
         else if (this.ready.get()) {
             readyButton.setText("READY");

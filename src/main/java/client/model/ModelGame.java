@@ -48,7 +48,8 @@ public class ModelGame {
         this.robotProperty = new SimpleIntegerProperty();
         this.readyList = FXCollections.observableArrayList();
         this.readyToPlay = new SimpleBooleanProperty();
-        this.maps = FXCollections.observableArrayList("Dizzy Highway", "Extra Crispy", "Lost Bearings", "Death Trap");
+        this.maps = client.getMaps();
+        //this.maps = FXCollections.observableArrayList(client.getMaps());
         this.gameBoard = new Board();
         this.playerList = client.getPlayerList();
         this.errorMessage = new SimpleStringProperty();
