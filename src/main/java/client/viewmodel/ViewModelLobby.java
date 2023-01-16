@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import client.ui.PlayerListCell;
 import communication.Message;
-import client.player.Player;
+import client.player.ClientPlayer;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -50,11 +50,11 @@ public class ViewModelLobby {
     @FXML
     private MenuItem helpMenuItem;
     @FXML
-    private ListView<Player> userList;
+    private ListView<ClientPlayer> userList;
     @FXML
     private ChoiceBox<String> mapsChoiceBox;
     @FXML
-    private ChoiceBox<Player> usersChoiceBox;
+    private ChoiceBox<ClientPlayer> usersChoiceBox;
     @FXML
     private Button readyButton;
     @FXML

@@ -1,24 +1,18 @@
 package client.connection;
 
-import client.player.PlayerList;
+import client.player.ClientPlayerList;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import game.board.Board;
-import game.board.Direction;
-import game.card.*;
 import game.player.Robot;
-import client.player.Player;
-import game.player.Robot;
+import client.player.ClientPlayer;
 import javafx.application.Platform;
-import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.javatuples.Pair;
-
-import org.javatuples.Triplet;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -59,7 +53,7 @@ public class Client {
     int port = 3000;
     private String protocolVersion = "Version 1.0";
     private String group = "KnorrigeKorrelate";
-    private PlayerList playerList;
+    private ClientPlayerList clientPlayerList;
     private ObservableList<String> maps;
 
 
@@ -71,7 +65,7 @@ public class Client {
         this.maps = FXCollections.observableArrayList();
         this.connected = new SimpleBooleanProperty();
         this.accepted = new SimpleBooleanProperty();
-        this.playerList = new PlayerList();
+        this.clientPlayerList = new ClientPlayerList();
         this.errorMessage = new SimpleStringProperty();
     }
 
@@ -117,8 +111,8 @@ public class Client {
         this.accepted.set(true);
     }
 
-    public PlayerList getPlayerList() {
-        return playerList;
+    public ClientPlayerList getPlayerList() {
+        return clientPlayerList;
     }
 
     public String getErrorMessage() {
@@ -168,7 +162,7 @@ public class Client {
                             else {
                                 String username = message.getMessageBody().getName();
                                 int figure = message.getMessageBody().getFigure();
-                                Platform.runLater(() -> Client.this.getPlayerList().add(new Player(clientID, username, new Robot(figure))));
+                                Platform.runLater(() -> Client.this.getPlayerList().add(new ClientPlayer(clientID, username, new Robot(figure))));
                             }
                         }
                         if (message.getMessageType().equals(MessageType.PlayerStatus)) {

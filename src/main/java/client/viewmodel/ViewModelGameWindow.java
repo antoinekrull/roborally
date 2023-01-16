@@ -13,6 +13,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -31,6 +32,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -67,6 +69,8 @@ public class ViewModelGameWindow {
     private Pane programmingPane1, programmingPane2, programmingPane3, programmingPane4, programmingPane5;
     @FXML
     private GridPane handGrid;
+    @FXML
+    private Region region5_4, region0_1, region0_0;
 
     //buttons for cards
 
@@ -91,7 +95,9 @@ public class ViewModelGameWindow {
         //TODO: Tiles resizeable
         ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
         placeTiles(map);
+
         //TODO: Playerlist in server/viewmodel
+
         /* PlayerList playerList = modelGame.getUsers();
         placeRobots(playerList);
         */
@@ -143,6 +149,25 @@ public class ViewModelGameWindow {
         onRightClickRemoveProgrammingcard(programmingPane3);
         onRightClickRemoveProgrammingcard(programmingPane4);
         onRightClickRemoveProgrammingcard(programmingPane5);
+
+
+
+        gameboard.setOnMouseClicked(event -> {
+            double x = event.getX();
+            double y = event.getY();
+            for (Node node : gameboard.getChildren()) {
+                if (node instanceof Region) {
+                    Bounds bounds = node.getBoundsInParent();
+                    if (bounds.contains(x, y)) {
+                        int columnIndex = GridPane.getColumnIndex(node);
+                        int rowIndex = GridPane.getRowIndex(node);
+                        System.out.println("colIndex: " + columnIndex + ", rowIndex: " + rowIndex);
+                    }
+                }
+            }
+        });
+
+        //selectStarttile(gameboard, new ClientPlayer(1, "Ralf", new Robot(1)));
     }
 
     public void receivedMessage() {
@@ -265,15 +290,22 @@ public class ViewModelGameWindow {
         }
     }
 
-    /*
 
+//    public void selectStarttile (GridPane gameboard, ClientPlayer player) {
+//        Image im = new Image("C:\\Users\\bened\\IdeaProjects\\knorrige-korrelate-hp\\src\\main\\resources\\textures\\robots\\Robot_1_bunt.png");
+//        ImageView img = new ImageView(im);
+//        gameboard.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+//            if (event.getButton() == MouseButton.PRIMARY){
+//                Node source = (Node) event.getSource();
+//                Integer colIndex = GridPane.getColumnIndex(source);
+//                Integer rowIndex = GridPane.getRowIndex(source);
+//                GridPane.setConstraints(img, colIndex, rowIndex);
+//                gameboard.getChildren().add(img);
+//            }
+//            }
+//            );
+//    }
 
-    private void placeRobots(PlayerList playerList) {
-        for (int x = 0; x < playerList.getPlayerList().size(); x++){
-            playerList.getPlayerList().get(x).getRobot().makeImage(gameboard);
-        }
-    }
-    */
     public void setOnDragDetected(ImageView source) {
 
         source.setOnDragDetected(new EventHandler<MouseEvent>() {

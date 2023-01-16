@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import client.player.PlayerList;
+import client.player.ClientPlayerList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -39,7 +39,7 @@ public class ViewModelRobotSelection {
     private Label errorLabelRobotSelection;
 
     private List<Node> robots;
-    private PlayerList playerList;
+    private ClientPlayerList clientPlayerList;
 
     private ModelUser modelUser;
     private ModelGame modelGame;
@@ -47,7 +47,7 @@ public class ViewModelRobotSelection {
     public ViewModelRobotSelection() {
         this.modelUser = ModelUser.getInstance();
         this.modelGame = ModelGame.getInstance();
-        playerList = modelGame.getPlayerList();
+        clientPlayerList = modelGame.getPlayerList();
     }
 
     /**

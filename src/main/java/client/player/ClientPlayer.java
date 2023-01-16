@@ -1,21 +1,12 @@
 package client.player;
 
-import game.Game;
-import game.card.AgainCard;
-import game.card.Card;
-import game.card.CardType;
-import game.card.ProgrammingDeck;
 import game.player.Robot;
-import org.apache.commons.lang3.ArrayUtils;
-
-import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * @author Moritz, Dominic, Antoine, Firas
  * @version 1.0
  */
-public class Player {
+public class ClientPlayer {
 
     private String username;
     private int score;
@@ -24,7 +15,7 @@ public class Player {
     private boolean isReady;
     private Robot robot;
 
-    public Player(int id, String username, Robot robot) {
+    public ClientPlayer(int id, String username, Robot robot) {
         this.id = id;
         this.username = username;
         this.robot = robot;

@@ -73,8 +73,8 @@
                     <RowConstraints vgrow="ALWAYS" />
                   </rowConstraints>
                   <children>
-                    <Region GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                    <Region GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <Region fx:id="region0_0" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <Region fx:id="region0_1" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                     <Region GridPane.columnIndex="0" GridPane.rowIndex="2" />
                     <Region GridPane.columnIndex="0" GridPane.rowIndex="3" />
                     <Region GridPane.columnIndex="0" GridPane.rowIndex="4" />
@@ -127,7 +127,7 @@
                     <Region GridPane.columnIndex="5" GridPane.rowIndex="1" />
                     <Region GridPane.columnIndex="5" GridPane.rowIndex="2" />
                     <Region GridPane.columnIndex="6" GridPane.rowIndex="3" />
-                    <Region GridPane.columnIndex="5" GridPane.rowIndex="4" />
+                    <Region fx:id="region5_4" GridPane.columnIndex="5" GridPane.rowIndex="4" />
                     <Region GridPane.columnIndex="5" GridPane.rowIndex="5" />
                     <Region GridPane.columnIndex="5" GridPane.rowIndex="6" />
                     <Region GridPane.columnIndex="5" GridPane.rowIndex="7" />
