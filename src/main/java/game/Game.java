@@ -10,7 +10,6 @@ import server.connection.PlayerList;
 
 import java.util.*;
 
-
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
