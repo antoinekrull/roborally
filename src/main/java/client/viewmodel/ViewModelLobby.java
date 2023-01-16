@@ -244,6 +244,7 @@ public class ViewModelLobby {
         String map = mapsChoiceBox.getSelectionModel().getSelectedItem();
         if (map != null) {
             modelUser.sendMapSelected(map);
+            //TODO: IF AT LEAST TWO PLAYERS ARE READY, START TIMER AND SWITCH SCENE
             RoboRallyStart.switchScene("gamewindow.fxml");
         }
     }
