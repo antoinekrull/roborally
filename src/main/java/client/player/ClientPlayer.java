@@ -1,10 +1,5 @@
 package client.player;
 
-import game.Game;
-import game.card.AgainCard;
-import game.card.Card;
-import game.card.CardType;
-import game.card.ProgrammingDeck;
 import game.player.Robot;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -19,7 +14,7 @@ import java.util.Random;
  * @author Moritz, Dominic, Antoine, Firas
  * @version 1.0
  */
-public class Player {
+public class ClientPlayer {
 
     private int id;
     private String username;
@@ -28,7 +23,7 @@ public class Player {
     private BooleanProperty isPlaying;
     private IntegerProperty score;
 
-    public Player(int id, String username, Robot robot) {
+    public ClientPlayer(int id, String username, Robot robot) {
         this.id = id;
         this.username = username;
         this.robot = robot;

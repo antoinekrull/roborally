@@ -1,7 +1,7 @@
 package client.model;
 
 import client.connection.Client;
-import client.player.PlayerList;
+import client.player.ClientPlayerList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import game.Game;
 import game.board.Board;
@@ -38,7 +38,7 @@ public class ModelGame {
     private ObservableList<String> maps;
     private BooleanProperty readyToPlay;
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
-    private PlayerList playerList;
+    private ClientPlayerList clientPlayerList;
     private Game game;
 
 
@@ -51,7 +51,7 @@ public class ModelGame {
         this.maps = client.getMaps();
         //this.maps = FXCollections.observableArrayList(client.getMaps());
         this.gameBoard = new Board();
-        this.playerList = client.getPlayerList();
+        this.clientPlayerList = client.getPlayerList();
         this.errorMessage = new SimpleStringProperty();
         errorMessage.bind(client.errorMessageProperty());
     }
@@ -63,8 +63,8 @@ public class ModelGame {
         return modelGame;
     }
 
-    public PlayerList getPlayerList() {
-        return playerList;
+    public ClientPlayerList getPlayerList() {
+        return clientPlayerList;
     }
 
     public SimpleIntegerProperty robotProperty() {

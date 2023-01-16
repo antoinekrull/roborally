@@ -4,9 +4,12 @@ import client.connection.NotifyChangeSupport;
 import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
+import client.player.ClientPlayer;
 import communication.Message;
 import game.board.Tile;
+import game.player.Robot;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -27,7 +30,12 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -71,6 +79,7 @@ public class ViewModelGameWindow {
     private int height = 150;
     private int columnIndex;
 
+
     private NotifyChangeSupport notifyChangeSupport;
 
     public ViewModelGameWindow() {
@@ -85,7 +94,9 @@ public class ViewModelGameWindow {
         //TODO: Tiles resizeable
         ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
         placeTiles(map);
+
         //TODO: Playerlist in server/viewmodel
+
         /* PlayerList playerList = modelGame.getUsers();
         placeRobots(playerList);
         */
@@ -152,6 +163,8 @@ public class ViewModelGameWindow {
                 Integer rowIndex = GridPane.getRowIndex(target);
             }
         });
+
+        selectStarttile(gameboard, new ClientPlayer(1, "Ralf", new Robot(1)));
     }
 
     public void receivedMessage() {
@@ -274,15 +287,30 @@ public class ViewModelGameWindow {
         }
     }
 
-    /*
 
-
-    private void placeRobots(PlayerList playerList) {
-        for (int x = 0; x < playerList.getPlayerList().size(); x++){
-            playerList.getPlayerList().get(x).getRobot().makeImage(gameboard);
-        }
+    public void selectStarttile (GridPane gameboard, ClientPlayer player) {
+        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_1_bunt.png");
+        Image im = new Image(input, 50, 50, true, true);
+        ImageView img = new ImageView(im);
+        gameboard.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Node target = (Node) event.getTarget();
+                if (target != gameboard) {
+                    Node parent;
+                    while ((parent = target.getParent()) != gameboard) {
+                        target = parent;
+                    }
+                }
+                Integer colIndex = GridPane.getColumnIndex(target);
+                Integer rowIndex = GridPane.getRowIndex(target);
+                System.out.println(colIndex + " " + rowIndex);
+                gameboard.add(img, colIndex, rowIndex);
+            }
+            }
+            );
     }
-    */
+
     public void setOnDragDetected(ImageView source) {
 
         source.setOnDragDetected(new EventHandler<MouseEvent>() {

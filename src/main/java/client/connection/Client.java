@@ -1,13 +1,13 @@
 package client.connection;
 
-import client.player.PlayerList;
+import client.player.ClientPlayerList;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import game.board.Board;
 import game.player.Robot;
-import client.player.Player;
+import client.player.ClientPlayer;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -53,7 +53,7 @@ public class Client {
     int port = 3000;
     private String protocolVersion = "Version 1.0";
     private String group = "KnorrigeKorrelate";
-    private PlayerList playerList;
+    private ClientPlayerList clientPlayerList;
     private ObservableList<String> maps;
 
 
@@ -65,7 +65,7 @@ public class Client {
         this.maps = FXCollections.observableArrayList();
         this.connected = new SimpleBooleanProperty();
         this.accepted = new SimpleBooleanProperty();
-        this.playerList = new PlayerList();
+        this.clientPlayerList = new ClientPlayerList();
         this.errorMessage = new SimpleStringProperty();
     }
 
@@ -111,8 +111,8 @@ public class Client {
         this.accepted.set(true);
     }
 
-    public PlayerList getPlayerList() {
-        return playerList;
+    public ClientPlayerList getPlayerList() {
+        return clientPlayerList;
     }
 
     public String getErrorMessage() {
