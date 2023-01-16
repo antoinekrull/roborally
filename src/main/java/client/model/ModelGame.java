@@ -3,6 +3,7 @@ package client.model;
 import client.connection.Client;
 import client.player.PlayerList;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import game.Game;
 import game.board.Board;
 import game.board.Tile;
 import javafx.beans.property.*;
@@ -24,16 +25,28 @@ public class ModelGame {
     private Board gameBoard;
     private SimpleIntegerProperty robotProperty;
     private SimpleStringProperty errorMessage;
+    private ObservableList<Integer> readyList;
+
+    public void setMaps(ObservableList<String> maps) {
+        this.maps = maps;
+    }
+
+    public ObservableList<Integer> getReadyList() {
+        return readyList;
+    }
+
     private ObservableList<String> maps;
     private BooleanProperty readyToPlay;
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
     private PlayerList playerList;
+    private Game game;
 
 
 
     private ModelGame() {
         client = Client.getInstance();
         this.robotProperty = new SimpleIntegerProperty();
+        this.readyList = FXCollections.observableArrayList();
         this.readyToPlay = new SimpleBooleanProperty();
         this.maps = FXCollections.observableArrayList("Dizzy Highway", "Extra Crispy", "Lost Bearings", "Death Trap");
         this.gameBoard = new Board();

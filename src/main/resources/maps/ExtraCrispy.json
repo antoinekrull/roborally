@@ -1,4 +1,5 @@
-[
+{
+  "gameMap": [
     [
       [
         {
@@ -79,18 +80,13 @@
       ],
       [
 
-          {
-            "type": "Wall",
-            "isOnBoard": "A",
-            "orientations": [
-              "top"
-            ]
-          },
-          {
-            "type": "Empty",
-            "isOnBoard": "A"
-          }
-
+        {
+          "type": "Wall",
+          "isOnBoard": "A",
+          "orientations": [
+            "top"
+          ]
+        }
       ],
       [
         {
@@ -123,10 +119,6 @@
           "orientations": [
             "bottom"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "A"
         }
       ],
       [
@@ -174,33 +166,23 @@
       ],
       [
 
-          {
-            "type": "Wall",
-            "isOnBoard": "A",
-            "orientations": [
-              "right"
-            ]
-          },
-          {
-            "type": "Empty",
-            "isOnBoard": "A"
-          }
-
+        {
+          "type": "Wall",
+          "isOnBoard": "A",
+          "orientations": [
+            "right"
+          ]
+        }
       ],
       [
 
-          {
-            "type": "Wall",
-            "isOnBoard": "A",
-            "orientations": [
-              "right"
-            ]
-          },
-          {
-            "type": "Empty",
-            "isOnBoard": "A"
-          }
-
+        {
+          "type": "Wall",
+          "isOnBoard": "A",
+          "orientations": [
+            "right"
+          ]
+        }
       ],
       [
         {
@@ -278,10 +260,6 @@
           "orientations": [
             "bottom"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "4A"
         }
       ],
       [
@@ -432,6 +410,20 @@
         }
       ],
       [
+        {
+          "type": "Wall",
+          "isOnBoard": "4A",
+          "orientations": [
+            "top"
+          ]
+        },
+        {
+          "type": "Laser",
+          "isOnBoard": "4A",
+          "orientations": [
+            "bottom"
+          ]
+        },
         {
           "type": "CheckPoint",
           "isOnBoard": "4A",
@@ -506,6 +498,20 @@
       ],
       [
         {
+          "type": "Wall",
+          "isOnBoard": "4A",
+          "orientations": [
+            "bottom"
+          ]
+        },
+        {
+          "type": "Laser",
+          "isOnBoard": "4A",
+          "orientations": [
+            "top"
+          ]
+        },
+        {
           "type": "CheckPoint",
           "isOnBoard": "4A",
           "count": 2
@@ -578,10 +584,6 @@
           "orientations": [
             "left"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "4A"
         }
       ],
       [
@@ -669,9 +671,9 @@
       ],
       [
         {
-        "type": "EnergySpace",
-        "isOnBoard": "4A",
-        "count": "1"
+          "type": "EnergySpace",
+          "isOnBoard": "4A",
+          "count": "1"
         }
       ],
       [
@@ -843,10 +845,6 @@
           "orientations": [
             "right"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "4A"
         }
       ],
       [
@@ -911,6 +909,20 @@
       ],
       [
         {
+          "type": "Wall",
+          "isOnBoard": "4A",
+          "orientations": [
+            "top"
+          ]
+        },
+        {
+          "type": "Laser",
+          "isOnBoard": "4A",
+          "orientations": [
+            "bottom"
+          ]
+        },
+        {
           "type": "CheckPoint",
           "isOnBoard": "4A",
           "count": 1
@@ -920,7 +932,7 @@
         {
           "type": "ConveyorBelt",
           "isOnBoard": "4A",
-          "speed": 1,
+          "speed": 2,
           "orientations": [
             "left",
             "right"
@@ -967,7 +979,7 @@
         {
           "type": "ConveyorBelt",
           "isOnBoard": "4A",
-          "speed": 1,
+          "speed": 2,
           "orientations": [
             "left",
             "right"
@@ -983,6 +995,20 @@
         }
       ],
       [
+        {
+          "type": "Wall",
+          "isOnBoard": "4A",
+          "orientations": [
+            "bottom"
+          ]
+        },
+        {
+          "type": "Laser",
+          "isOnBoard": "4A",
+          "orientations": [
+            "top"
+          ]
+        },
         {
           "type": "CheckPoint",
           "isOnBoard": "4A",
@@ -1024,7 +1050,7 @@
         {
           "type": "ConveyorBelt",
           "isOnBoard": "4A",
-          "speed": 1,
+          "speed": 2,
           "orientations": [
             "bottom",
             "top"
@@ -1035,7 +1061,7 @@
         {
           "type": "ConveyorBelt",
           "isOnBoard": "4A",
-          "speed": 1,
+          "speed": 2,
           "orientations": [
             "bottom",
             "top"
@@ -1046,7 +1072,7 @@
         {
           "type": "ConveyorBelt",
           "isOnBoard": "4A",
-          "speed": 1,
+          "speed": 2,
           "orientations": [
             "left",
             "top"
@@ -1070,7 +1096,7 @@
         {
           "type": "ConveyorBelt",
           "isOnBoard": "4A",
-          "speed": 1,
+          "speed": 2,
           "orientations": [
             "left",
             "bottom"
@@ -1081,7 +1107,7 @@
         {
           "type": "ConveyorBelt",
           "isOnBoard": "4A",
-          "speed": 1,
+          "speed": 2,
           "orientations": [
             "top",
             "bottom"
@@ -1092,7 +1118,7 @@
         {
           "type": "ConveyorBelt",
           "isOnBoard": "4A",
-          "speed": 1,
+          "speed": 2,
           "orientations": [
             "top",
             "bottom"
@@ -1103,7 +1129,7 @@
         {
           "type": "ConveyorBelt",
           "isOnBoard": "4A",
-          "speed": 1,
+          "speed": 2,
           "orientations": [
             "top",
             "bottom"
@@ -1143,10 +1169,6 @@
           "orientations": [
             "top"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "4A"
         }
       ],
       [
@@ -1156,10 +1178,6 @@
           "orientations": [
             "bottom"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "4A"
         }
       ],
       [
@@ -1188,3 +1206,4 @@
       ]
     ]
   ]
+}

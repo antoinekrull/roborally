@@ -11,6 +11,7 @@ public class NormalTile extends Tile {
     public NormalTile(int xCoordinate, int yCoordinate) {
         super(xCoordinate, yCoordinate, "/textures/gameboard/normalTile.png");
         this.path = getClass().getResource("/textures/gameboard/normalTile.png").toString();
+        setType("Empty");
         isDanger = false;
         isBlocking = false;
     }

@@ -9,15 +9,18 @@ import game.board.Board;
 import client.player.Player;
 import game.player.Robot;
 import javafx.application.Platform;
+import javafx.beans.Observable;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import org.javatuples.Triplet;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-
-
+import java.util.ArrayList;
 
 /**
  *
@@ -42,13 +45,15 @@ public class Client {
     private ObjectProperty<Message> message;
     private IntegerProperty userID;
     private StringProperty errorMessage;
+    private Boolean prioPlayer = false;
 
     MessageCreator messageCreator;
     String address = "localhost";
     int port = 3000;
-    private String protocolVersion = "Version 0.1";
+    private String protocolVersion = "Version 1.0";
     private String group = "KnorrigeKorrelate";
     private PlayerList playerList;
+    private ObservableList<String> maps;
 
 
     private Client() {
@@ -56,6 +61,7 @@ public class Client {
         this.message = new SimpleObjectProperty<>();
         this.userID = new SimpleIntegerProperty();
         this.isAI = new SimpleBooleanProperty();
+        this.maps = FXCollections.observableArrayList();
         this.connected = new SimpleBooleanProperty();
         this.accepted = new SimpleBooleanProperty();
         this.playerList = new PlayerList();
@@ -92,6 +98,9 @@ public class Client {
     public BooleanProperty connectedProperty() {
         return connected;
     }
+    public ObservableList<String> getMaps() {
+        return maps;
+    }
 
     public BooleanProperty acceptedProperty() {
         return accepted;
@@ -126,99 +135,82 @@ public class Client {
         }
 
         public void run() {
-            if (socket!=null) {
-                try {
-                    in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-                    out = new DataOutputStream(socket.getOutputStream());
-                    while (socket.isConnected()) {
-                        try {
-                            Message message = JsonSerializer.deserializeJson(in.readUTF(), Message.class);
-                            if(message.getMessageType().equals(MessageType.Alive)){
-                                sendAliveMessage();
-                            }
-                            if(message.getMessageType().equals(MessageType.HelloClient)){
-                                System.out.println(message.getMessageBody().getProtocol());
-                                sendHelloServerMessage(group, isAI.get(), protocolVersion);
-                            }
-                            if(message.getMessageType().equals(MessageType.Welcome)){
-                                Client.this.setUserID(message.getMessageBody().getClientID());
-                            }
-                            if(message.getMessageType().equals(MessageType.PlayerAdded)){
-                                int clientID = message.getMessageBody().getClientID();
-                                if (Client.this.userIDProperty().get() == clientID) {
-                                    if(!Client.this.accepted.get()) {
-                                        Client.this.setAcceptedProperty();
-                                    }
-                                }
-                                else {
-                                    String username = message.getMessageBody().getName();
-                                    int figure = message.getMessageBody().getFigure();
-                                    Platform.runLater(() -> Client.this.getPlayerList().add(new Player(clientID, username, new Robot(figure))));
+            try {
+                in = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+                out = new DataOutputStream(socket.getOutputStream());
+                String receiveMessage;
+                while (true) {
+                    if((receiveMessage =in.readUTF()) != null) {
+                        Message message = JsonSerializer.deserializeJson(receiveMessage, Message.class);
+                        if (message.getMessageType().equals(MessageType.Alive)) {
+                            sendAliveMessage();
+                        }
+                        if (message.getMessageType().equals(MessageType.HelloClient)) {
+                            sendHelloServerMessage(group, isAI.get(), protocolVersion);
+                        }
+                        if (message.getMessageType().equals(MessageType.Welcome)) {
+                            Client.this.setUserID(message.getMessageBody().getClientID());
+                        }
+                        if (message.getMessageType().equals(MessageType.PlayerAdded)) {
+                            int clientID = message.getMessageBody().getClientID();
+                            if (Client.this.userIDProperty().get() == clientID) {
+                                if(!Client.this.accepted.get()) {
+                                    Client.this.setAcceptedProperty();
                                 }
                             }
-                            if(message.getMessageType().equals(MessageType.PlayerStatus)){
+                            else {
+                                String username = message.getMessageBody().getName();
+                                int figure = message.getMessageBody().getFigure();
+                                Platform.runLater(() -> Client.this.getPlayerList().add(new Player(clientID, username, new Robot(figure))));
+                            }
+                        }
+                        if (message.getMessageType().equals(MessageType.PlayerStatus)) {
 
+                        }
+                        if (message.getMessageType().equals(MessageType.SelectMap)) {
+                            prioPlayer = true;
+                            //TODO: if client looses prio because he removes ready or looses connection, he isn`t allowed to change map
+                            String[] temp = message.getMessageBody().getAvailableMaps();
+                            for (int i = 0; i < temp.length; i++) {
+                                maps.add(temp[i]);
                             }
-                            if (message.getMessageType().equals(MessageType.SelectMap)){
-                                String[] maps = message.getMessageBody().getAvailableMaps();
-                                for (int i = 0; i < maps.length; i++) {
-                                    System.out.println(maps[i]);
-                                }
-                                sendMapMessage("hier soll mal die Map rein dann");
+                        }
+                        if (message.getMessageType().equals(MessageType.MapSelected)) {
+                            String map = message.getMessageBody().getMap();
+                            Message mapMessage = messageCreator.generateSendChatMessage("Selected map: " + map);
+                            Client.this.setMessage(mapMessage);
+                        }
+                        if (message.getMessageType().equals(MessageType.ReceivedChat)) {
+                            Client.this.setMessage(message);
+                        }
+                        if (message.getMessageType().equals(MessageType.Error)) {
+                            System.out.println(message.getMessageBody().getError());
+                        }
+                        if (message.getMessageType().equals(MessageType.CardPlayed)) {
 
-                            }
-                            if(message.getMessageType().equals(MessageType.ReceivedChat)){
-                                Client.this.setMessage(message);
-                            }
-                            if(message.getMessageType().equals(MessageType.Error)){
-                                String errorMessage = message.getMessageBody().getMessage();
-                                Client.this.setErrorMessage(errorMessage);
-                            }
-                            if(message.getMessageType().equals(MessageType.CardPlayed)){
+                        }
+                        if (message.getMessageType().equals(MessageType.CurrentPlayer)) {
 
-                            }
-                            if(message.getMessageType().equals(MessageType.CurrentPlayer)){
+                        }
+                        if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
 
-                            }
-                            if(message.getMessageType().equals(MessageType.StartingPointTaken)){
+                        }
+                        if (message.getMessageType().equals(MessageType.GameStarted)) {
+                            Board board = new Board();
+                            board.createBoard(message.getMessageBody().getGameMap());
+                        }
+                        if (message.getMessageType().equals(MessageType.YourCards)) {
 
-                            }
-                            if(message.getMessageType().equals(MessageType.GameStarted)){
+                        }
+                        if (message.getMessageType().equals(MessageType.NotYourCards)) {
 
-                                Board board = new Board();
-                                board.createBoard(message.getMessageBody().getGameMap());
-                            }
-                            if(message.getMessageType().equals(MessageType.YourCards)){
-
-                            }
-                            if(message.getMessageType().equals(MessageType.NotYourCards)){
-
-                            }
-                            //if (message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
-                            //    if (message.getMessage().equals("accepted")) {
-                            //        loginController.goToChat(name);
-                            //    } else {
-                            //        setName("");
-                            //        loginController.setMessage(message.getMessage());
-                            //    }
-                            //}
-                            //if (accessible && !message.getMessageType().equals(MessageType.USERNAME_COMMAND)) {
-                            //    MESSAGES.put(message.getMessage());
-                            //}
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
                     }
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
                 }
-            }else {
-
+            } catch (IOException e) {
+                System.out.println("Lost connection to server");
             }
-
         }
-
     }
 
     //maybe are these methods redundant, but they are kept until everything is implemented for them to be there
@@ -232,6 +224,9 @@ public class Client {
         sendMessageToServer(messageCreator.generatePlayerValuesMessage(name, figure));
     }
     public void sendSetStatusMessage(boolean ready){
+        if (!ready) {
+            prioPlayer = false;
+        }
         sendMessageToServer(messageCreator.generateSetStatusMessage(ready));
     }
     public void sendPrivateMessage(String message, int to){
@@ -240,8 +235,10 @@ public class Client {
     public void sendGroupMessage(String message){
         sendMessageToServer(messageCreator.generateSendChatMessage(message));
     }
-    public void sendMapMessage(String message) {
-        sendMessageToServer(messageCreator.generateMapSelectedMessage("DizzyHighway"));
+    public void sendMapSelected(String map) {
+        if (prioPlayer) {
+            sendMessageToServer(messageCreator.generateMapSelectedMessage(map));
+        }
     }
 
     public void sendMessageToServer(Message message) {

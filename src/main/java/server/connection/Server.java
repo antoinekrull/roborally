@@ -39,7 +39,7 @@ public class Server {
     private Server() {
         this.messageCreator = new MessageCreator();
         this.players = new PlayerList();
-        this.protocolVersion = "Version 0.1";
+        this.protocolVersion = "Version 1.0";
         this.online = new SimpleBooleanProperty(true);
         this.messages = new LinkedBlockingQueue<>();
     }

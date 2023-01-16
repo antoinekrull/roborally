@@ -9,7 +9,7 @@
       ],
       [
         {
-          "type": "Checkpoint",
+          "type": "CheckPoint",
           "isOnBoard": "2A",
           "count": 5
         }
@@ -92,10 +92,17 @@
       ],
       [
         {
-          "type": "PushPanel",
+          "type": "Wall",
           "isOnBoard": "2A",
           "orientations": [
             "top"
+          ]
+        },
+        {
+          "type": "PushPanel",
+          "isOnBoard": "2A",
+          "orientations": [
+            "bottom"
           ],
           "registers": [
             1, 3, 5
@@ -131,8 +138,8 @@
           "isOnBoard": "2A",
           "speed": 1,
           "orientations": [
-            "top",
-            "left"
+            "left",
+            "top"
           ]
         }
       ],
@@ -143,25 +150,28 @@
           "orientations": [
             "right"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "2A"
         }
       ],
       [
         {
-          "type": "Checkpoint",
+          "type": "CheckPoint",
           "isOnBoard": "2A",
           "count": 1
         }
       ],
       [
         {
-          "type": "PushPanel",
+          "type": "Wall",
           "isOnBoard": "2A",
           "orientations": [
             "left"
+          ]
+        },
+        {
+          "type": "PushPanel",
+          "isOnBoard": "2A",
+          "orientations": [
+            "right"
           ],
           "registers": [
             1, 3, 5
@@ -195,10 +205,17 @@
       ],
       [
         {
-          "type": "PushPanel",
+          "type": "Wall",
           "isOnBoard": "2A",
           "orientations": [
             "left"
+          ]
+        },
+        {
+          "type": "PushPanel",
+          "isOnBoard": "2A",
+          "orientations": [
+            "right"
           ],
           "registers": [
             2, 4
@@ -232,10 +249,17 @@
       ],
       [
         {
-          "type": "PushPanel",
+          "type": "Wall",
           "isOnBoard": "2A",
           "orientations": [
             "bottom"
+          ]
+        },
+        {
+          "type": "PushPanel",
+          "isOnBoard": "2A",
+          "orientations": [
+            "top"
           ],
           "registers": [
             2, 4
@@ -274,36 +298,39 @@
           "orientations": [
             "bottom"
           ]
+        }
+      ],
+      [
+        {
+          "type": "Pit",
+          "isOnBoard": "2A"
+        }
+      ],
+      [
+        {
+          "type": "Empty",
+          "isOnBoard": "2A"
+        }
+      ],
+      [
+        {
+          "type": "Pit",
+          "isOnBoard": "2A"
+        }
+      ],
+      [
+        {
+          "type": "Wall",
+          "isOnBoard": "2A",
+          "orientations": [
+            "bottom"
+          ]
         },
-        {
-          "type": "Empty",
-          "isOnBoard": "2A"
-        }
-      ],
-      [
-        {
-          "type": "Pit",
-          "isOnBoard": "2A"
-        }
-      ],
-      [
-        {
-          "type": "Empty",
-          "isOnBoard": "2A"
-        }
-      ],
-      [
-        {
-          "type": "Pit",
-          "isOnBoard": "2A"
-        }
-      ],
-      [
         {
           "type": "PushPanel",
           "isOnBoard": "2A",
           "orientations": [
-            "bottom"
+            "top"
           ],
           "registers": [
             1, 3, 5
@@ -368,10 +395,17 @@
       ],
       [
         {
-          "type": "PushPanel",
+          "type": "Wall",
           "isOnBoard": "2A",
           "orientations": [
             "bottom"
+          ]
+        },
+        {
+          "type": "PushPanel",
+          "isOnBoard": "2A",
+          "orientations": [
+            "top"
           ],
           "registers": [
             2, 4
@@ -380,17 +414,24 @@
       ],
       [
         {
-          "type": "Checkpoint",
+          "type": "CheckPoint",
           "isOnBoard": "2A",
           "count": 2
         }
       ],
       [
         {
-          "type": "PushPanel",
+          "type": "Wall",
           "isOnBoard": "2A",
           "orientations": [
             "top"
+          ]
+        },
+        {
+          "type": "PushPanel",
+          "isOnBoard": "2A",
+          "orientations": [
+            "bottom"
           ],
           "registers": [
             2, 4
@@ -416,8 +457,8 @@
           "isOnBoard": "2A",
           "speed": 1,
           "orientations": [
-            "left",
-            "right"
+            "right",
+            "left"
           ]
         }
       ],
@@ -441,8 +482,8 @@
           "isOnBoard": "2A",
           "speed": 1,
           "orientations": [
-            "right",
-            "left"
+            "left",
+            "right"
           ]
         }
       ],
@@ -471,10 +512,6 @@
           "orientations": [
             "bottom"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "2A"
         }
       ],
       [
@@ -495,8 +532,8 @@
           "isOnBoard": "2A",
           "speed": 1,
           "orientations": [
-            "left",
-            "bottom"
+            "bottom",
+            "left"
           ]
         }
       ],
@@ -506,8 +543,8 @@
           "isOnBoard": "2A",
           "speed": 1,
           "orientations": [
-            "top",
-            "right"
+            "right",
+            "top"
           ]
         }
       ]
@@ -540,10 +577,17 @@
       ],
       [
         {
-          "type": "PushPanel",
+          "type": "Wall",
           "isOnBoard": "2A",
           "orientations": [
             "top"
+          ]
+        },
+        {
+          "type": "PushPanel",
+          "isOnBoard": "2A",
+          "orientations": [
+            "bottom"
           ],
           "registers": [
             1, 3, 5
@@ -575,10 +619,6 @@
           "orientations": [
             "top"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "2A"
         }
       ],
       [
@@ -608,10 +648,17 @@
       ],
       [
         {
-          "type": "PushPanel",
+          "type": "Wall",
           "isOnBoard": "2A",
           "orientations": [
             "top"
+          ]
+        },
+        {
+          "type": "PushPanel",
+          "isOnBoard": "2A",
+          "orientations": [
+            "bottom"
           ],
           "registers": [
             2, 4
@@ -645,10 +692,17 @@
       ],
       [
         {
-          "type": "PushPanel",
+          "type": "Wall",
           "isOnBoard": "2A",
           "orientations": [
             "right"
+          ]
+        },
+        {
+          "type": "PushPanel",
+          "isOnBoard": "2A",
+          "orientations": [
+            "left"
           ],
           "registers": [
             2, 4
@@ -657,7 +711,7 @@
       ],
       [
         {
-          "type": "Checkpoint",
+          "type": "CheckPoint",
           "isOnBoard": "2A",
           "count": 3
         }
@@ -683,10 +737,17 @@
       ],
       [
         {
-          "type": "PushPanel",
+          "type": "Wall",
           "isOnBoard": "2A",
           "orientations": [
             "right"
+          ]
+        },
+        {
+          "type": "PushPanel",
+          "isOnBoard": "2A",
+          "orientations": [
+            "left"
           ],
           "registers": [
             1, 3, 5
@@ -695,7 +756,7 @@
       ],
       [
         {
-          "type": "Checkpoint",
+          "type": "CheckPoint",
           "isOnBoard": "2A",
           "count": 4
         }
@@ -707,10 +768,6 @@
           "orientations": [
             "left"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "2A"
         }
       ],
       [
@@ -749,10 +806,17 @@
       ],
       [
         {
-          "type": "PushPanel",
+          "type": "Wall",
           "isOnBoard": "2A",
           "orientations": [
             "bottom"
+          ]
+        },
+        {
+          "type": "PushPanel",
+          "isOnBoard": "2A",
+          "orientations": [
+            "top"
           ],
           "registers": [
             1, 3, 5
@@ -890,10 +954,6 @@
           "orientations": [
             "left"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "A"
         }
       ],
       [
@@ -903,10 +963,6 @@
           "orientations": [
             "left"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "A"
         }
       ],
       [
@@ -933,8 +989,8 @@
           "isOnBoard": "A",
           "speed": 1,
           "orientations": [
-            "right",
-            "left"
+            "left",
+            "right"
           ]
         }
       ]
@@ -959,10 +1015,6 @@
           "orientations": [
             "top"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "A"
         }
       ],
       [
@@ -996,10 +1048,6 @@
           "orientations": [
             "bottom"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "A"
         }
       ],
       [

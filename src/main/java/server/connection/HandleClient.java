@@ -176,29 +176,6 @@ public class HandleClient implements Runnable{
         write(messageCreator.generateHelloClientMessage(server.getProtocolVersion()));
 
         try {
-            //String username ="";
-
-            /*while (username == "") {
-                if(JsonSerializer.deserializeJson(in.readUTF(), Message.class).getMessageType() == MessageType.PlayerValues) {
-                    username = JsonSerializer.deserializeJson(in.readUTF(), Message.class).getMessageBody().getName();
-                    if (!containsName(server.CLIENTS, username)) {
-                        //grantAccess(username);
-                    } else {
-                        //denyAccess(username);
-                        username = "";
-                    }
-                }
-            }*/
-
-            //Thread needs to sleep so that the chat form can load and the user sees his welcome message
-            /*Thread.sleep(1000);
-            //welcome message to server
-            String message = this.username +  " has entered the chat";
-            try {
-                server.messages.put(message);
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            }*/
 
             String line;
 
@@ -212,10 +189,8 @@ public class HandleClient implements Runnable{
                             //writeTo(clientID, messageCreator.generateWelcomeMessage(clientID));
                             write(messageCreator.generateWelcomeMessage(clientID));
                         } else{
-                            //TODO message for client, that its version is not compatible
-                            System.out.println("Client version is not correct: "
-                                    +incomingMessage.getMessageBody().getProtocol()
-                                    + " but it should be: "+server.getProtocolVersion());
+                            write(messageCreator.generateErrorMessage("Please check your protocol version. This server runs with: "+ server.getProtocolVersion()));
+                            closeConnection();
                         }
                     }
                 } catch (Exception e){
@@ -265,11 +240,15 @@ public class HandleClient implements Runnable{
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
                         setAlive(true);
+
                     } else if (incomingMessage.getMessageType() == MessageType.MapSelected) {
-                        InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream("/maps/ExtraCrispy.json"));
+                        String map = incomingMessage.getMessageBody().getMap();
+                        String fileName = "/maps/"+map+".json";
+                        InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream(fileName));
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
                         String jsonmap = content.lines().collect(Collectors.joining());
-                        write(messageCreator.generateGameStartedMessage(jsonmap));
+                        write(messageCreator.generateMapSelectedMessage(map));
+
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
                         this.username = incomingMessage.getMessageBody().getName();
                         int figure = incomingMessage.getMessageBody().getFigure();
@@ -330,10 +309,6 @@ public class HandleClient implements Runnable{
 
     private void closeConnection(){
         try {
-            //changed String to Message to match with other messages (added generateGoodbyeMessage to MessageCreator)
-            String goodbyeMessage = "Server: " + this.threadID + " has left the chat!";
-            System.out.println(goodbyeMessage);
-            server.messages.put(messageCreator.generateGoodbyeMessage(clientID, goodbyeMessage));
             server.players.remove(threadID);
             server.CLIENTS.remove(threadID);
             this.in.close();

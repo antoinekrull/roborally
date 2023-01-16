@@ -242,7 +242,7 @@ public class ViewModelGameWindow {
         for (int x = 0; x < map.size(); x++){
             for (int y = 0; y < map.get(x).size(); y++) {
                 for (int i = 0; i < map.get(x).get(y).size(); i++){
-                    System.out.println("x:"+x+" y: "+y);
+                    System.out.println("("+x+"; "+y+"): "+map.get(x).get(y).get(i).getType()+" Tile");
                     map.get(x).get(y).get(i).makeImage(gameboard);
                 }
             }

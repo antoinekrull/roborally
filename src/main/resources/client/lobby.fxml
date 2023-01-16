@@ -75,7 +75,7 @@
                         <HBox alignment="CENTER" GridPane.rowIndex="1">
                            <children>
                               <ChoiceBox fx:id="mapsChoiceBox" prefHeight="26.0" prefWidth="213.0" />
-                              <Button fx:id="mapButton" mnemonicParsing="false" text="Select Map" />
+                              <Button fx:id="mapButton" mnemonicParsing="false" onAction="#mapButtonOnAction" text="Select Map" />
                            </children>
                         </HBox>
                             </children>

@@ -59,6 +59,8 @@ public class ViewModelLobby {
     private Button readyButton;
     @FXML
     private Label timeLabel;
+    @FXML
+    private Button mapButton;
 
     private BooleanProperty ready;
     private ModelChat modelChat;
@@ -236,14 +238,24 @@ public class ViewModelLobby {
             });
         }
     }
+    public void mapButtonOnAction() throws IOException{
+        String map = mapsChoiceBox.getSelectionModel().getSelectedItem();
+        if (map != null) {
+            modelUser.sendMapSelected(map);
+            //TODO: IF AT LEAST TWO PLAYERS ARE READY, START TIMER AND SWITCH SCENE
+            RoboRallyStart.switchScene("gamewindow.fxml");
+        }
+    }
 
     public void readyButtonOnAction() throws IOException {
         if (!this.ready.get()) {
             readyButton.setText("NOT READY");
             this.ready.set(true);
-            modelGame.setPlayerStatus(modelUser.userIDProperty().get());
-            //modelGame.setPlayerStatus(modelUser.getUserID());
+            //modelGame.setPlayerStatus(modelUser.userIDProperty().get());
             modelUser.sendSetStatus(true);
+            if(modelGame.getReadyList().size() >= 2) {
+                System.out.println("lets start");
+            }
             /*long endTime = 2000;
             DateFormat timeFormat = new SimpleDateFormat( "HH:mm:ss" );
             final Timeline timeline = new Timeline(
@@ -268,7 +280,6 @@ public class ViewModelLobby {
         else if (this.ready.get()) {
             readyButton.setText("READY");
             this.ready.set(false);
-            modelGame.setPlayerStatus(modelUser.userIDProperty().get());
             modelUser.sendSetStatus(false);
         }
         //resource is null
