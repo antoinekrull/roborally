@@ -38,7 +38,12 @@ public class Board {
     public static Antenna antenna;
 
     public static ArrayList<Tile> getTile(Pair<Integer, Integer> position){
+        try {
             return board.get(position.getValue0()).get(position.getValue1());
+        } catch(IndexOutOfBoundsException e) {
+            System.out.println("This tile is invalid");
+            return null;
+        }
     }
 
     public boolean tileIsBlocking(ArrayList<Tile> tileList) {

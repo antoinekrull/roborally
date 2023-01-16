@@ -57,13 +57,15 @@ public class Game implements Runnable {
     }
 
     private void applyAllTileEffects() throws Exception {
-        for(int x = 0; x < Board.conveyorBelt2List.size(); x++) {
-            for(int y = 0; y < playerList.size(); y++) {
-                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.conveyorBelt2List.get(x).getPosition())) {
-                    Board.conveyorBelt2List.get(x).applyEffect(playerList.get(y));
+        try {
+            for(int x = 0; x < Board.conveyorBelt2List.size(); x++) {
+                for(int y = 0; y < playerList.size(); y++) {
+                    if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.conveyorBelt2List.get(x).getPosition())) {
+                        Board.conveyorBelt2List.get(x).applyEffect(playerList.get(y));
+                    }
                 }
             }
-        }
+
         for(int x = 0; x < Board.conveyorBelt1List.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.conveyorBelt1List.get(x).getPosition())) {
@@ -113,6 +115,9 @@ public class Game implements Runnable {
                     Board.checkpointList.get(x).applyEffect(playerList.get(y));
                 }
             }
+        }
+        } catch(IndexOutOfBoundsException e) {
+            System.out.println("You're Robot can not move past this point");
         }
     }
 
@@ -335,7 +340,11 @@ public class Game implements Runnable {
     }
 
     private void activateRegister(Player player) throws Exception {
-        player.getCardFromRegister(currentRegister).applyEffect(player);
+        try{
+            player.getCardFromRegister(currentRegister).applyEffect(player);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("This register was not activated because you're Robot can not move past this point");
+        }
     }
     public String[] getMaps(){return this.maps;}
     public void addReady(int clientID) {readyList.add(clientID);}
