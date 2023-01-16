@@ -9,6 +9,9 @@ import game.CollisionCalculator;
 import game.Game;
 import game.board.Board;
 import game.board.Direction;
+import game.card.MoveCard1;
+import game.card.MoveCard2;
+import game.card.MoveCard3;
 import game.player.Player;
 import game.player.Robot;
 import javafx.beans.property.*;
@@ -181,9 +184,7 @@ public class Client {
                                 PlayerList playerList = new PlayerList();
                                 playerList.add(player1);
                                 playerList.add(player2);
-                                player1.getRobot().setDirection(Direction.EAST);
                                 player1.getRobot().setCurrentPosition(new Pair<>(6, 7));
-                                player2.getRobot().setDirection(Direction.NORTH);
                                 player2.getRobot().setCurrentPosition(new Pair<>(9, 9));
                                 game.setPlayerList(playerList);
                                 player1.drawFullHand();
@@ -197,6 +198,16 @@ public class Client {
                                 System.out.println(CollisionCalculator.checkRobotCollision(player1));
                                 System.out.println(CollisionCalculator.checkRobotCollision(player2));
                                 game.runTimer();
+                                MoveCard1 move1 = new MoveCard1();
+                                MoveCard2 move2 = new MoveCard2();
+                                MoveCard3 move3 = new MoveCard3();
+                                System.out.println(player1.getRobot().getCurrentPosition());
+                                move1.applyEffect(player1);
+                                System.out.println(player1.getRobot().getCurrentPosition());
+                                move2.applyEffect(player1);
+                                System.out.println(player1.getRobot().getCurrentPosition());
+                                move3.applyEffect(player1);
+                                System.out.println(player1.getRobot().getCurrentPosition());
                             }
                             if(message.getMessageType().equals(MessageType.YourCards)){
 
