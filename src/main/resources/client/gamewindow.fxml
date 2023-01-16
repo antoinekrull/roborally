@@ -245,9 +245,9 @@
                 </StackPane>
               </children>
             </GridPane>
-            <HBox fx:id="handGrid" alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
+            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
               <children>
-                <GridPane maxWidth="600.0" nodeOrientation="RIGHT_TO_LEFT" HBox.hgrow="ALWAYS">
+                <GridPane fx:id="handGrid" maxWidth="600.0" nodeOrientation="RIGHT_TO_LEFT" HBox.hgrow="ALWAYS">
                   <columnConstraints>
                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
