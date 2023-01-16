@@ -1,10 +1,13 @@
 package client.connection;
 
+import client.player.PlayerList;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import game.board.Board;
+import client.player.Player;
+import game.player.Robot;
 import javafx.application.Platform;
 import javafx.beans.Observable;
 import javafx.beans.property.*;
@@ -41,6 +44,7 @@ public class Client {
     private BooleanProperty isAI;
     private ObjectProperty<Message> message;
     private IntegerProperty userID;
+    private StringProperty errorMessage;
     private Boolean prioPlayer = false;
 
     MessageCreator messageCreator;
@@ -48,10 +52,9 @@ public class Client {
     int port = 3000;
     private String protocolVersion = "Version 1.0";
     private String group = "KnorrigeKorrelate";
-    private ObservableList<String> playersOnline;
-    private ObservableList<String> playersToChat;
-    private ObservableList<Triplet<String, Integer, Boolean>> playerIDs;
+    private PlayerList playerList;
     private ObservableList<String> maps;
+
 
     private Client() {
         this.messageCreator = new MessageCreator();
@@ -59,11 +62,10 @@ public class Client {
         this.userID = new SimpleIntegerProperty();
         this.isAI = new SimpleBooleanProperty();
         this.maps = FXCollections.observableArrayList();
-        this.playersOnline = FXCollections.observableArrayList();
-        this.playersToChat = FXCollections.observableArrayList("All");
-        this.playerIDs = FXCollections.observableArrayList();
         this.connected = new SimpleBooleanProperty();
         this.accepted = new SimpleBooleanProperty();
+        this.playerList = new PlayerList();
+        this.errorMessage = new SimpleStringProperty();
     }
 
     public static Client getInstance() {
@@ -71,14 +73,6 @@ public class Client {
             client = new Client();
         }
         return client;
-    }
-
-    public ObservableList<String> getPlayersOnline() {
-        return playersOnline;
-    }
-
-    public ObservableList<String> getPlayersToChat() {
-        return playersToChat;
     }
 
     public ObjectProperty<Message> messageProperty() {
@@ -95,10 +89,6 @@ public class Client {
 
     public void setUserID(int userID) {
         this.userID.set(userID);
-    }
-
-    public ObservableList<Triplet<String, Integer, Boolean>> getPlayerIDs() {
-        return playerIDs;
     }
 
     public BooleanProperty isAIProperty() {
@@ -120,11 +110,21 @@ public class Client {
         this.accepted.set(true);
     }
 
-   public void addPlayer(String username, int clientID) {
-        this.playersOnline.add(username);
-        this.playersToChat.add(username);
-        this.playerIDs.add(new Triplet<>(username, clientID, false));
-   }
+    public PlayerList getPlayerList() {
+        return playerList;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage.get();
+    }
+
+    public StringProperty errorMessageProperty() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage.set(errorMessage);
+    }
 
     private class ReadMessagesFromServer implements Runnable {
         DataInputStream in = null;
@@ -154,12 +154,14 @@ public class Client {
                         if (message.getMessageType().equals(MessageType.PlayerAdded)) {
                             int clientID = message.getMessageBody().getClientID();
                             if (Client.this.userIDProperty().get() == clientID) {
-                                if (!Client.this.accepted.get()) {
+                                if(!Client.this.accepted.get()) {
                                     Client.this.setAcceptedProperty();
                                 }
-                            } else {
+                            }
+                            else {
                                 String username = message.getMessageBody().getName();
-                                Platform.runLater(() -> Client.this.addPlayer(username, clientID));
+                                int figure = message.getMessageBody().getFigure();
+                                Platform.runLater(() -> Client.this.getPlayerList().add(new Player(clientID, username, new Robot(figure))));
                             }
                         }
                         if (message.getMessageType().equals(MessageType.PlayerStatus)) {

@@ -34,7 +34,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import server.connection.PlayerList;
+import client.player.PlayerList;
 
 /**
  * ViewModel for gamescreen
@@ -250,8 +250,8 @@ public class ViewModelGameWindow {
     }
 
     private void placeRobots(PlayerList playerList) {
-        for (int x = 0; x < playerList.size(); x++){
-            playerList.get(x).getRobot().makeImage(gameboard);
+        for (int x = 0; x < playerList.getPlayerList().size(); x++){
+            playerList.getPlayerList().get(x).getRobot().makeImage(gameboard);
         }
     }
 

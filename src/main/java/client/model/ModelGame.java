@@ -1,6 +1,7 @@
 package client.model;
 
 import client.connection.Client;
+import client.player.PlayerList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import game.Game;
 import game.board.Board;
@@ -8,7 +9,6 @@ import game.board.Tile;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.javatuples.Triplet;
 
 import java.util.ArrayList;
 
@@ -21,26 +21,24 @@ import java.util.ArrayList;
 public class ModelGame {
 
     private static ModelGame modelGame;
-    public Board gameBoard;
-    public SimpleIntegerProperty robotProperty;
     private Client client;
+    private Board gameBoard;
+    private SimpleIntegerProperty robotProperty;
+    private SimpleStringProperty errorMessage;
+    private ObservableList<Integer> readyList;
 
     public void setMaps(ObservableList<String> maps) {
         this.maps = maps;
     }
 
-    private ObservableList<String> maps;
-    private ObservableList<String> users;
-
     public ObservableList<Integer> getReadyList() {
         return readyList;
     }
 
-    private ObservableList<Integer> readyList;
-    private ObservableList<String> usersToSelect;
-    private ObservableList<Triplet<String, Integer, Boolean>> playerIDs;
+    private ObservableList<String> maps;
     private BooleanProperty readyToPlay;
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
+    private PlayerList playerList;
     private Game game;
 
 
@@ -50,11 +48,11 @@ public class ModelGame {
         this.robotProperty = new SimpleIntegerProperty();
         this.readyList = FXCollections.observableArrayList();
         this.readyToPlay = new SimpleBooleanProperty();
-        this.maps = client.getMaps();
-        this.users = client.getPlayersOnline();
-        this.usersToSelect = client.getPlayersToChat();
-        this.playerIDs = client.getPlayerIDs();
+        this.maps = FXCollections.observableArrayList("Dizzy Highway", "Extra Crispy", "Lost Bearings", "Death Trap");
         this.gameBoard = new Board();
+        this.playerList = client.getPlayerList();
+        this.errorMessage = new SimpleStringProperty();
+        errorMessage.bind(client.errorMessageProperty());
     }
 
     public static ModelGame getInstance() {
@@ -62,6 +60,10 @@ public class ModelGame {
             modelGame = new ModelGame();
         }
         return modelGame;
+    }
+
+    public PlayerList getPlayerList() {
+        return playerList;
     }
 
     public SimpleIntegerProperty robotProperty() {
@@ -77,7 +79,9 @@ public class ModelGame {
         gameBoard.createBoard(jsonMap);
         this.gameMap = gameBoard.getBoard();
     }
-
+    public SimpleStringProperty errorMessageProperty() {
+        return errorMessage;
+    }
     public BooleanProperty readyToPlayProperty() {
         return readyToPlay;
     }
@@ -86,22 +90,10 @@ public class ModelGame {
         return maps;
     }
 
-    public ObservableList<String> getUsers() {
-        return users;
-    }
-
-    public ObservableList<String> getUsersToSelect() {
-        return usersToSelect;
-    }
     public ArrayList<ArrayList<ArrayList<Tile>>> getGameMap() {
         this.gameMap = gameBoard.getBoard();
         return gameMap;
     }
-
-    public ObservableList<Triplet<String, Integer, Boolean>> getPlayerIDs() {
-        return playerIDs;
-    }
-
     public void sendPlayerInformation(String nickname) {
         client.sendPlayerValuesMessage(nickname, robotProperty.get());
     }

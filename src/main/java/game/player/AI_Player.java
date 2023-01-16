@@ -2,7 +2,6 @@ package game.player;
 
 import game.card.Card;
 import game.card.CardType;
-import game.player.Player;
 
 public class AI_Player extends Player {
     public AI_Player(int id, String username, Robot robot) {

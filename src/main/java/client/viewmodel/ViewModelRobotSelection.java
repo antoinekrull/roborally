@@ -1,13 +1,13 @@
 package client.viewmodel;
 
 import client.RoboRallyStart;
-import client.connection.NotifyChangeSupport;
 import client.model.ModelGame;
 import client.model.ModelUser;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import client.player.PlayerList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -39,7 +39,7 @@ public class ViewModelRobotSelection {
     private Label errorLabelRobotSelection;
 
     private List<Node> robots;
-
+    private PlayerList playerList;
 
     private ModelUser modelUser;
     private ModelGame modelGame;
@@ -47,6 +47,7 @@ public class ViewModelRobotSelection {
     public ViewModelRobotSelection() {
         this.modelUser = ModelUser.getInstance();
         this.modelGame = ModelGame.getInstance();
+        playerList = modelGame.getPlayerList();
     }
 
     /**
@@ -55,6 +56,7 @@ public class ViewModelRobotSelection {
     public void initialize() {
         usernameButton.disableProperty().bind(usernameTextField.textProperty().isEmpty());
         usernameTextField.textProperty().bindBidirectional(modelUser.usernameProperty());
+        errorLabelRobotSelection.textProperty().bind(modelGame.errorMessageProperty());
         robots = Arrays.asList(robot1, robot2, robot3, robot4, robot5, robot6);
         robot1.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(1);
