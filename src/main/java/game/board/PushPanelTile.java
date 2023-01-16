@@ -2,6 +2,9 @@ package game.board;
 
 import game.Game;
 import game.player.Player;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import org.javatuples.Pair;
 
 import java.util.ArrayList;
@@ -14,8 +17,16 @@ public class PushPanelTile extends Tile {
 
     ArrayList<Integer> activeRegisterList = new ArrayList<>();
     public PushPanelTile(int xCoordinate, int yCoordinate, Direction pushDirection, ArrayList<Integer> registers) {
-        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
-        this.path = getClass().getResource("/textures/gameboard/foerderbandGeradeAnimated.gif").toString();
+        super(xCoordinate, yCoordinate, "/textures/gameboard/pushPanel.png");
+        if (registers.size()==2){
+            this.path = getClass().getResource("/textures/gameboard/pushPanel.png").toString();
+        }
+        else {
+            //TODO: change picture with new push panel with registers
+            this.path = getClass().getResource("/textures/gameboard/pushPanel.png").toString();
+        }
+
+        setType("PushPanel");
         isBlocking = true;
         isDanger = false;
         this.pushDirection = pushDirection;
@@ -50,5 +61,20 @@ public class PushPanelTile extends Tile {
     }
     public void setActiveRegisterList(ArrayList<Integer> activeRegisterList) {
         this.activeRegisterList = activeRegisterList;
+    }
+    @Override
+    public void makeImage(GridPane tiles){
+        ImageView img = new ImageView();
+        Image im = new Image(path,(double) height, 70,true,false);
+        img.setImage(im);
+        int rot = 0;
+        switch (pushDirection) {
+            case NORTH -> rot = 0;
+            case EAST -> rot = 90;
+            case SOUTH -> rot = 180;
+            case WEST -> rot = 270;
+        }
+        img.setRotate(rot);
+        tiles.add(img,this.xCoordinate,this.yCoordinate);
     }
 }

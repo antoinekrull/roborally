@@ -1,7 +1,5 @@
 package server.connection;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
@@ -146,31 +144,8 @@ public class HandleClient implements Runnable{
         write(messageCreator.generateHelloClientMessage(server.getProtocolVersion()));
 
         try {
-            String username ="";
 
-            /*while (username == "") {
-                if(JsonSerializer.deserializeJson(in.readUTF(), Message.class).getMessageType() == MessageType.PlayerValues) {
-                    username = JsonSerializer.deserializeJson(in.readUTF(), Message.class).getMessageBody().getName();
-                    if (!containsName(server.CLIENTS, username)) {
-                        //grantAccess(username);
-                    } else {
-                        //denyAccess(username);
-                        username = "";
-                    }
-                }
-            }*/
-
-            //Thread needs to sleep so that the chat form can load and the user sees his welcome message
-            /*Thread.sleep(1000);
-            //welcome message to server
-            String message = this.username +  " has entered the chat";
-            try {
-                server.messages.put(message);
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            }*/
-
-            String line = "";
+            String line;
 
             //Accept client if his protocol version is correct
             while(!accepted) {
@@ -182,10 +157,8 @@ public class HandleClient implements Runnable{
                             //writeTo(clientID, messageCreator.generateWelcomeMessage(clientID));
                             write(messageCreator.generateWelcomeMessage(clientID));
                         } else{
-                            //TODO message for client, that its version is not compatible
-                            System.out.println("Client version is not correct: "
-                                    +incomingMessage.getMessageBody().getProtocol()
-                                    + " but it should be: "+server.getProtocolVersion());
+                            write(messageCreator.generateErrorMessage("Please check your protocol version. This server runs with: "+ server.getProtocolVersion()));
+                            closeConnection();
                         }
                     }
                 } catch (Exception e){
@@ -231,31 +204,67 @@ public class HandleClient implements Runnable{
                             server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
                             //int toUser = getClientID();
                             //server.sendTo(toUser, messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
-                            //writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);
+                            ///writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
                         setAlive(true);
+
                     } else if (incomingMessage.getMessageType() == MessageType.MapSelected) {
-                        InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream("/maps/ExtraCrispy.json"));
+                        String map = incomingMessage.getMessageBody().getMap();
+                        String fileName = "/maps/"+map+".json";
+                        InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream(fileName));
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
                         String jsonmap = content.lines().collect(Collectors.joining());
+                        write(messageCreator.generateMapSelectedMessage(map));
                         write(messageCreator.generateGameStartedMessage(jsonmap));
+
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
-                        server.players.add(new Player(incomingMessage.getMessageBody().getClientID(), incomingMessage.getMessageBody().getName()
-                                , new Robot(incomingMessage.getMessageBody().getFigure())));
-                        write(messageCreator.generatePlayerAddedMessage(incomingMessage.getMessageBody().getName(), incomingMessage.getMessageBody().getFigure(), this.clientID));
+                        this.username = incomingMessage.getMessageBody().getName();
+                        int figure = incomingMessage.getMessageBody().getFigure();
+                        if (server.players.size() == 0) {
+                            Message robotAcceptedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
+                            write(robotAcceptedMessage);
+                            server.players.add(new Player(getClientID(), incomingMessage.getMessageBody().getName()
+                                    , new Robot(incomingMessage.getMessageBody().getFigure())));
+                        }
+                        else {
+                            boolean taken = false;
+                            for (int i = 0; i < server.players.size(); i++) {
+                                if (server.players.get(i).getRobot().getFigure() == figure) {
+                                    taken = true;
+                                    write(messageCreator.generateErrorMessage("Your figure was already chosen. Choose another one."));
+                                    break;
+                                }
+                            }
+                            if (!taken) {
+
+                                Message robotAcceptedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
+                                write(robotAcceptedMessage);
+
+                                server.players.add(new Player(getClientID(), incomingMessage.getMessageBody().getName()
+                                        , new Robot(incomingMessage.getMessageBody().getFigure())));
+                                Message playerAddedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
+                                server.sendPlayerValuesToAll(getClientID(), playerAddedMessage);
+
+                                for(int i = 0; i < server.players.size(); i++) {
+                                    if(server.players.get(i).getId() != getClientID()) {
+                                        Message addOtherPlayer = messageCreator.generatePlayerAddedMessage(server.players.get(i).getUsername(),server.players.get(i).getRobot().getFigure(), server.players.get(i).getId());
+                                        write(addOtherPlayer);
+                                    }
+                                }
+                            }
+                        }
                     } else if(incomingMessage.getMessageType() == MessageType.SetStatus) {
                         boolean ready = incomingMessage.getMessageBody().isReady();
                         if(ready){
                             game.addReady(clientID);
-                            if(game.getFirstReadyID()==clientID){
+                            if(game.getFirstReadyID() == clientID){
                                 write(messageCreator.generateSelectMapMessage(game.getMaps()));
                             }
                         } else {
                             game.removeReady(clientID);
                         }
                         write(messageCreator.generatePlayerStatusMessage(clientID,ready));
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -266,12 +275,9 @@ public class HandleClient implements Runnable{
             //System.out.println("Client disconnected");
         }
     }
+
     private void closeConnection(){
         try {
-            //changed String to Message to match with other messages (added generateGoodbyeMessage to MessageCreator)
-            String goodbyeMessage = "Server: " + this.threadID + " has left the chat!";
-            System.out.println(goodbyeMessage);
-            server.messages.put(messageCreator.generateGoodbyeMessage(clientID, goodbyeMessage));
             server.players.remove(threadID);
             server.CLIENTS.remove(threadID);
             this.in.close();

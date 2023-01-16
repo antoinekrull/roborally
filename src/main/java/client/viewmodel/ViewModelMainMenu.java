@@ -1,7 +1,6 @@
 package client.viewmodel;
 
 import client.RoboRallyStart;
-import client.connection.NotifyChangeSupport;
 import client.model.ModelUser;
 import java.io.IOException;
 import javafx.animation.KeyFrame;
@@ -35,11 +34,9 @@ public class ViewModelMainMenu {
 
     private ModelUser modelUser;
 
-    private NotifyChangeSupport notifyChangeSupport;
 
     public ViewModelMainMenu() {
         modelUser = ModelUser.getInstance();
-        notifyChangeSupport = NotifyChangeSupport.getInstance();
     }
     public void initialize() {
         //Background-Video:
@@ -54,6 +51,7 @@ public class ViewModelMainMenu {
     }
 
     public void joinButtonOnAction() throws IOException {
+        modelUser.connect();
         if (modelUser.getConnection()){
             RoboRallyStart.switchScene("login.fxml");
         } else {

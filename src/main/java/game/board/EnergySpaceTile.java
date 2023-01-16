@@ -11,6 +11,7 @@ public class EnergySpaceTile extends Tile {
     public EnergySpaceTile(int xCoordinate, int yCoordinate) {
         super(xCoordinate, yCoordinate, "/textures/gameboard/energySpace.png");
         this.path = getClass().getResource("/textures/gameboard/energySpace.png").toString();
+        setType("EnergySpace");
         isDanger = false;
         isBlocking = false;
     }

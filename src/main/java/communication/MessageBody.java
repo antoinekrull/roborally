@@ -1,5 +1,7 @@
 package communication;
 
+import server.connection.PlayerList;
+
 /**
  * @author Antoine, Firas
  * @version 1.0
@@ -36,7 +38,7 @@ public class MessageBody {
     private String direction;
     private int count;
     private String source;
-    private String gameMap; //TODO: must be a jsonObject, think about implementation
+    private String gameMap;
     private int number;
 
     public int getNumber() {

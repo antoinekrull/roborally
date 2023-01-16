@@ -1,7 +1,9 @@
 package client.model;
 
 import client.connection.Client;
+import client.player.PlayerList;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import game.Game;
 import game.board.Board;
 import game.board.Tile;
 import javafx.beans.property.*;
@@ -19,32 +21,39 @@ import java.util.ArrayList;
 public class ModelGame {
 
     private static ModelGame modelGame;
-    public Board gameBoard;
-    public SimpleIntegerProperty robotProperty;
     private Client client;
+    private Board gameBoard;
+    private SimpleIntegerProperty robotProperty;
+    private SimpleStringProperty errorMessage;
+    private ObservableList<Integer> readyList;
+
+    public void setMaps(ObservableList<String> maps) {
+        this.maps = maps;
+    }
+
+    public ObservableList<Integer> getReadyList() {
+        return readyList;
+    }
+
     private ObservableList<String> maps;
-    private ObservableList<String> users;
-    private ObservableList<String> usersToSelect;
     private BooleanProperty readyToPlay;
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
+    private PlayerList playerList;
+    private Game game;
 
 
 
     private ModelGame() {
         client = Client.getInstance();
         this.robotProperty = new SimpleIntegerProperty();
+        this.readyList = FXCollections.observableArrayList();
         this.readyToPlay = new SimpleBooleanProperty();
-        this.maps = FXCollections.observableArrayList("Dizzy Highway", "Extra Crispy", "Lost Bearings", "Death Trap");
-        this.users = FXCollections.observableArrayList(client.getPlayersOnline());
-        this.usersToSelect = FXCollections.observableArrayList(client.getPlayersToChat());
-        this.maps = FXCollections.observableArrayList();
-        this.users = FXCollections.observableArrayList();
+        this.maps = client.getMaps();
+        //this.maps = FXCollections.observableArrayList(client.getMaps());
         this.gameBoard = new Board();
-        maps.add("Dizzy Highway");
-        maps.add("KackJavaFX");
-        /*users.add("Tomi");
-        users.add("Firas");
-        users.add("Molri");*/
+        this.playerList = client.getPlayerList();
+        this.errorMessage = new SimpleStringProperty();
+        errorMessage.bind(client.errorMessageProperty());
     }
 
     public static ModelGame getInstance() {
@@ -54,10 +63,15 @@ public class ModelGame {
         return modelGame;
     }
 
+    public PlayerList getPlayerList() {
+        return playerList;
+    }
+
     public SimpleIntegerProperty robotProperty() {
         return robotProperty;
     }
-    public void addUser(String user) {this.users.add(user);}
+
+    //public void addUser(String user) {this.users.add(user);}
 
     public void setRobotProperty(int robotProperty) {
         this.robotProperty.set(robotProperty);
@@ -66,7 +80,9 @@ public class ModelGame {
         gameBoard.createBoard(jsonMap);
         this.gameMap = gameBoard.getBoard();
     }
-
+    public SimpleStringProperty errorMessageProperty() {
+        return errorMessage;
+    }
     public BooleanProperty readyToPlayProperty() {
         return readyToPlay;
     }
@@ -75,28 +91,14 @@ public class ModelGame {
         return maps;
     }
 
-    public ObservableList<String> getUsers() {
-        return users;
-    }
-
-    public ObservableList<String> getUsersToSelect() {
-        return usersToSelect;
-    }
     public ArrayList<ArrayList<ArrayList<Tile>>> getGameMap() {
         this.gameMap = gameBoard.getBoard();
         return gameMap;
     }
-
-    /*public void sendRobotSelection(int clientID) throws IOException {
-        boolean result = clientService.sendSelection(clientID, modelGame.getRobot());
-        if (!result) {
-            //setSelectionResult("Please choose another robot");
-        }
-        else {
-            ScreenController.switchScene("lobby.fxml");
-        }
+    public void sendPlayerInformation(String nickname) {
+        client.sendPlayerValuesMessage(nickname, robotProperty.get());
     }
-    */
+
     public void setPlayerStatus(int userID) {
         //client.sendPlayerStatus or client.sendMessageToServer(userID, MessageType); true/false
     }

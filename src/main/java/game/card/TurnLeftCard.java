@@ -1,18 +1,17 @@
 package game.card;
 
 import game.board.Direction;
-import game.board.RotationType;
 import game.player.Player;
 
 public class TurnLeftCard extends Card {
-    private final RotationType rotationType = RotationType.LEFT;
+    private final Direction rotationType = Direction.LEFT;
 
     public TurnLeftCard(){
         cardType = CardType.PROGRAMMING_CARD;
         setCardName("Left Turn");
     }
 
-    public RotationType getRotationType(){
+    public Direction getRotationType(){
         return rotationType;
     }
 

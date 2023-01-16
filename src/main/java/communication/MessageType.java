@@ -49,6 +49,6 @@ public enum MessageType {
     CheckPointReached,
     GameFinished,
     Sample,
-    Goodbye
+    PlayerList, Accepted, Goodbye
     }
 

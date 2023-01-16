@@ -26,13 +26,15 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.*;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-
-import java.io.IOException;
-import java.util.ArrayList;
+import client.player.PlayerList;
 
 /**
  * ViewModel for gamescreen
@@ -84,6 +86,10 @@ public class ViewModelGameWindow {
         //TODO: Tiles resizeable
         ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
         placeTiles(map);
+        //TODO: Playerlist in server/viewmodel
+        /* PlayerList playerList = modelGame.getUsers();
+        placeRobots(playerList);
+        */
 
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
@@ -236,10 +242,16 @@ public class ViewModelGameWindow {
         for (int x = 0; x < map.size(); x++){
             for (int y = 0; y < map.get(x).size(); y++) {
                 for (int i = 0; i < map.get(x).get(y).size(); i++){
-                    System.out.println("x:"+x+" y: "+y);
+                    System.out.println("("+x+"; "+y+"): "+map.get(x).get(y).get(i).getType()+" Tile");
                     map.get(x).get(y).get(i).makeImage(gameboard);
                 }
             }
+        }
+    }
+
+    private void placeRobots(PlayerList playerList) {
+        for (int x = 0; x < playerList.getPlayerList().size(); x++){
+            playerList.getPlayerList().get(x).getRobot().makeImage(gameboard);
         }
     }
 

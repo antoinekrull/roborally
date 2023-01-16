@@ -1,12 +1,10 @@
 package server;
 
-import client.RoboRallyStart;
+import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class ServerStart extends Application {
 
@@ -17,7 +15,7 @@ public class ServerStart extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException  {
         FXMLLoader loader = new FXMLLoader(ServerStart.class.getResource("servergui.fxml"));
-        Scene scene = new Scene(loader.load(), 250, 250);
+        Scene scene = new Scene(loader.load(), 250, 300);
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.show();
