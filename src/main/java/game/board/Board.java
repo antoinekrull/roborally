@@ -30,7 +30,6 @@ public class Board {
     public static ArrayList<LaserTile> laserTileList = new ArrayList<>();
     public static ArrayList<CheckpointTile> checkpointList = new ArrayList<>();
     public static ArrayList<EnergySpaceTile> energySpaceList = new ArrayList<>();
-    public static ArrayList<Tile> robotLaserList = new ArrayList<>();
     public static ArrayList<RebootTile> rebootTileList = new ArrayList<>();
     public static ArrayList<StartTile> startTileList = new ArrayList<>();
     public static Antenna antenna;
@@ -162,7 +161,7 @@ public class Board {
                             }
                             case "Antenna" -> {
                                 replaceTileInMap(board, x, y, tile, new Antenna(x, y));
-                                antennaTileList.add(new Antenna(x, y));
+                                antenna = new Antenna(x, y);
                             }
                             case "PushPanel" -> {
                                 String directionPushPanel = tile.getOrientations().get(0);

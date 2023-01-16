@@ -5,22 +5,18 @@ import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
-import game.CollisionCalculator;
-import game.Game;
 import game.board.Board;
 import game.board.Direction;
 import game.card.*;
-import game.player.Player;
 import game.player.Robot;
 import client.player.Player;
 import game.player.Robot;
 import javafx.application.Platform;
-import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.javatuples.Triplet;
-import server.connection.PlayerList;
+import org.javatuples.Pair;
+
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -53,6 +49,8 @@ public class Client {
     private IntegerProperty userID;
     private StringProperty errorMessage;
     private Boolean prioPlayer = false;
+
+    public static ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
 
     MessageCreator messageCreator;
     String address = "localhost";

@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static game.board.Board.robotLaserList;
-
 public class Game implements Runnable {
     private GamePhase currentGamePhase;
     private Timer timer = new Timer();
@@ -36,6 +34,7 @@ public class Game implements Runnable {
     private static Game INSTANCE;
 
     private ArrayList<CheckpointTile> checkpointTileArrayList = null;
+    private ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
 
     public Game() {}
 
