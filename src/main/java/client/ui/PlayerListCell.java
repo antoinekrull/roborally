@@ -1,6 +1,6 @@
 package client.ui;
 
-import client.player.Player;
+import client.player.ClientPlayer;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -9,7 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class PlayerListCell extends ListCell<Player> {
+public class PlayerListCell extends ListCell<ClientPlayer> {
     private final Label name = new Label();
     private final Label robot = new Label();
     private ImageView readyImage = new ImageView();
@@ -23,7 +23,7 @@ public class PlayerListCell extends ListCell<Player> {
     }
 
     @Override
-    protected void updateItem(Player item, boolean empty) {
+    protected void updateItem(ClientPlayer item, boolean empty) {
         super.updateItem(item, empty);
 
         setText(null);

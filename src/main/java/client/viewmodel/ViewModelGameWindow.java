@@ -149,21 +149,6 @@ public class ViewModelGameWindow {
         onRightClickRemoveProgrammingcard(programmingPane4);
         onRightClickRemoveProgrammingcard(programmingPane5);
 
-        gameboard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Node target = (Node) event.getTarget();
-                if (target != gameboard) {
-                    Node parent;
-                    while ((parent = target.getParent()) != gameboard) {
-                        target = parent;
-                    }
-                }
-                Integer colIndex = GridPane.getColumnIndex(target);
-                Integer rowIndex = GridPane.getRowIndex(target);
-            }
-        });
-
         selectStarttile(gameboard, new ClientPlayer(1, "Ralf", new Robot(1)));
     }
 

@@ -162,15 +162,15 @@ public class Client {
                             else {
                                 String username = message.getMessageBody().getName();
                                 int figure = message.getMessageBody().getFigure();
-                                if (!playerList.containsPlayer(clientID)) {
-                                    Platform.runLater(() -> Client.this.getPlayerList().add(new Player(clientID, username, new Robot(figure))));
+                                if (!clientPlayerList.containsPlayer(clientID)) {
+                                    Platform.runLater(() -> Client.this.getPlayerList().add(new ClientPlayer(clientID, username, new Robot(figure))));
                                 }
                             }
                         }
                         if (message.getMessageType().equals(MessageType.PlayerStatus)) {
                             int clientID = message.getMessageBody().getClientID();
                             boolean ready = message.getMessageBody().isReady();
-                            playerList.changePlayerStatus(clientID, ready);
+                            clientPlayerList.changePlayerStatus(clientID, ready);
                         }
                         if (message.getMessageType().equals(MessageType.SelectMap)) {
                             prioPlayer = true;
