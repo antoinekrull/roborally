@@ -7,10 +7,9 @@ import client.model.ModelGame;
 import client.model.ModelUser;
 import java.io.IOException;
 
-import client.playerlist.PlayerList;
 import client.ui.PlayerListCell;
 import communication.Message;
-import game.player.Player;
+import client.player.Player;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

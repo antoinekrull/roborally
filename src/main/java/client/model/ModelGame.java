@@ -1,7 +1,7 @@
 package client.model;
 
 import client.connection.Client;
-import client.playerlist.PlayerList;
+import client.player.PlayerList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.Board;
 import game.board.Tile;

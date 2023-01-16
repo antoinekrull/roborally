@@ -1,6 +1,6 @@
-package client.playerlist;
+package client.player;
 
-import game.player.Player;
+import client.player.Player;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

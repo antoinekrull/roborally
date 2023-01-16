@@ -1,14 +1,13 @@
 package client.viewmodel;
 
 import client.RoboRallyStart;
-import client.connection.NotifyChangeSupport;
 import client.model.ModelGame;
 import client.model.ModelUser;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import client.playerlist.PlayerList;
+import client.player.PlayerList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;

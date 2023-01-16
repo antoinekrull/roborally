@@ -1,12 +1,12 @@
 package client.connection;
 
-import client.playerlist.PlayerList;
+import client.player.PlayerList;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import game.board.Board;
-import game.player.Player;
+import client.player.Player;
 import game.player.Robot;
 import javafx.application.Platform;
 import javafx.beans.property.*;
@@ -144,19 +144,6 @@ public class Client {
                                 Client.this.setUserID(message.getMessageBody().getClientID());
                             }
                             if(message.getMessageType().equals(MessageType.PlayerAdded)){
-                                /*
-                                int clientID = message.getMessageBody().getClientID();
-                                if (Client.this.userIDProperty().get() == clientID){
-                                    if (!Client.this.accepted.get()) {
-                                        Client.this.setAcceptedProperty();
-                                    }
-                                }
-                                else {
-                                    String username = message.getMessageBody().getName();
-                                    Platform.runLater(() -> Client.this.addPlayer(username, clientID));
-                                }
-
-                                 */
                                 int clientID = message.getMessageBody().getClientID();
                                 if (Client.this.userIDProperty().get() == clientID) {
                                     if(!Client.this.accepted.get()) {
