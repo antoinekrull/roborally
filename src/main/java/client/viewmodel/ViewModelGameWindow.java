@@ -4,8 +4,6 @@ import client.connection.NotifyChangeSupport;
 import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
-import client.player.ClientPlayer;
-import client.ui.Tutorial;
 import communication.Message;
 import game.board.Tile;
 import java.io.IOException;
@@ -28,13 +26,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -63,7 +62,7 @@ public class ViewModelGameWindow {
     @FXML
     private GridPane gameboard;
     @FXML
-    private ImageView programCard1, programCard2, programCard3, programCard4, programCard5, programCard6, programCard7, programCard8, programCard9;
+    private Pane programCard1, programCard2, programCard3, programCard4, programCard5, programCard6, programCard7, programCard8, programCard9;
     @FXML
     private GridPane programmingGrid;
     @FXML
@@ -86,7 +85,7 @@ public class ViewModelGameWindow {
 
     private int height = 150;
     private int columnIndex;
-    private Tutorial tutorial;
+
 
 
     private NotifyChangeSupport notifyChangeSupport;
@@ -309,25 +308,22 @@ public class ViewModelGameWindow {
 
 
 
-    public void setOnDragDetected(ImageView source) {
+    public void setOnDragDetected(Pane source) {
 
         source.setOnDragDetected(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 //drag was detected, start drag-and-drop gesture
-                System.out.println("Drag detected");
-
                 //Any TransferMode is allowed
                 Dragboard db = source.startDragAndDrop(TransferMode.ANY);
-
                 //put image on dragboard
                 ClipboardContent content = new ClipboardContent();
-                content.putImage(source.getImage());
+                ImageView card = (ImageView) source.getChildren().get(0);
+                content.putImage(card.getImage());
                 db.setContent(content);
-
                 event.consume();
                 columnIndex = handGrid.getChildren().indexOf(source);
-                ((ImageView) handGrid.getChildren().get(columnIndex)).setImage(null);
+                source.getChildren().clear();
                 System.out.println(columnIndex);
 
             }
@@ -344,7 +340,6 @@ public class ViewModelGameWindow {
                     //allow for copying and moving
                     event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                 }
-
                 event.consume();
             }
         });
@@ -359,7 +354,6 @@ public class ViewModelGameWindow {
                 if (event.getGestureSource() != target && event.getDragboard().hasImage()) {
                     target.setStyle("-fx-border-color: green;");
                 }
-
                 event.consume();
             }
         });
@@ -372,7 +366,6 @@ public class ViewModelGameWindow {
                 //mouse moves out of enntered area
                 //remove visuals
                 target.setStyle("-fx-border-color: transparent;");
-
                 event.consume();
             }
         });
@@ -395,32 +388,65 @@ public class ViewModelGameWindow {
                         //add image from dragboard to slots (Pane)
                         target.getChildren().add(card);
                         success = true;
-                        handGrid.getChildren().remove(columnIndex);
-                        System.out.println("Success");
+                        Pane source = (Pane) handGrid.getChildren().get(columnIndex);
+                        source.getChildren().clear();
                     }
-
                     event.setDropCompleted(success);
                     event.consume();
-                } else {
+                }
+                else {
                     Dragboard db = event.getDragboard();
                     if (db.hasImage()) {
                         Image data = db.getImage();
-                        ((ImageView)handGrid.getChildren().get(columnIndex)).setImage(data);
+                        Pane source = (Pane) handGrid.getChildren().get(columnIndex);
+                        ImageView card = new ImageView(data);
+                        card.setFitHeight(height);
+                        card.setPreserveRatio(true);
+                        source.getChildren().remove(0);;
+                        source.getChildren().add(card);
                         System.out.println(columnIndex);
                     }
                 }
             }
         });
     }
-    public void onRightClickRemoveProgrammingcard (Pane pane) {
-        pane.setOnMousePressed(event -> {
-            if (event.isSecondaryButtonDown()) {
-                for(Node child : pane.getChildren()) {
-                    handGrid.add(child, 0, 0);
+
+    public void onRightClickRemoveProgrammingcard(Pane target) {
+        target.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getButton() == MouseButton.SECONDARY) {
+                    Object targetNode = event.getTarget();
+                    if (targetNode instanceof ImageView) {
+                        ImageView card = (ImageView) targetNode;
+                        Image data = card.getImage();
+                        target.getChildren().remove(card);
+                        int index = getFirstFreeSlot();
+                        if (index != -1) {
+                            Pane emptyPane = (Pane) handGrid.getChildren().get(index);
+                            ImageView newCard = new ImageView(data);
+                            newCard.setFitHeight(height);
+                            newCard.setPreserveRatio(true);
+                            emptyPane.getChildren().add(newCard);
+                        }
+                    }
                 }
-                pane.getChildren().clear();
             }
         });
     }
+
+    public int getFirstFreeSlot() {
+        for (int i = 0; i < handGrid.getChildren().size(); i++) {
+            Pane child = (Pane) handGrid.getChildren().get(i);
+            if (child.getChildren().isEmpty()) {
+                System.out.println("Slot " + i + " is empty");
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
+
 }
 
