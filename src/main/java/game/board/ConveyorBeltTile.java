@@ -23,7 +23,7 @@ public class ConveyorBeltTile extends Tile {
 
 
     public ConveyorBeltTile(int xCoordinate, int yCoordinate, int velocity, ArrayList<Direction> directionIn, Direction directionOut) {
-        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif");
+        super(xCoordinate, yCoordinate, "/textures/gameboard/foerderbandGeradeAnimated.gif", "ConveyorBelt");
         setType("ConveyorBelt");
         isDanger = false;
         isBlocking = false;
@@ -70,6 +70,7 @@ public class ConveyorBeltTile extends Tile {
     @Override
     public void makeImage(GridPane tiles) {
         ImageView img = new ImageView();
+        img.setId(imageFXid);
         Image im = new Image(path, (double) height, 70, true, false);
         img.setImage(im);
         int rot = 0;
@@ -168,14 +169,26 @@ public class ConveyorBeltTile extends Tile {
             switch(variant){
                 case STRAIGHT ->{
                     switch (velocity){
-                        case 1 -> this.path = getClass().getResource(pathToStraight).toString();
-                        case 2 -> this.path = getClass().getResource(pathToFastStraight).toString();
+                        case 1 -> {
+                            this.path = getClass().getResource(pathToStraight).toString();
+                            this.imageFXid = "ConveyorStraight";
+                        }
+                        case 2 -> {
+                            this.path = getClass().getResource(pathToFastStraight).toString();
+                            this.imageFXid = "FastConveyorStraight";
+                        }
                     }
                 }
                 case CURVE -> {
                     switch (velocity){
-                        case 1 -> this.path = getClass().getResource(pathToCurve).toString();
-                        case 2 -> this.path = getClass().getResource(pathToFastCurve).toString();
+                        case 1 -> {
+                            this.path = getClass().getResource(pathToCurve).toString();
+                            this.imageFXid = "ConveyorCurve";
+                        }
+                        case 2 -> {
+                            this.path = getClass().getResource(pathToFastCurve).toString();
+                            this.imageFXid = "FastConveyorCurve";
+                        }
                     }
                 }
             }
@@ -184,8 +197,14 @@ public class ConveyorBeltTile extends Tile {
             //path to T-Section conveyor belt
             this.variant = Variant.TSECTION;
             switch (velocity) {
-                case 1 ->this.path = getClass().getResource(pathToTSection).toString();
-                case 2 ->this.path = getClass().getResource(pathToFastTSection).toString();
+                case 1 -> {
+                    this.path = getClass().getResource(pathToTSection).toString();
+                    this.imageFXid = "ConveyorT";
+                }
+                case 2 -> {
+                    this.path = getClass().getResource(pathToFastTSection).toString();
+                    this.imageFXid = "FastConveyorT";
+                }
             }
         }
         else {

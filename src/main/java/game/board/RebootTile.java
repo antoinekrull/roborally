@@ -1,8 +1,8 @@
 package game.board;
 
-import game.player.Player;
-
 import static game.Game.spamDeck;
+
+import game.player.Player;
 
 /**
  * @author Firas
@@ -14,8 +14,9 @@ public class RebootTile extends Tile {
 
     //TODO: Direction needs to be added to constructor
     public RebootTile(int xCoordinate, int yCoordinate/*, Direction direction*/){
-        super(xCoordinate, yCoordinate, "/textures/gameboard/reboot.png");
+        super(xCoordinate, yCoordinate, "/textures/gameboard/reboot.png", "RebootTile");
         this.path = getClass().getResource("/textures/gameboard/reboot.png").toString();
+        this.imageFXid = "RebootTile";
         setType("RestartPoint");
         isDanger = false;
         isBlocking = false;

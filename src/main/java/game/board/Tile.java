@@ -2,8 +2,6 @@ package game.board;
 
 import game.player.Player;
 import java.util.ArrayList;
-
-import javafx.geometry.Orientation;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -66,6 +64,7 @@ public class Tile {
     }
 
     String path;
+    String imageFXid;
     protected int xCoordinate;
     protected int yCoordinate;
     protected int width;
@@ -77,7 +76,7 @@ public class Tile {
 
     public Tile(){}
 
-    public Tile(int xCoordinate, int yCoordinate, String path) {
+    public Tile(int xCoordinate, int yCoordinate, String path, String imageFXid) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         //position = new Pair<>(xCoordinate, yCoordinate);
@@ -111,6 +110,7 @@ public class Tile {
 
     public void makeImage(GridPane tiles){
         ImageView img = new ImageView();
+        img.setId(imageFXid);
         Image im = new Image(path,(double) height, 70,true,false);
         img.setImage(im);
         tiles.add(img,this.xCoordinate,this.yCoordinate);

@@ -11,6 +11,7 @@ import game.player.Robot;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -34,7 +35,6 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -289,6 +289,14 @@ public class ViewModelGameWindow {
                 }
                 Integer colIndex = GridPane.getColumnIndex(target);
                 Integer rowIndex = GridPane.getRowIndex(target);
+                List<Node> children = gameboard.getChildren();
+                for (Node child : children) {
+                    Integer childRow = GridPane.getRowIndex(child);
+                    Integer childCol = GridPane.getColumnIndex(child);
+                    if (childRow == rowIndex && childCol == colIndex) {
+                        System.out.println("Element at clicked position: " + child);
+                    }
+                }
                 System.out.println(colIndex + " " + rowIndex);
                 gameboard.add(img, colIndex, rowIndex);
             }
