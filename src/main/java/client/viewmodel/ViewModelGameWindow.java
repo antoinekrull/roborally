@@ -286,6 +286,8 @@ public class ViewModelGameWindow {
         });
     }
 
+
+
     public void setOnDragDetected(ImageView source) {
 
         source.setOnDragDetected(new EventHandler<MouseEvent>() {
