@@ -4,10 +4,8 @@ import client.connection.NotifyChangeSupport;
 import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
-import client.player.ClientPlayer;
 import communication.Message;
 import game.board.Tile;
-import game.player.Robot;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -148,7 +146,7 @@ public class ViewModelGameWindow {
         onRightClickRemoveProgrammingcard(programmingPane4);
         onRightClickRemoveProgrammingcard(programmingPane5);
 
-        selectStarttile(gameboard, new ClientPlayer(1, "Ralf", new Robot(1)));
+        selectStarttile(gameboard, modelGame.robotProperty().get());
     }
 
     public void receivedMessage() {
@@ -234,7 +232,6 @@ public class ViewModelGameWindow {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setPadding(new Insets(5, 5, 5, 10));
-
         Text text = new Text(groupMessage);
         TextFlow textFlow = new TextFlow(text);
         textFlow.setStyle(
@@ -271,8 +268,8 @@ public class ViewModelGameWindow {
         }
     }
 
-    public void selectStarttile (GridPane gameboard, ClientPlayer player) {
-        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_1_bunt.png");
+    public void selectStarttile (GridPane gameboard, int robot) {
+        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + robot + "_bunt.png");
         Image im = new Image(input, 50, 50, true, true);
         ImageView img = new ImageView(im);
         gameboard.setOnMouseClicked(event -> {
@@ -280,6 +277,7 @@ public class ViewModelGameWindow {
             Integer colIndex = GridPane.getColumnIndex(target);
             Integer rowIndex = GridPane.getRowIndex(target);
             if(target.getId() != null && target.getId().equals("StartTile")){
+                gameboard.getChildren().remove(img);
                 gameboard.add(img, colIndex, rowIndex);
             }
             else{
