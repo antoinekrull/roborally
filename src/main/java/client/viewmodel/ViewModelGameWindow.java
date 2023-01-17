@@ -86,6 +86,8 @@ public class ViewModelGameWindow {
     private int height = 150;
     private int columnIndex;
 
+    //private Tutorial tutorial;
+
 
 
     private NotifyChangeSupport notifyChangeSupport;
