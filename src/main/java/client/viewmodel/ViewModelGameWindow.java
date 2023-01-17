@@ -4,6 +4,8 @@ import client.connection.NotifyChangeSupport;
 import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
+import client.player.ClientPlayer;
+import client.ui.Tutorial;
 import communication.Message;
 import game.board.Tile;
 import java.io.IOException;
@@ -28,6 +30,7 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.*;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -43,7 +46,6 @@ import javafx.scene.text.TextFlow;
  * @author Tobias, Benedikt
  * @version 0.1
  */
-
 public class ViewModelGameWindow {
 
     public static ColumnConstraints gameboardTileColumn;
@@ -69,12 +71,22 @@ public class ViewModelGameWindow {
     @FXML
     private GridPane handGrid;
 
+    @FXML
+    private StackPane baseStackPane;
+    @FXML
+    private StackPane handStackPane;
+    @FXML
+    private StackPane programmingSpaceStackPane;
+    @FXML
+    private StackPane gameboardStackPane;
+
     private ModelChat modelChat;
     private ModelGame modelGame;
     private ModelUser modelUser;
 
     private int height = 150;
     private int columnIndex;
+    private Tutorial tutorial;
 
 
     private NotifyChangeSupport notifyChangeSupport;
@@ -146,6 +158,14 @@ public class ViewModelGameWindow {
         onRightClickRemoveProgrammingcard(programmingPane4);
         onRightClickRemoveProgrammingcard(programmingPane5);
 
+        //selectStarttile(gameboard, new ClientPlayer(1, "Ralf", new Robot(1)));
+
+        /*
+        this.tutorial = new Tutorial(baseStackPane, programmingSpaceStackPane, gameboardStackPane,
+                handStackPane, handGrid, programmingGrid, gameboard, modelUser.usernameProperty().get());
+        tutorial.loadGameWindowTutorial();
+
+         */
         selectStarttile(gameboard, modelGame.robotProperty().get());
     }
 
@@ -232,6 +252,7 @@ public class ViewModelGameWindow {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setPadding(new Insets(5, 5, 5, 10));
+
         Text text = new Text(groupMessage);
         TextFlow textFlow = new TextFlow(text);
         textFlow.setStyle(
