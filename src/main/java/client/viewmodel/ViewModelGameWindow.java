@@ -11,7 +11,6 @@ import game.player.Robot;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -272,36 +271,21 @@ public class ViewModelGameWindow {
         }
     }
 
-
     public void selectStarttile (GridPane gameboard, ClientPlayer player) {
         InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_1_bunt.png");
         Image im = new Image(input, 50, 50, true, true);
         ImageView img = new ImageView(im);
-        gameboard.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                Node target = (Node) event.getTarget();
-                if (target != gameboard) {
-                    Node parent;
-                    while ((parent = target.getParent()) != gameboard) {
-                        target = parent;
-                    }
-                }
-                Integer colIndex = GridPane.getColumnIndex(target);
-                Integer rowIndex = GridPane.getRowIndex(target);
-                List<Node> children = gameboard.getChildren();
-                for (Node child : children) {
-                    Integer childRow = GridPane.getRowIndex(child);
-                    Integer childCol = GridPane.getColumnIndex(child);
-                    if (childRow == rowIndex && childCol == colIndex) {
-                        System.out.println("Element at clicked position: " + child);
-                    }
-                }
-                System.out.println(colIndex + " " + rowIndex);
+        gameboard.setOnMouseClicked(event -> {
+            Node target = event.getPickResult().getIntersectedNode();
+            Integer colIndex = GridPane.getColumnIndex(target);
+            Integer rowIndex = GridPane.getRowIndex(target);
+            if(target.getId() != null && target.getId().equals("StartTile")){
                 gameboard.add(img, colIndex, rowIndex);
             }
+            else{
+                System.out.println("Ist kein Starttile");
             }
-            );
+        });
     }
 
     public void setOnDragDetected(ImageView source) {
