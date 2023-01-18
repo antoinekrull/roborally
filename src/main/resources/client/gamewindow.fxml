@@ -251,73 +251,109 @@
             </GridPane>
             <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
               <children>
-                        <StackPane fx:id="handStackPane" HBox.hgrow="ALWAYS">
-                           <children>
-                      <GridPane fx:id="handGrid" maxWidth="600.0" nodeOrientation="RIGHT_TO_LEFT">
-                        <columnConstraints>
-                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                        </columnConstraints>
-                        <rowConstraints>
-                          <RowConstraints minHeight="10.0" valignment="BOTTOM" vgrow="SOMETIMES" />
-                        </rowConstraints>
-                        <children>
-                          <ImageView fx:id="programCard1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+              <StackPane fx:id="handStackPane" HBox.hgrow="ALWAYS">
+              <children>
+                <GridPane fx:id="handGrid" alignment="CENTER" gridLinesVisible="true" maxWidth="700.0" nodeOrientation="RIGHT_TO_LEFT" prefWidth="700.0" HBox.hgrow="ALWAYS">
+                  <columnConstraints>
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                  </columnConstraints>
+                  <rowConstraints>
+                    <RowConstraints minHeight="10.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                  </rowConstraints>
+                  <children>
+                              <Pane fx:id="programCard1">
+                                 <children>
+                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                               <Image url="@../textures/cards/Again.png" />
                             </image>
                           </ImageView>
-                          <ImageView fx:id="programCard2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="programCard2" GridPane.columnIndex="1">
+                                 <children>
+                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                               <Image url="@../textures/cards/leftTurn.png" />
                             </image>
                           </ImageView>
-                          <ImageView fx:id="programCard3" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="programCard3" GridPane.columnIndex="2">
+                                 <children>
+                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                               <Image url="@../textures/cards/Move3.png" />
                             </image>
                           </ImageView>
-                          <ImageView fx:id="programCard4" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="programCard4" GridPane.columnIndex="3">
+                                 <children>
+                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                               <Image url="@../textures/cards/rightTurn.png" />
                             </image>
                           </ImageView>
-                          <ImageView fx:id="programCard5" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4">
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="programCard5" GridPane.columnIndex="4">
+                                 <children>
+                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                               <Image url="@../textures/cards/Move2.png" />
                             </image>
                           </ImageView>
-                          <ImageView fx:id="programCard6" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5">
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="programCard6" GridPane.columnIndex="5">
+                                 <children>
+                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                               <Image url="@../textures/cards/uTurn.png" />
                             </image>
                           </ImageView>
-                          <ImageView fx:id="programCard7" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6">
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="programCard7" GridPane.columnIndex="6">
+                                 <children>
+                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                               <Image url="@../textures/cards/Move3.png" />
                             </image>
                           </ImageView>
-                          <ImageView fx:id="programCard8" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7">
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="programCard8" GridPane.columnIndex="7">
+                                 <children>
+                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                               <Image url="@../textures/cards/Again.png" />
                             </image>
                           </ImageView>
-                          <ImageView fx:id="programCard9" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8">
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="programCard9" GridPane.columnIndex="8">
+                                 <children>
+                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                             <image>
                               <Image url="@../textures/cards/rightTurn.png" />
                             </image>
                           </ImageView>
-                        </children>
-                      </GridPane>
-                           </children>
-                        </StackPane>
+                                 </children>
+                              </Pane>
+                  </children>
+                </GridPane>
+              </children>
+              </StackPane>
               </children>
             </HBox>
           </children>
