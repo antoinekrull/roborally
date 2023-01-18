@@ -63,7 +63,7 @@
                             <RowConstraints minHeight="10.0" vgrow="ALWAYS" />
                         </rowConstraints>
                         <children>
-                            <Label fx:id="robot1" alignment="CENTER" contentDisplay="CENTER" styleClass="roboterlabel" text="Alduin" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
+                            <Label fx:id="robot1" alignment="CENTER" contentDisplay="CENTER" styleClass="roboterlabel" text="GuardCard" GridPane.hgrow="SOMETIMES" GridPane.vgrow="SOMETIMES">
                                 <graphic>
                                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                         <image>
