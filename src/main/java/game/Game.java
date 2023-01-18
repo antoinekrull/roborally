@@ -315,6 +315,9 @@ public class Game implements Runnable {
         while(!playerList.playersAreReady()) {
             System.out.println("Waiting for players to be ready");
             Thread.sleep(3000);
+            if(playerList.getAmountOfReadyPlayers() <= 1) {
+                runTimer();
+            }
         }
     }
 

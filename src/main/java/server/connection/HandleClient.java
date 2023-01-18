@@ -218,9 +218,7 @@ public class HandleClient implements Runnable{
                         jsonMap = content.lines().collect(Collectors.joining());
                         write(messageCreator.generateMapSelectedMessage(map));
                         game.board.createBoard(map);
-                        //should this be here?
-                        //Nein Moritz, das gehört hier nicht hin
-                        //game.run();
+
                         //write(messageCreator.generateGameStartedMessage(jsonMap));
 
                     } else if (incomingMessage.getMessageType() == MessageType.CurrentPlayer) {
