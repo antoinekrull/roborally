@@ -31,14 +31,14 @@
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           </columnConstraints>
           <rowConstraints>
-            <RowConstraints fx:id="rowUp" percentHeight="80.0" valignment="TOP" vgrow="ALWAYS" />
-            <RowConstraints percentHeight="20.0" valignment="BOTTOM" vgrow="ALWAYS" />
+            <RowConstraints fx:id="rowUp" percentHeight="90.0" valignment="TOP" vgrow="ALWAYS" />
+            <RowConstraints percentHeight="15.0" valignment="BOTTOM" vgrow="ALWAYS" />
           </rowConstraints>
           <children>
             <GridPane GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" percentWidth="70.0" />
-                <ColumnConstraints hgrow="SOMETIMES" percentWidth="30.0" />
+                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" percentWidth="70.0" />
+                <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" percentWidth="30.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
@@ -46,9 +46,9 @@
               <children>
                         <StackPane fx:id="gameboardStackPane">
                            <children>
-                      <GridPane fx:id="gameboard" alignment="CENTER">
+                      <GridPane fx:id="gameboard" alignment="CENTER" maxHeight="700.0" maxWidth="910.0" StackPane.alignment="CENTER_LEFT">
                         <columnConstraints>
-                          <ColumnConstraints fx:id="gameboardTileColumn" halignment="CENTER" hgrow="ALWAYS" />
+                          <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" />
                           <ColumnConstraints hgrow="ALWAYS" />
                           <ColumnConstraints hgrow="ALWAYS" />
                           <ColumnConstraints hgrow="ALWAYS" />
@@ -75,8 +75,8 @@
                           <RowConstraints vgrow="ALWAYS" />
                         </rowConstraints>
                         <children>
-                          <Region GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                          <Region fx:id="region0_1" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                          <Region fx:id="gameboardRegion" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                          <Region GridPane.columnIndex="0" GridPane.rowIndex="1" />
                           <Region GridPane.columnIndex="0" GridPane.rowIndex="2" />
                           <Region GridPane.columnIndex="0" GridPane.rowIndex="3" />
                           <Region GridPane.columnIndex="0" GridPane.rowIndex="4" />
@@ -206,6 +206,9 @@
                           <Region GridPane.columnIndex="12" GridPane.rowIndex="8" />
                           <Region GridPane.columnIndex="12" GridPane.rowIndex="9" />
                         </children>
+                                 <StackPane.margin>
+                                    <Insets left="20.0" />
+                                 </StackPane.margin>
                       </GridPane>
                            </children>
                         </StackPane>
@@ -253,7 +256,7 @@
               <children>
               <StackPane fx:id="handStackPane" HBox.hgrow="ALWAYS">
               <children>
-                <GridPane fx:id="handGrid" alignment="CENTER" gridLinesVisible="true" maxWidth="700.0" nodeOrientation="RIGHT_TO_LEFT" prefWidth="700.0" HBox.hgrow="ALWAYS">
+                <GridPane fx:id="handGrid" alignment="CENTER" gridLinesVisible="true" maxHeight="130.0" maxWidth="700.0" nodeOrientation="RIGHT_TO_LEFT" prefWidth="700.0" HBox.hgrow="ALWAYS">
                   <columnConstraints>
                     <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
                     <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
@@ -363,7 +366,7 @@
         </GridPane>
       </center>
       <top>
-        <VBox spacing="60.0" BorderPane.alignment="CENTER">
+        <VBox prefHeight="180.0" spacing="60.0" BorderPane.alignment="CENTER">
           <children>
                   <StackPane>
                      <children>

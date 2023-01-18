@@ -29,10 +29,10 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -47,7 +47,8 @@ import javafx.scene.text.TextFlow;
  */
 public class ViewModelGameWindow {
 
-    public static ColumnConstraints gameboardTileColumn;
+    @FXML
+    private Region gameboardRegion;
     public Pane programspacePane;
     @FXML
     private Button chatButton;
@@ -88,6 +89,12 @@ public class ViewModelGameWindow {
 
     //private Tutorial tutorial;
 
+    private double gameboardTileWidth = 70;
+
+    public double getGameboardTileWidth(){
+        return gameboardTileWidth;
+    }
+
 
 
     private NotifyChangeSupport notifyChangeSupport;
@@ -102,15 +109,11 @@ public class ViewModelGameWindow {
 
     public void initialize() {
         //TODO: Tiles resizeable
+        //Not functioning - TODO: Why?
+        //gameboardTileWidth = gameboardRegion.getWidth();
+
         ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
         placeTiles(map);
-
-        //TODO: Playerlist in server/viewmodel
-
-        /* PlayerList playerList = modelGame.getUsers();
-        placeRobots(playerList);
-        */
-
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
         chatVBox.heightProperty().addListener(new ChangeListener<Number>() {@Override
@@ -292,7 +295,8 @@ public class ViewModelGameWindow {
 
     public void selectStarttile (GridPane gameboard, int robot) {
         InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + robot + "_bunt.png");
-        Image im = new Image(input, 50, 50, true, true);
+        double width = getGameboardTileWidth();
+        Image im = new Image(input, width, width, true, true);
         ImageView img = new ImageView(im);
         gameboard.setOnMouseClicked(event -> {
             Node target = event.getPickResult().getIntersectedNode();
