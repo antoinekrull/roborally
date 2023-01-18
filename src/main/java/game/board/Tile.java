@@ -1,6 +1,5 @@
 package game.board;
 
-import client.viewmodel.ViewModelGameWindow;
 import game.player.Player;
 import java.util.ArrayList;
 import javafx.scene.image.Image;
@@ -111,10 +110,10 @@ public class Tile {
     public void makeImage(GridPane tiles){
         ImageView img = new ImageView();
         img.setId(imageFXid);
-        ViewModelGameWindow vm = new ViewModelGameWindow();
-        double width = vm.getGameboardTileWidth();
-        Image im = new Image(path,width,(double) height, true,false);
+        Image im = new Image(path,70,(double) height, true,true);
         img.setImage(im);
         tiles.add(img,this.xCoordinate,this.yCoordinate);
     }
+
+
 }

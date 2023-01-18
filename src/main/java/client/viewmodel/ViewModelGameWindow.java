@@ -29,6 +29,7 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -49,6 +50,8 @@ public class ViewModelGameWindow {
 
     @FXML
     private Region gameboardRegion;
+    @FXML
+    private ColumnConstraints gameboardColumn;
     public Pane programspacePane;
     @FXML
     private Button chatButton;
@@ -89,11 +92,9 @@ public class ViewModelGameWindow {
 
     //private Tutorial tutorial;
 
-    private double gameboardTileWidth = 70;
+    private double gameboardTileWidth;
 
-    public double getGameboardTileWidth(){
-        return gameboardTileWidth;
-    }
+
 
 
 
@@ -109,17 +110,26 @@ public class ViewModelGameWindow {
 
     public void initialize() {
         //TODO: Tiles resizeable
-        //Not functioning - TODO: Why?
-        //gameboardTileWidth = gameboardRegion.getWidth();
+
+
+        selectStarttile(gameboard, modelGame.robotProperty().get());
 
         ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
         placeTiles(map);
+
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
+
         chatVBox.heightProperty().addListener(new ChangeListener<Number>() {@Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
             chatScrollPane.setVvalue((Double) newValue);
         }
+        });
+
+        gameboardTileWidth = gameboardRegion.getWidth();
+        gameboardRegion.widthProperty().addListener((obs, oldValue, newValue) -> {
+            double width = newValue.doubleValue() * 0.04;
+            updateWidth(width);
         });
 
         setOnDragDetected(programCard1);
@@ -162,15 +172,27 @@ public class ViewModelGameWindow {
         onRightClickRemoveProgrammingcard(programmingPane4);
         onRightClickRemoveProgrammingcard(programmingPane5);
 
-        //selectStarttile(gameboard, new ClientPlayer(1, "Ralf", new Robot(1)));
-
         /*
         this.tutorial = new Tutorial(baseStackPane, programmingSpaceStackPane, gameboardStackPane,
                 handStackPane, handGrid, programmingGrid, gameboard, modelUser.usernameProperty().get());
         tutorial.loadGameWindowTutorial();
 
          */
-        selectStarttile(gameboard, modelGame.robotProperty().get());
+
+    }
+
+    public double getGameboardTileWidth(){
+        return gameboardTileWidth;
+    }
+
+    private void updateWidth(double width) {
+        for(Node node: gameboard.getChildren()){
+            if(node instanceof ImageView){
+                ImageView img = (ImageView)node;
+                img.setFitWidth(width);
+                img.setPreserveRatio(true);
+            }
+        }
     }
 
     public void receivedMessage() {
