@@ -27,13 +27,9 @@ public class Game implements Runnable {
     public static TrojanDeck trojanDeck = new TrojanDeck();
     public static WormDeck wormDeck = new WormDeck();
     public static int currentRegister = 0;
-
-    //TODO: Remove this?
     private LinkedList<Integer> readyList = new LinkedList<>();
     private String[] maps = {"DizzyHighway", "ExtraCrispy", "DeathTrap", "LostBearings"};
-
     private static Game INSTANCE;
-
     private ArrayList<CheckpointTile> checkpointTileArrayList = null;
     private ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
     private Server server;
@@ -322,7 +318,7 @@ public class Game implements Runnable {
         playerList.setPlayersPlaying(true);
         while(!playerList.playersAreReady()) {
             System.out.println("Waiting for players to be ready");
-            Thread.sleep(3000);
+            Thread.sleep(5000);
             if(playerList.getAmountOfReadyPlayers() <= 1) {
                 runTimer();
             }
@@ -397,6 +393,20 @@ public class Game implements Runnable {
     public void setJsonMap(String jsonMap) {
         this.jsonMap = jsonMap;
     }
+
+    public boolean checkIfStartTileIsTaken(int x, int y) {
+        boolean result = false;
+        for(StartTile startTile: Board.startTileList) {
+            if(startTile.getXCoordinate() == x && startTile.getYCoordinate() == y) {
+                if(startTile.isTaken()) {
+                    result = true;
+                    //Board.startTileList.remove(startTile);
+                }
+            }
+        }
+        return result;
+    }
+
     @Override
     public void run() {
         System.out.println("This game is running");

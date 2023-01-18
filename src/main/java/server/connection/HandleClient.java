@@ -238,13 +238,13 @@ public class HandleClient implements Runnable{
                                     incomingMessage.getMessageBody().getRegister(), true);
                             write(cardPlayedMessage);
                         }
-
                     } else if (incomingMessage.getMessageType() == MessageType.SetStartingPoint) {
                         int x = incomingMessage.getMessageBody().getX();
                         int y = incomingMessage.getMessageBody().getY();
                         Message startingPointTakenMessage = messageCreator.generateSetStartingPointMessage(x, y);
-                        //TODO: Check if starting point is taken
-                        server.messages.put(startingPointTakenMessage);
+                        if(game.checkIfStartTileIsTaken(x, y)){
+                            server.messages.put(startingPointTakenMessage);
+                        }
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
                         this.username = incomingMessage.getMessageBody().getName();
                         int figure = incomingMessage.getMessageBody().getFigure();

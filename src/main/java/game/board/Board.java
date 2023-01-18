@@ -16,12 +16,8 @@ import static java.lang.Integer.parseInt;
 public class Board {
     protected static int columns;
     protected static int rows;
-
     private int checkPointCount;
-
-
     protected static ArrayList<ArrayList<ArrayList<Tile>>> board = new ArrayList<ArrayList<ArrayList<Tile>>>();
-
     //Lists of used tiles on the board, would be iterated on during the activation phase
     public static ArrayList<ConveyorBeltTile> conveyorBelt2List = new ArrayList<>();
     public static ArrayList<ConveyorBeltTile> conveyorBelt1List = new ArrayList<>();
