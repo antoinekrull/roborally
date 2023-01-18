@@ -214,6 +214,33 @@ public class Client {
                         if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
 
                         }
+                        if (message.getMessageType().equals(MessageType.Movement)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.PlayerTurning)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.DrawDamage)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.PickDamage)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.Energy)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.GameFinished)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.CheckpointMoved)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.RegisterChosen)) {
+
+                        }
                     }
                 }
             } catch (IOException e) {
@@ -258,6 +285,20 @@ public class Client {
     public void sendSelectCard(String card, int register) {
         sendMessageToServer(messageCreator.generateSelectedCardMessage(card, register));
     }
+    //TODO: add method in messageCreator
+    public void sendSelectedDamageCards() {
+
+    }
+    public void sendRebootDirection(String direction) {
+        sendMessageToServer(messageCreator.generateRebootDirectionMessage(direction));
+    }
+    public void sendDiscardSome() {
+
+    }
+    public void sendRegister(int register) {
+        sendMessageToServer(messageCreator.generateChooseRegisterMessage(register));
+    }
+
 
 
 

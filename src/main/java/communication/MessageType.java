@@ -49,6 +49,6 @@ public enum MessageType {
     CheckPointReached,
     GameFinished,
     Sample,
-    PlayerList, Accepted, ConnectionUpdate, UpgradeBought, BuyUpgrade, DrawDamage, Boink, CheckpointMoved, ChooseRegister, RegisterChosen, Goodbye
+    PlayerList, Accepted, ConnectionUpdate, UpgradeBought, BuyUpgrade, DrawDamage, Boink, CheckpointMoved, ChooseRegister, RegisterChosen, PickDamage, Goodbye
     }
 
