@@ -33,6 +33,7 @@ public class HandleClient implements Runnable{
     public int port;
     public Socket socket;
     private String username;
+    private String jsonMap = null;
     //private ServerMain.Server serverMain;
 
     private Server server;
@@ -214,12 +215,13 @@ public class HandleClient implements Runnable{
                         String fileName = "/maps/"+map+".json";
                         InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream(fileName));
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
-                        String jsonmap = content.lines().collect(Collectors.joining());
+                        jsonMap = content.lines().collect(Collectors.joining());
                         write(messageCreator.generateMapSelectedMessage(map));
                         game.board.createBoard(map);
-                        write(messageCreator.generateGameStartedMessage(jsonmap));
                         //should this be here?
+                        //Nein Moritz, das gehört hier nicht hin
                         //game.run();
+                        //write(messageCreator.generateGameStartedMessage(jsonMap));
 
                     } else if (incomingMessage.getMessageType() == MessageType.CurrentPlayer) {
                         Game.playerList.getPlayerFromList(incomingMessage.getMessageBody().getClientID()).setPlaying(true);
@@ -235,7 +237,7 @@ public class HandleClient implements Runnable{
                                     incomingMessage.getMessageBody().getRegister(), true);
                             write(cardPlayedMessage);
                         }
-                        
+
                     } else if (incomingMessage.getMessageType() == MessageType.SetStartingPoint) {
                         int x = incomingMessage.getMessageBody().getX();
                         int y = incomingMessage.getMessageBody().getY();
@@ -284,6 +286,9 @@ public class HandleClient implements Runnable{
                             game.addReady(clientID);
                             if(game.getFirstReadyID() == clientID){
                                 write(messageCreator.generateSelectMapMessage(game.getMaps()));
+                            }
+                            if((game.getReadyList().size() >= 2)&this.jsonMap!=null){
+                                write(messageCreator.generateGameStartedMessage(jsonMap));
                             }
                         } else {
                             game.removeReady(clientID);
