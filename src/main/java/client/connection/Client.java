@@ -1,5 +1,6 @@
 package client.connection;
 
+import client.model.ModelUser;
 import client.player.ClientPlayerList;
 import communication.JsonSerializer;
 import communication.Message;
@@ -56,8 +57,11 @@ public class Client {
     private ClientPlayerList clientPlayerList;
     private ObservableList<String> maps;
 
+    private ModelUser modelUser;
+
 
     private Client() {
+
         this.messageCreator = new MessageCreator();
         this.message = new SimpleObjectProperty<>();
         this.userID = new SimpleIntegerProperty();
@@ -181,6 +185,7 @@ public class Client {
                             }
                         }
                         if (message.getMessageType().equals(MessageType.MapSelected)) {
+                            System.out.println("hab die map bekommen");
                             String map = message.getMessageBody().getMap();
                             Message mapMessage = messageCreator.generateSendChatMessage("Selected map: " + map);
                             Client.this.setMessage(mapMessage);
@@ -204,6 +209,8 @@ public class Client {
                         if (message.getMessageType().equals(MessageType.GameStarted)) {
                             Board board = new Board();
                             board.createBoard(message.getMessageBody().getGameMap());
+                            //TODO: connect to Model/ViewModel to switch scenes
+                            System.out.println("game started");
 
                         }
                         if (message.getMessageType().equals(MessageType.YourCards)) {

@@ -30,7 +30,7 @@ public class Server {
     public HashMap<Integer, HandleClient> CLIENTS = new HashMap<>();
     //Message type instead of Strings
     public LinkedBlockingQueue<Message> messages;
-    public int uniqueID = 0;
+    public int uniqueID = 1;
     public Boolean alive;
     public BooleanProperty online;
     MessageCreator messageCreator;
@@ -162,13 +162,14 @@ public class Server {
         }
         System.out.println("sendPlayerValuesToAll: " + " from " + message.getMessageBody().getClientID() + ", " + "with figure: " + message.getMessageBody().getFigure() + ", with name: " + message.getMessageBody().getName() + ", with id: " + message.getMessageBody().getClientID() + "\n");
     }
-
-    public static Game getGameInstance(){
-        if (game == null) {
-            game = new Game();
+    public void sendActivePhase(int phase) {
+        try {
+            messages.put(messageCreator.generateActivePhaseMessage(phase));
+        } catch (Exception e){
+            e.printStackTrace();
         }
-        return game;
     }
+
 
     public synchronized int getUniqueID() {
         return uniqueID++;

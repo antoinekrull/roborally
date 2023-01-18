@@ -7,6 +7,7 @@ import game.player.Player;
 import game.player.Robot;
 import org.javatuples.Pair;
 import server.connection.PlayerList;
+import server.connection.Server;
 
 import java.util.*;
 
@@ -35,8 +36,11 @@ public class Game implements Runnable {
 
     private ArrayList<CheckpointTile> checkpointTileArrayList = null;
     private ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
+    private Server server;
 
-    public Game() {}
+    private String jsonMap;
+
+    private Game(){}
 
     public static Game getInstance() {
         if(INSTANCE == null) {
@@ -295,12 +299,14 @@ public class Game implements Runnable {
     }
 
     public void runSetupPhase() {
+        server.sendActivePhase(0);
         System.out.println("Running Setup Phase now");
         System.out.println(maps[0]);
         playerList.setPlayerReadiness(false);
         while(!playerList.playersAreReady()) {
             //TODO: implement this properly
             //pickStartLocationForRobot();
+
         }
         //map name logic
         setStartDirectionForRobot(maps[0]);
@@ -308,9 +314,11 @@ public class Game implements Runnable {
     }
 
     private void runUpgradePhase(){
+        server.sendActivePhase(1);
 
     }
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
+        server.sendActivePhase(2);
         playerList.setPlayersPlaying(true);
         while(!playerList.playersAreReady()) {
             System.out.println("Waiting for players to be ready");
@@ -320,6 +328,7 @@ public class Game implements Runnable {
 
     //TODO: Make this private once testing in console is done
     public void runActivationPhase() throws Exception {
+        server.sendActivePhase(3);
         int playerRegisterLength = 5;
         while(!playerList.allPlayerRegistersActivated()) {
             for(int i = 0; i < playerList.size(); i++) {
@@ -338,6 +347,9 @@ public class Game implements Runnable {
             System.out.println("Applying tile effects");
             applyAllTileEffects();
         }
+    }
+    public void setServer(Server server) {
+        this.server = server;
     }
 
     private void activateRegister(Player player) throws Exception {
@@ -375,7 +387,13 @@ public class Game implements Runnable {
         //board.createBoard(map);
         //board.testBoard();
     }
+    public String getJsonMap() {
+        return jsonMap;
+    }
 
+    public void setJsonMap(String jsonMap) {
+        this.jsonMap = jsonMap;
+    }
     @Override
     public void run() {
         System.out.println("This game is running");
@@ -393,4 +411,5 @@ public class Game implements Runnable {
             }
         }
     }
+
 }
