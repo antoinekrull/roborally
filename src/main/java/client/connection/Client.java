@@ -211,6 +211,9 @@ public class Client {
                         if (message.getMessageType().equals(MessageType.NotYourCards)) {
 
                         }
+                        if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
+
+                        }
                     }
                 }
             } catch (IOException e) {
@@ -246,6 +249,17 @@ public class Client {
             sendMessageToServer(messageCreator.generateMapSelectedMessage(map));
         }
     }
+    public void sendPlayCard(String moveCard) {
+        sendMessageToServer(messageCreator.generatePlayCardMessage(moveCard));
+    }
+    public void sendStartingPoint(int x, int y) {
+        sendMessageToServer(messageCreator.generateSetStartingPointMessage(x, y));
+    }
+    public void sendSelectCard(String card, int register) {
+        sendMessageToServer(messageCreator.generateSelectedCardMessage(card, register));
+    }
+
+
 
     public void sendMessageToServer(Message message) {
         try {
