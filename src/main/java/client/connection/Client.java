@@ -211,6 +211,9 @@ public class Client {
                         if (message.getMessageType().equals(MessageType.NotYourCards)) {
 
                         }
+                        if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
+
+                        }
                     }
                 }
             } catch (IOException e) {

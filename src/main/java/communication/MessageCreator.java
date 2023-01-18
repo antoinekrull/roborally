@@ -244,5 +244,51 @@ import server.connection.PlayerList;
             messageBody.setMessage(message);
             return new Message(MessageType.Goodbye, messageBody);
         }
+
+        public Message generateConnectionUpdateMessage(int clientID, boolean isConnected, String action) {
+            MessageBody messageBody = new MessageBody();
+            messageBody.setClientID(clientID);
+            messageBody.setConnected(isConnected);
+            messageBody.setAction(action);
+            return new Message(MessageType.ConnectionUpdate, messageBody);
+        }
+
+        public Message generateBuyUpgradeMessage(boolean isBuying, String card) {
+            MessageBody messageBody = new MessageBody();
+            messageBody.setBuying(isBuying);
+            messageBody.setCard(card);
+            return new Message(MessageType.BuyUpgrade, messageBody);
+        }
+
+        public Message generateUpgradeBoughtMessage(int clientID, String card) {
+            MessageBody messageBody = new MessageBody();
+            messageBody.setClientID(clientID);
+            messageBody.setCard(card);
+            return new Message(MessageType.UpgradeBought, messageBody);
+        }
+
+        public Message generateCheckpointMovedMessage(int checkpointID, int x, int y) {
+            MessageBody messageBody = new MessageBody();
+            messageBody.setCheckpointID(checkpointID);
+            messageBody.setX(x);
+            messageBody.setY(y);
+            return new Message(MessageType.CheckpointMoved, messageBody);
+        }
+
+        public Message generateChooseRegisterMessage(int register) {
+            MessageBody messageBody = new MessageBody();
+            messageBody.setRegister(register);;
+            return new Message(MessageType.ChooseRegister, messageBody);
+        }
+
+        public Message generateRegisterChosenMessage(int clientID, int register) {
+            MessageBody messageBody = new MessageBody();
+            messageBody.setClientID(clientID);
+            messageBody.setRegister(register);;
+            return new Message(MessageType.RegisterChosen, messageBody);
+        }
+
+
+
 }
 

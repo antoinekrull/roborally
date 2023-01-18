@@ -40,6 +40,10 @@ public class MessageBody {
     private String source;
     private String gameMap;
     private int number;
+    private boolean isConnected;
+    private String action;
+    private boolean isBuying;
+    private int checkpointID;
 
     public int getNumber() {
         return number;
@@ -280,4 +284,38 @@ public class MessageBody {
     public void setProtocol(String protocol) {
         this.protocol = protocol;
     }
+
+    public boolean isConnected() {
+        return isConnected;
+    }
+
+    public void setConnected(boolean connected) {
+        isConnected = connected;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public boolean isBuying() {
+        return isBuying;
+    }
+
+    public void setBuying(boolean buying) {
+        isBuying = buying;
+    }
+
+    public int getCheckpointID() {
+        return checkpointID;
+    }
+
+    public void setCheckpointID(int checkpointID) {
+        this.checkpointID = checkpointID;
+    }
+
+
 }
