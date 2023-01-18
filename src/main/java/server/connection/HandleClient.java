@@ -216,8 +216,32 @@ public class HandleClient implements Runnable{
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
                         String jsonmap = content.lines().collect(Collectors.joining());
                         write(messageCreator.generateMapSelectedMessage(map));
+                        game.board.createBoard(map);
                         write(messageCreator.generateGameStartedMessage(jsonmap));
+                        //should this be here?
+                        //game.run();
 
+                    } else if (incomingMessage.getMessageType() == MessageType.CurrentPlayer) {
+                        Game.playerList.getPlayerFromList(incomingMessage.getMessageBody().getClientID()).setPlaying(true);
+                    } else if (incomingMessage.getMessageType() == MessageType.SelectedCard) {
+                        Game.playerList.getPlayerFromList(getClientID()).playCard(incomingMessage.getMessageBody().getCard(),
+                                incomingMessage.getMessageBody().getRegister());
+                        if(incomingMessage.getMessageBody().getCard().equals("Null")) {
+                            Message cardRemovedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
+                                    incomingMessage.getMessageBody().getRegister(), false);
+                            write(cardRemovedMessage);
+                        } else {
+                            Message cardPlayedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
+                                    incomingMessage.getMessageBody().getRegister(), true);
+                            write(cardPlayedMessage);
+                        }
+                        
+                    } else if (incomingMessage.getMessageType() == MessageType.SetStartingPoint) {
+                        int x = incomingMessage.getMessageBody().getX();
+                        int y = incomingMessage.getMessageBody().getY();
+                        Message startingPointTakenMessage = messageCreator.generateSetStartingPointMessage(x, y);
+                        //TODO: Check if starting point is taken
+                        write(startingPointTakenMessage);
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
                         this.username = incomingMessage.getMessageBody().getName();
                         int figure = incomingMessage.getMessageBody().getFigure();

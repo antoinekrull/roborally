@@ -153,6 +153,23 @@ public class Player {
         }
     }
 
+    public void playCard(String cardName, int index) {
+        Card card = null;
+        if(cardNameInHand(cardName)) {
+            card = hand.get(getIndexOfCard(cardName));
+        }
+        if(index == 0 && card instanceof AgainCard) {
+            System.out.println("You cant play this card in the first register, please try again!");
+        } else if(index > 0 || index < cardRegister.length){
+            System.out.println("The register has not been addressed properly, please try again!");
+        } else {
+            cardRegister[index] = card;
+        }
+        if(getEmptyRegisterAmount() == 0) {
+            setReady(true);
+        }
+    }
+
     public boolean allRegistersActivated() {
         boolean result = false;
         int registerCount = 0;
@@ -227,5 +244,39 @@ public class Player {
                 System.out.println(cardRegister[i].getCardName());
             }
         }
+    }
+
+    public boolean cardNameInHand(String cardName) {
+        boolean result = false;
+        for(int i = 0; i < hand.size(); i++) {
+            if(cardName.equals(hand.get(i).getCardName())) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    private int getIndexOfCard(Card card) {
+        int result = -1;
+        Object cardClass = card.getClass();
+        for(int i = 0; i < hand.size(); i++) {
+            if(hand.get(i).getCardName().equals(card.getCardName())) {
+                result = i;
+                break;
+            }
+        }
+        return result;
+    }
+
+    private int getIndexOfCard(String cardName) {
+        int result = -1;
+        Object cardClass = cardName.getClass();
+        for(int i = 0; i < hand.size(); i++) {
+            if(hand.get(i).getCardName().equals(cardName)) {
+                result = i;
+                break;
+            }
+        }
+        return result;
     }
 }

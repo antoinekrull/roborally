@@ -17,6 +17,7 @@ import java.util.TimerTask;
 public class Game implements Runnable {
     private GamePhase currentGamePhase;
     private Timer timer = new Timer();
+    private String mapName;
     public static PlayerList playerList;
     public Board board = new Board();
     private Player activePlayer;
@@ -294,9 +295,11 @@ public class Game implements Runnable {
     }
 
     public void runSetupPhase() {
+        System.out.println("Running Setup Phase now");
         System.out.println(maps[0]);
         playerList.setPlayerReadiness(false);
         while(!playerList.playersAreReady()) {
+            //TODO: implement this properly
             //pickStartLocationForRobot();
         }
         //map name logic
@@ -311,7 +314,7 @@ public class Game implements Runnable {
         playerList.setPlayersPlaying(true);
         while(!playerList.playersAreReady()) {
             System.out.println("Waiting for players to be ready");
-            Thread.sleep(10000);
+            Thread.sleep(3000);
         }
     }
 
@@ -376,7 +379,7 @@ public class Game implements Runnable {
     @Override
     public void run() {
         System.out.println("This game is running");
-        playerList.setPlayerReadiness(false);
+        runSetupPhase();
         while(true) {
             System.out.println("This game is running the Upgrade Phase now");
             runUpgradePhase();
