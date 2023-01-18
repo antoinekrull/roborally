@@ -1,5 +1,6 @@
 package client.connection;
 
+import client.RoboRallyStart;
 import client.player.ClientPlayerList;
 import communication.JsonSerializer;
 import communication.Message;
@@ -8,10 +9,13 @@ import communication.MessageType;
 import game.board.Board;
 import game.player.Robot;
 import client.player.ClientPlayer;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.util.Duration;
 import org.javatuples.Pair;
 
 import java.io.BufferedInputStream;
@@ -64,7 +68,7 @@ public class Client {
         this.isAI = new SimpleBooleanProperty();
         this.maps = FXCollections.observableArrayList();
         this.connected = new SimpleBooleanProperty();
-        this.accepted = new SimpleBooleanProperty();
+        this.accepted = new SimpleBooleanProperty(false);
         this.clientPlayerList = new ClientPlayerList();
         this.errorMessage = new SimpleStringProperty();
     }
@@ -107,8 +111,8 @@ public class Client {
         return accepted;
     }
 
-    public void setAcceptedProperty() {
-        this.accepted.set(true);
+    public void setAcceptedProperty(boolean accepted) {
+        this.accepted.set(accepted);
     }
 
     public ClientPlayerList getPlayerList() {
@@ -156,7 +160,7 @@ public class Client {
                             int clientID = message.getMessageBody().getClientID();
                             if (Client.this.userIDProperty().get() == clientID) {
                                 if(!Client.this.accepted.get()) {
-                                    Client.this.setAcceptedProperty();
+                                    Client.this.setAcceptedProperty(true);
                                 }
                             }
                             else {

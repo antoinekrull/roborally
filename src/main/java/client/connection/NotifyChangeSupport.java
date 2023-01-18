@@ -2,6 +2,7 @@ package client.connection;
 
 import client.viewmodel.ViewModelGameWindow;
 import client.viewmodel.ViewModelLobby;
+import client.viewmodel.ViewModelRobotSelection;
 
 /**
  * Notifier class. Actively notifies specific instances for changes.
@@ -13,10 +14,12 @@ public class NotifyChangeSupport {
 
     ViewModelGameWindow viewModelGameWindow;
     ViewModelLobby viewModelLobby;
+    ViewModelRobotSelection viewModelRobotSelection;
     private static NotifyChangeSupport notifyChangeSupport;
 
-    private Boolean lobby;
-    private Boolean gamewindow;
+    private boolean lobby;
+    private boolean gamewindow;
+    private boolean robotselection;
 
     private NotifyChangeSupport() {
 
@@ -32,12 +35,21 @@ public class NotifyChangeSupport {
         this.viewModelLobby = viewModelLobby;
         this.lobby = true;
         this.gamewindow = false;
+        this.robotselection = false;
     }
 
     public void setViewModelGameWindow(ViewModelGameWindow viewModelGameWindow) {
         this.viewModelGameWindow = viewModelGameWindow;
         this.lobby = false;
         this.gamewindow = true;
+        this.robotselection = false;
+    }
+
+    public void setViewModelRobotSelection(ViewModelRobotSelection viewModelRobotSelection) {
+        this.viewModelRobotSelection = viewModelRobotSelection;
+        this.lobby = false;
+        this.gamewindow = false;
+        this.robotselection = true;
     }
 
     public void notifyInstance() {
@@ -46,6 +58,9 @@ public class NotifyChangeSupport {
         }
         if (gamewindow) {
             viewModelGameWindow.receivedMessage();
+        }
+        if (robotselection) {
+            viewModelRobotSelection.robotAccepted();
         }
     }
 }

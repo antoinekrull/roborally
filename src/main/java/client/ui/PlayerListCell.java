@@ -9,6 +9,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.io.InputStream;
+
 public class PlayerListCell extends ListCell<ClientPlayer> {
     private final Label name = new Label();
     private final Label robot = new Label();
@@ -20,6 +22,8 @@ public class PlayerListCell extends ListCell<ClientPlayer> {
     public PlayerListCell() {
         super();
         name.setStyle("-fx-font-size: 16px;");
+        robotImage.setFitHeight(30);
+        robotImage.setFitWidth(30);
     }
 
     @Override
@@ -32,42 +36,61 @@ public class PlayerListCell extends ListCell<ClientPlayer> {
             name.setText(null);
             robot.setText(null);
             setGraphic(null);
-        }
-        else {
+        } else {
             if (item.getUsername().equals("Group")) {
                 name.setText("Active Player List");
-                name.setStyle("-fx-font-weight: bold;" + "-fx-text-fill: red;" + "-fx-font-size: 22px;");
+                name.setStyle("-fx-font-weight: bold;" + "-fx-text-fill: #d00707;" + "-fx-font-size: 22px;");
                 layout.setAlignment(Pos.CENTER);
-                layout.setStyle("-fx-background-color: #000000;");
                 robot.setText("");
-            }
-            else {
+            } else {
+                System.out.println("has changed: username: " + item.getUsername() + ", id: " + item.getId());
                 name.setText(item.getUsername());
                 name.setStyle("-fx-font-weight: bold;");
                 robot.setText("Roboter " + (item.getRobot() != null
                         ? item.getRobot().getFigure()
                         : 0));
-            }
 
+                layout.setSpacing(15);
+                if (item.getRobot() != null) {
+                    int roboter = item.getRobot().getFigure();
+                    if (roboter == 1) {
+                        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_1_bunt.png");
+                        robotImage.setImage(new Image(input));
+                    }
+                    if (roboter == 2) {
+                        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_2_bunt.png");
+                        robotImage.setImage(new Image(input));
+                    }
+                    if (roboter == 3) {
+                        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_3_bunt.png");
+                        robotImage.setImage(new Image(input));
+                    }
+                    if (roboter == 4) {
+                        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_4_bunt.png");
+                        robotImage.setImage(new Image(input));
+                    }
+                    if (roboter == 5) {
+                        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_5_bunt.png");
+                        robotImage.setImage(new Image(input));
+                    }
+                    if (roboter == 6) {
+                        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_6_bunt.png");
+                        robotImage.setImage(new Image(input));
+                    }
+
+                }
             /*
-            switch(item.getRobot().getFigure()) {
-                case -1: robotImage.setImage(null);
-                case 1: robotImage.setImage(new Image(""));
-                case 2: robotImage.setImage(new Image(""));
-                case 3: robotImage.setImage(new Image(""));
-                case 4: robotImage.setImage(new Image(""));
-                case 5: robotImage.setImage(new Image(""));
-                case 6: robotImage.setImage(new Image(""));
-            }
             if (item.isReady()) {
                 readyImage.setImage(new Image(""));
             }
             else {
                 readyImage.setImage(null);
             }
-             */
 
-            setGraphic(layout);
+             */
+            }
         }
+
+        setGraphic(layout);
     }
 }

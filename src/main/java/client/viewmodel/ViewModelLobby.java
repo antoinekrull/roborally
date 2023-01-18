@@ -98,11 +98,6 @@ public class ViewModelLobby {
         Platform.runLater(() -> chatTextfield.requestFocus());
 
         /*
-         * refreshes ListView when change happens
-         */
-        Platform.runLater(() -> userList.refresh());
-
-        /*
          * Adjusts VBox height and updates ScrollPane to latest message.
          */
         chatVBox.heightProperty().addListener(new ChangeListener<Number>() {

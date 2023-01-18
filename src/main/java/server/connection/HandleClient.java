@@ -33,7 +33,6 @@ public class HandleClient implements Runnable{
     public int port;
     public Socket socket;
     private String username;
-    //private ServerMain.Server serverMain;
 
     private Server server;
 
@@ -248,11 +247,14 @@ public class HandleClient implements Runnable{
 
                                 for(int i = 0; i < server.players.size(); i++) {
                                     if(server.players.get(i).getId() != getClientID()) {
-                                        Message addOtherPlayer = messageCreator.generatePlayerAddedMessage(server.players.get(i).getUsername(),server.players.get(i).getRobot().getFigure(), server.players.get(i).getId());
+                                        Message addOtherPlayer = messageCreator.generatePlayerAddedMessage(server.players.get(i).getUsername(), server.players.get(i).getRobot().getFigure(), server.players.get(i).getId());
                                         write(addOtherPlayer);
                                     }
                                 }
                             }
+                        }
+                        for (int i = 0; i < server.players.size(); i++) {
+                            System.out.println(server.players.get(i).getId() + " " + server.players.get(i).getUsername());
                         }
                     } else if(incomingMessage.getMessageType() == MessageType.SetStatus) {
                         boolean ready = incomingMessage.getMessageBody().isReady();
