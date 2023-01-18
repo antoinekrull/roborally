@@ -17,13 +17,15 @@ public class PushPanelTile extends Tile {
 
     ArrayList<Integer> activeRegisterList = new ArrayList<>();
     public PushPanelTile(int xCoordinate, int yCoordinate, Direction pushDirection, ArrayList<Integer> registers) {
-        super(xCoordinate, yCoordinate, "/textures/gameboard/pushPanel.png");
+        super(xCoordinate, yCoordinate, "/textures/gameboard/pushPanel.png", "PushPanel");
         if (registers.size()==2){
             this.path = getClass().getResource("/textures/gameboard/pushPanel.png").toString();
+            this.imageFXid = "PushPanelRegister2";
         }
         else {
             //TODO: change picture with new push panel with registers
             this.path = getClass().getResource("/textures/gameboard/pushPanel.png").toString();
+            this.imageFXid = "PushPanel";
         }
 
         setType("PushPanel");

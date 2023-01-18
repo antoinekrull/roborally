@@ -1,8 +1,8 @@
 package game.board;
 
-import game.player.Player;
-
 import static game.Game.spamDeck;
+
+import game.player.Player;
 
 /**
  * @author Firas
@@ -14,9 +14,10 @@ public class RebootTile extends Tile {
 
     //TODO: Direction needs to be added to constructor
     public RebootTile(int xCoordinate, int yCoordinate/*, Direction direction*/){
-        super(xCoordinate, yCoordinate, "/textures/gameboard/reboot.png");
+        super(xCoordinate, yCoordinate, "/textures/gameboard/reboot.png", "RebootTile");
         this.path = getClass().getResource("/textures/gameboard/reboot.png").toString();
-        //this.direction = direction;
+        this.imageFXid = "RebootTile";
+        setType("RestartPoint");
         isDanger = false;
         isBlocking = false;
         setRebootTileIndex(rebootTileIndex++);
@@ -43,7 +44,9 @@ public class RebootTile extends Tile {
         player.getPersonalDiscardPile().addCard(spamDeck.popCardFromDeck());
         //discard all cards in your programming deck, activation is cancelled
         player.setStatusRegister(true);
-        player.emptyAllCardRegisters();
+        for(int i = 0; i < 5; i++){
+            player.getPersonalDiscardPile().addCard(player.getCardFromRegister(i));
+        }
         //discard all cards in hand
         while(player.getHand().size()>0){
             player.getPersonalDiscardPile().addCard(player.getHand().get(0));

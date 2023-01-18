@@ -15,8 +15,9 @@ public class WallTile extends Tile {
 
     private ArrayList<Direction> blockedDirections;
     public WallTile(int xCoordinate, int yCoordinate, ArrayList<Direction> blockedDirections) {
-        super(xCoordinate, yCoordinate, "/textures/gameboard/wall.png");
+        super(xCoordinate, yCoordinate, "/textures/gameboard/wall.png", "WallTile");
         this.path = getClass().getResource("/textures/gameboard/wall.png").toString();
+        this.imageFXid = "WallTile";
         setType("Wall");
         isDanger = false;
         isBlocking = true;

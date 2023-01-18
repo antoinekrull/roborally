@@ -34,7 +34,6 @@ public class ModelUser {
         userID.bindBidirectional(client.userIDProperty());
         isAI = new SimpleBooleanProperty();
         isAI.bind(client.isAIProperty());
-
     }
 
     public static ModelUser getInstance() {

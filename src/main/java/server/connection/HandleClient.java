@@ -1,7 +1,5 @@
 package server.connection;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
@@ -206,7 +204,7 @@ public class HandleClient implements Runnable{
                             server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
                             //int toUser = getClientID();
                             //server.sendTo(toUser, messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
-                            //writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);
+                            ///writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
                         setAlive(true);
@@ -218,23 +216,16 @@ public class HandleClient implements Runnable{
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
                         String jsonmap = content.lines().collect(Collectors.joining());
                         write(messageCreator.generateMapSelectedMessage(map));
+                        write(messageCreator.generateGameStartedMessage(jsonmap));
 
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
-                        System.out.println("HandleClient: PlayerValues");
-                        System.out.println("message incoming: " + incomingMessage.getMessageType());
-                        System.out.println("content: " + incomingMessage.getMessageBody().getFigure() + " " + incomingMessage.getMessageBody().getName());
                         this.username = incomingMessage.getMessageBody().getName();
-                        System.out.println("Username registered from server: " + this.username + "\n");
                         int figure = incomingMessage.getMessageBody().getFigure();
                         if (server.players.size() == 0) {
-                            System.out.println("zero players reached");
-
                             Message robotAcceptedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
                             write(robotAcceptedMessage);
-
                             server.players.add(new Player(getClientID(), incomingMessage.getMessageBody().getName()
                                     , new Robot(incomingMessage.getMessageBody().getFigure())));
-                            System.out.println("Added because 0 players\n");
                         }
                         else {
                             boolean taken = false;
@@ -242,7 +233,6 @@ public class HandleClient implements Runnable{
                                 if (server.players.get(i).getRobot().getFigure() == figure) {
                                     taken = true;
                                     write(messageCreator.generateErrorMessage("Your figure was already chosen. Choose another one."));
-                                    System.out.println("Double figures\n");
                                     break;
                                 }
                             }
@@ -262,7 +252,6 @@ public class HandleClient implements Runnable{
                                         write(addOtherPlayer);
                                     }
                                 }
-                                System.out.println("new player\n");
                             }
                         }
                     } else if(incomingMessage.getMessageType() == MessageType.SetStatus) {
@@ -275,7 +264,7 @@ public class HandleClient implements Runnable{
                         } else {
                             game.removeReady(clientID);
                         }
-                        write(messageCreator.generatePlayerStatusMessage(clientID,ready));
+                        write(messageCreator.generatePlayerStatusMessage(clientID, ready));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

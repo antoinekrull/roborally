@@ -9,8 +9,9 @@ import game.player.Player;
 public class NormalTile extends Tile {
 
     public NormalTile(int xCoordinate, int yCoordinate) {
-        super(xCoordinate, yCoordinate, "/textures/gameboard/normalTile.png");
+        super(xCoordinate, yCoordinate, "/textures/gameboard/normalTile.png" , "NormalTile");
         this.path = getClass().getResource("/textures/gameboard/normalTile.png").toString();
+        this.imageFXid = "NormalTile";
         setType("Empty");
         isDanger = false;
         isBlocking = false;

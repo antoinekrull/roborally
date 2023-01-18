@@ -37,6 +37,15 @@ public class Robot {
     }
     public void setCurrentPosition(Pair<Integer, Integer> currentPosition) {
         this.currentPosition = currentPosition;
+        if(currentPosition.getValue0() < 13) {
+            this.currentPosition = currentPosition.setAt0(13);
+        } else if(currentPosition.getValue0() > 0) {
+            this.currentPosition = currentPosition.setAt0(0);
+        } else if(currentPosition.getValue1() < 10) {
+            this.currentPosition = currentPosition.setAt1(10);
+        } else if(currentPosition.getValue1() > 0) {
+            this.currentPosition = currentPosition.setAt1(0);
+        }
     }
     public int getCurrentObjective() {
         return currentObjective;

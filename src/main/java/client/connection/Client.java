@@ -1,16 +1,18 @@
 package client.connection;
 
+import client.player.ClientPlayerList;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import game.board.Board;
+import game.player.Robot;
+import client.player.ClientPlayer;
 import javafx.application.Platform;
-import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.javatuples.Triplet;
+import org.javatuples.Pair;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -41,17 +43,19 @@ public class Client {
     private BooleanProperty isAI;
     private ObjectProperty<Message> message;
     private IntegerProperty userID;
+    private StringProperty errorMessage;
     private Boolean prioPlayer = false;
+
+    public static ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
 
     MessageCreator messageCreator;
     String address = "localhost";
     int port = 3000;
     private String protocolVersion = "Version 1.0";
     private String group = "KnorrigeKorrelate";
-    private ObservableList<String> playersOnline;
-    private ObservableList<String> playersToChat;
-    private ObservableList<Triplet<String, Integer, Boolean>> playerIDs;
+    private ClientPlayerList clientPlayerList;
     private ObservableList<String> maps;
+
 
     private Client() {
         this.messageCreator = new MessageCreator();
@@ -59,11 +63,10 @@ public class Client {
         this.userID = new SimpleIntegerProperty();
         this.isAI = new SimpleBooleanProperty();
         this.maps = FXCollections.observableArrayList();
-        this.playersOnline = FXCollections.observableArrayList();
-        this.playersToChat = FXCollections.observableArrayList("All");
-        this.playerIDs = FXCollections.observableArrayList();
         this.connected = new SimpleBooleanProperty();
         this.accepted = new SimpleBooleanProperty();
+        this.clientPlayerList = new ClientPlayerList();
+        this.errorMessage = new SimpleStringProperty();
     }
 
     public static Client getInstance() {
@@ -71,14 +74,6 @@ public class Client {
             client = new Client();
         }
         return client;
-    }
-
-    public ObservableList<String> getPlayersOnline() {
-        return playersOnline;
-    }
-
-    public ObservableList<String> getPlayersToChat() {
-        return playersToChat;
     }
 
     public ObjectProperty<Message> messageProperty() {
@@ -95,10 +90,6 @@ public class Client {
 
     public void setUserID(int userID) {
         this.userID.set(userID);
-    }
-
-    public ObservableList<Triplet<String, Integer, Boolean>> getPlayerIDs() {
-        return playerIDs;
     }
 
     public BooleanProperty isAIProperty() {
@@ -120,11 +111,21 @@ public class Client {
         this.accepted.set(true);
     }
 
-   public void addPlayer(String username, int clientID) {
-        this.playersOnline.add(username);
-        this.playersToChat.add(username);
-        this.playerIDs.add(new Triplet<>(username, clientID, false));
-   }
+    public ClientPlayerList getPlayerList() {
+        return clientPlayerList;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage.get();
+    }
+
+    public StringProperty errorMessageProperty() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage.set(errorMessage);
+    }
 
     private class ReadMessagesFromServer implements Runnable {
         DataInputStream in = null;
@@ -140,7 +141,7 @@ public class Client {
                 out = new DataOutputStream(socket.getOutputStream());
                 String receiveMessage;
                 while (true) {
-                    if((receiveMessage =in.readUTF()) != null) {
+                    if((receiveMessage = in.readUTF()) != null) {
                         Message message = JsonSerializer.deserializeJson(receiveMessage, Message.class);
                         if (message.getMessageType().equals(MessageType.Alive)) {
                             sendAliveMessage();
@@ -154,16 +155,22 @@ public class Client {
                         if (message.getMessageType().equals(MessageType.PlayerAdded)) {
                             int clientID = message.getMessageBody().getClientID();
                             if (Client.this.userIDProperty().get() == clientID) {
-                                if (!Client.this.accepted.get()) {
+                                if(!Client.this.accepted.get()) {
                                     Client.this.setAcceptedProperty();
                                 }
-                            } else {
+                            }
+                            else {
                                 String username = message.getMessageBody().getName();
-                                Platform.runLater(() -> Client.this.addPlayer(username, clientID));
+                                int figure = message.getMessageBody().getFigure();
+                                if (!clientPlayerList.containsPlayer(clientID)) {
+                                    Platform.runLater(() -> Client.this.getPlayerList().add(new ClientPlayer(clientID, username, new Robot(figure))));
+                                }
                             }
                         }
                         if (message.getMessageType().equals(MessageType.PlayerStatus)) {
-
+                            int clientID = message.getMessageBody().getClientID();
+                            boolean ready = message.getMessageBody().isReady();
+                            clientPlayerList.changePlayerStatus(clientID, ready);
                         }
                         if (message.getMessageType().equals(MessageType.SelectMap)) {
                             prioPlayer = true;
@@ -182,7 +189,8 @@ public class Client {
                             Client.this.setMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.Error)) {
-                            System.out.println(message.getMessageBody().getError());
+                            String error = message.getMessageBody().getError();
+                            Platform.runLater(() -> Client.this.setErrorMessage(error));
                         }
                         if (message.getMessageType().equals(MessageType.CardPlayed)) {
 

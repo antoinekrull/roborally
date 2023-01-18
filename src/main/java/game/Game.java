@@ -10,12 +10,9 @@ import server.connection.PlayerList;
 
 import java.util.*;
 
-
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import static game.board.Board.robotLaserList;
 
 public class Game implements Runnable {
     private GamePhase currentGamePhase;
@@ -36,6 +33,7 @@ public class Game implements Runnable {
     private static Game INSTANCE;
 
     private ArrayList<CheckpointTile> checkpointTileArrayList = null;
+    private ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
 
     public Game() {}
 
@@ -57,13 +55,15 @@ public class Game implements Runnable {
     }
 
     private void applyAllTileEffects() throws Exception {
-        for(int x = 0; x < Board.conveyorBelt2List.size(); x++) {
-            for(int y = 0; y < playerList.size(); y++) {
-                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.conveyorBelt2List.get(x).getPosition())) {
-                    Board.conveyorBelt2List.get(x).applyEffect(playerList.get(y));
+        try {
+            for(int x = 0; x < Board.conveyorBelt2List.size(); x++) {
+                for(int y = 0; y < playerList.size(); y++) {
+                    if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.conveyorBelt2List.get(x).getPosition())) {
+                        Board.conveyorBelt2List.get(x).applyEffect(playerList.get(y));
+                    }
                 }
             }
-        }
+
         for(int x = 0; x < Board.conveyorBelt1List.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.conveyorBelt1List.get(x).getPosition())) {
@@ -113,6 +113,9 @@ public class Game implements Runnable {
                     Board.checkpointList.get(x).applyEffect(playerList.get(y));
                 }
             }
+        }
+        } catch(IndexOutOfBoundsException e) {
+            System.out.println("You're Robot can not move past this point");
         }
     }
 
@@ -335,7 +338,11 @@ public class Game implements Runnable {
     }
 
     private void activateRegister(Player player) throws Exception {
-        player.getCardFromRegister(currentRegister).applyEffect(player);
+        try{
+            player.getCardFromRegister(currentRegister).applyEffect(player);
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("This register was not activated because you're Robot can not move past this point");
+        }
     }
     public String[] getMaps(){return this.maps;}
     public void addReady(int clientID) {readyList.add(clientID);}

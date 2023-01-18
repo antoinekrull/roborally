@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelGameWindow">
+<StackPane fx:id="baseStackPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelGameWindow">
   <children>
     <Pane prefHeight="200.0" prefWidth="200.0" styleClass="gamewindowBackground" />
     <BorderPane prefHeight="1080.0" prefWidth="1920.0">
@@ -44,179 +44,172 @@
                 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
               </rowConstraints>
               <children>
-                <GridPane fx:id="gameboard" alignment="CENTER">
-                  <columnConstraints>
-                    <ColumnConstraints fx:id="gameboardTileColumn" halignment="CENTER" hgrow="ALWAYS" />
-                    <ColumnConstraints hgrow="ALWAYS" />
-                    <ColumnConstraints hgrow="ALWAYS" />
-                    <ColumnConstraints hgrow="ALWAYS" />
-                    <ColumnConstraints hgrow="ALWAYS" />
-                    <ColumnConstraints hgrow="ALWAYS" />
-                    <ColumnConstraints hgrow="ALWAYS" />
-                    <ColumnConstraints hgrow="ALWAYS" />
-                    <ColumnConstraints hgrow="ALWAYS" />
-                    <ColumnConstraints hgrow="ALWAYS" />
-                    <ColumnConstraints hgrow="ALWAYS" />
-                    <ColumnConstraints hgrow="ALWAYS" />
-                    <ColumnConstraints hgrow="ALWAYS" />
-                    <ColumnConstraints hgrow="ALWAYS" />
-                  </columnConstraints>
-                  <rowConstraints>
-                    <RowConstraints vgrow="ALWAYS" />
-                    <RowConstraints vgrow="ALWAYS" />
-                    <RowConstraints vgrow="ALWAYS" />
-                    <RowConstraints vgrow="ALWAYS" />
-                    <RowConstraints vgrow="ALWAYS" />
-                    <RowConstraints vgrow="ALWAYS" />
-                    <RowConstraints vgrow="ALWAYS" />
-                    <RowConstraints vgrow="ALWAYS" />
-                    <RowConstraints vgrow="ALWAYS" />
-                    <RowConstraints vgrow="ALWAYS" />
-                  </rowConstraints>
-                  <children>
-                    <Region GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                    <Region GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                    <Region GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                    <Region GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                    <Region GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                    <Region GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                    <Region GridPane.columnIndex="0" GridPane.rowIndex="6" />
-                    <Region GridPane.columnIndex="0" GridPane.rowIndex="7" />
-                    <Region GridPane.columnIndex="0" GridPane.rowIndex="8" />
-                    <Region GridPane.columnIndex="0" GridPane.rowIndex="9" />
-                    <Region GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                    <Region GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                    <Region GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                    <Region GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                    <Region GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                    <Region GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                    <Region GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                    <Region GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                    <Region GridPane.columnIndex="1" GridPane.rowIndex="8" />
-                    <Region GridPane.columnIndex="1" GridPane.rowIndex="9" />
-                    <Region GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                    <Region GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                    <Region GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                    <Region GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                    <Region GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                    <Region GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                    <Region GridPane.columnIndex="2" GridPane.rowIndex="6" />
-                    <Region GridPane.columnIndex="2" GridPane.rowIndex="7" />
-                    <Region GridPane.columnIndex="2" GridPane.rowIndex="8" />
-                    <Region GridPane.columnIndex="2" GridPane.rowIndex="9" />
-                    <Region GridPane.columnIndex="3" GridPane.rowIndex="0" />
-                    <Region GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                    <Region GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                    <Region GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                    <Region GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                    <Region GridPane.columnIndex="3" GridPane.rowIndex="5" />
-                    <Region GridPane.columnIndex="3" GridPane.rowIndex="6" />
-                    <Region GridPane.columnIndex="3" GridPane.rowIndex="7" />
-                    <Region GridPane.columnIndex="3" GridPane.rowIndex="8" />
-                    <Region GridPane.columnIndex="3" GridPane.rowIndex="9" />
-                    <Region GridPane.columnIndex="4" GridPane.rowIndex="0" />
-                    <Region GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                    <Region GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                    <Region GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                    <Region GridPane.columnIndex="4" GridPane.rowIndex="4" />
-                    <Region GridPane.columnIndex="4" GridPane.rowIndex="5" />
-                    <Region GridPane.columnIndex="4" GridPane.rowIndex="6" />
-                    <Region GridPane.columnIndex="4" GridPane.rowIndex="7" />
-                    <Region GridPane.columnIndex="4" GridPane.rowIndex="8" />
-                    <Region GridPane.columnIndex="4" GridPane.rowIndex="9" />
-                    <Region GridPane.columnIndex="5" GridPane.rowIndex="0" />
-                    <Region GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                    <Region GridPane.columnIndex="5" GridPane.rowIndex="2" />
-                    <Region GridPane.columnIndex="6" GridPane.rowIndex="3" />
-                    <Region GridPane.columnIndex="5" GridPane.rowIndex="4" />
-                    <Region GridPane.columnIndex="5" GridPane.rowIndex="5" />
-                    <Region GridPane.columnIndex="5" GridPane.rowIndex="6" />
-                    <Region GridPane.columnIndex="5" GridPane.rowIndex="7" />
-                    <Region GridPane.columnIndex="5" GridPane.rowIndex="8" />
-                    <Region GridPane.columnIndex="5" GridPane.rowIndex="9" />
-                    <Region GridPane.columnIndex="6" GridPane.rowIndex="0" />
-                    <Region GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                    <Region GridPane.columnIndex="6" GridPane.rowIndex="2" />
-                    <Region GridPane.columnIndex="6" GridPane.rowIndex="3" />
-                    <Region GridPane.columnIndex="6" GridPane.rowIndex="4" />
-                    <Region GridPane.columnIndex="6" GridPane.rowIndex="5" />
-                    <Region GridPane.columnIndex="6" GridPane.rowIndex="6" />
-                    <Region GridPane.columnIndex="6" GridPane.rowIndex="7" />
-                    <Region GridPane.columnIndex="6" GridPane.rowIndex="8" />
-                    <Region GridPane.columnIndex="6" GridPane.rowIndex="9" />
-                    <Region GridPane.columnIndex="7" GridPane.rowIndex="0" />
-                    <Region GridPane.columnIndex="7" GridPane.rowIndex="1" />
-                    <Region GridPane.columnIndex="7" GridPane.rowIndex="2" />
-                    <Region GridPane.columnIndex="7" GridPane.rowIndex="3" />
-                    <Region GridPane.columnIndex="7" GridPane.rowIndex="4" />
-                    <Region GridPane.columnIndex="7" GridPane.rowIndex="5" />
-                    <Region GridPane.columnIndex="7" GridPane.rowIndex="6" />
-                    <Region GridPane.columnIndex="7" GridPane.rowIndex="7" />
-                    <Region GridPane.columnIndex="7" GridPane.rowIndex="8" />
-                    <Region GridPane.columnIndex="7" GridPane.rowIndex="9" />
-                    <Region GridPane.columnIndex="8" GridPane.rowIndex="0" />
-                    <Region GridPane.columnIndex="8" GridPane.rowIndex="1" />
-                    <Region GridPane.columnIndex="8" GridPane.rowIndex="2" />
-                    <Region GridPane.columnIndex="8" GridPane.rowIndex="3" />
-                    <Region GridPane.columnIndex="8" GridPane.rowIndex="4" />
-                    <Region GridPane.columnIndex="8" GridPane.rowIndex="5" />
-                    <Region GridPane.columnIndex="8" GridPane.rowIndex="6" />
-                    <Region GridPane.columnIndex="8" GridPane.rowIndex="7" />
-                    <Region GridPane.columnIndex="8" GridPane.rowIndex="8" />
-                    <Region GridPane.columnIndex="8" GridPane.rowIndex="9" />
-                    <Region GridPane.columnIndex="9" GridPane.rowIndex="0" />
-                    <Region GridPane.columnIndex="9" GridPane.rowIndex="1" />
-                    <Region GridPane.columnIndex="9" GridPane.rowIndex="2" />
-                    <Region GridPane.columnIndex="9" GridPane.rowIndex="3" />
-                    <Region GridPane.columnIndex="9" GridPane.rowIndex="4" />
-                    <Region GridPane.columnIndex="9" GridPane.rowIndex="5" />
-                    <Region GridPane.columnIndex="9" GridPane.rowIndex="6" />
-                    <Region GridPane.columnIndex="9" GridPane.rowIndex="7" />
-                    <Region GridPane.columnIndex="9" GridPane.rowIndex="8" />
-                    <Region GridPane.columnIndex="9" GridPane.rowIndex="9" />
-                    <Region GridPane.columnIndex="10" GridPane.rowIndex="0" />
-                    <Region GridPane.columnIndex="10" GridPane.rowIndex="1" />
-                    <Region GridPane.columnIndex="10" GridPane.rowIndex="2" />
-                    <Region GridPane.columnIndex="10" GridPane.rowIndex="3" />
-                    <Region GridPane.columnIndex="10" GridPane.rowIndex="4" />
-                    <Region GridPane.columnIndex="10" GridPane.rowIndex="5" />
-                    <Region GridPane.columnIndex="10" GridPane.rowIndex="6" />
-                    <Region GridPane.columnIndex="10" GridPane.rowIndex="7" />
-                    <Region GridPane.columnIndex="10" GridPane.rowIndex="8" />
-                    <Region GridPane.columnIndex="10" GridPane.rowIndex="9" />
-                    <Region GridPane.columnIndex="11" GridPane.rowIndex="0" />
-                    <Region GridPane.columnIndex="11" GridPane.rowIndex="1" />
-                    <Region GridPane.columnIndex="11" GridPane.rowIndex="2" />
-                    <Region GridPane.columnIndex="11" GridPane.rowIndex="3" />
-                    <Region GridPane.columnIndex="11" GridPane.rowIndex="4" />
-                    <Region GridPane.columnIndex="11" GridPane.rowIndex="5" />
-                    <Region GridPane.columnIndex="11" GridPane.rowIndex="6" />
-                    <Region GridPane.columnIndex="11" GridPane.rowIndex="7" />
-                    <Region GridPane.columnIndex="11" GridPane.rowIndex="8" />
-                    <Region GridPane.columnIndex="11" GridPane.rowIndex="9" />
-                    <Region GridPane.columnIndex="12" GridPane.rowIndex="0" />
-                    <Region GridPane.columnIndex="12" GridPane.rowIndex="1" />
-                    <Region GridPane.columnIndex="12" GridPane.rowIndex="2" />
-                    <Region GridPane.columnIndex="12" GridPane.rowIndex="3" />
-                    <Region GridPane.columnIndex="12" GridPane.rowIndex="4" />
-                    <Region GridPane.columnIndex="12" GridPane.rowIndex="5" />
-                    <Region GridPane.columnIndex="12" GridPane.rowIndex="6" />
-                    <Region GridPane.columnIndex="12" GridPane.rowIndex="7" />
-                    <Region GridPane.columnIndex="12" GridPane.rowIndex="8" />
-                    <Region GridPane.columnIndex="12" GridPane.rowIndex="9" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="0" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="1" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="2" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="3" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="4" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="5" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="6" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="7" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="8" />
-                    <Region GridPane.columnIndex="13" GridPane.rowIndex="9" />
-                  </children>
-                </GridPane>
-                <StackPane GridPane.columnIndex="1">
+                        <StackPane fx:id="gameboardStackPane">
+                           <children>
+                      <GridPane fx:id="gameboard" alignment="CENTER">
+                        <columnConstraints>
+                          <ColumnConstraints fx:id="gameboardTileColumn" halignment="CENTER" hgrow="ALWAYS" />
+                          <ColumnConstraints hgrow="ALWAYS" />
+                          <ColumnConstraints hgrow="ALWAYS" />
+                          <ColumnConstraints hgrow="ALWAYS" />
+                          <ColumnConstraints hgrow="ALWAYS" />
+                          <ColumnConstraints hgrow="ALWAYS" />
+                          <ColumnConstraints hgrow="ALWAYS" />
+                          <ColumnConstraints hgrow="ALWAYS" />
+                          <ColumnConstraints hgrow="ALWAYS" />
+                          <ColumnConstraints hgrow="ALWAYS" />
+                          <ColumnConstraints hgrow="ALWAYS" />
+                          <ColumnConstraints hgrow="ALWAYS" />
+                          <ColumnConstraints hgrow="ALWAYS" />
+                        </columnConstraints>
+                        <rowConstraints>
+                          <RowConstraints vgrow="ALWAYS" />
+                          <RowConstraints vgrow="ALWAYS" />
+                          <RowConstraints vgrow="ALWAYS" />
+                          <RowConstraints vgrow="ALWAYS" />
+                          <RowConstraints vgrow="ALWAYS" />
+                          <RowConstraints vgrow="ALWAYS" />
+                          <RowConstraints vgrow="ALWAYS" />
+                          <RowConstraints vgrow="ALWAYS" />
+                          <RowConstraints vgrow="ALWAYS" />
+                          <RowConstraints vgrow="ALWAYS" />
+                        </rowConstraints>
+                        <children>
+                          <Region GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                          <Region fx:id="region0_1" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                          <Region GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                          <Region GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                          <Region GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                          <Region GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                          <Region GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                          <Region GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                          <Region GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                          <Region GridPane.columnIndex="0" GridPane.rowIndex="9" />
+                          <Region GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                          <Region GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                          <Region GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                          <Region GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                          <Region GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                          <Region GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                          <Region GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                          <Region GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                          <Region GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                          <Region GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                          <Region GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                          <Region GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                          <Region GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                          <Region GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                          <Region GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                          <Region GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                          <Region GridPane.columnIndex="2" GridPane.rowIndex="6" />
+                          <Region GridPane.columnIndex="2" GridPane.rowIndex="7" />
+                          <Region GridPane.columnIndex="2" GridPane.rowIndex="8" />
+                          <Region GridPane.columnIndex="2" GridPane.rowIndex="9" />
+                          <Region GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                          <Region GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                          <Region GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                          <Region GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                          <Region GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                          <Region GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                          <Region GridPane.columnIndex="3" GridPane.rowIndex="6" />
+                          <Region GridPane.columnIndex="3" GridPane.rowIndex="7" />
+                          <Region GridPane.columnIndex="3" GridPane.rowIndex="8" />
+                          <Region GridPane.columnIndex="3" GridPane.rowIndex="9" />
+                          <Region GridPane.columnIndex="4" GridPane.rowIndex="0" />
+                          <Region GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                          <Region GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                          <Region GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                          <Region GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                          <Region GridPane.columnIndex="4" GridPane.rowIndex="5" />
+                          <Region GridPane.columnIndex="4" GridPane.rowIndex="6" />
+                          <Region GridPane.columnIndex="4" GridPane.rowIndex="7" />
+                          <Region GridPane.columnIndex="4" GridPane.rowIndex="8" />
+                          <Region GridPane.columnIndex="4" GridPane.rowIndex="9" />
+                          <Region GridPane.columnIndex="5" GridPane.rowIndex="0" />
+                          <Region GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                          <Region GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                          <Region GridPane.columnIndex="6" GridPane.rowIndex="3" />
+                          <Region GridPane.columnIndex="5" GridPane.rowIndex="4" />
+                          <Region GridPane.columnIndex="5" GridPane.rowIndex="5" />
+                          <Region GridPane.columnIndex="5" GridPane.rowIndex="6" />
+                          <Region GridPane.columnIndex="5" GridPane.rowIndex="7" />
+                          <Region GridPane.columnIndex="5" GridPane.rowIndex="8" />
+                          <Region GridPane.columnIndex="5" GridPane.rowIndex="9" />
+                          <Region GridPane.columnIndex="6" GridPane.rowIndex="0" />
+                          <Region GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                          <Region GridPane.columnIndex="6" GridPane.rowIndex="2" />
+                          <Region GridPane.columnIndex="6" GridPane.rowIndex="3" />
+                          <Region GridPane.columnIndex="6" GridPane.rowIndex="4" />
+                          <Region GridPane.columnIndex="6" GridPane.rowIndex="5" />
+                          <Region GridPane.columnIndex="6" GridPane.rowIndex="6" />
+                          <Region GridPane.columnIndex="6" GridPane.rowIndex="7" />
+                          <Region GridPane.columnIndex="6" GridPane.rowIndex="8" />
+                          <Region GridPane.columnIndex="6" GridPane.rowIndex="9" />
+                          <Region GridPane.columnIndex="7" GridPane.rowIndex="0" />
+                          <Region GridPane.columnIndex="7" GridPane.rowIndex="1" />
+                          <Region GridPane.columnIndex="7" GridPane.rowIndex="2" />
+                          <Region GridPane.columnIndex="7" GridPane.rowIndex="3" />
+                          <Region GridPane.columnIndex="7" GridPane.rowIndex="4" />
+                          <Region GridPane.columnIndex="7" GridPane.rowIndex="5" />
+                          <Region GridPane.columnIndex="7" GridPane.rowIndex="6" />
+                          <Region GridPane.columnIndex="7" GridPane.rowIndex="7" />
+                          <Region GridPane.columnIndex="7" GridPane.rowIndex="8" />
+                          <Region GridPane.columnIndex="7" GridPane.rowIndex="9" />
+                          <Region GridPane.columnIndex="8" GridPane.rowIndex="0" />
+                          <Region GridPane.columnIndex="8" GridPane.rowIndex="1" />
+                          <Region GridPane.columnIndex="8" GridPane.rowIndex="2" />
+                          <Region GridPane.columnIndex="8" GridPane.rowIndex="3" />
+                          <Region GridPane.columnIndex="8" GridPane.rowIndex="4" />
+                          <Region GridPane.columnIndex="8" GridPane.rowIndex="5" />
+                          <Region GridPane.columnIndex="8" GridPane.rowIndex="6" />
+                          <Region GridPane.columnIndex="8" GridPane.rowIndex="7" />
+                          <Region GridPane.columnIndex="8" GridPane.rowIndex="8" />
+                          <Region GridPane.columnIndex="8" GridPane.rowIndex="9" />
+                          <Region GridPane.columnIndex="9" GridPane.rowIndex="0" />
+                          <Region GridPane.columnIndex="9" GridPane.rowIndex="1" />
+                          <Region GridPane.columnIndex="9" GridPane.rowIndex="2" />
+                          <Region GridPane.columnIndex="9" GridPane.rowIndex="3" />
+                          <Region GridPane.columnIndex="9" GridPane.rowIndex="4" />
+                          <Region GridPane.columnIndex="9" GridPane.rowIndex="5" />
+                          <Region GridPane.columnIndex="9" GridPane.rowIndex="6" />
+                          <Region GridPane.columnIndex="9" GridPane.rowIndex="7" />
+                          <Region GridPane.columnIndex="9" GridPane.rowIndex="8" />
+                          <Region GridPane.columnIndex="9" GridPane.rowIndex="9" />
+                          <Region GridPane.columnIndex="10" GridPane.rowIndex="0" />
+                          <Region GridPane.columnIndex="10" GridPane.rowIndex="1" />
+                          <Region GridPane.columnIndex="10" GridPane.rowIndex="2" />
+                          <Region GridPane.columnIndex="10" GridPane.rowIndex="3" />
+                          <Region GridPane.columnIndex="10" GridPane.rowIndex="4" />
+                          <Region GridPane.columnIndex="10" GridPane.rowIndex="5" />
+                          <Region GridPane.columnIndex="10" GridPane.rowIndex="6" />
+                          <Region GridPane.columnIndex="10" GridPane.rowIndex="7" />
+                          <Region GridPane.columnIndex="10" GridPane.rowIndex="8" />
+                          <Region GridPane.columnIndex="10" GridPane.rowIndex="9" />
+                          <Region GridPane.columnIndex="11" GridPane.rowIndex="0" />
+                          <Region GridPane.columnIndex="11" GridPane.rowIndex="1" />
+                          <Region GridPane.columnIndex="11" GridPane.rowIndex="2" />
+                          <Region GridPane.columnIndex="11" GridPane.rowIndex="3" />
+                          <Region GridPane.columnIndex="11" GridPane.rowIndex="4" />
+                          <Region GridPane.columnIndex="11" GridPane.rowIndex="5" />
+                          <Region GridPane.columnIndex="11" GridPane.rowIndex="6" />
+                          <Region GridPane.columnIndex="11" GridPane.rowIndex="7" />
+                          <Region GridPane.columnIndex="11" GridPane.rowIndex="8" />
+                          <Region GridPane.columnIndex="11" GridPane.rowIndex="9" />
+                          <Region GridPane.columnIndex="12" GridPane.rowIndex="0" />
+                          <Region GridPane.columnIndex="12" GridPane.rowIndex="1" />
+                          <Region GridPane.columnIndex="12" GridPane.rowIndex="2" />
+                          <Region GridPane.columnIndex="12" GridPane.rowIndex="3" />
+                          <Region GridPane.columnIndex="12" GridPane.rowIndex="4" />
+                          <Region GridPane.columnIndex="12" GridPane.rowIndex="5" />
+                          <Region GridPane.columnIndex="12" GridPane.rowIndex="6" />
+                          <Region GridPane.columnIndex="12" GridPane.rowIndex="7" />
+                          <Region GridPane.columnIndex="12" GridPane.rowIndex="8" />
+                          <Region GridPane.columnIndex="12" GridPane.rowIndex="9" />
+                        </children>
+                      </GridPane>
+                           </children>
+                        </StackPane>
+                <StackPane fx:id="programmingSpaceStackPane" GridPane.columnIndex="1">
                   <children>
                     <Pane fx:id="programspacePane" prefHeight="200.0" prefWidth="200.0" styleClass="programmierflaeche">
                       <children>
@@ -227,7 +220,7 @@
                         </ImageView>
                       </children>
                     </Pane>
-                    <GridPane fx:id="programmingGrid" hgap="10.0" StackPane.alignment="CENTER">
+                    <GridPane fx:id="programmingGrid" hgap="3.0" StackPane.alignment="CENTER">
                       <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
@@ -241,9 +234,6 @@
                       <StackPane.margin>
                         <Insets />
                       </StackPane.margin>
-                      <padding>
-                        <Insets bottom="100.0" top="340.0" />
-                      </padding>
                                  <children>
                                     <Pane fx:id="programmingPane1" prefHeight="200.0" prefWidth="200.0" />
                                     <Pane fx:id="programmingPane2" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
@@ -251,6 +241,9 @@
                                     <Pane fx:id="programmingPane4" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" />
                                     <Pane fx:id="programmingPane5" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" />
                                  </children>
+                                 <padding>
+                                    <Insets top="100.0" />
+                                 </padding>
                     </GridPane>
                   </children>
                 </StackPane>
@@ -258,69 +251,109 @@
             </GridPane>
             <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
               <children>
-                <GridPane maxWidth="600.0" nodeOrientation="RIGHT_TO_LEFT" HBox.hgrow="ALWAYS">
+              <StackPane fx:id="handStackPane" HBox.hgrow="ALWAYS">
+              <children>
+                <GridPane fx:id="handGrid" alignment="CENTER" gridLinesVisible="true" maxWidth="700.0" nodeOrientation="RIGHT_TO_LEFT" prefWidth="700.0" HBox.hgrow="ALWAYS">
                   <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
                   </columnConstraints>
                   <rowConstraints>
                     <RowConstraints minHeight="10.0" valignment="BOTTOM" vgrow="SOMETIMES" />
                   </rowConstraints>
                   <children>
-                    <ImageView fx:id="programCard1" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                      <image>
-                        <Image url="@../textures/cards/Again.png" />
-                      </image>
-                    </ImageView>
-                    <ImageView fx:id="programCard2" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
-                      <image>
-                        <Image url="@../textures/cards/leftTurn.png" />
-                      </image>
-                    </ImageView>
-                    <ImageView fx:id="programCard3" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
-                      <image>
-                        <Image url="@../textures/cards/Move3.png" />
-                      </image>
-                    </ImageView>
-                    <ImageView fx:id="programCard4" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3">
-                      <image>
-                        <Image url="@../textures/cards/rightTurn.png" />
-                      </image>
-                    </ImageView>
-                    <ImageView fx:id="programCard5" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="4">
-                      <image>
-                        <Image url="@../textures/cards/Move2.png" />
-                      </image>
-                    </ImageView>
-                    <ImageView fx:id="programCard6" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="5">
-                      <image>
-                        <Image url="@../textures/cards/uTurn.png" />
-                      </image>
-                    </ImageView>
-                    <ImageView fx:id="programCard7" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="6">
-                      <image>
-                        <Image url="@../textures/cards/Move3.png" />
-                      </image>
-                    </ImageView>
-                    <ImageView fx:id="programCard8" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="7">
-                      <image>
-                        <Image url="@../textures/cards/Again.png" />
-                      </image>
-                    </ImageView>
-                    <ImageView fx:id="programCard9" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="8">
-                      <image>
-                        <Image url="@../textures/cards/rightTurn.png" />
-                      </image>
-                    </ImageView>
+                              <Pane fx:id="programCard1">
+                                 <children>
+                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                              <Image url="@../textures/cards/Again.png" />
+                            </image>
+                          </ImageView>
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="programCard2" GridPane.columnIndex="1">
+                                 <children>
+                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                              <Image url="@../textures/cards/leftTurn.png" />
+                            </image>
+                          </ImageView>
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="programCard3" GridPane.columnIndex="2">
+                                 <children>
+                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                              <Image url="@../textures/cards/Move3.png" />
+                            </image>
+                          </ImageView>
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="programCard4" GridPane.columnIndex="3">
+                                 <children>
+                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                              <Image url="@../textures/cards/rightTurn.png" />
+                            </image>
+                          </ImageView>
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="programCard5" GridPane.columnIndex="4">
+                                 <children>
+                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                              <Image url="@../textures/cards/Move2.png" />
+                            </image>
+                          </ImageView>
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="programCard6" GridPane.columnIndex="5">
+                                 <children>
+                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                              <Image url="@../textures/cards/uTurn.png" />
+                            </image>
+                          </ImageView>
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="programCard7" GridPane.columnIndex="6">
+                                 <children>
+                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                              <Image url="@../textures/cards/Move3.png" />
+                            </image>
+                          </ImageView>
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="programCard8" GridPane.columnIndex="7">
+                                 <children>
+                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                              <Image url="@../textures/cards/Again.png" />
+                            </image>
+                          </ImageView>
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="programCard9" GridPane.columnIndex="8">
+                                 <children>
+                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                              <Image url="@../textures/cards/rightTurn.png" />
+                            </image>
+                          </ImageView>
+                                 </children>
+                              </Pane>
                   </children>
                 </GridPane>
+              </children>
+              </StackPane>
               </children>
             </HBox>
           </children>
@@ -369,49 +402,53 @@
                         <Image url="@../textures/cards/SPAM.png" />
                       </image>
                     </ImageView>
-                    <Pane fx:id="toprightRow" HBox.hgrow="ALWAYS">
-                      <children>
-                        <ScrollPane fx:id="chatScrollPane" hbarPolicy="NEVER" minHeight="80.0" minWidth="300.0" prefHeight="${toprightRow.height}" vbarPolicy="ALWAYS">
-                          <content>
-                            <VBox fx:id="chatVBox" />
-                          </content>
-                          <padding>
-                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                          </padding>
-                        </ScrollPane>
-                        <HBox layoutY="80.0">
-                          <children>
-                            <TextField fx:id="chatTextfield" focusTraversable="false" prefHeight="30.0" prefWidth="388.0" promptText="Type here...">
-                              <font>
-                                <Font name="Hiragino Sans W2" size="13.0" />
-                              </font>
-                            </TextField>
-                            <Button fx:id="chatButton" mnemonicParsing="false" onAction="#chatButtonOnAction" prefHeight="26.0" prefWidth="55.0">
-                              <opaqueInsets>
-                                <Insets />
-                              </opaqueInsets>
-                              <graphic>
-                                <Label fx:id="sendLabel">
-                                  <font>
-                                    <Font name="Hiragino Sans W2" size="11.0" />
-                                  </font>
-                                  <graphic>
-                                    <ImageView fitHeight="18.0" fitWidth="24.0">
-                                      <image>
-                                        <Image url="@Send_Image.png" />
-                                      </image>
-                                    </ImageView>
-                                  </graphic>
-                                </Label>
-                              </graphic>
-                            </Button>
-                          </children>
-                        </HBox>
-                      </children>
-                      <HBox.margin>
-                        <Insets bottom="30.0" />
-                      </HBox.margin>
-                    </Pane>
+                              <StackPane fx:id="chatStackPane" HBox.hgrow="ALWAYS">
+                                 <HBox.margin>
+                                    <Insets bottom="30.0" />
+                                 </HBox.margin>
+                                 <children>
+                          <Pane fx:id="toprightRow">
+                            <children>
+                              <ScrollPane fx:id="chatScrollPane" hbarPolicy="NEVER" minHeight="80.0" minWidth="300.0" prefHeight="${toprightRow.height}" vbarPolicy="ALWAYS">
+                                <content>
+                                  <VBox fx:id="chatVBox" />
+                                </content>
+                                <padding>
+                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                </padding>
+                              </ScrollPane>
+                              <HBox layoutY="80.0">
+                                <children>
+                                  <TextField fx:id="chatTextfield" focusTraversable="false" prefHeight="30.0" prefWidth="388.0" promptText="Type here...">
+                                    <font>
+                                      <Font name="Hiragino Sans W2" size="13.0" />
+                                    </font>
+                                  </TextField>
+                                  <Button fx:id="chatButton" mnemonicParsing="false" onAction="#chatButtonOnAction" prefHeight="26.0" prefWidth="55.0">
+                                    <opaqueInsets>
+                                      <Insets />
+                                    </opaqueInsets>
+                                    <graphic>
+                                      <Label fx:id="sendLabel">
+                                        <font>
+                                          <Font name="Hiragino Sans W2" size="11.0" />
+                                        </font>
+                                        <graphic>
+                                          <ImageView fitHeight="18.0" fitWidth="24.0">
+                                            <image>
+                                              <Image url="@Send_Image.png" />
+                                            </image>
+                                          </ImageView>
+                                        </graphic>
+                                      </Label>
+                                    </graphic>
+                                  </Button>
+                                </children>
+                              </HBox>
+                            </children>
+                          </Pane>
+                                 </children>
+                              </StackPane>
                   </children>
                 </HBox>
                 <GridPane maxWidth="600.0" GridPane.rowIndex="1">

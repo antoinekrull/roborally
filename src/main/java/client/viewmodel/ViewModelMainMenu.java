@@ -1,7 +1,6 @@
 package client.viewmodel;
 
 import client.RoboRallyStart;
-import client.connection.NotifyChangeSupport;
 import client.model.ModelUser;
 import java.io.IOException;
 import javafx.animation.KeyFrame;

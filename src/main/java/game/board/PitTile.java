@@ -11,8 +11,9 @@ public class PitTile extends Tile {
     private int rebootTileIndex;
 
     public PitTile(int xCoordinate, int yCoordinate) {
-        super(xCoordinate, yCoordinate, "/textures/gameboard/pit.png");
+        super(xCoordinate, yCoordinate, "/textures/gameboard/pit.png", "PitTile");
         this.path = getClass().getResource("/textures/gameboard/pit.png").toString();
+        this.imageFXid = "PitTile";
         setType("Pit");
         isDanger = true;
         isBlocking = false;
