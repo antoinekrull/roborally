@@ -39,7 +39,9 @@ public class Game implements Runnable {
 
     private String jsonMap;
 
-    private Game(){}
+    private Game(){
+        new Thread(this).start();
+    }
 
     public static Game getInstance() {
         if(INSTANCE == null) {
@@ -412,7 +414,15 @@ public class Game implements Runnable {
     @Override
     public void run() {
         logger.debug("This game is running");
-        runSetupPhase();
+        boolean readyToStart = false;
+        while(!readyToStart){
+            if (readyList.size()>=2){
+                readyToStart = true;
+                System.out.println("i can start now");
+            }
+        }
+
+        /*runSetupPhase();
         while(true) {
             logger.debug("This game is running the Upgrade Phase now");
             runUpgradePhase();
@@ -424,7 +434,7 @@ public class Game implements Runnable {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-        }
+        }*/
     }
 
 }

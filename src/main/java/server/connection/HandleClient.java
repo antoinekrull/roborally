@@ -288,12 +288,12 @@ public class HandleClient implements Runnable{
                         boolean ready = incomingMessage.getMessageBody().isReady();
                         if(ready){
                             game.addReady(clientID);
-                            if(game.getFirstReadyID() == clientID){
+                            /*if(game.getFirstReadyID() == clientID){
                                 write(messageCreator.generateSelectMapMessage(game.getMaps()));
                             }
                             if((game.getReadyList().size() >= 2)&&game.getJsonMap()!=null){
                                 server.messages.put(messageCreator.generateGameStartedMessage(game.getJsonMap()));
-                            }
+                            }*/
                         } else {
                             game.removeReady(clientID);
                         }
