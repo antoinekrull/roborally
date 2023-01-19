@@ -220,7 +220,10 @@ public class Client {
                         }
                         if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
                             int clientID = message.getMessageBody().getClientID();
-                            Platform.runLater(() -> Client.this.clientPlayerList.remove(clientID));
+                            String action = message.getMessageBody().getAction();
+                            if (action.equals("Remove")) {
+                                Platform.runLater(() -> Client.this.clientPlayerList.remove(clientID));
+                            }
                         }
                         if (message.getMessageType().equals(MessageType.Movement)) {
 
