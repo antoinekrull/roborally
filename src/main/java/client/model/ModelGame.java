@@ -7,13 +7,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import game.Game;
 import game.board.Board;
 import game.board.Tile;
-import javafx.beans.property.*;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import java.util.ArrayList;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import java.util.ArrayList;
 
 /**
  * Model for game
@@ -98,5 +98,9 @@ public class ModelGame {
     }
     public void sendPlayerInformation(String nickname) {
         client.sendPlayerValuesMessage(nickname, robotProperty.get());
+    }
+
+    public void sendStarttileCoordinates( int x, int y){
+        client.sendStartingPoint(x, y);
     }
 }
