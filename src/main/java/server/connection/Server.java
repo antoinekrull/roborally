@@ -174,6 +174,56 @@ public class Server {
         }
     }
 
+    public void sendYourCards(Player player) {
+        String[] cardsInHand = new String[player.getHand().size()];
+        for(int i = 0; i < player.getHand().size(); i++) {
+            cardsInHand[i] = player.getHand().get(i).getCardName();
+        }
+        try {
+            CLIENTS.get(player.getId()).write(messageCreator.generateYourCardsMessage(cardsInHand));
+            //TODO: Client side has to ignore this message if his id is identical to the one in the messageBody
+            messages.put(messageCreator.generateNotYourCardsMessage(player.getId(), player.getHand().size()));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void sendShuffleCoding(Player player) {
+        try {
+            CLIENTS.get(player.getId()).write(messageCreator.generateShuffleCodingMessage(player.getId()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendTimerStarted() {
+        try {
+            messages.put(messageCreator.generateTimerStartedMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendTimerEnded(PlayerList latePlayers) {
+        int[] latePlayerIds = new int[latePlayers.size()];
+        for(int i = 0; i < latePlayers.size(); i++) {
+            latePlayerIds[i] = latePlayers.get(i).getId();
+        }
+        try {
+            messages.put(messageCreator.generateTimerEndedMessage(latePlayerIds));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendCardsYouGotNow(Player player, String[] cardNames) {
+        try {
+            CLIENTS.get(player.getId()).write(messageCreator.generateCardsYouGotNowMessage(cardNames));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public synchronized int getUniqueID() {
         return uniqueID++;

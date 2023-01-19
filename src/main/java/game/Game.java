@@ -249,13 +249,15 @@ public class Game implements Runnable {
         return result;
     }
 
-    //TODO: Implement this
     public void runTimer() {
+        server.sendTimerStarted();
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
                 PlayerList unreadyPlayers = playerList.getUnreadyPlayers();
                 for (int i = 0; i < unreadyPlayers.size(); i++) {
+                    String[] placedCards = unreadyPlayers.get(i).fillRegisterWithRandomCards();
+                    server.sendCardsYouGotNow(unreadyPlayers.get(i), placedCards);
                     unreadyPlayers.get(i).fillRegisterWithRandomCards();
 
                     // for testing purposes
@@ -265,6 +267,7 @@ public class Game implements Runnable {
             }
         };
         timer.schedule(timerTask, 30000);
+        server.sendTimerEnded(playerList.getUnreadyPlayers());
     }
 
     public GamePhase getCurrentGamePhase() {
@@ -297,7 +300,7 @@ public class Game implements Runnable {
         }
     }
 
-    public void runSetupPhase() {
+    private void runSetupPhase() {
         server.sendActivePhase(0);
         System.out.println("Running Setup Phase now");
         System.out.println(maps[0]);
@@ -318,6 +321,9 @@ public class Game implements Runnable {
     }
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
         server.sendActivePhase(2);
+        for(int i = 0; i < playerList.size(); i++) {
+            server.sendYourCards(playerList.get(i));
+        }
         playerList.setPlayersPlaying(true);
         while(!playerList.playersAreReady()) {
             logger.info("Waiting for players to be ready");
@@ -327,9 +333,7 @@ public class Game implements Runnable {
             }
         }
     }
-
-    //TODO: Make this private once testing in console is done
-    public void runActivationPhase() throws Exception {
+    private void runActivationPhase() throws Exception {
         server.sendActivePhase(3);
         int playerRegisterLength = 5;
         while(!playerList.allPlayerRegistersActivated()) {
@@ -339,6 +343,7 @@ public class Game implements Runnable {
                 playerList.get(i).setStatusRegister(true, currentRegister);
             }
             currentRegister++;
+            determinePriority();
             //checks if all registers have been activated
             if(currentRegister == playerRegisterLength) {
                 for(int i = 0; i < playerList.size(); i++) {
@@ -383,12 +388,6 @@ public class Game implements Runnable {
         return readyList;
     }
 
-
-    //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    public void createBoard(String map) throws JsonProcessingException {
-        //board.createBoard(map);
-        //board.testBoard();
-    }
     public String getJsonMap() {
         return jsonMap;
     }
