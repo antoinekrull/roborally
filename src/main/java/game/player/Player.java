@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author Moritz, Dominic, Antoine, Firas
@@ -28,6 +30,7 @@ public class Player {
     private boolean[] statusRegister = new boolean[5];
     private ProgrammingDeck personalDiscardPile;
     private Robot robot;
+    private final Logger logger = LogManager.getLogger(Player.class);
 
     public Player(int id, String username, Robot robot) {
         this.id = id;
@@ -145,9 +148,9 @@ public class Player {
     //TODO: Add GUI functionality / exceptions
     public void playCard(Card card, int index) {
         if(index == 0 && card instanceof AgainCard) {
-            System.out.println("You cant play this card in the first register, please try again!");
+            logger.info("You cant play this card in the first register, please try again!");
         } else if(index > 0 || index < cardRegister.length){
-            System.out.println("The register has not been addressed properly, please try again!");
+            logger.info("The register has not been addressed properly, please try again!");
         } else {
             cardRegister[index] = card;
         }
@@ -193,7 +196,7 @@ public class Player {
                     if(hand.size() > 0) {
                         cardRegister[y] = discard(random.nextInt(hand.size()));
                     }
-                    System.out.println("Hand too empty to fill all registers");
+                    logger.info("Hand too empty to fill all registers");
                 }
             }
         }
@@ -232,16 +235,16 @@ public class Player {
     //for testing purposes
     public void printHand() {
         for(int i = 0; i < hand.size(); i++) {
-            System.out.println(hand.get(i).getCardName());
+            logger.debug(hand.get(i).getCardName());
         }
     }
 
     public void printRegisters() {
         for(int i = 0; i < cardRegister.length; i++) {
             if(cardRegister[i] == null) {
-                System.out.println("null");
+                logger.debug("null");
             } else {
-                System.out.println(cardRegister[i].getCardName());
+                logger.info(cardRegister[i].getCardName());
             }
         }
     }

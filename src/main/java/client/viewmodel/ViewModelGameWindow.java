@@ -33,11 +33,14 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * ViewModel for gamescreen
@@ -47,7 +50,10 @@ import javafx.scene.text.TextFlow;
  */
 public class ViewModelGameWindow {
 
-    public static ColumnConstraints gameboardTileColumn;
+    @FXML
+    private Region gameboardRegion;
+    @FXML
+    private ColumnConstraints gameboardColumn;
     public Pane programspacePane;
     @FXML
     private Button chatButton;
@@ -88,9 +94,14 @@ public class ViewModelGameWindow {
 
     //private Tutorial tutorial;
 
+    private double gameboardTileWidth;
+
+
+
 
 
     private NotifyChangeSupport notifyChangeSupport;
+    private final Logger logger = LogManager.getLogger(ViewModelGameWindow.class);
 
     public ViewModelGameWindow() {
         this.modelChat = ModelChat.getInstance();
@@ -102,21 +113,26 @@ public class ViewModelGameWindow {
 
     public void initialize() {
         //TODO: Tiles resizeable
+
+
+        selectStarttile(gameboard, modelGame.robotProperty().get());
+
         ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
         placeTiles(map);
 
-        //TODO: Playerlist in server/viewmodel
-
-        /* PlayerList playerList = modelGame.getUsers();
-        placeRobots(playerList);
-        */
-
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
+
         chatVBox.heightProperty().addListener(new ChangeListener<Number>() {@Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
             chatScrollPane.setVvalue((Double) newValue);
         }
+        });
+
+        gameboardTileWidth = gameboardRegion.getWidth();
+        gameboardRegion.widthProperty().addListener((obs, oldValue, newValue) -> {
+            double width = newValue.doubleValue() * 0.04;
+            updateWidth(width);
         });
 
         setOnDragDetected(programCard1);
@@ -159,15 +175,27 @@ public class ViewModelGameWindow {
         onRightClickRemoveProgrammingcard(programmingPane4);
         onRightClickRemoveProgrammingcard(programmingPane5);
 
-        //selectStarttile(gameboard, new ClientPlayer(1, "Ralf", new Robot(1)));
-
         /*
         this.tutorial = new Tutorial(baseStackPane, programmingSpaceStackPane, gameboardStackPane,
                 handStackPane, handGrid, programmingGrid, gameboard, modelUser.usernameProperty().get());
         tutorial.loadGameWindowTutorial();
 
          */
-        selectStarttile(gameboard, modelGame.robotProperty().get());
+
+    }
+
+    public double getGameboardTileWidth(){
+        return gameboardTileWidth;
+    }
+
+    private void updateWidth(double width) {
+        for(Node node: gameboard.getChildren()){
+            if(node instanceof ImageView){
+                ImageView img = (ImageView)node;
+                img.setFitWidth(width);
+                img.setPreserveRatio(true);
+            }
+        }
     }
 
     public void receivedMessage() {
@@ -283,7 +311,7 @@ public class ViewModelGameWindow {
         for (int x = 0; x < map.size(); x++){
             for (int y = 0; y < map.get(x).size(); y++) {
                 for (int i = 0; i < map.get(x).get(y).size(); i++){
-                    System.out.println("("+x+"; "+y+"): "+map.get(x).get(y).get(i).getType()+" Tile");
+                    logger.debug("("+x+"; "+y+"): "+map.get(x).get(y).get(i).getType()+" Tile");
                     map.get(x).get(y).get(i).makeImage(gameboard);
                 }
             }
@@ -292,7 +320,8 @@ public class ViewModelGameWindow {
 
     public void selectStarttile (GridPane gameboard, int robot) {
         InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + robot + "_bunt.png");
-        Image im = new Image(input, 50, 50, true, true);
+        double width = getGameboardTileWidth();
+        Image im = new Image(input, width, width, true, true);
         ImageView img = new ImageView(im);
         gameboard.setOnMouseClicked(event -> {
             Node target = event.getPickResult().getIntersectedNode();
@@ -316,6 +345,8 @@ public class ViewModelGameWindow {
             @Override
             public void handle(MouseEvent event) {
                 //drag was detected, start drag-and-drop gesture
+                logger.debug("Drag detected");
+
                 //Any TransferMode is allowed
                 Dragboard db = source.startDragAndDrop(TransferMode.ANY);
                 //put image on dragboard
@@ -326,7 +357,7 @@ public class ViewModelGameWindow {
                 event.consume();
                 columnIndex = handGrid.getChildren().indexOf(source);
                 source.getChildren().clear();
-                System.out.println(columnIndex);
+                logger.debug(columnIndex);
 
             }
         });
@@ -406,7 +437,7 @@ public class ViewModelGameWindow {
                         card.setPreserveRatio(true);
                         source.getChildren().remove(0);;
                         source.getChildren().add(card);
-                        System.out.println(columnIndex);
+                        logger.debug(columnIndex);
                     }
                 }
             }

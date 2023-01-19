@@ -7,6 +7,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -26,6 +28,7 @@ public class ModelChat {
     private NotifyChangeSupport notifyChangeSupport;
 
     private Client client;
+    private final Logger logger = LogManager.getLogger(ModelChat.class);
 
 
     private ModelChat() {
@@ -62,12 +65,12 @@ public class ModelChat {
 
     public void sendGroupMessage() {
         client.sendGroupMessage(textfieldProperty.get());
-        System.out.println("send group message");
+        logger.debug("send group message");
     }
 
     public void sendPrivateMessage(int toUser) {
         client.sendPrivateMessage(textfieldProperty.get(), toUser);
-        System.out.println("send private message");
+        logger.debug("send private message");
     }
 }
 

@@ -23,7 +23,7 @@
 
 <StackPane fx:id="baseStackPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelGameWindow">
   <children>
-    <Pane prefHeight="200.0" prefWidth="200.0" styleClass="gamewindowBackground" />
+    <Pane fx:id="gameboardRegion" prefHeight="200.0" prefWidth="200.0" styleClass="gamewindowBackground" />
     <BorderPane prefHeight="1080.0" prefWidth="1920.0">
       <center>
         <GridPane prefHeight="377.0" prefWidth="775.0">
@@ -31,14 +31,14 @@
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
           </columnConstraints>
           <rowConstraints>
-            <RowConstraints fx:id="rowUp" percentHeight="80.0" valignment="TOP" vgrow="ALWAYS" />
-            <RowConstraints percentHeight="20.0" valignment="BOTTOM" vgrow="ALWAYS" />
+            <RowConstraints fx:id="rowUp" percentHeight="90.0" valignment="TOP" vgrow="ALWAYS" />
+            <RowConstraints percentHeight="15.0" valignment="BOTTOM" vgrow="ALWAYS" />
           </rowConstraints>
           <children>
             <GridPane GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
               <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" percentWidth="70.0" />
-                <ColumnConstraints hgrow="SOMETIMES" percentWidth="30.0" />
+                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" percentWidth="55.0" />
+                <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" percentWidth="45.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
@@ -46,9 +46,9 @@
               <children>
                         <StackPane fx:id="gameboardStackPane">
                            <children>
-                      <GridPane fx:id="gameboard" alignment="CENTER">
+                      <GridPane fx:id="gameboard" alignment="CENTER" gridLinesVisible="true" StackPane.alignment="CENTER_LEFT">
                         <columnConstraints>
-                          <ColumnConstraints fx:id="gameboardTileColumn" halignment="CENTER" hgrow="ALWAYS" />
+                          <ColumnConstraints fx:id="gameboardColumn" halignment="CENTER" hgrow="ALWAYS" />
                           <ColumnConstraints hgrow="ALWAYS" />
                           <ColumnConstraints hgrow="ALWAYS" />
                           <ColumnConstraints hgrow="ALWAYS" />
@@ -76,7 +76,7 @@
                         </rowConstraints>
                         <children>
                           <Region GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                          <Region fx:id="region0_1" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                          <Region GridPane.columnIndex="0" GridPane.rowIndex="1" />
                           <Region GridPane.columnIndex="0" GridPane.rowIndex="2" />
                           <Region GridPane.columnIndex="0" GridPane.rowIndex="3" />
                           <Region GridPane.columnIndex="0" GridPane.rowIndex="4" />
@@ -206,6 +206,9 @@
                           <Region GridPane.columnIndex="12" GridPane.rowIndex="8" />
                           <Region GridPane.columnIndex="12" GridPane.rowIndex="9" />
                         </children>
+                                 <StackPane.margin>
+                                    <Insets left="20.0" />
+                                 </StackPane.margin>
                       </GridPane>
                            </children>
                         </StackPane>
@@ -220,30 +223,29 @@
                         </ImageView>
                       </children>
                     </Pane>
-                    <GridPane fx:id="programmingGrid" hgap="3.0" StackPane.alignment="CENTER">
+                    <GridPane fx:id="programmingGrid" alignment="CENTER" hgap="3.0" StackPane.alignment="CENTER">
                       <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" prefWidth="100.0" />
+                        <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="ALWAYS" percentWidth="20.0" />
+                        <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="ALWAYS" percentWidth="20.0" />
+                        <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="ALWAYS" percentWidth="20.0" />
+                        <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="ALWAYS" percentWidth="20.0" />
+                        <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="ALWAYS" percentWidth="20.0" />
                       </columnConstraints>
                       <rowConstraints>
-                        <RowConstraints fx:id="programspace" percentHeight="100.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                    <RowConstraints fillHeight="false" percentHeight="40.0" valignment="CENTER" vgrow="SOMETIMES" />
+                        <RowConstraints fx:id="programspace" fillHeight="false" percentHeight="40.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                    <RowConstraints fillHeight="false" percentHeight="5.0" valignment="CENTER" vgrow="SOMETIMES" />
                       </rowConstraints>
                       <StackPane.margin>
                         <Insets />
                       </StackPane.margin>
                                  <children>
-                                    <Pane fx:id="programmingPane1" prefHeight="200.0" prefWidth="200.0" />
-                                    <Pane fx:id="programmingPane2" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
-                                    <Pane fx:id="programmingPane3" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" />
-                                    <Pane fx:id="programmingPane4" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" />
-                                    <Pane fx:id="programmingPane5" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" />
+                                    <Pane fx:id="programmingPane1" prefHeight="500.0" prefWidth="200.0" GridPane.rowIndex="1" />
+                                    <Pane fx:id="programmingPane2" prefHeight="500.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Pane fx:id="programmingPane3" prefHeight="500.0" prefWidth="500.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                                    <Pane fx:id="programmingPane4" prefHeight="500.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                                    <Pane fx:id="programmingPane5" prefHeight="500.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
                                  </children>
-                                 <padding>
-                                    <Insets top="100.0" />
-                                 </padding>
                     </GridPane>
                   </children>
                 </StackPane>
@@ -253,7 +255,7 @@
               <children>
               <StackPane fx:id="handStackPane" HBox.hgrow="ALWAYS">
               <children>
-                <GridPane fx:id="handGrid" alignment="CENTER" gridLinesVisible="true" maxWidth="700.0" nodeOrientation="RIGHT_TO_LEFT" prefWidth="700.0" HBox.hgrow="ALWAYS">
+                <GridPane fx:id="handGrid" alignment="CENTER" gridLinesVisible="true" maxHeight="130.0" maxWidth="700.0" nodeOrientation="RIGHT_TO_LEFT" prefWidth="700.0" HBox.hgrow="ALWAYS">
                   <columnConstraints>
                     <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
                     <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
@@ -363,7 +365,7 @@
         </GridPane>
       </center>
       <top>
-        <VBox spacing="60.0" BorderPane.alignment="CENTER">
+        <VBox BorderPane.alignment="CENTER">
           <children>
                   <StackPane>
                      <children>
@@ -379,8 +381,11 @@
                   </MenuBar>
                         <Label text="??? Turn - 00:00 left" />
                      </children>
+                     <VBox.margin>
+                        <Insets bottom="5.0" />
+                     </VBox.margin>
                   </StackPane>
-            <GridPane VBox.vgrow="ALWAYS">
+            <GridPane alignment="CENTER" VBox.vgrow="ALWAYS">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -390,7 +395,7 @@
                 <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
               </rowConstraints>
               <children>
-                <HBox prefHeight="100.0" prefWidth="200.0" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <HBox spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                   <children>
                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                       <image>
@@ -451,7 +456,7 @@
                               </StackPane>
                   </children>
                 </HBox>
-                <GridPane maxWidth="600.0" GridPane.rowIndex="1">
+                <GridPane GridPane.rowIndex="1">
                   <columnConstraints>
                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
