@@ -8,6 +8,8 @@ import game.Game;
 import game.player.Player;
 import game.player.Robot;
 import javafx.beans.property.SimpleBooleanProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.Socket;
@@ -38,6 +40,7 @@ public class HandleClient implements Runnable{
 
     private MessageCreator messageCreator;
     private Game game;
+    private final Logger logger = LogManager.getLogger(HandleClient.class);
 
     /**
      * Thread which handles the logged in clients.
@@ -71,7 +74,7 @@ public class HandleClient implements Runnable{
                     new BufferedInputStream(socket.getInputStream()));
             this.out = new DataOutputStream(socket.getOutputStream());
         } catch (Exception e) {
-            System.out.println("Error in HandleClient constructor " + e.getMessage());
+            logger.warn("An error occurred: " + e);
         }
     }
 
@@ -90,7 +93,7 @@ public class HandleClient implements Runnable{
         try {
             this.out.writeUTF(JsonSerializer.serializeJson(message));
         } catch (IOException e) {
-            System.out.println("Error in write method " + e.getMessage());
+            logger.warn("An error occurred: " + e);
         }
     }
 
@@ -118,7 +121,7 @@ public class HandleClient implements Runnable{
                 }
             }
         } catch (Exception e) {
-            System.out.println("Client "+ id +" couldn't be reached");
+            logger.warn("Client "+ id +" couldn't be reached\nAn exception occurred: " + e);
         }
     }
 
@@ -269,12 +272,11 @@ public class HandleClient implements Runnable{
                         write(messageCreator.generatePlayerStatusMessage(clientID, ready));
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    System.out.println(this.username);
+                    logger.warn("An exception occurred: " + e);
                 }
             }
         } catch (Exception e) {
-            //System.out.println("Client disconnected");
+            logger.warn("An exception occurred: " + e);
         }
     }
 
@@ -286,7 +288,7 @@ public class HandleClient implements Runnable{
             this.out.close();
             socket.close();
         } catch (Exception e) {
-            System.out.println("Error while closing Connection" + e.getMessage());
+            logger.warn("An exception occurred: " + e);
         }
 
     }

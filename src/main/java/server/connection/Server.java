@@ -7,6 +7,8 @@ import game.Game;
 import game.player.Player;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -35,8 +37,10 @@ public class Server {
     public BooleanProperty online;
     MessageCreator messageCreator;
     private final String protocolVersion;
+    private final Logger logger = LogManager.getLogger(Server.class);
 
     private Server() {
+        logger.debug("Server constructor is called");
         this.messageCreator = new MessageCreator();
         this.players = new PlayerList();
         this.protocolVersion = "Version 1.0";
@@ -125,8 +129,8 @@ public class Server {
                                 }
                             }
                         }
-                    } catch (InterruptedException e) {
-                            System.out.println("Error is it here " + e.getMessage());
+                    } catch (Exception e) {
+                            logger.warn("An Exception occured: " + e);
                     }
                 }
             }
