@@ -35,6 +35,7 @@ public class PlayerListCell extends ListCell<ClientPlayer> {
         if (empty || item == null || item.getUsername() == null) {
             name.setText(null);
             robot.setText(null);
+            robotImage.setImage(null);
             setGraphic(null);
         } else {
             if (item.getUsername().equals("Group")) {

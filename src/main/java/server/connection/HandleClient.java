@@ -160,6 +160,8 @@ public class HandleClient implements Runnable{
                             if (isAlive()) {
                                 setAlive(false);
                             } else {
+                                Message connectionMessage = messageCreator.generateConnectionUpdateMessage(getClientID(), false, "Remove");
+                                server.sendConnectionLost(getClientID(), connectionMessage);
                                 closeConnection();
                                 exit = true;
                             }
@@ -250,6 +252,9 @@ public class HandleClient implements Runnable{
                             game.removeReady(clientID);
                         }
                         write(messageCreator.generatePlayerStatusMessage(clientID, ready));
+                    }
+                    else if (incomingMessage.getMessageType() == MessageType.ConnectionUpdate) {
+
                     }
                 } catch (Exception e) {
                     logger.warn("An exception occurred: " + e);
