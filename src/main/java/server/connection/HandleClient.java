@@ -97,22 +97,6 @@ public class HandleClient implements Runnable{
         }
     }
 
-
-    //messages stored in linkedblockingqueue (thread using linkedblockingqueue calls write method which should be enough)
-    /*
-    public void writeTo(int id, Message message) {
-        try {
-            for (Map.Entry<Integer, HandleClient> client : server.CLIENTS.entrySet()) {
-                if (client.getValue().getClientID() == id) {
-                    client.getValue().out.writeUTF(JsonSerializer.serializeJson(message));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-     */
-
     public void aliveMessage(int id) {
         try {
             for (Map.Entry<Integer, HandleClient> client : server.CLIENTS.entrySet()) {
@@ -192,21 +176,17 @@ public class HandleClient implements Runnable{
             while (accepted) {
                 Message incomingMessage = JsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
                 line = incomingMessage.getMessageBody().getMessage();
-                String line_formatted = this.username + ":  " + line;
+                String line_formatted = this.username + ": " + line;
                 try {
                     //String changed to Message type (protocol, from: sender): added to linkedblockingqueue
                     if (incomingMessage.getMessageType() == MessageType.SendChat && incomingMessage.getMessageBody().getTo() == -1) {
                         int clientID = getClientID();
                         server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, clientID, false));
-                        //server.broadcast(clientID, messageCreator.generateReceivedChatMessage(line_formatted, clientID, false));
                     } else if (incomingMessage.getMessageType() == MessageType.SendChat) {
                         if (server.CLIENTS.containsKey(incomingMessage.getMessageBody().getTo())) {
                             //String changed to Message type (protocol, from: to send): added to linkedblockingqueue
                             int toUser = incomingMessage.getMessageBody().getTo();
                             server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
-                            //int toUser = getClientID();
-                            //server.sendTo(toUser, messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
-                            ///writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
                         setAlive(true);

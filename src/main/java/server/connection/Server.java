@@ -138,25 +138,6 @@ public class Server {
         writeMessages.start();
     }
 
-    //not used anymore
-    /*
-    public void broadcast(int id, Message message) {
-        for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
-            if (client.getKey() != id) {
-                client.getValue().write(message);
-            }
-        }
-    }
-
-    public void sendTo(int toUser, Message message) {
-        for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
-            if (client.getKey() == toUser) {
-                client.getValue().write(message);
-            }
-        }
-    }
-     */
-
     public void sendPlayerValuesToAll(int clientID, Message message) {
         for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
             if (client.getKey() != clientID) {

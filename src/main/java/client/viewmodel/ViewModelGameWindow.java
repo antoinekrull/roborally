@@ -169,11 +169,11 @@ public class ViewModelGameWindow {
         setOnDragDropped(programmingPane4);
         setOnDragDropped(programmingPane5);
 
-        onRightClickRemoveProgrammingcard(programmingPane1);
-        onRightClickRemoveProgrammingcard(programmingPane2);
-        onRightClickRemoveProgrammingcard(programmingPane3);
-        onRightClickRemoveProgrammingcard(programmingPane4);
-        onRightClickRemoveProgrammingcard(programmingPane5);
+        onRightClickRemoveProgrammingCard(programmingPane1);
+        onRightClickRemoveProgrammingCard(programmingPane2);
+        onRightClickRemoveProgrammingCard(programmingPane3);
+        onRightClickRemoveProgrammingCard(programmingPane4);
+        onRightClickRemoveProgrammingCard(programmingPane5);
 
         /*
         this.tutorial = new Tutorial(baseStackPane, programmingSpaceStackPane, gameboardStackPane,
@@ -444,7 +444,7 @@ public class ViewModelGameWindow {
         });
     }
 
-    public void onRightClickRemoveProgrammingcard(Pane target) {
+    public void onRightClickRemoveProgrammingCard(Pane target) {
         target.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
