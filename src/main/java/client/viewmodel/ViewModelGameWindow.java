@@ -9,6 +9,7 @@ import game.board.Tile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -33,12 +34,12 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.util.Duration;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -51,7 +52,7 @@ import org.apache.logging.log4j.Logger;
 public class ViewModelGameWindow {
 
     @FXML
-    private Region gameboardRegion;
+    private Pane gameboardRegion;
     @FXML
     private ColumnConstraints gameboardColumn;
     public Pane programspacePane;
@@ -75,7 +76,8 @@ public class ViewModelGameWindow {
     private Pane programmingPane1, programmingPane2, programmingPane3, programmingPane4, programmingPane5;
     @FXML
     private GridPane handGrid;
-
+    @FXML
+    private Pane cardDeck;
     @FXML
     private StackPane baseStackPane;
     @FXML
@@ -112,8 +114,6 @@ public class ViewModelGameWindow {
     }
 
     public void initialize() {
-        //TODO: Tiles resizeable
-
 
         selectStarttile(gameboard, modelGame.robotProperty().get());
 
@@ -175,6 +175,8 @@ public class ViewModelGameWindow {
         onRightClickRemoveProgrammingcard(programmingPane4);
         onRightClickRemoveProgrammingcard(programmingPane5);
 
+        //StartupDispenseCards("/textures/cards/kartendeckStapel.png", cardDeck, programCard1);
+
         /*
         this.tutorial = new Tutorial(baseStackPane, programmingSpaceStackPane, gameboardStackPane,
                 handStackPane, handGrid, programmingGrid, gameboard, modelUser.usernameProperty().get());
@@ -184,6 +186,7 @@ public class ViewModelGameWindow {
 
     }
 
+    //should work for selectStarttile but has now effect
     public double getGameboardTileWidth(){
         return gameboardTileWidth;
     }
@@ -320,22 +323,25 @@ public class ViewModelGameWindow {
 
     public void selectStarttile (GridPane gameboard, int robot) {
         InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + robot + "_bunt.png");
-        double width = getGameboardTileWidth();
-        Image im = new Image(input, width, width, true, true);
+        Image im = new Image(input, 70, 70,true, true);
         ImageView img = new ImageView(im);
         gameboard.setOnMouseClicked(event -> {
             Node target = event.getPickResult().getIntersectedNode();
             Integer colIndex = GridPane.getColumnIndex(target);
             Integer rowIndex = GridPane.getRowIndex(target);
+            //check imageviews for type of tile
             if(target.getId() != null && target.getId().equals("StartTile")){
                 gameboard.getChildren().remove(img);
                 gameboard.add(img, colIndex, rowIndex);
+                //when starttile, insert img of robot and send coordinates
+                modelGame.sendStarttileCoordinates(colIndex, rowIndex);
             }
             else{
                 System.out.println("Ist kein Starttile");
             }
         });
     }
+
 
 
 
@@ -435,7 +441,6 @@ public class ViewModelGameWindow {
                         ImageView card = new ImageView(data);
                         card.setFitHeight(height);
                         card.setPreserveRatio(true);
-                        source.getChildren().remove(0);;
                         source.getChildren().add(card);
                         logger.debug(columnIndex);
                     }
@@ -472,11 +477,23 @@ public class ViewModelGameWindow {
         for (int i = 0; i < handGrid.getChildren().size(); i++) {
             Pane child = (Pane) handGrid.getChildren().get(i);
             if (child.getChildren().isEmpty()) {
-                System.out.println("Slot " + i + " is empty");
+                logger.debug("Slot " + i + " is empty");
                 return i;
             }
         }
         return -1;
+    }
+
+    private void StartupDispenseCards(String imagePath, Pane fromPane, Pane toPane) {
+        InputStream inputPath = getClass().getResourceAsStream(imagePath);
+        ImageView imageView = new ImageView(new Image(inputPath));
+        fromPane.getChildren().add(imageView);
+        TranslateTransition transition = new TranslateTransition();
+        transition.setDuration(Duration.seconds(2));
+        transition.setNode(imageView);
+        transition.setToX(toPane.getLayoutX());
+        transition.setToY(toPane.getLayoutY());
+        transition.play();
     }
 
 

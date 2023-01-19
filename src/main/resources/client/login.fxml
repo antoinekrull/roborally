@@ -127,7 +127,7 @@
                     </GridPane>
                   <VBox alignment="CENTER" VBox.vgrow="SOMETIMES">
                      <children>
-                        <Label fx:id="errorLabelRobotSelection" />
+                        <Label fx:id="errorLabelRobotSelection" styleClass="errorLabelRobotSelection" />
                           <HBox fx:id="nicknameHBox" alignment="CENTER" prefHeight="41.0" prefWidth="399.0" spacing="10.0">
                               <children>
                                   <TextField fx:id="usernameTextField" alignment="TOP_LEFT" focusTraversable="false" prefHeight="26.0" prefWidth="287.0" promptText="Enter username" HBox.hgrow="ALWAYS">
