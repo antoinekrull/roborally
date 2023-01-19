@@ -1,21 +1,18 @@
 package client.connection;
 
-import client.RoboRallyStart;
 import client.player.ClientPlayerList;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import game.board.Board;
+import game.card.Card;
 import game.player.Robot;
 import client.player.ClientPlayer;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.util.Duration;
 import org.javatuples.Pair;
 
 import java.io.BufferedInputStream;
@@ -197,6 +194,8 @@ public class Client {
                             Platform.runLater(() -> Client.this.setErrorMessage(error));
                         }
                         if (message.getMessageType().equals(MessageType.CardPlayed)) {
+                            int clientID = message.getMessageBody().getClientID();
+                            String card = message.getMessageBody().getCard();
 
                         }
                         if (message.getMessageType().equals(MessageType.CurrentPlayer)) {
@@ -216,7 +215,8 @@ public class Client {
 
                         }
                         if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
-
+                            int clientID = message.getMessageBody().getClientID();
+                            Platform.runLater(() -> Client.this.clientPlayerList.remove(clientID));
                         }
                         if (message.getMessageType().equals(MessageType.Movement)) {
 
@@ -280,8 +280,9 @@ public class Client {
             sendMessageToServer(messageCreator.generateMapSelectedMessage(map));
         }
     }
-    public void sendPlayCard(String moveCard) {
-        sendMessageToServer(messageCreator.generatePlayCardMessage(moveCard));
+    public void sendPlayCard(Card card) {
+        String sendCard = card.getCardName();
+        sendMessageToServer(messageCreator.generatePlayCardMessage(sendCard));
     }
     public void sendStartingPoint(int x, int y) {
         sendMessageToServer(messageCreator.generateSetStartingPointMessage(x, y));

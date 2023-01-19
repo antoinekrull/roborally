@@ -45,7 +45,6 @@ public class ModelGame {
     private Game game;
 
 
-
     private ModelGame() {
         client = Client.getInstance();
         notifyChangeSupport = NotifyChangeSupport.getInstance();
