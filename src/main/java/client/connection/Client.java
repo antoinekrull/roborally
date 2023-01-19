@@ -16,6 +16,8 @@ import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
 
 import org.javatuples.Triplet;
@@ -61,6 +63,7 @@ public class Client {
     private String group = "KnorrigeKorrelate";
     private PlayerList playerList;
     private ObservableList<String> maps;
+    private final Logger logger = LogManager.getLogger(Client.class);
 
 
     private Client() {
@@ -191,7 +194,7 @@ public class Client {
                             Client.this.setMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.Error)) {
-                            System.out.println(message.getMessageBody().getError());
+                            logger.debug(message.getMessageBody().getError());
                         }
                         if (message.getMessageType().equals(MessageType.CardPlayed)) {
 
@@ -215,7 +218,7 @@ public class Client {
                     }
                 }
             } catch (IOException e) {
-                System.out.println("Lost connection to server");
+                logger.warn("Lost connection to server " + e);
             }
         }
     }

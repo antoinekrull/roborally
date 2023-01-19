@@ -3,6 +3,8 @@ package game.board;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.geometry.Orientation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
 
 import java.util.ArrayList;
@@ -33,12 +35,13 @@ public class Board {
     public static ArrayList<RebootTile> rebootTileList = new ArrayList<>();
     public static ArrayList<StartTile> startTileList = new ArrayList<>();
     public static Antenna antenna;
+    private final static Logger logger = LogManager.getLogger(Board.class);
 
     public static ArrayList<Tile> getTile(Pair<Integer, Integer> position){
         try {
             return board.get(position.getValue0()).get(position.getValue1());
         } catch(IndexOutOfBoundsException e) {
-            System.out.println("This tile is invalid");
+            logger.warn("This tile is invalid " + e);
             return null;
         }
     }
@@ -73,7 +76,7 @@ public class Board {
         int count = 0;
         for(int x = 0; x < board.size(); x++){
             for(int y = 0; y < board.get(x).size(); y++) {
-                System.out.println(board.get(x).get(y).get(0).getClass() +" on Coordinates: (" + x+" ,"+y+")");
+                logger.debug(board.get(x).get(y).get(0).getClass() +" on Coordinates: (" + x+" ,"+y+")");
             }
         }
     }
@@ -83,7 +86,7 @@ public class Board {
         MapDeserializer map = objectMapper.readValue(jsonMap, MapDeserializer.class);
         board = map.getGameMap();
         //board = objectMapper.readValue(jsonMap, new TypeReference<ArrayList<ArrayList<ArrayList<Tile>>>>() {
-        System.out.println("Board mit größe ("+board.size()+", "+board.get(0).size()+") erstellt!");
+        logger.debug("Board mit größe ("+board.size()+", "+board.get(0).size()+") erstellt!");
 
             try {
             for(int x = 0; x < board.size(); x++){
@@ -204,7 +207,7 @@ public class Board {
             map.get(x).get(y).remove(tile);
             map.get(x).get(y).add(index, (Tile) object);
         } else {
-            System.out.println("something went wrong with replacing the TileElement");
+            logger.warn("something went wrong with replacing the TileElement");
         }
     }
     public int angelCalculation(Direction direct1, Direction direct2){

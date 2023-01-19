@@ -35,6 +35,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * ViewModel for gamescreen
@@ -78,6 +80,7 @@ public class ViewModelGameWindow {
     private int columnIndex;
 
     private NotifyChangeSupport notifyChangeSupport;
+    private final Logger logger = LogManager.getLogger(ViewModelGameWindow.class);
 
     public ViewModelGameWindow() {
         this.modelChat = ModelChat.getInstance();
@@ -258,7 +261,7 @@ public class ViewModelGameWindow {
         for (int x = 0; x < map.size(); x++){
             for (int y = 0; y < map.get(x).size(); y++) {
                 for (int i = 0; i < map.get(x).get(y).size(); i++){
-                    System.out.println("("+x+"; "+y+"): "+map.get(x).get(y).get(i).getType()+" Tile");
+                    logger.debug("("+x+"; "+y+"): "+map.get(x).get(y).get(i).getType()+" Tile");
                     map.get(x).get(y).get(i).makeImage(gameboard);
                 }
             }
@@ -280,7 +283,7 @@ public class ViewModelGameWindow {
             @Override
             public void handle(MouseEvent event) {
                 //drag was detected, start drag-and-drop gesture
-                System.out.println("Drag detected");
+                logger.debug("Drag detected");
 
                 //Any TransferMode is allowed
                 Dragboard db = source.startDragAndDrop(TransferMode.ANY);
@@ -293,7 +296,7 @@ public class ViewModelGameWindow {
                 event.consume();
                 columnIndex = handGrid.getChildren().indexOf(source);
                 ((ImageView) handGrid.getChildren().get(columnIndex)).setImage(null);
-                System.out.println(columnIndex);
+                logger.debug(columnIndex);
 
             }
         });
@@ -361,7 +364,7 @@ public class ViewModelGameWindow {
                         target.getChildren().add(card);
                         success = true;
                         handGrid.getChildren().remove(columnIndex);
-                        System.out.println("Success");
+                        logger.debug("Success");
                     }
 
                     event.setDropCompleted(success);
@@ -371,7 +374,7 @@ public class ViewModelGameWindow {
                     if (db.hasImage()) {
                         Image data = db.getImage();
                         ((ImageView)handGrid.getChildren().get(columnIndex)).setImage(data);
-                        System.out.println(columnIndex);
+                        logger.debug(columnIndex);
                     }
                 }
             }

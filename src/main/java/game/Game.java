@@ -5,6 +5,8 @@ import game.board.*;
 import game.card.*;
 import game.player.Player;
 import game.player.Robot;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
 import server.connection.PlayerList;
 
@@ -34,6 +36,7 @@ public class Game implements Runnable {
 
     private ArrayList<CheckpointTile> checkpointTileArrayList = null;
     private ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
+    private final Logger logger = LogManager.getLogger(Game.class);
 
     public Game() {}
 
@@ -115,7 +118,7 @@ public class Game implements Runnable {
             }
         }
         } catch(IndexOutOfBoundsException e) {
-            System.out.println("You're Robot can not move past this point");
+            logger.warn("You're Robot can not move past this point." + e);
         }
     }
 
@@ -256,7 +259,7 @@ public class Game implements Runnable {
 
                     // for testing purposes
                     unreadyPlayers.get(i).printRegisters();
-                    System.out.println("Time ran through");
+                    logger.info("Time ran through");
                 }
             }
         };
@@ -294,7 +297,7 @@ public class Game implements Runnable {
     }
 
     public void runSetupPhase() {
-        System.out.println(maps[0]);
+        logger.debug(maps[0]);
         playerList.setPlayerReadiness(false);
         while(!playerList.playersAreReady()) {
             //pickStartLocationForRobot();
@@ -310,7 +313,7 @@ public class Game implements Runnable {
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
         playerList.setPlayersPlaying(true);
         while(!playerList.playersAreReady()) {
-            System.out.println("Waiting for players to be ready");
+            logger.info("Waiting for players to be ready");
             Thread.sleep(10000);
         }
     }
@@ -320,7 +323,7 @@ public class Game implements Runnable {
         int playerRegisterLength = 5;
         while(!playerList.allPlayerRegistersActivated()) {
             for(int i = 0; i < playerList.size(); i++) {
-                System.out.println("Activating registers");
+                logger.debug("Activating registers");
                 activateRegister(playerList.get(i));
                 playerList.get(i).setStatusRegister(true, currentRegister);
             }
@@ -328,11 +331,11 @@ public class Game implements Runnable {
             //checks if all registers have been activated
             if(currentRegister == playerRegisterLength) {
                 for(int i = 0; i < playerList.size(); i++) {
-                    System.out.println("Emptying card registers");
+                    logger.debug("Emptying card registers");
                     playerList.get(i).emptyAllCardRegisters();
                 }
             }
-            System.out.println("Applying tile effects");
+            logger.debug("Applying tile effects");
             applyAllTileEffects();
         }
     }
@@ -341,7 +344,7 @@ public class Game implements Runnable {
         try{
             player.getCardFromRegister(currentRegister).applyEffect(player);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("This register was not activated because you're Robot can not move past this point");
+            logger.warn("This register was not activated because you're Robot can not move past this point" + e);
         }
     }
     public String[] getMaps(){return this.maps;}
@@ -375,15 +378,15 @@ public class Game implements Runnable {
 
     @Override
     public void run() {
-        System.out.println("This game is running");
+        logger.debug("This game is running");
         playerList.setPlayerReadiness(false);
         while(true) {
-            System.out.println("This game is running the Upgrade Phase now");
+            logger.debug("This game is running the Upgrade Phase now");
             runUpgradePhase();
             try {
-                System.out.println("This game is running the Programming Phase now");
+                logger.debug("This game is running the Programming Phase now");
                 runProgrammingPhase(playerList);
-                System.out.println("This game is running the Activation Phase now");
+                logger.debug("This game is running the Activation Phase now");
                 runActivationPhase();
             } catch (Exception e) {
                 throw new RuntimeException(e);
