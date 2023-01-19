@@ -1,26 +1,20 @@
 package client.connection;
 
-import client.player.PlayerList;
+import client.player.ClientPlayerList;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import game.board.Board;
-import game.board.Direction;
-import game.card.*;
 import game.player.Robot;
-import client.player.Player;
-import game.player.Robot;
+import client.player.ClientPlayer;
 import javafx.application.Platform;
-import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
-
-import org.javatuples.Triplet;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -61,7 +55,7 @@ public class Client {
     int port = 3000;
     private String protocolVersion = "Version 1.0";
     private String group = "KnorrigeKorrelate";
-    private PlayerList playerList;
+    private ClientPlayerList clientPlayerList;
     private ObservableList<String> maps;
     private final Logger logger = LogManager.getLogger(Client.class);
 
@@ -74,7 +68,7 @@ public class Client {
         this.maps = FXCollections.observableArrayList();
         this.connected = new SimpleBooleanProperty();
         this.accepted = new SimpleBooleanProperty();
-        this.playerList = new PlayerList();
+        this.clientPlayerList = new ClientPlayerList();
         this.errorMessage = new SimpleStringProperty();
     }
 
@@ -120,8 +114,8 @@ public class Client {
         this.accepted.set(true);
     }
 
-    public PlayerList getPlayerList() {
-        return playerList;
+    public ClientPlayerList getPlayerList() {
+        return clientPlayerList;
     }
 
     public String getErrorMessage() {
@@ -150,7 +144,7 @@ public class Client {
                 out = new DataOutputStream(socket.getOutputStream());
                 String receiveMessage;
                 while (true) {
-                    if((receiveMessage =in.readUTF()) != null) {
+                    if((receiveMessage = in.readUTF()) != null) {
                         Message message = JsonSerializer.deserializeJson(receiveMessage, Message.class);
                         if (message.getMessageType().equals(MessageType.Alive)) {
                             sendAliveMessage();
@@ -171,11 +165,15 @@ public class Client {
                             else {
                                 String username = message.getMessageBody().getName();
                                 int figure = message.getMessageBody().getFigure();
-                                Platform.runLater(() -> Client.this.getPlayerList().add(new Player(clientID, username, new Robot(figure))));
+                                if (!clientPlayerList.containsPlayer(clientID)) {
+                                    Platform.runLater(() -> Client.this.getPlayerList().add(new ClientPlayer(clientID, username, new Robot(figure))));
+                                }
                             }
                         }
                         if (message.getMessageType().equals(MessageType.PlayerStatus)) {
-
+                            int clientID = message.getMessageBody().getClientID();
+                            boolean ready = message.getMessageBody().isReady();
+                            clientPlayerList.changePlayerStatus(clientID, ready);
                         }
                         if (message.getMessageType().equals(MessageType.SelectMap)) {
                             prioPlayer = true;
@@ -194,7 +192,9 @@ public class Client {
                             Client.this.setMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.Error)) {
-                            logger.debug(message.getMessageBody().getError());
+                            String error = message.getMessageBody().getError();
+                            logger.debug("Error: " + error);
+                            Platform.runLater(() -> Client.this.setErrorMessage(error));
                         }
                         if (message.getMessageType().equals(MessageType.CardPlayed)) {
 
@@ -213,6 +213,9 @@ public class Client {
 
                         }
                         if (message.getMessageType().equals(MessageType.NotYourCards)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
 
                         }
                     }
@@ -250,6 +253,17 @@ public class Client {
             sendMessageToServer(messageCreator.generateMapSelectedMessage(map));
         }
     }
+    public void sendPlayCard(String moveCard) {
+        sendMessageToServer(messageCreator.generatePlayCardMessage(moveCard));
+    }
+    public void sendStartingPoint(int x, int y) {
+        sendMessageToServer(messageCreator.generateSetStartingPointMessage(x, y));
+    }
+    public void sendSelectCard(String card, int register) {
+        sendMessageToServer(messageCreator.generateSelectedCardMessage(card, register));
+    }
+
+
 
     public void sendMessageToServer(Message message) {
         try {

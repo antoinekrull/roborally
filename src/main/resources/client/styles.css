@@ -55,6 +55,14 @@
 .gamewindowBackground{
 -fx-background-image: url("../textures/designelements/gameboardHintergrund.png");
 -fx-background-repeat: no-repeat;
--fx-background-size: contain;
+-fx-background-size: cover;
 -fx-background-color: none;
+}
+
+.errorLabelRobotSelection{
+-fx-text-fill: red;
+}
+
+.selectedRoboter{
+-fx-effect: dropshadow(three-pass-box, grey, 30, 0.0, 0, 0);
 }

@@ -3,8 +3,9 @@ package game.board;
 
 public class StartTile extends Tile{
     public StartTile(int xCoordinate, int yCoordinate){
-        super(xCoordinate, yCoordinate, "/textures/gameboard/StartTile.png");
+        super(xCoordinate, yCoordinate, "/textures/gameboard/StartTile.png", "StartTile");
         this.path = getClass().getResource("/textures/gameboard/StartTile.png").toString();
+        this.imageFXid = "StartTile";
         setType("StartPoint");
         isDanger = false;
         isBlocking = false;

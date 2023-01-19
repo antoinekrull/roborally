@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import client.ui.PlayerListCell;
 import communication.Message;
-import client.player.Player;
+import client.player.ClientPlayer;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -52,11 +52,11 @@ public class ViewModelLobby {
     @FXML
     private MenuItem helpMenuItem;
     @FXML
-    private ListView<Player> userList;
+    private ListView<ClientPlayer> userList;
     @FXML
     private ChoiceBox<String> mapsChoiceBox;
     @FXML
-    private ChoiceBox<Player> usersChoiceBox;
+    private ChoiceBox<ClientPlayer> usersChoiceBox;
     @FXML
     private Button readyButton;
     @FXML
@@ -129,11 +129,14 @@ public class ViewModelLobby {
             @Override
             public void handle(MouseEvent event) {
                 if (!userList.getSelectionModel().getSelectedItems().isEmpty()) {
-                    usersChoiceBox.setValue(userList.getSelectionModel().getSelectedItem());
-                    event.consume();
-                }
-                else {
-                    //usersChoiceBox.setValue();
+                    if (userList.getSelectionModel().getSelectedIndex() != 0) {
+                        usersChoiceBox.setValue(userList.getSelectionModel().getSelectedItem());
+                        event.consume();
+                    }
+                    else {
+                        usersChoiceBox.setValue(userList.getItems().get(0));
+                        event.consume();
+                    }
                 }
             }
         });

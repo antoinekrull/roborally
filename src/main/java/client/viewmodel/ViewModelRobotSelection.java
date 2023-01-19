@@ -3,11 +3,11 @@ package client.viewmodel;
 import client.RoboRallyStart;
 import client.model.ModelGame;
 import client.model.ModelUser;
+import client.player.ClientPlayerList;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-
-import client.player.PlayerList;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -16,6 +16,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.util.Duration;
 
 /**
@@ -37,9 +39,11 @@ public class ViewModelRobotSelection {
     private Button exitButton;
     @FXML
     private Label errorLabelRobotSelection;
+    @FXML
+    ImageView selectedRobot;
 
     private List<Node> robots;
-    private PlayerList playerList;
+    private ClientPlayerList clientPlayerList;
 
     private ModelUser modelUser;
     private ModelGame modelGame;
@@ -47,7 +51,7 @@ public class ViewModelRobotSelection {
     public ViewModelRobotSelection() {
         this.modelUser = ModelUser.getInstance();
         this.modelGame = ModelGame.getInstance();
-        playerList = modelGame.getPlayerList();
+        clientPlayerList = modelGame.getPlayerList();
     }
 
     /**
@@ -61,26 +65,38 @@ public class ViewModelRobotSelection {
         robot1.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(1);
             applyStyle(robot1);
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_1_bunt.png");
+            selectedRobot.setImage(new Image(input));
         });
         robot2.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(2);
             applyStyle(robot2);
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_2_bunt.png");
+            selectedRobot.setImage(new Image(input));
         });
         robot3.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(3);
             applyStyle(robot3);
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_3_bunt.png");
+            selectedRobot.setImage(new Image(input));
         });
         robot4.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(4);
             applyStyle(robot4);
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_4_bunt.png");
+            selectedRobot.setImage(new Image(input));
         });
         robot5.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(5);
             applyStyle(robot5);
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_5_bunt.png");
+            selectedRobot.setImage(new Image(input));
         });
         robot6.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(6);
             applyStyle(robot6);
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_6_bunt.png");
+            selectedRobot.setImage(new Image(input));
         });
     }
 

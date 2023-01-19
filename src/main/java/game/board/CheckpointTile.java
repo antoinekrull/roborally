@@ -9,8 +9,9 @@ import game.player.Player;
 public class CheckpointTile extends Tile {
 
     public CheckpointTile(int xCoordinate, int yCoordinate) {
-        super(xCoordinate, yCoordinate, "/textures/gameboard/checkpoint.png");
+        super(xCoordinate, yCoordinate, "/textures/gameboard/checkpoint.png", "Checkpoint");
         this.path = getClass().getResource("/textures/gameboard/checkpoint.png").toString();
+        this.imageFXid = "Checkpoint";
         setType("Checkpoint");
         isDanger = false;
         isBlocking = false;

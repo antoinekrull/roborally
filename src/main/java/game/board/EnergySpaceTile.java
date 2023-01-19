@@ -9,8 +9,9 @@ import game.player.Player;
 public class EnergySpaceTile extends Tile {
 
     public EnergySpaceTile(int xCoordinate, int yCoordinate) {
-        super(xCoordinate, yCoordinate, "/textures/gameboard/energySpace.png");
+        super(xCoordinate, yCoordinate, "/textures/gameboard/energySpace.png", "EnergySpace");
         this.path = getClass().getResource("/textures/gameboard/energySpace.png").toString();
+        this.imageFXid = "EnergySpace";
         setType("EnergySpace");
         isDanger = false;
         isBlocking = false;

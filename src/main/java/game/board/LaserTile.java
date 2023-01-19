@@ -14,12 +14,14 @@ public class LaserTile extends Tile {
     private Boolean onWall;
 
     public LaserTile(int xCoordinate, int yCoordinate, Direction LineOfSight, Boolean onWall) {
-        super(xCoordinate, yCoordinate, "/textures/gameboard/laser.png");
+        super(xCoordinate, yCoordinate, "/textures/gameboard/laser.png", "LaserTile");
         if (!onWall){
             this.path = getClass().getResource("/textures/gameboard/laserShot.png").toString();
+            this.imageFXid = "LaserShot";
         }
         else {
             this.path = getClass().getResource("/textures/gameboard/laser.png").toString();
+            this.imageFXid = "Laser";
         }
         this.onWall = onWall;
         setType("Laser");
