@@ -234,6 +234,23 @@ public class Server {
         }
     }
 
+    public void sendMovement(Player player) {
+        try {
+            messages.put(messageCreator.generateMovementMessage(player.getId(), player.getRobot().getCurrentPosition().getValue0(),
+                    player.getRobot().getCurrentPosition().getValue1()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendPlayerTurning(Player player) {
+        try {
+            messages.put(messageCreator.generatePlayerTurningMessage(player.getId(), player.getRobot().getDirection().toString()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public synchronized int getUniqueID() {
         return uniqueID++;
