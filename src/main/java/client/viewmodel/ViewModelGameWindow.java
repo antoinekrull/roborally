@@ -4,6 +4,8 @@ import client.connection.NotifyChangeSupport;
 import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
+import client.ui.PlayerGameInfo;
+import client.ui.Tutorial;
 import communication.Message;
 import game.board.Tile;
 import java.io.IOException;
@@ -17,10 +19,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -75,6 +74,8 @@ public class ViewModelGameWindow {
     private Pane programmingPane1, programmingPane2, programmingPane3, programmingPane4, programmingPane5;
     @FXML
     private GridPane handGrid;
+    @FXML
+    private GridPane playerInfoGrid;
 
     @FXML
     private StackPane baseStackPane;
@@ -91,14 +92,11 @@ public class ViewModelGameWindow {
 
     private int height = 150;
     private int columnIndex;
+    private PlayerGameInfo playerGameInfo;
 
-    //private Tutorial tutorial;
+    private Tutorial tutorial;
 
     private double gameboardTileWidth;
-
-
-
-
 
     private NotifyChangeSupport notifyChangeSupport;
     private final Logger logger = LogManager.getLogger(ViewModelGameWindow.class);
@@ -134,6 +132,9 @@ public class ViewModelGameWindow {
             double width = newValue.doubleValue() * 0.04;
             updateWidth(width);
         });
+
+        playerGameInfo = new PlayerGameInfo(playerInfoGrid, modelGame.getPlayerList());
+        playerGameInfo.loadPlayerInfo();
 
         setOnDragDetected(programCard1);
         setOnDragDetected(programCard2);
@@ -174,6 +175,7 @@ public class ViewModelGameWindow {
         onRightClickRemoveProgrammingCard(programmingPane3);
         onRightClickRemoveProgrammingCard(programmingPane4);
         onRightClickRemoveProgrammingCard(programmingPane5);
+
 
         /*
         this.tutorial = new Tutorial(baseStackPane, programmingSpaceStackPane, gameboardStackPane,

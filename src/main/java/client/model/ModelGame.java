@@ -41,13 +41,11 @@ public class ModelGame {
     private BooleanProperty readyToPlay;
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
     private ClientPlayerList clientPlayerList;
-    private NotifyChangeSupport notifyChangeSupport;
     private Game game;
 
 
     private ModelGame() {
         client = Client.getInstance();
-        notifyChangeSupport = NotifyChangeSupport.getInstance();
         this.robotProperty = new SimpleIntegerProperty();
         this.readyList = FXCollections.observableArrayList();
         this.readyToPlay = new SimpleBooleanProperty();

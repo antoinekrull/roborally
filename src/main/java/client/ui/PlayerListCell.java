@@ -44,7 +44,6 @@ public class PlayerListCell extends ListCell<ClientPlayer> {
                 layout.setAlignment(Pos.CENTER);
                 robot.setText("");
             } else {
-                System.out.println("has changed: username: " + item.getUsername() + ", id: " + item.getId());
                 name.setText(item.getUsername());
                 name.setStyle("-fx-font-weight: bold;");
                 robot.setText("Roboter " + (item.getRobot() != null
