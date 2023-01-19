@@ -164,19 +164,19 @@ public class Game implements Runnable {
         return new Pair<>(result, index);
     }
 
-    private ArrayList<Robot> determinePriority() {
+    private ArrayList<Player> determinePriority() {
         Pair<Integer, Integer> antennaPosition = Board.antenna.getPosition();
-        ArrayList<Robot> roboList = new ArrayList<>();
+        ArrayList<Player> priorityList = new ArrayList<>();
         for (PlayerList it = playerList; it.hasNext(); ) {
             Player player = it.next();
-            roboList.add(player.getRobot());
+            priorityList.add(player);
         }
-        roboList.sort((r1, r2) -> {
-            double dist1 = Math.sqrt(Math.pow(r1.getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(r1.getCurrentPosition().getValue1() - antennaPosition.getValue1(), 2));
-            double dist2 = Math.sqrt(Math.pow(r2.getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(r2.getCurrentPosition().getValue1(), 2));
+        priorityList.sort((p1, p2) -> {
+            double dist1 = Math.sqrt(Math.pow(p1.getRobot().getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(p1.getRobot().getCurrentPosition().getValue1() - antennaPosition.getValue1(), 2));
+            double dist2 = Math.sqrt(Math.pow(p2.getRobot().getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(p2.getRobot().getCurrentPosition().getValue1(), 2));
             return Double.compare(dist1, dist2);
         });
-        return roboList;
+        return priorityList;
     }
 
     private void computeRobotLaserPositions(){
