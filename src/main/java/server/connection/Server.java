@@ -5,6 +5,7 @@ import communication.MessageCreator;
 import communication.MessageType;
 import game.Game;
 import game.player.Player;
+import game.player.Robot;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.apache.logging.log4j.LogManager;
@@ -234,18 +235,18 @@ public class Server {
         }
     }
 
-    public void sendMovement(Player player) {
+    public void sendMovement(Robot robot) {
         try {
-            messages.put(messageCreator.generateMovementMessage(player.getId(), player.getRobot().getCurrentPosition().getValue0(),
-                    player.getRobot().getCurrentPosition().getValue1()));
+            messages.put(messageCreator.generateMovementMessage(robot.getId(), robot.getCurrentPosition().getValue0(),
+                    robot.getCurrentPosition().getValue1()));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void sendPlayerTurning(Player player) {
+    public void sendPlayerTurning(Robot robot) {
         try {
-            messages.put(messageCreator.generatePlayerTurningMessage(player.getId(), player.getRobot().getDirection().toString()));
+            messages.put(messageCreator.generatePlayerTurningMessage(robot.getId(), robot.getDirection().toString()));
         } catch (Exception e) {
             e.printStackTrace();
         }

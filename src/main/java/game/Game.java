@@ -1,6 +1,5 @@
 package game;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.*;
 import game.card.*;
 import game.player.Player;
@@ -54,7 +53,7 @@ public class Game implements Runnable {
     //TODO: needs to be used somewhere, once all players have been added
     public void setServerForPlayers() {
         for(int i = 0; i < playerList.size(); i++) {
-            playerList.get(i).setServer(server);
+            playerList.get(i).setServerForPlayerAndRobot(server);
         }
     }
     public Board getBoard() {
@@ -346,7 +345,6 @@ public class Game implements Runnable {
     private void runActivationPhase() throws Exception {
         server.sendActivePhase(3);
         int playerRegisterLength = 5;
-
         ArrayList<Pair<Integer, String>> dataList = new ArrayList<>();
         Pair<Integer, String> dataPoint;
         while(!playerList.allPlayerRegistersActivated()) {
@@ -356,7 +354,6 @@ public class Game implements Runnable {
                 dataList.add(dataPoint);
                 activateRegister(playerList.get(i));
                 playerList.get(i).setStatusRegister(true, currentRegister);
-
             }
             server.sendCurrentCards(dataList);
             dataList.clear();

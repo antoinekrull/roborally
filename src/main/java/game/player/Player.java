@@ -39,6 +39,7 @@ public class Player {
         this.id = id;
         this.username = username;
         this.robot = robot;
+        robot.setId(id);
         robot.setDirection(Direction.NORTH);
         this.hand = new ArrayList<Card>();
         this.score = 0;
@@ -107,8 +108,9 @@ public class Player {
             status = setAll;
         }
     }
-    public void setServer(Server server) {
+    public void setServerForPlayerAndRobot(Server server) {
         this.server = server;
+        robot.setServer(server);
     }
     public void drawFullHand(){
         int cardsToDraw = 9 - hand.size();
