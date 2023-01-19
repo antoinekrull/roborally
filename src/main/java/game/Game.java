@@ -36,8 +36,9 @@ public class Game implements Runnable {
     private ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
     private Server server;
     private final Logger logger = LogManager.getLogger(Game.class);
-
     private String jsonMap;
+
+    //TODO: discuss ShuffleCoding functionality
 
     private Game(){}
 
@@ -46,6 +47,13 @@ public class Game implements Runnable {
             INSTANCE = new Game();
         }
         return INSTANCE;
+    }
+
+    //TODO: needs to be used somewhere, once all players have been added
+    public void setServerForPlayers() {
+        for(int i = 0; i < playerList.size(); i++) {
+            playerList.get(i).setServer(server);
+        }
     }
     public Board getBoard() {
         return board;
@@ -336,12 +344,20 @@ public class Game implements Runnable {
     private void runActivationPhase() throws Exception {
         server.sendActivePhase(3);
         int playerRegisterLength = 5;
+
+        ArrayList<Pair<Integer, String>> dataList = new ArrayList<>();
+        Pair<Integer, String> dataPoint;
         while(!playerList.allPlayerRegistersActivated()) {
             for(int i = 0; i < playerList.size(); i++) {
                 logger.debug("Activating registers");
+                dataPoint = new Pair<>(playerList.get(i).getId(), playerList.get(i).getCardFromRegister(currentRegister).getCardName());
+                dataList.add(dataPoint);
                 activateRegister(playerList.get(i));
                 playerList.get(i).setStatusRegister(true, currentRegister);
+                
             }
+            server.sendCurrentCards(dataList);
+            dataList.clear();
             currentRegister++;
             determinePriority();
             //checks if all registers have been activated

@@ -9,10 +9,12 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.javatuples.Pair;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -219,6 +221,14 @@ public class Server {
     public void sendCardsYouGotNow(Player player, String[] cardNames) {
         try {
             CLIENTS.get(player.getId()).write(messageCreator.generateCardsYouGotNowMessage(cardNames));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendCurrentCards(ArrayList<Pair<Integer, String>> input) {
+        try {
+            messages.put(messageCreator.generateCurrentCardsMessage(input));
         } catch (Exception e) {
             e.printStackTrace();
         }

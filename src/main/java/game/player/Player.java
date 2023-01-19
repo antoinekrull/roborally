@@ -13,6 +13,7 @@ import java.util.Random;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import server.connection.Server;
 
 /**
  * @author Moritz, Dominic, Antoine, Firas
@@ -31,6 +32,8 @@ public class Player {
     private ProgrammingDeck personalDiscardPile;
     private Robot robot;
     private final Logger logger = LogManager.getLogger(Player.class);
+
+    private Server server;
 
     public Player(int id, String username, Robot robot) {
         this.id = id;
@@ -104,6 +107,9 @@ public class Player {
             status = setAll;
         }
     }
+    public void setServer(Server server) {
+        this.server = server;
+    }
     public void drawFullHand(){
         int cardsToDraw = 9 - hand.size();
         for(int i = 0; i < cardsToDraw; i++){
@@ -132,6 +138,7 @@ public class Player {
     public void refillDeck(){
         robot.setDeck(personalDiscardPile);
         robot.getDeck().shuffleDeck();
+        server.sendShuffleCoding(this);
     }
     public void addCard(Card drawnCard) {
         hand.add(drawnCard);
