@@ -324,12 +324,14 @@ public class ViewModelGameWindow {
         }
     }
 
-    public void selectStarttile (GridPane gameboard, int robot) {
+    public void selectStarttile (int robot) {
         InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + robot + "_bunt.png");
         Image im = new Image(input);
         ImageView img = new ImageView(im);
         img.setFitWidth(gameboardTileWidth);
         img.setPreserveRatio(true);
+        //to identify the robot in other methods
+        img.setId("Robot_" + robot);
         gameboard.setOnMouseClicked(event -> {
             Node target = event.getPickResult().getIntersectedNode();
             Integer colIndex = GridPane.getColumnIndex(target);
@@ -347,17 +349,17 @@ public class ViewModelGameWindow {
         });
     }
 
-    public void robotMovement (int x, int y, int robot){
+    public void robotMovement(int x, int y, int robot) {
         InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + robot + "_bunt.png");
         Image im = new Image(input);
         ImageView img = new ImageView(im);
         img.setFitWidth(gameboardTileWidth);
         img.setPreserveRatio(true);
-        //Current Image gets searched and then removed
+        img.setId("Robot_" + robot);
+        //Current robot image gets searched and then removed
         for (Node node : gameboard.getChildren()) {
-            if (node instanceof ImageView) {
-                ImageView imageView = (ImageView) node;
-                if (imageView.getImage().getUrl().equals(input)) {
+            if (node instanceof ImageView imageView) {
+                if (imageView.getId() != null && imageView.getId().equals("Robot_" + robot)) {
                     gameboard.getChildren().remove(imageView);
                     break;
                 }
