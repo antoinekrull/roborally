@@ -434,6 +434,21 @@ public class ViewModelGameWindow {
                         success = true;
                         Pane source = (Pane) handGrid.getChildren().get(columnIndex);
                         source.getChildren().clear();
+                        //Send cardtype and register of played Card:
+                        String cardName = switch (data.getUrl()) {
+                            case "Move1.png" -> "MoveI";
+                            case "Move2.png" -> "MoveII";
+                            case "Move3.png" -> "MoveIII";
+                            case "leftTurn.png" -> "TurnLeft";
+                            case "rightTurn.png" -> "TurnRight";
+                            case "uTurn.png" -> "UTurn";
+                            case "moveBack.png" -> "BackUp";
+                            case "powerUp.png" -> "PowerUp";
+                            case "Again.png" -> "Again";
+                            default -> "";
+                        };
+                        int targetIndex = GridPane.getColumnIndex(target);
+                        modelGame.sendSelectedCard(cardName, targetIndex);
                     }
                     event.setDropCompleted(success);
                     event.consume();
@@ -464,6 +479,9 @@ public class ViewModelGameWindow {
                         ImageView card = (ImageView) targetNode;
                         Image data = card.getImage();
                         target.getChildren().remove(card);
+                        //Resets register when card is taken out:
+                        int targetIndex = GridPane.getColumnIndex(target);
+                        modelGame.sendSelectedCard(null, targetIndex);
                         int index = getFirstFreeSlot();
                         if (index != -1) {
                             Pane emptyPane = (Pane) handGrid.getChildren().get(index);
@@ -501,7 +519,7 @@ public class ViewModelGameWindow {
         transition.play();
     }
 
-    public void fillHandCards (GridPane handGrid, String[] imagePaths) {
+    public void fillHandCards () {
         for (int i = 0; i < handGrid.getChildren().size(); i++) {
             Pane pane = (Pane) handGrid.getChildren().get(i);
             switch (handCardsUI.get(i)) {
