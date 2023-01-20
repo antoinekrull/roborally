@@ -9,6 +9,7 @@ import game.card.ProgrammingDeck;
 
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
@@ -25,9 +26,10 @@ public class Player {
     private int id;
     private boolean isPlaying;
     private boolean isReady;
+    private boolean[] isUsingUpgrade = {false, false, false};
     private ArrayList<Card> hand;
     private Card[] cardRegister = new Card[5];
-    private Card[] upgradeSlots = new Card[3];
+    private ArrayBlockingQueue<Card> upgradeSlots = new ArrayBlockingQueue<>(3);
     private boolean[] statusRegister = new boolean[5];
     private ProgrammingDeck personalDiscardPile;
     private Robot robot;
@@ -43,6 +45,13 @@ public class Player {
         this.personalDiscardPile = new ProgrammingDeck();
         isPlaying = false;
         isReady = false;
+    }
+
+    public boolean[] isUsingUpgrade() {
+        return isUsingUpgrade;
+    }
+    public void setUsingUpgrade(boolean[] values) {
+        isUsingUpgrade = values;
     }
 
     public String getUsername() {
