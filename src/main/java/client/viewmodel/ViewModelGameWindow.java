@@ -347,6 +347,26 @@ public class ViewModelGameWindow {
         });
     }
 
+    public void robotMovement (int x, int y, int robot){
+        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + robot + "_bunt.png");
+        Image im = new Image(input);
+        ImageView img = new ImageView(im);
+        img.setFitWidth(gameboardTileWidth);
+        img.setPreserveRatio(true);
+        //Current Image gets searched and then removed
+        for (Node node : gameboard.getChildren()) {
+            if (node instanceof ImageView) {
+                ImageView imageView = (ImageView) node;
+                if (imageView.getImage().getUrl().equals(input)) {
+                    gameboard.getChildren().remove(imageView);
+                    break;
+                }
+            }
+        }
+        //adds new Image
+        gameboard.add(img, x, y);
+    }
+
 
 
 
