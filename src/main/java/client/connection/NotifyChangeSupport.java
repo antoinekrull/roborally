@@ -3,6 +3,8 @@ package client.connection;
 import client.viewmodel.ViewModelGameWindow;
 import client.viewmodel.ViewModelLobby;
 
+import java.io.IOException;
+
 /**
  * Notifier class. Actively notifies specific instances for changes.
  *
@@ -46,6 +48,11 @@ public class NotifyChangeSupport {
         }
         if (gamewindow) {
             viewModelGameWindow.receivedMessage();
+        }
+    }
+    public void enterGame() throws IOException {
+        if (lobby){
+            viewModelLobby.enterGame();
         }
     }
 }

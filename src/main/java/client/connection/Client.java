@@ -44,6 +44,10 @@ public class Client {
     private BooleanProperty connected;
     private BooleanProperty accepted;
     private BooleanProperty isAI;
+
+
+
+    private BooleanProperty gameStarted;
     private ObjectProperty<Message> message;
     private IntegerProperty userID;
     private StringProperty errorMessage;
@@ -68,6 +72,7 @@ public class Client {
         this.messageCreator = new MessageCreator();
         this.message = new SimpleObjectProperty<>();
         this.userID = new SimpleIntegerProperty();
+        this.gameStarted = new SimpleBooleanProperty();
         this.isAI = new SimpleBooleanProperty();
         this.maps = FXCollections.observableArrayList();
         this.connected = new SimpleBooleanProperty();
@@ -133,6 +138,13 @@ public class Client {
     public void setErrorMessage(String errorMessage) {
         this.errorMessage.set(errorMessage);
     }
+    public boolean isGameStarted() {
+        return gameStarted.get();
+    }
+
+    public BooleanProperty gameStartedProperty() {
+        return gameStarted;
+    }
 
     private class ReadMessagesFromServer implements Runnable {
         DataInputStream in = null;
@@ -188,7 +200,6 @@ public class Client {
                             }
                         }
                         if (message.getMessageType().equals(MessageType.MapSelected)) {
-                            System.out.println("hab die map bekommen");
                             String map = message.getMessageBody().getMap();
                             Message mapMessage = messageCreator.generateSendChatMessage("Selected map: " + map);
                             Client.this.setMessage(mapMessage);
@@ -215,6 +226,7 @@ public class Client {
                             board.createBoard(message.getMessageBody().getGameMap());
                             //TODO: connect to Model/ViewModel to switch scenes
                             System.out.println("game started");
+                            gameStarted.set(true);
 
                         }
                         if (message.getMessageType().equals(MessageType.YourCards)) {
@@ -245,9 +257,8 @@ public class Client {
         sendMessageToServer(messageCreator.generatePlayerValuesMessage(name, figure));
     }
     public void sendSetStatusMessage(boolean ready){
-        if (!ready) {
-            prioPlayer = false;
-        }
+        prioPlayer = false;
+        this.maps.clear();
         sendMessageToServer(messageCreator.generateSetStatusMessage(ready));
     }
     public void sendPrivateMessage(String message, int to){

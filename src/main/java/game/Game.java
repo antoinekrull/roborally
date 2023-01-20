@@ -36,6 +36,7 @@ public class Game implements Runnable {
     private Server server;
     private final Logger logger = LogManager.getLogger(Game.class);
     private String jsonMap;
+    private int firstReady;
 
     //TODO: discuss ShuffleCoding functionality
 
@@ -382,12 +383,23 @@ public class Game implements Runnable {
         }
     }
     public String[] getMaps(){return this.maps;}
-    public void addReady(int clientID) {readyList.add(clientID);}
+    public void addReady(int clientID) {
+        readyList.add(clientID);
+        logger.debug(readyList.size());
+        if(clientID == getFirstReadyID()){
+            server.sendSelectMap(maps);
+        }
+    }
 
     public void removeReady(int clientID) {
         for (int i = 0; i < readyList.size(); i++) {
             if (readyList.get(i).equals(clientID)) {
+                int temp = readyList.get(i);
+                int first = getFirstReadyID();
                 readyList.remove(i);
+                if(temp==first){
+                    server.sendSelectMap(maps);
+                }
             }
         }
     }
@@ -429,16 +441,26 @@ public class Game implements Runnable {
         logger.debug("This game is running");
         boolean readyToStart = false;
         while(!readyToStart){
-            if (readyList.size()>=2){
-                readyToStart = true;
-                System.out.println("i can start now");
+            try {
+                //thread needs to sleep to check the if statetment probably
+                Thread.sleep(100);
+                if (readyList.size() >= 2 && this.jsonMap != null) {
+                    server.sendGameStarted(jsonMap);
+                    Thread.sleep(100);
+                    readyToStart = true;
+
+                }
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
+
+
         }
 
-        /*runSetupPhase();
+        /*();runSetupPhase();
         while(true) {
             logger.debug("This game is running the Upgrade Phase now");
-            runUpgradePhase();
+            runUpgradePhase
             try {
                 logger.debug("This game is running the Programming Phase now");
                 runProgrammingPhase(playerList);

@@ -213,7 +213,6 @@ public class HandleClient implements Runnable{
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
                         setAlive(true);
-
                     } else if (incomingMessage.getMessageType() == MessageType.MapSelected) {
 
                         String map = incomingMessage.getMessageBody().getMap();
