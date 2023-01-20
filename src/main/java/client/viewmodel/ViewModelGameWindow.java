@@ -119,7 +119,7 @@ public class ViewModelGameWindow {
     public void initialize() {
         ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
 
-        selectStarttile(gameboard, modelGame.robotProperty().get());
+        selectStarttile(modelGame.robotProperty().get());
 
         handCardsUI = FXCollections.observableArrayList(modelGame.getMyHandCards());
 
