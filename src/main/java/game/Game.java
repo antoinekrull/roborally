@@ -371,6 +371,7 @@ public class Game implements Runnable {
             if(checkIfPlayerWon(playerList)){
                 Player winner = determineWichPlayerWon(playerList);
                 logger.debug("The winning player is: " + winner);
+                server.sendGameFinished(winner);
                 //do some game ending magic
             }
         }
