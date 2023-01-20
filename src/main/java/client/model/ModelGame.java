@@ -1,7 +1,6 @@
 package client.model;
 
 import client.connection.Client;
-import client.connection.NotifyChangeSupport;
 import client.player.ClientPlayerList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import game.Game;

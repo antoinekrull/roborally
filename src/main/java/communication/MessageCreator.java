@@ -1,7 +1,5 @@
 package communication;
 
-import server.connection.PlayerList;
-
 /**
      * This class is used for communication between the server and the client by processing the client's input
      */

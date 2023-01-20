@@ -4,7 +4,6 @@ import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import game.Game;
-import game.player.Player;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.apache.logging.log4j.LogManager;

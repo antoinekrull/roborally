@@ -1,7 +1,5 @@
 package communication;
 
-import server.connection.PlayerList;
-
 /**
  * @author Antoine, Firas
  * @version 1.0
