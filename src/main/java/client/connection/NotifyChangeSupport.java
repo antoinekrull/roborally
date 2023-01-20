@@ -4,6 +4,8 @@ import client.viewmodel.ViewModelGameWindow;
 import client.viewmodel.ViewModelLobby;
 import client.viewmodel.ViewModelRobotSelection;
 
+import java.io.IOException;
+
 /**
  * Notifier class. Actively notifies specific instances for changes.
  *
@@ -61,6 +63,11 @@ public class NotifyChangeSupport {
         }
         if (robotselection) {
             viewModelRobotSelection.robotAccepted();
+        }
+    }
+    public void enterGame() throws IOException {
+        if (lobby){
+            viewModelLobby.enterGame();
         }
     }
 }

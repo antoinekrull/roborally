@@ -30,7 +30,7 @@ public class Server {
 
     protected Socket socket;
     protected ServerSocket serverSocket;
-    private static Game game;
+    private Game game;
     public PlayerList players;
     public HashMap<Integer, HandleClient> CLIENTS = new HashMap<>();
     //Message type instead of Strings
@@ -69,6 +69,7 @@ public class Server {
     }
 
     public void startServer(int port) {
+        this.game = Game.getInstance();
         this.alive = true;
         server.setOnline(true);
         Thread acceptClients = new Thread() {
@@ -112,22 +113,32 @@ public class Server {
                                     client.getValue().write(message);
                                 }
                             }
+                        } else if(message.getMessageType() == MessageType.SelectMap){
+                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                                if (client.getKey() == game.getFirstReadyID()) {
+                                    client.getValue().write(message);
+                                }
+                            }
+                        } else if(message.getMessageType() == MessageType.GameStarted){
+                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                                    client.getValue().write(message);
+                            }
                         }
                         //Changed group messages: will only be displayed to other clients, not to yourself
-                        if (!isPrivate) {
-                            int id = message.getMessageBody().getFrom();
+                        //added private message to work in chat
+                        //still need other players clientID to send message
+                        else if (isPrivate) {
+                            int toUser = message.getMessageBody().getFrom();
                             for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
-                                if (client.getKey() != id) {
+                                if (client.getKey() == toUser) {
                                     client.getValue().write(message);
                                 }
                             }
                         }
-                        //added private message to work in chat
-                        //still need other players clientID to send message
-                        if (isPrivate) {
-                            int toUser = message.getMessageBody().getFrom();
+                        else {
+                            int id = message.getMessageBody().getFrom();
                             for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
-                                if (client.getKey() == toUser) {
+                                if (client.getKey() != id) {
                                     client.getValue().write(message);
                                 }
                             }
@@ -163,6 +174,22 @@ public class Server {
         } catch (InterruptedException e) {
             logger.warn("An error occurred: " + e);
         }
+    }
+    public void sendGameStarted(String jsonMap) {
+
+        try {
+            messages.put(messageCreator.generateGameStartedMessage(jsonMap));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void sendSelectMap(String[] maps){
+        try {
+            messages.put(messageCreator.generateSelectMapMessage(maps));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
     }
     public void sendActivePhase(int phase) {
         try {
