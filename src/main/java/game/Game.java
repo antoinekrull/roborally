@@ -37,6 +37,7 @@ public class Game implements Runnable {
     private final Logger logger = LogManager.getLogger(Game.class);
     private String jsonMap;
     private int firstReady;
+    private boolean gameIsRunning = true;
 
     //TODO: discuss ShuffleCoding functionality
 
@@ -312,8 +313,8 @@ public class Game implements Runnable {
 
     private void runSetupPhase() {
         server.sendActivePhase(0);
-        System.out.println("Running Setup Phase now");
-        System.out.println(maps[0]);
+        logger.debug("Running Setup Phase now");
+        logger.debug(maps[0]);
         playerList.setPlayerReadiness(false);
         while(!playerList.playersAreReady()) {
             //TODO: implement this properly
@@ -372,8 +373,10 @@ public class Game implements Runnable {
             if(checkIfPlayerWon(playerList)){
                 Player winner = determineWichPlayerWon(playerList);
                 logger.debug("The winning player is: " + winner);
+                //sends a message to all clients
                 server.sendGameFinished(winner);
-                //do some game ending magic
+                //stops the game thread
+                gameIsRunning = false;
             }
         }
     }
@@ -479,27 +482,25 @@ public class Game implements Runnable {
     public void run() {
         logger.debug("This game is running");
         boolean readyToStart = false;
-        while(!readyToStart){
-            try {
-                //thread needs to sleep to check the if statetment probably
-                Thread.sleep(100);
-                if (readyList.size() >= 2 && this.jsonMap != null) {
-                    server.sendGameStarted(jsonMap);
+        while(gameIsRunning) {
+            //this while block checks when the game starts
+            while (!readyToStart) {
+                try {
+                    //thread needs to sleep to check the if statement probably
                     Thread.sleep(100);
-                    readyToStart = true;
+                    if (readyList.size() >= 2 && this.jsonMap != null) {
+                        server.sendGameStarted(jsonMap);
+                        Thread.sleep(100);
+                        readyToStart = true;
 
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
             }
-
-
-        }
-
-        /*();runSetupPhase();
-        while(true) {
+            //runSetupPhase();
             logger.debug("This game is running the Upgrade Phase now");
-            runUpgradePhase
+            runUpgradePhase();
             try {
                 logger.debug("This game is running the Programming Phase now");
                 runProgrammingPhase(playerList);
@@ -509,7 +510,7 @@ public class Game implements Runnable {
                 logger.warn("An error occurred :" + e);
                 throw new RuntimeException(e);
             }
-        }*/
+        }
     }
 
 }
