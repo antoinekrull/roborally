@@ -25,6 +25,7 @@ public class Player {
     private boolean isReady;
     private ArrayList<Card> hand;
     private Card[] cardRegister = new Card[5];
+    private Card[] upgradeSlots = new Card[3];
     private boolean[] statusRegister = new boolean[5];
     private ProgrammingDeck personalDiscardPile;
     private Robot robot;
