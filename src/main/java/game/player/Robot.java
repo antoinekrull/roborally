@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import org.javatuples.Pair;
+import server.connection.Server;
 
 /**
  * @author Moritz, Antoine, Firas
@@ -23,6 +24,8 @@ public class Robot {
     private ProgrammingDeck deck = new ProgrammingDeck();
     private boolean isRebooted = false;
     private int activeRegister;
+    private int id;
+    private Server server;
 
     public Robot(int figure) {
         this.figure = figure;
@@ -45,6 +48,17 @@ public class Robot {
         } else if(currentPosition.getValue1() > 0) {
             this.currentPosition = currentPosition.setAt1(0);
         }
+        server.sendMovement(this);
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+    public int getId() {
+        return id;
     }
     public int getCurrentObjective() {
         return currentObjective;
@@ -54,6 +68,7 @@ public class Robot {
     }
     public void setDirection(Direction direction) {
         this.direction = direction;
+        server.sendPlayerTurning(this);
     }
     public Direction getDirection() {
         return direction;

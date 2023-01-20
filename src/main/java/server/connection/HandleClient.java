@@ -35,6 +35,8 @@ public class HandleClient implements Runnable{
     public int port;
     public Socket socket;
     private String username;
+    private String jsonMap = null;
+    //private ServerMain.Server serverMain;
 
     private Server server;
 
@@ -68,7 +70,8 @@ public class HandleClient implements Runnable{
                 }
             }
         });
-        this.game = server.getGameInstance();
+        this.game = Game.getInstance();
+        game.setServer(server);
         try {
             this.in = new DataInputStream(
                     new BufferedInputStream(socket.getInputStream()));
@@ -194,14 +197,39 @@ public class HandleClient implements Runnable{
                         setAlive(true);
 
                     } else if (incomingMessage.getMessageType() == MessageType.MapSelected) {
+
                         String map = incomingMessage.getMessageBody().getMap();
                         String fileName = "/maps/"+map+".json";
                         InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream(fileName));
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
-                        String jsonmap = content.lines().collect(Collectors.joining());
-                        write(messageCreator.generateMapSelectedMessage(map));
-                        write(messageCreator.generateGameStartedMessage(jsonmap));
+                        this.jsonMap = content.lines().collect(Collectors.joining());
+                        game.setJsonMap(jsonMap);
+                        server.messages.put(messageCreator.generateMapSelectedMessage(map));
+                        //write(messageCreator.generateMapSelectedMessage(map));
 
+                        //write(messageCreator.generateGameStartedMessage(jsonMap));
+
+                    } else if (incomingMessage.getMessageType() == MessageType.CurrentPlayer) {
+                        Game.playerList.getPlayerFromList(incomingMessage.getMessageBody().getClientID()).setPlaying(true);
+                    } else if (incomingMessage.getMessageType() == MessageType.SelectedCard) {
+                        Game.playerList.getPlayerFromList(getClientID()).playCard(incomingMessage.getMessageBody().getCard(),
+                                incomingMessage.getMessageBody().getRegister());
+                        if(incomingMessage.getMessageBody().getCard().equals("Null")) {
+                            Message cardRemovedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
+                                    incomingMessage.getMessageBody().getRegister(), false);
+                            write(cardRemovedMessage);
+                        } else {
+                            Message cardPlayedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
+                                    incomingMessage.getMessageBody().getRegister(), true);
+                            write(cardPlayedMessage);
+                        }
+                    } else if (incomingMessage.getMessageType() == MessageType.SetStartingPoint) {
+                        int x = incomingMessage.getMessageBody().getX();
+                        int y = incomingMessage.getMessageBody().getY();
+                        Message startingPointTakenMessage = messageCreator.generateSetStartingPointMessage(x, y);
+                        if(game.checkIfStartTileIsTaken(x, y)){
+                            server.messages.put(startingPointTakenMessage);
+                        }
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
                         this.username = incomingMessage.getMessageBody().getName();
                         int figure = incomingMessage.getMessageBody().getFigure();
@@ -245,13 +273,16 @@ public class HandleClient implements Runnable{
                         boolean ready = incomingMessage.getMessageBody().isReady();
                         if(ready){
                             game.addReady(clientID);
-                            if(game.getFirstReadyID() == clientID){
+                            /*if(game.getFirstReadyID() == clientID){
                                 write(messageCreator.generateSelectMapMessage(game.getMaps()));
                             }
+                            if((game.getReadyList().size() >= 2)&&game.getJsonMap()!=null){
+                                server.messages.put(messageCreator.generateGameStartedMessage(game.getJsonMap()));
+                            }*/
                         } else {
                             game.removeReady(clientID);
                         }
-                        write(messageCreator.generatePlayerStatusMessage(clientID, ready));
+                        server.messages.put(messageCreator.generatePlayerStatusMessage(clientID, ready));
                     }
                     else if (incomingMessage.getMessageType() == MessageType.ConnectionUpdate) {
 

@@ -1,5 +1,10 @@
 package communication;
 
+import org.javatuples.Pair;
+import server.connection.PlayerList;
+
+import java.util.ArrayList;
+
 /**
  * @author Antoine, Firas
  * @version 1.0
@@ -29,7 +34,7 @@ public class MessageBody {
     private int register;
     private boolean filled;
     private int[] clientIDs;
-    private Object[] activeCards;
+    private ArrayList<Pair<Integer, String>> activeCards;
     private String newCard;
     private String rotation;
     private String type;
@@ -219,11 +224,11 @@ public class MessageBody {
         this.clientIDs = clientIDs;
     }
 
-    public Object[] getActiveCards() {
+    public ArrayList<Pair<Integer, String>> getActiveCards() {
         return activeCards;
     }
 
-    public void setActiveCards(Object[] activeCards) {
+    public void setActiveCards(ArrayList<Pair<Integer, String>> activeCards) {
         this.activeCards = activeCards;
     }
 

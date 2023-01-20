@@ -49,6 +49,16 @@ public class PlayerList implements Iterator<Player> {
         return result;
     }
 
+    public int getAmountOfReadyPlayers() {
+        int result = 0;
+        for(Player player: playerList) {
+            if (player.isReady()) {
+                result++;
+            }
+        }
+        return result;
+    }
+
     public void setPlayerReadiness(boolean setter) {
         for(int i = 0; i < playerList.size(); i++) {
             playerList.get(i).setReady(setter);

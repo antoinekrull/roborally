@@ -1,5 +1,11 @@
 package communication;
 
+import game.card.Card;
+import org.javatuples.Pair;
+import server.connection.PlayerList;
+
+import java.util.ArrayList;
+
 /**
      * This class is used for communication between the server and the client by processing the client's input
      */
@@ -177,7 +183,7 @@ package communication;
             messageBody.setCardsInHand(cards);
             return new Message(MessageType.CardsYouGotNow, messageBody);
         }
-        public Message generateCurrentCardsMessage(Object[] activeCards){
+        public Message generateCurrentCardsMessage(ArrayList<Pair<Integer, String>> activeCards){
             MessageBody messageBody = new MessageBody();
             messageBody.setActiveCards(activeCards);
             return new Message(MessageType.CurrentCards, messageBody);
