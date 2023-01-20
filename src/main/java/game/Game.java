@@ -26,6 +26,8 @@ public class Game implements Runnable {
     public static VirusDeck virusDeck = new VirusDeck();
     public static TrojanDeck trojanDeck = new TrojanDeck();
     public static WormDeck wormDeck = new WormDeck();
+    public static UpgradeDeck upgradeDeck = new UpgradeDeck();
+    public static ArrayList<Card> upgradeShop = new ArrayList<>();
     public static int currentRegister = 0;
 
     //TODO: Remove this?
@@ -152,6 +154,12 @@ public class Game implements Runnable {
             else if(tileList.get(1) instanceof PushPanelTile){index = 1;}
         }
         return new Pair<>(result, index);
+    }
+    private void refreshUpgradeShop(){
+        upgradeShop.clear();
+        for(int i = 0; i < playerList.size(); i++){
+            upgradeShop.add(upgradeDeck.popCardFromDeck());
+        }
     }
 
     private ArrayList<Robot> determinePriority() {

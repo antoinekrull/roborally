@@ -26,10 +26,11 @@ public class Player {
     private int id;
     private boolean isPlaying;
     private boolean isReady;
-    private boolean[] isUsingUpgrade = {false, false, false};
+    private boolean[][] isUsingUpgrade = {{false, false, false},{false, false, false}};
     private ArrayList<Card> hand;
     private Card[] cardRegister = new Card[5];
-    private ArrayBlockingQueue<Card> upgradeSlots = new ArrayBlockingQueue<>(3);
+    private ArrayBlockingQueue<Card> PermanentUpgradeSlots = new ArrayBlockingQueue<>(3);
+    private ArrayBlockingQueue<Card> TemporaryUpgradeSlots = new ArrayBlockingQueue<>(3);
     private boolean[] statusRegister = new boolean[5];
     private ProgrammingDeck personalDiscardPile;
     private Robot robot;
@@ -47,10 +48,10 @@ public class Player {
         isReady = false;
     }
 
-    public boolean[] isUsingUpgrade() {
+    public boolean[][] isUsingUpgrade() {
         return isUsingUpgrade;
     }
-    public void setUsingUpgrade(boolean[] values) {
+    public void setUsingUpgrade(boolean[][] values) {
         isUsingUpgrade = values;
     }
 
