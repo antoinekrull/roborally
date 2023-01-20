@@ -113,11 +113,9 @@ public class ViewModelGameWindow {
     }
 
     public void initialize() {
+        ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
 
         selectStarttile(gameboard, modelGame.robotProperty().get());
-
-        ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
-        placeTiles(map);
 
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
@@ -128,10 +126,10 @@ public class ViewModelGameWindow {
         }
         });
 
-        gameboardTileWidth = gameboardRegion.getWidth();
         gameboardRegion.widthProperty().addListener((obs, oldValue, newValue) -> {
             double width = newValue.doubleValue() * 0.04;
-            updateWidth(width);
+            gameboardTileWidth = width;
+            updateWidth(gameboardTileWidth);
         });
 
         playerGameInfo = new PlayerGameInfo(playerInfoGrid, modelGame.getPlayerList());
@@ -177,21 +175,18 @@ public class ViewModelGameWindow {
         onRightClickRemoveProgrammingCard(programmingPane4);
         onRightClickRemoveProgrammingCard(programmingPane5);
 
+        placeTiles(map);
+
         //StartupDispenseCards("/textures/cards/kartendeckStapel.png", cardDeck, programCard1);
+
 
         /*
         this.tutorial = new Tutorial(baseStackPane, programmingSpaceStackPane, gameboardStackPane,
                 handStackPane, handGrid, programmingGrid, gameboard, modelUser.usernameProperty().get());
         tutorial.loadGameWindowTutorial();
-
          */
-
     }
 
-    //should work for selectStarttile but has now effect
-    public double getGameboardTileWidth(){
-        return gameboardTileWidth;
-    }
 
     private void updateWidth(double width) {
         for(Node node: gameboard.getChildren()){
@@ -325,8 +320,10 @@ public class ViewModelGameWindow {
 
     public void selectStarttile (GridPane gameboard, int robot) {
         InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + robot + "_bunt.png");
-        Image im = new Image(input, 70, 70,true, true);
+        Image im = new Image(input);
         ImageView img = new ImageView(im);
+        img.setFitWidth(gameboardTileWidth);
+        img.setPreserveRatio(true);
         gameboard.setOnMouseClicked(event -> {
             Node target = event.getPickResult().getIntersectedNode();
             Integer colIndex = GridPane.getColumnIndex(target);
@@ -443,7 +440,6 @@ public class ViewModelGameWindow {
                         ImageView card = new ImageView(data);
                         card.setFitHeight(height);
                         card.setPreserveRatio(true);
-                        source.getChildren().remove(0);;
                         source.getChildren().add(card);
                         logger.debug(columnIndex);
                     }
@@ -492,11 +488,20 @@ public class ViewModelGameWindow {
         ImageView imageView = new ImageView(new Image(inputPath));
         fromPane.getChildren().add(imageView);
         TranslateTransition transition = new TranslateTransition();
-        transition.setDuration(Duration.seconds(2));
+        transition.setDuration(Duration.seconds(10));
         transition.setNode(imageView);
         transition.setToX(toPane.getLayoutX());
         transition.setToY(toPane.getLayoutY());
         transition.play();
+    }
+
+    public void fillHandCards (GridPane handGrid, String[] imagePaths) {
+        for (int i = 0; i < handGrid.getChildren().size(); i++) {
+            Pane pane = (Pane) handGrid.getChildren().get(i);
+            Image image = new Image(imagePaths[i]);
+            ImageView imageView = new ImageView(image);
+            pane.getChildren().add(imageView);
+        }
     }
 
 
