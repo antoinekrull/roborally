@@ -134,8 +134,8 @@ public class Game implements Runnable {
     }
 
     private void applyTileEffects(ArrayList<Tile> tileList, Player player) throws Exception {
-        for (int i = 0; i < tileList.size(); i++) {
-            tileList.get(i).applyEffect(player);
+        for (Tile tile : tileList) {
+            tile.applyEffect(player);
         }
     }
 
@@ -287,7 +287,7 @@ public class Game implements Runnable {
                     playerList.get(i).getRobot().setDirection(Direction.WEST);
                 }
             }
-            case "DizzyHighway", "ExtraCrispy", "LostBearings" -> {
+            case "DizzyHighway", "ExtraCrispy", "LostBearings", "Twister" -> {
                 for(int i = 0; i < playerList.size(); i++) {
                     playerList.get(i).getRobot().setDirection(Direction.EAST);
                 }
@@ -368,6 +368,39 @@ public class Game implements Runnable {
         return readyList;
     }
 
+    /**
+     * Checks every game round if a player has won the game.
+     *
+     * @param playerList The list of players who are playing the game at the moment
+     * @return returns if a Player has won the game
+     */
+    public boolean checkIfPlayerWon(PlayerList playerList){
+        int checkpointsInGame = board.getCheckPointCount();
+        for(int i = 0; i < playerList.size(); i++){
+            //checks if the current Obj. of the robot is higher than the checkpoints in game. This should happen
+            //when the robot gets to the last checkpoint
+            if(playerList.get(i).getRobot().getCurrentObjective() > checkpointsInGame){
+                return true;
+            }
+        }
+        return false;
+    }
+    /**
+     * Determines which player won the game.
+     *
+     * @param playerList The list of players who are playing the game at the moment
+     * @return returns the Player that has won the game
+     */
+    public Player determineWichPlayerWon(PlayerList playerList){
+        int checkpointsInGame = board.getCheckPointCount();
+        for(int i = 0; i < playerList.size(); i++){
+            if(playerList.get(i).getRobot().getCurrentObjective() > checkpointsInGame){
+                return playerList.get(i);
+            }
+        }
+        return null;
+    }
+
     @Override
     public void run() {
         logger.debug("This game is running");
@@ -380,7 +413,13 @@ public class Game implements Runnable {
                 runProgrammingPhase(playerList);
                 logger.debug("This game is running the Activation Phase now");
                 runActivationPhase();
+                if(checkIfPlayerWon(playerList)){
+                    Player winner = determineWichPlayerWon(playerList);
+                    logger.debug("The winning player is: " + winner);
+                    //do some game ending magic
+                }
             } catch (Exception e) {
+                logger.warn("An error occurred :" + e);
                 throw new RuntimeException(e);
             }
         }
