@@ -1,6 +1,5 @@
 package game;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.*;
 import game.card.*;
 import game.player.Player;
@@ -18,7 +17,7 @@ import java.util.TimerTask;
 
 public class Game implements Runnable {
     private GamePhase currentGamePhase;
-    private Timer timer = new Timer();
+    private final Timer timer = new Timer();
     public static PlayerList playerList;
     public Board board = new Board();
     private Player activePlayer;
@@ -30,7 +29,7 @@ public class Game implements Runnable {
 
     //TODO: Remove this?
     private LinkedList<Integer> readyList = new LinkedList<>();
-    private String[] maps = {"DizzyHighway", "ExtraCrispy", "DeathTrap", "LostBearings"};
+    private final String[] maps = {"DizzyHighway", "ExtraCrispy", "DeathTrap", "LostBearings", "Twister"};
 
     private static Game INSTANCE;
 
@@ -54,7 +53,7 @@ public class Game implements Runnable {
         this.board = board;
     }
     public void setPlayerList(PlayerList playerList) {
-        this.playerList = playerList;
+        Game.playerList = playerList;
     }
 
     private void applyAllTileEffects() throws Exception {
@@ -124,11 +123,11 @@ public class Game implements Runnable {
 
     private void applyPushPanelEffects() throws Exception {
         for (int i = 0; i < playerList.size(); i++) {
-            if((pushPanelInTile(board.getTile(playerList.get(i).getRobot().getCurrentPosition())).getValue0())){
-                int index = pushPanelInTile(board.getTile(playerList.get(i).getRobot().getCurrentPosition())).getValue1();
-                if(((PushPanelTile) board.getTile(playerList.get(i).getRobot().getCurrentPosition()).get(index))
+            if((pushPanelInTile(Objects.requireNonNull(Board.getTile(playerList.get(i).getRobot().getCurrentPosition()))).getValue0())){
+                int index = pushPanelInTile(Objects.requireNonNull(Board.getTile(playerList.get(i).getRobot().getCurrentPosition()))).getValue1();
+                if(((PushPanelTile) Board.getTile(playerList.get(i).getRobot().getCurrentPosition()).get(index))
                         .getActiveRegisterList().contains(currentRegister)) {
-                    applyTileEffects(board.getTile(playerList.get(i).getRobot().getCurrentPosition()), playerList.getPlayerFromList(i));
+                    applyTileEffects(Objects.requireNonNull(Board.getTile(playerList.get(i).getRobot().getCurrentPosition())), playerList.getPlayerFromList(i));
                 }
             }
         }
@@ -367,13 +366,6 @@ public class Game implements Runnable {
     }
     public LinkedList<Integer> getReadyList() {
         return readyList;
-    }
-
-
-    //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    public void createBoard(String map) throws JsonProcessingException {
-        //board.createBoard(map);
-        //board.testBoard();
     }
 
     @Override
