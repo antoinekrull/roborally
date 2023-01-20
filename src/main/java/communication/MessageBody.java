@@ -47,6 +47,8 @@ public class MessageBody {
     private String action;
     private boolean isBuying;
     private int checkpointID;
+    private String[] cardsInHand;
+    private int cardsAmountInHand;
 
     public int getNumber() {
         return number;
@@ -318,6 +320,22 @@ public class MessageBody {
 
     public void setCheckpointID(int checkpointID) {
         this.checkpointID = checkpointID;
+    }
+
+    public String[] getCardsInHand() {
+        return cardsInHand;
+    }
+
+    public void setCardsInHand(String[] cardsInHand) {
+        this.cardsInHand = cardsInHand;
+    }
+
+    public int getCardsAmountInHand() {
+        return cardsAmountInHand;
+    }
+
+    public void setCardsAmountInHand(int cardsInHand) {
+        this.cardsAmountInHand = cardsAmountInHand;
     }
 
 
