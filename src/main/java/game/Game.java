@@ -336,6 +336,11 @@ public class Game implements Runnable {
             }
             logger.debug("Applying tile effects");
             applyAllTileEffects();
+            if(checkIfPlayerWon(playerList)){
+                Player winner = determineWichPlayerWon(playerList);
+                logger.debug("The winning player is: " + winner);
+                //do some game ending magic
+            }
         }
     }
 
@@ -379,7 +384,7 @@ public class Game implements Runnable {
         for(int i = 0; i < playerList.size(); i++){
             //checks if the current Obj. of the robot is higher than the checkpoints in game. This should happen
             //when the robot gets to the last checkpoint
-            if(playerList.get(i).getRobot().getCurrentObjective() > checkpointsInGame){
+            if(playerList.get(i).getRobot().getCurrentObjective() == checkpointsInGame){
                 return true;
             }
         }
@@ -394,7 +399,7 @@ public class Game implements Runnable {
     public Player determineWichPlayerWon(PlayerList playerList){
         int checkpointsInGame = board.getCheckPointCount();
         for(int i = 0; i < playerList.size(); i++){
-            if(playerList.get(i).getRobot().getCurrentObjective() > checkpointsInGame){
+            if(playerList.get(i).getRobot().getCurrentObjective() == checkpointsInGame){
                 return playerList.get(i);
             }
         }
@@ -413,11 +418,6 @@ public class Game implements Runnable {
                 runProgrammingPhase(playerList);
                 logger.debug("This game is running the Activation Phase now");
                 runActivationPhase();
-                if(checkIfPlayerWon(playerList)){
-                    Player winner = determineWichPlayerWon(playerList);
-                    logger.debug("The winning player is: " + winner);
-                    //do some game ending magic
-                }
             } catch (Exception e) {
                 logger.warn("An error occurred :" + e);
                 throw new RuntimeException(e);
