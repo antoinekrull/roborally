@@ -35,8 +35,6 @@ public class PlayerList implements Iterator<Player> {
     public ArrayList<Player> getPlayerList(){
         return playerList;
     }
-
-
     public boolean playersAreReady() {
         int readyCount = 0;
         boolean result = false;
