@@ -13,6 +13,8 @@ import game.player.Player;
 public abstract class Card {
 
     private String cardName;
+    private int cost = 0;
+    private boolean isPermanent = false;
     private boolean isActivated = false;
     protected boolean isDamageCard = false;
     private String cardEffect;
@@ -45,6 +47,10 @@ public abstract class Card {
     public void setDamageCard(boolean damageCard) {
         isDamageCard = damageCard;
     }
+    public int getCost() {return cost;}
+    public void setCost(int cost) {this.cost = cost;}
+    public boolean isPermanent() {return isPermanent;}
+    public void setPermanent(boolean permanent) {isPermanent = permanent;}
 
     public void applyEffect(Player player) throws Exception {}
 
