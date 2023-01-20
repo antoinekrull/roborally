@@ -177,6 +177,10 @@ public class Player {
         }
     }
 
+    private void useUpgrades(boolean[][] parameter){
+        isUsingUpgrade = parameter;
+    }
+
     //TODO: Add GUI functionality / exceptions
     public void playCard(Card card, int index) {
         if(index == 0 && card instanceof AgainCard) {
