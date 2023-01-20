@@ -7,6 +7,7 @@ module com.example.knorrigekorrelatehp {
     requires com.fasterxml.jackson.databind;
     requires javatuples;
     requires org.apache.commons.lang3;
+    requires org.apache.logging.log4j;
 
     opens server to javafx.graphics, javafx.fxml, javafx.controls;
     exports server;

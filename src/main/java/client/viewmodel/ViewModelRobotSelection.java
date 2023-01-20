@@ -1,6 +1,7 @@
 package client.viewmodel;
 
 import client.RoboRallyStart;
+import client.connection.NotifyChangeSupport;
 import client.model.ModelGame;
 import client.model.ModelUser;
 import client.player.ClientPlayerList;
@@ -47,11 +48,14 @@ public class ViewModelRobotSelection {
 
     private ModelUser modelUser;
     private ModelGame modelGame;
+    private NotifyChangeSupport notifyChangeSupport;
 
     public ViewModelRobotSelection() {
         this.modelUser = ModelUser.getInstance();
         this.modelGame = ModelGame.getInstance();
         clientPlayerList = modelGame.getPlayerList();
+        notifyChangeSupport = NotifyChangeSupport.getInstance();
+        notifyChangeSupport.setViewModelRobotSelection(this);
     }
 
     /**
@@ -117,21 +121,23 @@ public class ViewModelRobotSelection {
         String username = modelUser.usernameProperty().get();
         if (robot != 0 && !username.isEmpty()) {
             modelGame.sendPlayerInformation(username);
-
-            Timeline timeline = new Timeline(new KeyFrame(
-                    Duration.millis(500),
-                    event -> {
-                        try {
-                            if (modelUser.getVerification()) {
-                                RoboRallyStart.switchScene("lobby.fxml");
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }));
-            timeline.play();
-
         }
+    }
+
+    public void robotAccepted() {
+        System.out.println("Selection accepted.");
+        Timeline timeline = new Timeline(new KeyFrame(
+                Duration.millis(650),
+                event -> {
+                    try {
+                        if (modelUser.getVerification()) {
+                            RoboRallyStart.switchScene("lobby.fxml");
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }));
+        timeline.play();
     }
 
     public void exit() throws IOException {

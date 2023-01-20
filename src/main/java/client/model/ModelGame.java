@@ -1,16 +1,19 @@
 package client.model;
 
 import client.connection.Client;
+import client.connection.NotifyChangeSupport;
 import client.player.ClientPlayerList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import game.Game;
 import game.board.Board;
 import game.board.Tile;
-import javafx.beans.property.*;
+import java.util.ArrayList;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
-import java.util.ArrayList;
 
 /**
  * Model for game
@@ -30,7 +33,6 @@ public class ModelGame {
     public void setMaps(ObservableList<String> maps) {
         this.maps = maps;
     }
-
     public ObservableList<Integer> getReadyList() {
         return readyList;
     }
@@ -40,7 +42,6 @@ public class ModelGame {
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
     private ClientPlayerList clientPlayerList;
     private Game game;
-
 
 
     private ModelGame() {
@@ -99,8 +100,7 @@ public class ModelGame {
         client.sendPlayerValuesMessage(nickname, robotProperty.get());
     }
 
-    public void setPlayerStatus(int userID) {
-        //client.sendPlayerStatus or client.sendMessageToServer(userID, MessageType); true/false
+    public void sendStarttileCoordinates( int x, int y){
+        client.sendStartingPoint(x, y);
     }
-
 }

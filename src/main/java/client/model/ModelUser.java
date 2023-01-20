@@ -1,7 +1,10 @@
 package client.model;
 
 import client.connection.Client;
+import client.connection.NotifyChangeSupport;
 import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 
 
 /**
@@ -19,21 +22,30 @@ public class ModelUser {
     private IntegerProperty userID;
     private StringProperty usernameProperty;
     private BooleanProperty isAI;
-
+    private NotifyChangeSupport notifyChangeSupport;
     private Client client;
 
 
     private ModelUser() {
         client = Client.getInstance();
+        notifyChangeSupport = NotifyChangeSupport.getInstance();
         connected = new SimpleBooleanProperty();
         connected.bind(client.connectedProperty());
-        accepted = new SimpleBooleanProperty();
-        accepted.bind(client.acceptedProperty());
         usernameProperty = new SimpleStringProperty("");
         userID = new SimpleIntegerProperty();
         userID.bindBidirectional(client.userIDProperty());
         isAI = new SimpleBooleanProperty();
         isAI.bind(client.isAIProperty());
+        accepted = new SimpleBooleanProperty();
+        accepted.bind(client.acceptedProperty());
+        accepted.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (accepted.get()) {
+                    notifyChangeSupport.notifyInstance();
+                }
+            }
+        });
     }
 
     public static ModelUser getInstance() {

@@ -83,5 +83,4 @@ public class ViewModelMainMenu {
         Platform.exit();
         System.exit(0);
     }
-
 }

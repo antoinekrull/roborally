@@ -6,12 +6,15 @@ import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import game.board.Board;
+import game.card.Card;
 import game.player.Robot;
 import client.player.ClientPlayer;
 import javafx.application.Platform;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
 
 import java.io.BufferedInputStream;
@@ -55,6 +58,7 @@ public class Client {
     private String group = "KnorrigeKorrelate";
     private ClientPlayerList clientPlayerList;
     private ObservableList<String> maps;
+    private final Logger logger = LogManager.getLogger(Client.class);
 
 
     private Client() {
@@ -64,7 +68,7 @@ public class Client {
         this.isAI = new SimpleBooleanProperty();
         this.maps = FXCollections.observableArrayList();
         this.connected = new SimpleBooleanProperty();
-        this.accepted = new SimpleBooleanProperty();
+        this.accepted = new SimpleBooleanProperty(false);
         this.clientPlayerList = new ClientPlayerList();
         this.errorMessage = new SimpleStringProperty();
     }
@@ -107,8 +111,8 @@ public class Client {
         return accepted;
     }
 
-    public void setAcceptedProperty() {
-        this.accepted.set(true);
+    public void setAcceptedProperty(boolean accepted) {
+        this.accepted.set(accepted);
     }
 
     public ClientPlayerList getPlayerList() {
@@ -156,7 +160,7 @@ public class Client {
                             int clientID = message.getMessageBody().getClientID();
                             if (Client.this.userIDProperty().get() == clientID) {
                                 if(!Client.this.accepted.get()) {
-                                    Client.this.setAcceptedProperty();
+                                    Client.this.setAcceptedProperty(true);
                                 }
                             }
                             else {
@@ -190,9 +194,12 @@ public class Client {
                         }
                         if (message.getMessageType().equals(MessageType.Error)) {
                             String error = message.getMessageBody().getError();
+                            logger.debug("Error: " + error);
                             Platform.runLater(() -> Client.this.setErrorMessage(error));
                         }
                         if (message.getMessageType().equals(MessageType.CardPlayed)) {
+                            int clientID = message.getMessageBody().getClientID();
+                            String card = message.getMessageBody().getCard();
 
                         }
                         if (message.getMessageType().equals(MessageType.CurrentPlayer)) {
@@ -211,10 +218,44 @@ public class Client {
                         if (message.getMessageType().equals(MessageType.NotYourCards)) {
 
                         }
+                        if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
+                            int clientID = message.getMessageBody().getClientID();
+                            String action = message.getMessageBody().getAction();
+                            if (action.equals("Remove")) {
+                                Platform.runLater(() -> Client.this.clientPlayerList.remove(clientID));
+                            }
+                        }
+                        if (message.getMessageType().equals(MessageType.Movement)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.PlayerTurning)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.DrawDamage)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.PickDamage)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.Energy)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.GameFinished)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.CheckpointMoved)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.RegisterChosen)) {
+
+                        }
                     }
                 }
             } catch (IOException e) {
-                System.out.println("Lost connection to server");
+                logger.warn("Lost connection to server " + e);
             }
         }
     }
@@ -246,6 +287,32 @@ public class Client {
             sendMessageToServer(messageCreator.generateMapSelectedMessage(map));
         }
     }
+    public void sendPlayCard(Card card) {
+        String sendCard = card.getCardName();
+        sendMessageToServer(messageCreator.generatePlayCardMessage(sendCard));
+    }
+    public void sendStartingPoint(int x, int y) {
+        sendMessageToServer(messageCreator.generateSetStartingPointMessage(x, y));
+    }
+    public void sendSelectCard(String card, int register) {
+        sendMessageToServer(messageCreator.generateSelectedCardMessage(card, register));
+    }
+    //TODO: add method in messageCreator
+    public void sendSelectedDamageCards() {
+
+    }
+    public void sendRebootDirection(String direction) {
+        sendMessageToServer(messageCreator.generateRebootDirectionMessage(direction));
+    }
+    public void sendDiscardSome() {
+
+    }
+    public void sendRegister(int register) {
+        sendMessageToServer(messageCreator.generateChooseRegisterMessage(register));
+    }
+
+
+
 
     public void sendMessageToServer(Message message) {
         try {

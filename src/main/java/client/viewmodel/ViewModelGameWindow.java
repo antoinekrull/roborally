@@ -4,11 +4,14 @@ import client.connection.NotifyChangeSupport;
 import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
+import client.ui.PlayerGameInfo;
+import client.ui.Tutorial;
 import communication.Message;
 import game.board.Tile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -17,10 +20,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -38,6 +38,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import javafx.util.Duration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * ViewModel for gamescreen
@@ -47,7 +50,10 @@ import javafx.scene.text.TextFlow;
  */
 public class ViewModelGameWindow {
 
-    public static ColumnConstraints gameboardTileColumn;
+    @FXML
+    private Pane gameboardRegion;
+    @FXML
+    private ColumnConstraints gameboardColumn;
     public Pane programspacePane;
     @FXML
     private Button chatButton;
@@ -69,7 +75,11 @@ public class ViewModelGameWindow {
     private Pane programmingPane1, programmingPane2, programmingPane3, programmingPane4, programmingPane5;
     @FXML
     private GridPane handGrid;
+    @FXML
+    private GridPane playerInfoGrid;
 
+    @FXML
+    private Pane cardDeck;
     @FXML
     private StackPane baseStackPane;
     @FXML
@@ -85,12 +95,14 @@ public class ViewModelGameWindow {
 
     private int height = 150;
     private int columnIndex;
+    private PlayerGameInfo playerGameInfo;
 
-    //private Tutorial tutorial;
+    private Tutorial tutorial;
 
-
+    private double gameboardTileWidth;
 
     private NotifyChangeSupport notifyChangeSupport;
+    private final Logger logger = LogManager.getLogger(ViewModelGameWindow.class);
 
     public ViewModelGameWindow() {
         this.modelChat = ModelChat.getInstance();
@@ -101,23 +113,29 @@ public class ViewModelGameWindow {
     }
 
     public void initialize() {
-        //TODO: Tiles resizeable
+
+        selectStarttile(gameboard, modelGame.robotProperty().get());
+
         ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
         placeTiles(map);
 
-        //TODO: Playerlist in server/viewmodel
-
-        /* PlayerList playerList = modelGame.getUsers();
-        placeRobots(playerList);
-        */
-
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
+
         chatVBox.heightProperty().addListener(new ChangeListener<Number>() {@Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
             chatScrollPane.setVvalue((Double) newValue);
         }
         });
+
+        gameboardTileWidth = gameboardRegion.getWidth();
+        gameboardRegion.widthProperty().addListener((obs, oldValue, newValue) -> {
+            double width = newValue.doubleValue() * 0.04;
+            updateWidth(width);
+        });
+
+        playerGameInfo = new PlayerGameInfo(playerInfoGrid, modelGame.getPlayerList());
+        playerGameInfo.loadPlayerInfo();
 
         setOnDragDetected(programCard1);
         setOnDragDetected(programCard2);
@@ -153,13 +171,13 @@ public class ViewModelGameWindow {
         setOnDragDropped(programmingPane4);
         setOnDragDropped(programmingPane5);
 
-        onRightClickRemoveProgrammingcard(programmingPane1);
-        onRightClickRemoveProgrammingcard(programmingPane2);
-        onRightClickRemoveProgrammingcard(programmingPane3);
-        onRightClickRemoveProgrammingcard(programmingPane4);
-        onRightClickRemoveProgrammingcard(programmingPane5);
+        onRightClickRemoveProgrammingCard(programmingPane1);
+        onRightClickRemoveProgrammingCard(programmingPane2);
+        onRightClickRemoveProgrammingCard(programmingPane3);
+        onRightClickRemoveProgrammingCard(programmingPane4);
+        onRightClickRemoveProgrammingCard(programmingPane5);
 
-        //selectStarttile(gameboard, new ClientPlayer(1, "Ralf", new Robot(1)));
+        //StartupDispenseCards("/textures/cards/kartendeckStapel.png", cardDeck, programCard1);
 
         /*
         this.tutorial = new Tutorial(baseStackPane, programmingSpaceStackPane, gameboardStackPane,
@@ -167,7 +185,22 @@ public class ViewModelGameWindow {
         tutorial.loadGameWindowTutorial();
 
          */
-        selectStarttile(gameboard, modelGame.robotProperty().get());
+
+    }
+
+    //should work for selectStarttile but has now effect
+    public double getGameboardTileWidth(){
+        return gameboardTileWidth;
+    }
+
+    private void updateWidth(double width) {
+        for(Node node: gameboard.getChildren()){
+            if(node instanceof ImageView){
+                ImageView img = (ImageView)node;
+                img.setFitWidth(width);
+                img.setPreserveRatio(true);
+            }
+        }
     }
 
     public void receivedMessage() {
@@ -283,7 +316,7 @@ public class ViewModelGameWindow {
         for (int x = 0; x < map.size(); x++){
             for (int y = 0; y < map.get(x).size(); y++) {
                 for (int i = 0; i < map.get(x).get(y).size(); i++){
-                    System.out.println("("+x+"; "+y+"): "+map.get(x).get(y).get(i).getType()+" Tile");
+                    logger.debug("("+x+"; "+y+"): "+map.get(x).get(y).get(i).getType()+" Tile");
                     map.get(x).get(y).get(i).makeImage(gameboard);
                 }
             }
@@ -292,15 +325,18 @@ public class ViewModelGameWindow {
 
     public void selectStarttile (GridPane gameboard, int robot) {
         InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + robot + "_bunt.png");
-        Image im = new Image(input, 50, 50, true, true);
+        Image im = new Image(input, 70, 70,true, true);
         ImageView img = new ImageView(im);
         gameboard.setOnMouseClicked(event -> {
             Node target = event.getPickResult().getIntersectedNode();
             Integer colIndex = GridPane.getColumnIndex(target);
             Integer rowIndex = GridPane.getRowIndex(target);
+            //check imageviews for type of tile
             if(target.getId() != null && target.getId().equals("StartTile")){
                 gameboard.getChildren().remove(img);
                 gameboard.add(img, colIndex, rowIndex);
+                //when starttile, insert img of robot and send coordinates
+                modelGame.sendStarttileCoordinates(colIndex, rowIndex);
             }
             else{
                 System.out.println("Ist kein Starttile");
@@ -310,12 +346,15 @@ public class ViewModelGameWindow {
 
 
 
+
     public void setOnDragDetected(Pane source) {
 
         source.setOnDragDetected(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 //drag was detected, start drag-and-drop gesture
+                logger.debug("Drag detected");
+
                 //Any TransferMode is allowed
                 Dragboard db = source.startDragAndDrop(TransferMode.ANY);
                 //put image on dragboard
@@ -326,7 +365,7 @@ public class ViewModelGameWindow {
                 event.consume();
                 columnIndex = handGrid.getChildren().indexOf(source);
                 source.getChildren().clear();
-                System.out.println(columnIndex);
+                logger.debug(columnIndex);
 
             }
         });
@@ -406,14 +445,14 @@ public class ViewModelGameWindow {
                         card.setPreserveRatio(true);
                         source.getChildren().remove(0);;
                         source.getChildren().add(card);
-                        System.out.println(columnIndex);
+                        logger.debug(columnIndex);
                     }
                 }
             }
         });
     }
 
-    public void onRightClickRemoveProgrammingcard(Pane target) {
+    public void onRightClickRemoveProgrammingCard(Pane target) {
         target.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -441,11 +480,23 @@ public class ViewModelGameWindow {
         for (int i = 0; i < handGrid.getChildren().size(); i++) {
             Pane child = (Pane) handGrid.getChildren().get(i);
             if (child.getChildren().isEmpty()) {
-                System.out.println("Slot " + i + " is empty");
+                logger.debug("Slot " + i + " is empty");
                 return i;
             }
         }
         return -1;
+    }
+
+    private void StartupDispenseCards(String imagePath, Pane fromPane, Pane toPane) {
+        InputStream inputPath = getClass().getResourceAsStream(imagePath);
+        ImageView imageView = new ImageView(new Image(inputPath));
+        fromPane.getChildren().add(imageView);
+        TranslateTransition transition = new TranslateTransition();
+        transition.setDuration(Duration.seconds(2));
+        transition.setNode(imageView);
+        transition.setToX(toPane.getLayoutX());
+        transition.setToY(toPane.getLayoutY());
+        transition.play();
     }
 
 

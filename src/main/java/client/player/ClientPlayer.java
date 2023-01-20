@@ -1,10 +1,10 @@
 package client.player;
 
+import game.card.Card;
 import game.player.Robot;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
@@ -22,6 +22,9 @@ public class ClientPlayer {
     private BooleanProperty isReady;
     private BooleanProperty isPlaying;
     private IntegerProperty score;
+    private DoubleProperty energyCubes;
+    private IntegerProperty hand;
+
 
     public ClientPlayer(int id, String username, Robot robot) {
         this.id = id;
@@ -30,6 +33,8 @@ public class ClientPlayer {
         this.score = new SimpleIntegerProperty();
         this.isPlaying = new SimpleBooleanProperty();
         this.isReady = new SimpleBooleanProperty();
+        this.energyCubes = new SimpleDoubleProperty(5);
+        this.hand = new SimpleIntegerProperty(9);
     }
 
     public String getUsername() {
@@ -97,4 +102,35 @@ public class ClientPlayer {
         return username;
     }
 
+    public boolean isIsReady() {
+        return isReady.get();
+    }
+
+    public boolean isIsPlaying() {
+        return isPlaying.get();
+    }
+
+    public double getEnergyCubes() {
+        return energyCubes.get();
+    }
+
+    public DoubleProperty energyCubesProperty() {
+        return energyCubes;
+    }
+
+    public void setEnergyCubes(int energyCubes) {
+        this.energyCubes.set(energyCubes);
+    }
+
+    public int getHand() {
+        return hand.get();
+    }
+
+    public IntegerProperty handProperty() {
+        return hand;
+    }
+
+    public void setHand(int hand) {
+        this.hand.set(hand);
+    }
 }

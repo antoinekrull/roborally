@@ -7,6 +7,8 @@ import game.Game;
 import game.player.Player;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -35,8 +37,10 @@ public class Server {
     public BooleanProperty online;
     MessageCreator messageCreator;
     private final String protocolVersion;
+    private final Logger logger = LogManager.getLogger(Server.class);
 
     private Server() {
+        logger.debug("Server constructor is called");
         this.messageCreator = new MessageCreator();
         this.players = new PlayerList();
         this.protocolVersion = "Version 1.0";
@@ -125,8 +129,8 @@ public class Server {
                                 }
                             }
                         }
-                    } catch (InterruptedException e) {
-                            System.out.println("Error is it here " + e.getMessage());
+                    } catch (Exception e) {
+                            logger.warn("An Exception occured: " + e);
                     }
                 }
             }
@@ -134,33 +138,20 @@ public class Server {
         writeMessages.start();
     }
 
-    //not used anymore
-    /*
-    public void broadcast(int id, Message message) {
-        for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
-            if (client.getKey() != id) {
-                client.getValue().write(message);
-            }
-        }
-    }
-
-    public void sendTo(int toUser, Message message) {
-        for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
-            if (client.getKey() == toUser) {
-                client.getValue().write(message);
-            }
-        }
-    }
-     */
-
     public void sendPlayerValuesToAll(int clientID, Message message) {
         for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
             if (client.getKey() != clientID) {
                 client.getValue().write(message);
-                System.out.println("send to: " + client.getValue().getUsername() + " with id: " + client.getValue().getClientID());
             }
         }
-        System.out.println("sendPlayerValuesToAll: " + " from " + message.getMessageBody().getClientID() + ", " + "with figure: " + message.getMessageBody().getFigure() + ", with name: " + message.getMessageBody().getName() + ", with id: " + message.getMessageBody().getClientID() + "\n");
+    }
+
+    public void sendConnectionLost(int clientID, Message message) {
+        for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+            if (client.getKey() != clientID) {
+                client.getValue().write(message);
+            }
+        }
     }
 
     public static Game getGameInstance(){

@@ -67,7 +67,6 @@ public class Tile {
     String imageFXid;
     protected int xCoordinate;
     protected int yCoordinate;
-    protected int width;
     protected int height;
     protected boolean isDanger;
     protected boolean isBlocking;
@@ -111,8 +110,10 @@ public class Tile {
     public void makeImage(GridPane tiles){
         ImageView img = new ImageView();
         img.setId(imageFXid);
-        Image im = new Image(path,(double) height, 70,true,false);
+        Image im = new Image(path,70,(double) height, true,true);
         img.setImage(im);
         tiles.add(img,this.xCoordinate,this.yCoordinate);
     }
+
+
 }

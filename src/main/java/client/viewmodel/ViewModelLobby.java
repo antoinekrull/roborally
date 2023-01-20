@@ -26,6 +26,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * ViewModel for lobby including chat, ListView to show current players,
@@ -68,6 +70,7 @@ public class ViewModelLobby {
     private ModelGame modelGame;
 
     private NotifyChangeSupport notifyChangeSupport;
+    private final Logger logger = LogManager.getLogger(ViewModelLobby.class);
 
     public ViewModelLobby() {
         modelChat = ModelChat.getInstance();
@@ -96,11 +99,6 @@ public class ViewModelLobby {
          * Sets focus for TextField after sending a message
          */
         Platform.runLater(() -> chatTextfield.requestFocus());
-
-        /*
-         * refreshes ListView when change happens
-         */
-        Platform.runLater(() -> userList.refresh());
 
         /*
          * Adjusts VBox height and updates ScrollPane to latest message.
@@ -259,7 +257,7 @@ public class ViewModelLobby {
             //modelGame.setPlayerStatus(modelUser.userIDProperty().get());
             modelUser.sendSetStatus(true);
             if(modelGame.getReadyList().size() >= 2) {
-                System.out.println("lets start");
+                logger.info("lets start");
             }
             /*long endTime = 2000;
             DateFormat timeFormat = new SimpleDateFormat( "HH:mm:ss" );

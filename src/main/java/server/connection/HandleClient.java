@@ -8,6 +8,8 @@ import game.Game;
 import game.player.Player;
 import game.player.Robot;
 import javafx.beans.property.SimpleBooleanProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.Socket;
@@ -33,12 +35,12 @@ public class HandleClient implements Runnable{
     public int port;
     public Socket socket;
     private String username;
-    //private ServerMain.Server serverMain;
 
     private Server server;
 
     private MessageCreator messageCreator;
     private Game game;
+    private final Logger logger = LogManager.getLogger(HandleClient.class);
 
     /**
      * Thread which handles the logged in clients.
@@ -72,7 +74,7 @@ public class HandleClient implements Runnable{
                     new BufferedInputStream(socket.getInputStream()));
             this.out = new DataOutputStream(socket.getOutputStream());
         } catch (Exception e) {
-            System.out.println("Error in HandleClient constructor " + e.getMessage());
+            logger.warn("An error occurred: " + e);
         }
     }
 
@@ -91,25 +93,9 @@ public class HandleClient implements Runnable{
         try {
             this.out.writeUTF(JsonSerializer.serializeJson(message));
         } catch (IOException e) {
-            System.out.println("Error in write method " + e.getMessage());
+            logger.warn("An error occurred: " + e);
         }
     }
-
-
-    //messages stored in linkedblockingqueue (thread using linkedblockingqueue calls write method which should be enough)
-    /*
-    public void writeTo(int id, Message message) {
-        try {
-            for (Map.Entry<Integer, HandleClient> client : server.CLIENTS.entrySet()) {
-                if (client.getValue().getClientID() == id) {
-                    client.getValue().out.writeUTF(JsonSerializer.serializeJson(message));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-     */
 
     public void aliveMessage(int id) {
         try {
@@ -119,7 +105,7 @@ public class HandleClient implements Runnable{
                 }
             }
         } catch (Exception e) {
-            System.out.println("Client "+ id +" couldn't be reached");
+            logger.warn("Client "+ id +" couldn't be reached\nAn exception occurred: " + e);
         }
     }
 
@@ -174,6 +160,8 @@ public class HandleClient implements Runnable{
                             if (isAlive()) {
                                 setAlive(false);
                             } else {
+                                Message connectionMessage = messageCreator.generateConnectionUpdateMessage(getClientID(), false, "Remove");
+                                server.sendConnectionLost(getClientID(), connectionMessage);
                                 closeConnection();
                                 exit = true;
                             }
@@ -190,21 +178,17 @@ public class HandleClient implements Runnable{
             while (accepted) {
                 Message incomingMessage = JsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
                 line = incomingMessage.getMessageBody().getMessage();
-                String line_formatted = this.username + ":  " + line;
+                String line_formatted = this.username + ": " + line;
                 try {
                     //String changed to Message type (protocol, from: sender): added to linkedblockingqueue
                     if (incomingMessage.getMessageType() == MessageType.SendChat && incomingMessage.getMessageBody().getTo() == -1) {
                         int clientID = getClientID();
                         server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, clientID, false));
-                        //server.broadcast(clientID, messageCreator.generateReceivedChatMessage(line_formatted, clientID, false));
                     } else if (incomingMessage.getMessageType() == MessageType.SendChat) {
                         if (server.CLIENTS.containsKey(incomingMessage.getMessageBody().getTo())) {
                             //String changed to Message type (protocol, from: to send): added to linkedblockingqueue
                             int toUser = incomingMessage.getMessageBody().getTo();
                             server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
-                            //int toUser = getClientID();
-                            //server.sendTo(toUser, messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
-                            ///writeTo(incomingMessage.getMessageBody().getTo(), incomingMessage);
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
                         setAlive(true);
@@ -248,11 +232,14 @@ public class HandleClient implements Runnable{
 
                                 for(int i = 0; i < server.players.size(); i++) {
                                     if(server.players.get(i).getId() != getClientID()) {
-                                        Message addOtherPlayer = messageCreator.generatePlayerAddedMessage(server.players.get(i).getUsername(),server.players.get(i).getRobot().getFigure(), server.players.get(i).getId());
+                                        Message addOtherPlayer = messageCreator.generatePlayerAddedMessage(server.players.get(i).getUsername(), server.players.get(i).getRobot().getFigure(), server.players.get(i).getId());
                                         write(addOtherPlayer);
                                     }
                                 }
                             }
+                        }
+                        for (int i = 0; i < server.players.size(); i++) {
+                            System.out.println(server.players.get(i).getId() + " " + server.players.get(i).getUsername());
                         }
                     } else if(incomingMessage.getMessageType() == MessageType.SetStatus) {
                         boolean ready = incomingMessage.getMessageBody().isReady();
@@ -266,13 +253,15 @@ public class HandleClient implements Runnable{
                         }
                         write(messageCreator.generatePlayerStatusMessage(clientID, ready));
                     }
+                    else if (incomingMessage.getMessageType() == MessageType.ConnectionUpdate) {
+
+                    }
                 } catch (Exception e) {
-                    e.printStackTrace();
-                    System.out.println(this.username);
+                    logger.warn("An exception occurred: " + e);
                 }
             }
         } catch (Exception e) {
-            //System.out.println("Client disconnected");
+            logger.warn("An exception occurred: " + e);
         }
     }
 
@@ -284,7 +273,7 @@ public class HandleClient implements Runnable{
             this.out.close();
             socket.close();
         } catch (Exception e) {
-            System.out.println("Error while closing Connection" + e.getMessage());
+            logger.warn("An exception occurred: " + e);
         }
 
     }
