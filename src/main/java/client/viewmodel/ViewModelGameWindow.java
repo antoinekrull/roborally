@@ -119,7 +119,7 @@ public class ViewModelGameWindow {
     public void initialize() {
         ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
 
-        selectStarttile(modelGame.robotProperty().get());
+
 
         handCardsUI = FXCollections.observableArrayList(modelGame.getMyHandCards());
 
@@ -136,6 +136,7 @@ public class ViewModelGameWindow {
             double width = newValue.doubleValue() * 0.04;
             gameboardTileWidth = width;
             updateWidth(gameboardTileWidth);
+            selectStarttile(modelGame.robotProperty().get(), gameboardTileWidth);
         });
 
         playerGameInfo = new PlayerGameInfo(playerInfoGrid, modelGame.getPlayerList());
@@ -323,11 +324,11 @@ public class ViewModelGameWindow {
         }
     }
 
-    public void selectStarttile (int robot) {
+    public void selectStarttile (int robot, double width) {
         InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + robot + "_bunt.png");
         Image im = new Image(input);
         ImageView img = new ImageView(im);
-        img.setFitWidth(gameboardTileWidth);
+        img.setFitWidth(width);
         img.setPreserveRatio(true);
         //to identify the robot in other methods
         img.setId("Robot_" + robot);
