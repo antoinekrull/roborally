@@ -17,6 +17,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -123,6 +124,13 @@ public class Server {
                             for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
                                     client.getValue().write(message);
                             }
+                        } else if (message.getMessageType() == MessageType.CurrentPlayer){
+                            int id = message.getMessageBody().getClientID();
+                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                                if (client.getKey() == id) {
+                                    client.getValue().write(message);
+                                }
+                            }
                         }
                         //Changed group messages: will only be displayed to other clients, not to yourself
                         //added private message to work in chat
@@ -150,6 +158,9 @@ public class Server {
             }
         };
         writeMessages.start();
+    }
+    public void addPlayerToGame(Player player) {
+        game.addPlayer(player);
     }
 
     public void sendPlayerValuesToAll(int clientID, Message message) {
@@ -182,6 +193,16 @@ public class Server {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+    public void sendStartPointTaken(int id, Pair<Integer, Integer> coordinates){
+        int x = coordinates.getValue0();
+        int y = coordinates.getValue1();
+        try {
+            messages.put(messageCreator.generateStartingPointTakenMessage(id,x,y));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
     }
     public void sendSelectMap(String[] maps){
         try {
@@ -218,6 +239,13 @@ public class Server {
             CLIENTS.get(player.getId()).write(messageCreator.generateShuffleCodingMessage(player.getId()));
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    public void sendCurrentPlayer(int ID) {
+        try {
+            messages.put(messageCreator.generateCurrentPlayerMessage(ID));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 

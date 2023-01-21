@@ -232,16 +232,16 @@ public class HandleClient implements Runnable{
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
                         this.username = incomingMessage.getMessageBody().getName();
                         int figure = incomingMessage.getMessageBody().getFigure();
-                        if (server.players.size() == 0) {
+                        if (game.playerList.size() == 0) {
                             Message robotAcceptedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
                             write(robotAcceptedMessage);
-                            server.players.add(new Player(getClientID(), incomingMessage.getMessageBody().getName()
+                            server.addPlayerToGame(new Player(getClientID(), incomingMessage.getMessageBody().getName()
                                     , new Robot(incomingMessage.getMessageBody().getFigure())));
                         }
                         else {
                             boolean taken = false;
-                            for (int i = 0; i < server.players.size(); i++) {
-                                if (server.players.get(i).getRobot().getFigure() == figure) {
+                            for (int i = 0; i < game.playerList.size(); i++) {
+                                if (game.playerList.get(i).getRobot().getFigure() == figure) {
                                     taken = true;
                                     write(messageCreator.generateErrorMessage("Your figure was already chosen. Choose another one."));
                                     break;
@@ -252,18 +252,21 @@ public class HandleClient implements Runnable{
                                 Message robotAcceptedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
                                 write(robotAcceptedMessage);
 
-                                server.players.add(new Player(getClientID(), incomingMessage.getMessageBody().getName()
+                                server.addPlayerToGame(new Player(getClientID(), incomingMessage.getMessageBody().getName()
                                         , new Robot(incomingMessage.getMessageBody().getFigure())));
                                 Message playerAddedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
                                 server.sendPlayerValuesToAll(getClientID(), playerAddedMessage);
 
-                                for(int i = 0; i < server.players.size(); i++) {
-                                    if(server.players.get(i).getId() != getClientID()) {
-                                        Message addOtherPlayer = messageCreator.generatePlayerAddedMessage(server.players.get(i).getUsername(), server.players.get(i).getRobot().getFigure(), server.players.get(i).getId());
+                                for(int i = 0; i < game.playerList.size(); i++) {
+                                    if(game.playerList.get(i).getId() != getClientID()) {
+                                        Message addOtherPlayer = messageCreator.generatePlayerAddedMessage(game.playerList.get(i).getUsername(), game.playerList.get(i).getRobot().getFigure(), game.playerList.get(i).getId());
                                         write(addOtherPlayer);
                                     }
                                 }
                             }
+                        }
+                        for (int i = 0; i < game.playerList.size(); i++) {
+                            logger.debug(game.playerList.get(i).getId() + " " + game.playerList.get(i).getUsername());
                         }
                     } else if(incomingMessage.getMessageType() == MessageType.SetStatus) {
                         boolean ready = incomingMessage.getMessageBody().isReady();
@@ -295,7 +298,7 @@ public class HandleClient implements Runnable{
 
     private void closeConnection(){
         try {
-            server.players.remove(threadID);
+            game.playerList.remove(threadID);
             server.CLIENTS.remove(threadID);
             this.in.close();
             this.out.close();
