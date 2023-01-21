@@ -121,9 +121,15 @@ public class Server {
                                 }
                             }
                         } else if(message.getMessageType() == MessageType.GameStarted){
-                            LinkedList ready = game.getReadyList();
                             for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
                                     client.getValue().write(message);
+                            }
+                        } else if (message.getMessageType() == MessageType.CurrentPlayer){
+                            int id = message.getMessageBody().getClientID();
+                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                                if (client.getKey() == id) {
+                                    client.getValue().write(message);
+                                }
                             }
                         }
                         //Changed group messages: will only be displayed to other clients, not to yourself
@@ -153,7 +159,7 @@ public class Server {
         };
         writeMessages.start();
     }
-    public void addPlayertoGame(Player player) {
+    public void addPlayerToGame(Player player) {
         game.addPlayer(player);
     }
 
@@ -187,6 +193,16 @@ public class Server {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+    public void sendStartPointTaken(int id, Pair<Integer, Integer> coordinates){
+        int x = coordinates.getValue0();
+        int y = coordinates.getValue1();
+        try {
+            messages.put(messageCreator.generateStartingPointTakenMessage(id,x,y));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
     }
     public void sendSelectMap(String[] maps){
         try {
@@ -223,6 +239,13 @@ public class Server {
             CLIENTS.get(player.getId()).write(messageCreator.generateShuffleCodingMessage(player.getId()));
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    public void sendCurrentPlayer(int ID) {
+        try {
+            messages.put(messageCreator.generateCurrentPlayerMessage(ID));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 

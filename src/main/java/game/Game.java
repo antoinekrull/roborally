@@ -31,12 +31,12 @@ public class Game implements Runnable {
     private LinkedList<Integer> readyList = new LinkedList<>();
     private final String[] maps = {"DizzyHighway", "ExtraCrispy", "DeathTrap", "LostBearings", "Twister"};
     private static Game INSTANCE;
+    private boolean robotSet = false;
     private ArrayList<CheckpointTile> checkpointTileArrayList = null;
     private ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
     private Server server;
     private final Logger logger = LogManager.getLogger(Game.class);
     private String jsonMap;
-    private int firstReady;
     private boolean gameIsRunning = true;
 
     //TODO: discuss ShuffleCoding functionality
@@ -57,6 +57,9 @@ public class Game implements Runnable {
         for(int i = 0; i < playerList.size(); i++) {
             playerList.get(i).setServerForPlayerAndRobot(server);
         }
+    }
+    public void setRobotSet(boolean robotSet) {
+        this.robotSet = robotSet;
     }
     public Board getBoard() {
         return board;
@@ -317,6 +320,14 @@ public class Game implements Runnable {
     private void runSetupPhase() {
         server.sendActivePhase(0);
         logger.debug("Running Setup Phase now");
+        for (int i =0; i < readyList.size(); i++) {
+            activePlayer = playerList.getPlayerFromList(readyList.get(i));
+            server.sendCurrentPlayer(readyList.get(i));
+            while(!robotSet){}
+            this.robotSet=false;
+            server.sendStartPointTaken(activePlayer.getId(),activePlayer.getRobot().getCurrentPosition());
+
+        }
         logger.debug(maps[0]);
         playerList.setPlayerReadiness(false);
         while(!playerList.playersAreReady()) {
