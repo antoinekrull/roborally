@@ -1,5 +1,6 @@
 package client.viewmodel;
 
+import client.RoboRallyStart;
 import client.changesupport.NotifyChangeSupport;
 import client.model.ModelChat;
 import client.model.ModelGame;
