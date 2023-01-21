@@ -2,6 +2,8 @@ package client.player;
 
 import game.player.Robot;
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  * @author Moritz, Dominic, Antoine, Firas
@@ -21,6 +23,7 @@ public class ClientPlayer {
     private IntegerProperty x;
     private IntegerProperty y;
 
+    private ObservableList<RegisterInformation> registerInformations;
 
     public ClientPlayer(int id, String username, Robot robot) {
         this.id = id;
@@ -31,6 +34,7 @@ public class ClientPlayer {
         this.isReady = new SimpleBooleanProperty();
         this.energyCubes = new SimpleDoubleProperty(5);
         this.cardsInHand = new SimpleIntegerProperty(9);
+        this.registerInformations = FXCollections.observableArrayList();
     }
 
     public String getUsername() {
@@ -128,5 +132,49 @@ public class ClientPlayer {
 
     public void setCardsInHand(int hand) {
         this.cardsInHand.set(hand);
+    }
+
+    public void setEnergyCubes(double energyCubes) {
+        this.energyCubes.set(energyCubes);
+    }
+
+    public int getCardsInHand() {
+        return cardsInHand.get();
+    }
+
+    public IntegerProperty cardsInHandProperty() {
+        return cardsInHand;
+    }
+
+    public int getX() {
+        return x.get();
+    }
+
+    public IntegerProperty xProperty() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x.set(x);
+    }
+
+    public int getY() {
+        return y.get();
+    }
+
+    public IntegerProperty yProperty() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y.set(y);
+    }
+
+    public ObservableList<RegisterInformation> getRegisterInformations() {
+        return registerInformations;
+    }
+
+    public void setRegisterInformations(ObservableList<RegisterInformation> registerInformations) {
+        this.registerInformations = registerInformations;
     }
 }

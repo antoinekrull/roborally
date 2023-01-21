@@ -1,6 +1,7 @@
 package client.connection;
 
 import client.player.ClientPlayerList;
+import client.player.RegisterInformation;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
@@ -297,6 +298,16 @@ public class Client {
 
                             }
 
+                        }
+                        if (message.getMessageType().equals(MessageType.CardSelected)) {
+                            int clientID = message.getMessageBody().getClientID();
+                            int register = message.getMessageBody().getRegister();
+                            boolean filled = message.getMessageBody().isFilled();
+                            for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
+                                if (clientPlayerList.getPlayerList().get(i).getId() == clientID) {
+                                    Client.this.clientPlayerList.getPlayerList().get(i).getRegisterInformations().add(new RegisterInformation(register, filled));
+                                }
+                            }
                         }
                         if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
 
