@@ -20,7 +20,7 @@ public class Game implements Runnable {
     private GamePhase currentGamePhase;
     private final Timer timer = new Timer();
     private String mapName;
-    public static PlayerList playerList;
+    public static PlayerList playerList = new PlayerList();
     public Board board = new Board();
     private Player activePlayer;
     public static SpamDeck spamDeck = new SpamDeck();
@@ -64,6 +64,9 @@ public class Game implements Runnable {
 
     public void setBoard(Board board) {
         this.board = board;
+    }
+    public void addPlayer(Player player) {
+        playerList.add(player);
     }
     public void setPlayerList(PlayerList playerList) {
         Game.playerList = playerList;
@@ -394,7 +397,6 @@ public class Game implements Runnable {
     public String[] getMaps(){return this.maps;}
     public void addReady(int clientID) {
         readyList.add(clientID);
-        logger.debug(readyList.size());
         if(clientID == getFirstReadyID()){
             server.sendSelectMap(maps);
         }
@@ -488,7 +490,8 @@ public class Game implements Runnable {
                 try {
                     //thread needs to sleep to check the if statement probably
                     Thread.sleep(100);
-                    if (readyList.size() >= 2 && this.jsonMap != null) {
+                    //if condition checks if at least two players are ready and a map was selected and if every joined player is ready
+                    if (readyList.size() >= 2 && this.jsonMap != null && readyList.size()==playerList.size()) {
                         server.sendGameStarted(jsonMap);
                         Thread.sleep(100);
                         readyToStart = true;
@@ -498,7 +501,7 @@ public class Game implements Runnable {
                     throw new RuntimeException(e);
                 }
             }
-            //runSetupPhase();
+            runSetupPhase();
             logger.debug("This game is running the Upgrade Phase now");
             runUpgradePhase();
             try {

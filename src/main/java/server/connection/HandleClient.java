@@ -235,7 +235,7 @@ public class HandleClient implements Runnable{
                         if (server.players.size() == 0) {
                             Message robotAcceptedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
                             write(robotAcceptedMessage);
-                            server.players.add(new Player(getClientID(), incomingMessage.getMessageBody().getName()
+                            server.addPlayertoGame(new Player(getClientID(), incomingMessage.getMessageBody().getName()
                                     , new Robot(incomingMessage.getMessageBody().getFigure())));
                         }
                         else {

@@ -17,6 +17,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -120,6 +121,7 @@ public class Server {
                                 }
                             }
                         } else if(message.getMessageType() == MessageType.GameStarted){
+                            LinkedList ready = game.getReadyList();
                             for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
                                     client.getValue().write(message);
                             }
@@ -150,6 +152,9 @@ public class Server {
             }
         };
         writeMessages.start();
+    }
+    public void addPlayertoGame(Player player) {
+        game.addPlayer(player);
     }
 
     public void sendPlayerValuesToAll(int clientID, Message message) {
