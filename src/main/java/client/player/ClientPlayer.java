@@ -16,7 +16,8 @@ public class ClientPlayer {
     private BooleanProperty isPlaying;
     private IntegerProperty score;
     private DoubleProperty energyCubes;
-    private IntegerProperty hand;
+
+    private IntegerProperty cardsInHand;
     private IntegerProperty x;
     private IntegerProperty y;
 
@@ -29,7 +30,7 @@ public class ClientPlayer {
         this.isPlaying = new SimpleBooleanProperty();
         this.isReady = new SimpleBooleanProperty();
         this.energyCubes = new SimpleDoubleProperty(5);
-        this.hand = new SimpleIntegerProperty(9);
+        this.cardsInHand = new SimpleIntegerProperty(9);
     }
 
     public String getUsername() {
@@ -118,14 +119,14 @@ public class ClientPlayer {
     }
 
     public int getHand() {
-        return hand.get();
+        return cardsInHand.get();
     }
 
     public IntegerProperty handProperty() {
-        return hand;
+        return cardsInHand;
     }
 
-    public void setHand(int hand) {
-        this.hand.set(hand);
+    public void setCardsInHand(int hand) {
+        this.cardsInHand.set(hand);
     }
 }

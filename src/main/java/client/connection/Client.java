@@ -270,6 +270,13 @@ public class Client {
                             Client.this.myCards.setAll(message.getMessageBody().getCardsInHand());
                         }
                         if (message.getMessageType().equals(MessageType.NotYourCards)) {
+                            int clientID = message.getMessageBody().getClientID();
+                            int cardsInHand = message.getMessageBody().getCardsAmountInHand();
+                            for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
+                                if (clientPlayerList.getPlayerList().get(i).getId() == clientID) {
+                                    Client.this.clientPlayerList.getPlayerList().get(i).setCardsInHand(cardsInHand);
+                                }
+                            }
 
                         }
                         if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
