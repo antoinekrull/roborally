@@ -64,7 +64,7 @@ public class ViewModelLobby {
     @FXML
     private Button mapButton;
 
-    private BooleanProperty ready;
+    private Boolean ready = false;
     private ModelChat modelChat;
     private ModelUser modelUser;
     private ModelGame modelGame;
@@ -84,7 +84,6 @@ public class ViewModelLobby {
      * Initializing method for JavaFX components
      */
     public void initialize() {
-        this.ready = new SimpleBooleanProperty();
         this.userList.setItems(modelGame.getPlayerList().getPlayerList());
         this.usersChoiceBox.setValue(modelGame.getPlayerList().getPlayerList().get(0));
         this.usersChoiceBox.setItems(modelGame.getPlayerList().getPlayerList());
@@ -93,7 +92,6 @@ public class ViewModelLobby {
 
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
-        ready.bindBidirectional(modelGame.readyToPlayProperty());
 
         /*
          * Sets focus for TextField after sending a message
@@ -251,9 +249,9 @@ public class ViewModelLobby {
     }
 
     public void readyButtonOnAction() throws IOException {
-        if (!this.ready.get()) {
+        if (!this.ready) {
             readyButton.setText("NOT READY");
-            this.ready.set(true);
+            this.ready =true;
             //modelGame.setPlayerStatus(modelUser.userIDProperty().get());
             modelUser.sendSetStatus(true);
             if(modelGame.getReadyList().size() >= 2) {
@@ -280,9 +278,9 @@ public class ViewModelLobby {
              */
             //RoboRallyStart.switchScene("gamewindow.fxml");
         }
-        else if (this.ready.get()) {
+        else if (this.ready) {
             readyButton.setText("READY");
-            this.ready.set(false);
+            this.ready=false;
             modelUser.sendSetStatus(false);
         }
         //resource is null
@@ -293,6 +291,9 @@ public class ViewModelLobby {
         currentStage.setScene(new Scene(root, 1650, 1000));
         currentStage.show();
         */
+    }
+    public void enterGame() throws IOException {
+        RoboRallyStart.switchScene("gamewindow.fxml");
     }
 
     public void exit() throws IOException {

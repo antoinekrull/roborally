@@ -16,6 +16,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
+import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
 /**
  * Model for game
  *
@@ -30,6 +39,7 @@ public class ModelGame {
     private SimpleIntegerProperty robotProperty;
     private SimpleStringProperty errorMessage;
     private ObservableList<Integer> readyList;
+    private NotifyChangeSupport notifyChangeSupport;
 
     public void setMaps(ObservableList<String> maps) {
         this.maps = maps;
@@ -53,6 +63,19 @@ public class ModelGame {
         this.robotProperty = new SimpleIntegerProperty();
         this.readyList = FXCollections.observableArrayList();
         this.readyToPlay = new SimpleBooleanProperty();
+        readyToPlay.bind(client.gameStartedProperty());
+        readyToPlay.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (readyToPlay.get()){
+                    try {
+                        notifyChangeSupport.enterGame();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
         this.maps = client.getMaps();
         //this.maps = FXCollections.observableArrayList(client.getMaps());
         this.gameBoard = new Board();

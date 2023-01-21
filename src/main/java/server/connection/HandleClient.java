@@ -36,6 +36,7 @@ public class HandleClient implements Runnable{
     public Socket socket;
     private String username;
     private String jsonMap = null;
+    //private ServerMain.Server serverMain;
 
     private Server server;
 
@@ -194,7 +195,6 @@ public class HandleClient implements Runnable{
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
                         setAlive(true);
-
                     } else if (incomingMessage.getMessageType() == MessageType.MapSelected) {
 
                         String map = incomingMessage.getMessageBody().getMap();

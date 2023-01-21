@@ -1,7 +1,6 @@
 package game.player;
 
 import game.board.Direction;
-import game.board.Tile;
 import game.card.ProgrammingDeck;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

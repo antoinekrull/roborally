@@ -1,14 +1,7 @@
 package client.player;
 
-import game.card.Card;
 import game.player.Robot;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import org.apache.commons.lang3.ArrayUtils;
-
-import java.util.ArrayList;
-import java.util.Random;
 
 /**
  * @author Moritz, Dominic, Antoine, Firas
