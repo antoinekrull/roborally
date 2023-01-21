@@ -1,7 +1,7 @@
 package client.model;
 
 import client.connection.Client;
-import client.connection.NotifyChangeSupport;
+import client.changesupport.NotifyChangeSupport;
 import client.player.ClientPlayerList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import game.Game;
@@ -9,10 +9,10 @@ import game.board.Board;
 import game.board.Tile;
 import java.io.IOException;
 import java.util.ArrayList;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
+
+import javafx.beans.property.*;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -34,13 +34,10 @@ public class ModelGame {
     private SimpleStringProperty errorMessage;
     private ObservableList<Integer> readyList;
     private NotifyChangeSupport notifyChangeSupport;
-
-    public void setMaps(ObservableList<String> maps) {
-        this.maps = maps;
-    }
-    public ObservableList<Integer> getReadyList() {
-        return readyList;
-    }
+    private IntegerProperty x;
+    private IntegerProperty y;
+    private boolean yChanged;
+    private boolean xChanged;
 
     private ObservableList<String> maps;
     private BooleanProperty readyToPlay;
@@ -54,6 +51,8 @@ public class ModelGame {
     private ModelGame() {
         client = Client.getInstance();
         this.notifyChangeSupport = NotifyChangeSupport.getInstance();
+        this.xChanged = false;
+        this.yChanged = false;
         this.robotProperty = new SimpleIntegerProperty();
         this.readyList = FXCollections.observableArrayList();
         this.readyToPlay = new SimpleBooleanProperty();
@@ -77,6 +76,26 @@ public class ModelGame {
         this.errorMessage = new SimpleStringProperty();
         errorMessage.bind(client.errorMessageProperty());
         this.myHandCards = FXCollections.observableArrayList(client.getMyCards());
+        this.x = new SimpleIntegerProperty();
+        this.y = new SimpleIntegerProperty();
+        x.bind(client.xProperty());
+        y.bind(client.yProperty());
+
+        x.addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                xChanged = true;
+                check_x_y_changed();
+            }
+        });
+
+        y.addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                yChanged = true;
+            }
+        });
+
         myHandCards.addListener(new ListChangeListener<String>() {
             @Override
             public void onChanged(Change<? extends String> c) {
@@ -124,7 +143,35 @@ public class ModelGame {
     public ObservableList<String> getMyHandCards() {
         return myHandCards;
     }
+    public void setMaps(ObservableList<String> maps) {
+        this.maps = maps;
+    }
+    public ObservableList<Integer> getReadyList() {
+        return readyList;
+    }
+    public int getX() {
+        return x.get();
+    }
 
+    public IntegerProperty xProperty() {
+        return x;
+    }
+
+    public int getY() {
+        return y.get();
+    }
+
+    public IntegerProperty yProperty() {
+        return y;
+    }
+
+    public void check_x_y_changed() {
+        if (xChanged && yChanged) {
+            notifyChangeSupport.robotMovement(xProperty().get(), yProperty().get(), robotProperty.get());
+            xChanged = false;
+            yChanged = false;
+        }
+    }
     public void createMap(String jsonMap) throws JsonProcessingException {
         gameBoard.createBoard(jsonMap);
         this.gameMap = gameBoard.getBoard();

@@ -51,6 +51,8 @@ public class Client {
     private ObjectProperty<Message> message;
     private IntegerProperty userID;
     private StringProperty errorMessage;
+    private IntegerProperty x;
+    private IntegerProperty y;
     private Boolean prioPlayer = false;
 
     public static ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
@@ -78,6 +80,8 @@ public class Client {
         this.clientPlayerList = new ClientPlayerList();
         this.errorMessage = new SimpleStringProperty();
         this.myCards = FXCollections.observableArrayList();
+        this.x = new SimpleIntegerProperty();
+        this.y = new SimpleIntegerProperty();
     }
 
     public static Client getInstance() {
@@ -151,6 +155,30 @@ public class Client {
 
     public void setMyCards(ObservableList<String> myCards) {
         this.myCards = myCards;
+    }
+
+    public int getX() {
+        return x.get();
+    }
+
+    public IntegerProperty xProperty() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x.set(x);
+    }
+
+    public int getY() {
+        return y.get();
+    }
+
+    public IntegerProperty yProperty() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y.set(y);
     }
 
     private class ReadMessagesFromServer implements Runnable {
@@ -252,7 +280,15 @@ public class Client {
                             }
                         }
                         if (message.getMessageType().equals(MessageType.Movement)) {
+                            int clientID = message.getMessageBody().getClientID();
+                            if (Client.this.userIDProperty().get() == clientID) {
+                                Client.this.setX(message.getMessageBody().getX());
+                                Client.this.setY(message.getMessageBody().getY());
+                            }
+                            //TODO: movement for other players
+                            else {
 
+                            }
 
                         }
                         if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {

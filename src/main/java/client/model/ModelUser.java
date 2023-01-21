@@ -1,7 +1,7 @@
 package client.model;
 
 import client.connection.Client;
-import client.connection.NotifyChangeSupport;
+import client.changesupport.NotifyChangeSupport;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

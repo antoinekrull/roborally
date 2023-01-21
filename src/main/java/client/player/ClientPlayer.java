@@ -17,6 +17,8 @@ public class ClientPlayer {
     private IntegerProperty score;
     private DoubleProperty energyCubes;
     private IntegerProperty hand;
+    private IntegerProperty x;
+    private IntegerProperty y;
 
 
     public ClientPlayer(int id, String username, Robot robot) {

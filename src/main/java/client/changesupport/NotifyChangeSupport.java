@@ -1,4 +1,4 @@
-package client.connection;
+package client.changesupport;
 
 import client.viewmodel.ViewModelGameWindow;
 import client.viewmodel.ViewModelLobby;
@@ -10,7 +10,7 @@ import java.io.IOException;
  * Notifier class. Actively notifies specific instances for changes.
  *
  * @author Tobias
- * @version 0.1
+ * @version 2.0
  */
 public class NotifyChangeSupport {
 
@@ -78,6 +78,12 @@ public class NotifyChangeSupport {
     public void updateProgrammingHandCards() {
         if (gamewindow) {
             viewModelGameWindow.fillHandCards();
+        }
+    }
+
+    public void robotMovement(int x, int y, int figure) {
+        if (gamewindow) {
+            viewModelGameWindow.robotMovement(x, y, figure);
         }
     }
 }
