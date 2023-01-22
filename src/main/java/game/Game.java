@@ -337,15 +337,8 @@ public class Game implements Runnable {
                 }
                 this.robotSet = false;
                 Thread.sleep(100);
-                logger.debug(maps[0]);
-                playerList.setPlayerReadiness(false);
-                while (!playerList.playersAreReady()) {
-                    //TODO: implement this properly
-                    //pickStartLocationForRobot();
-                }
-                //map name logic
-                setStartDirectionForRobot(maps[0]);
             }
+            logger.debug("finished setupphase");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -652,7 +645,7 @@ public class Game implements Runnable {
             }
             runSetupPhase();
             logger.debug("This game is running the Upgrade Phase now");
-            runUpgradePhase();
+            //runUpgradePhase();
             try {
                 logger.debug("This game is running the Programming Phase now");
                 runProgrammingPhase(playerList);
