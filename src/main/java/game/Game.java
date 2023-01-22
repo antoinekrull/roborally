@@ -19,6 +19,7 @@ import java.util.TimerTask;
 public class Game implements Runnable {
     private GamePhase currentGamePhase;
     private final Timer timer = new Timer();
+    //TODO: needs to be set
     private String mapName;
     public static PlayerList playerList = new PlayerList();
     public Board board = new Board();
@@ -188,19 +189,16 @@ public class Game implements Runnable {
         return new Pair<>(result, index);
     }
 
-    private ArrayList<Player> determinePriority() {
+    private void determinePriority() {
         Pair<Integer, Integer> antennaPosition = board.getAntenna().getPosition();
-        ArrayList<Player> priorityList = new ArrayList<>();
-        for (PlayerList it = playerList; it.hasNext(); ) {
-            Player player = it.next();
-            priorityList.add(player);
-        }
-        priorityList.sort((p1, p2) -> {
+        //TODO: make sort sort through the playerlist already in the server, to determine priority
+        /*
+        playerList.sort((p1, p2) -> {
             double dist1 = Math.sqrt(Math.pow(p1.getRobot().getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(p1.getRobot().getCurrentPosition().getValue1() - antennaPosition.getValue1(), 2));
             double dist2 = Math.sqrt(Math.pow(p2.getRobot().getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(p2.getRobot().getCurrentPosition().getValue1(), 2));
             return Double.compare(dist1, dist2);
         });
-        return priorityList;
+         */
     }
 
     private void computeRobotLaserPositions(){
@@ -427,7 +425,7 @@ public class Game implements Runnable {
             Thread.sleep(1000);
             if(playerList.robotNeedsReboot()) {
                 for(int i = 0; i < playerList.numberOfNeededReboots(); i++) {
-                    //playerList.get(i).getRobot().reboot(board.getRebootTile());
+                    reboot(playerList.get(i));
                 }
             }
             Thread.sleep(1000);

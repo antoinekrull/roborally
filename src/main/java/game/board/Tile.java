@@ -78,7 +78,7 @@ public class Tile {
     public Tile(int xCoordinate, int yCoordinate, String path, String imageFXid) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        //position = new Pair<>(xCoordinate, yCoordinate);
+        position = new Pair<>(xCoordinate, yCoordinate);
     }
 
     public boolean isDanger() {
