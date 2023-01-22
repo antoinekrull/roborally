@@ -1,7 +1,7 @@
 package client.model;
 
 import client.connection.Client;
-import client.connection.NotifyChangeSupport;
+import client.changesupport.NotifyChangeSupport;
 import communication.Message;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

@@ -1,7 +1,7 @@
 package client.viewmodel;
 
 import client.RoboRallyStart;
-import client.connection.NotifyChangeSupport;
+import client.changesupport.NotifyChangeSupport;
 import client.model.ModelGame;
 import client.model.ModelUser;
 import client.player.ClientPlayerList;

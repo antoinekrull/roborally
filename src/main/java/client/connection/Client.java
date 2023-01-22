@@ -1,6 +1,7 @@
 package client.connection;
 
 import client.player.ClientPlayerList;
+import client.player.RegisterInformation;
 import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
@@ -44,14 +45,17 @@ public class Client {
     private BooleanProperty connected;
     private BooleanProperty accepted;
     private BooleanProperty isAI;
-
-
-
     private BooleanProperty gameStarted;
     private ObjectProperty<Message> message;
     private IntegerProperty userID;
     private StringProperty errorMessage;
-    private Boolean prioPlayer = false;
+    private IntegerProperty x;
+    private IntegerProperty y;
+    private IntegerProperty movementX;
+    private IntegerProperty movementY;
+    private IntegerProperty robotID;
+    private boolean prioPlayer = false;
+    private BooleanProperty activePlayer;
 
     public static ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
     public ObservableList<String> myCards;
@@ -62,6 +66,7 @@ public class Client {
     private String group = "KnorrigeKorrelate";
     private ClientPlayerList clientPlayerList;
     private ObservableList<String> maps;
+    private BooleanProperty timer;
     private final Logger logger = LogManager.getLogger(Client.class);
 
     public Board getBoard() {
@@ -77,6 +82,7 @@ public class Client {
         this.message = new SimpleObjectProperty<>();
         this.userID = new SimpleIntegerProperty();
         this.gameStarted = new SimpleBooleanProperty();
+        this.activePlayer = new SimpleBooleanProperty(false);
         this.isAI = new SimpleBooleanProperty();
         this.maps = FXCollections.observableArrayList();
         this.connected = new SimpleBooleanProperty();
@@ -84,6 +90,11 @@ public class Client {
         this.clientPlayerList = new ClientPlayerList();
         this.errorMessage = new SimpleStringProperty();
         this.myCards = FXCollections.observableArrayList();
+        this.x = new SimpleIntegerProperty();
+        this.y = new SimpleIntegerProperty();
+        this.timer = new SimpleBooleanProperty(false);
+        this.movementX = new SimpleIntegerProperty();
+        this.movementY = new SimpleIntegerProperty();
     }
 
     public static Client getInstance() {
@@ -159,6 +170,98 @@ public class Client {
         this.myCards = myCards;
     }
 
+    public int getX() {
+        return x.get();
+    }
+
+    public IntegerProperty xProperty() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x.set(x);
+    }
+
+    public int getY() {
+        return y.get();
+    }
+
+    public IntegerProperty yProperty() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y.set(y);
+    }
+
+    public boolean isTimer() {
+        return timer.get();
+    }
+
+    public BooleanProperty timerProperty() {
+        return timer;
+    }
+
+    public void setTimer(boolean timer) {
+        this.timer.set(timer);
+    }
+
+    public int getMovementX() {
+        return movementX.get();
+    }
+
+    public IntegerProperty movementXProperty() {
+        return movementX;
+    }
+
+    public void setMovementX(int movementX) {
+        this.movementX.set(movementX);
+    }
+
+    public int getMovementY() {
+        return movementY.get();
+    }
+
+    public IntegerProperty movementYProperty() {
+        return movementY;
+    }
+
+    public void setMovementY(int movementY) {
+        this.movementY.set(movementY);
+    }
+
+    public int getRobotID() {
+        return robotID.get();
+    }
+
+    public IntegerProperty robotIDProperty() {
+        return robotID;
+    }
+
+    public void setRobotID(int robotID) {
+        this.robotID.set(robotID);
+    }
+
+    public Boolean getPrioPlayer() {
+        return prioPlayer;
+    }
+
+    public void setPrioPlayer(Boolean prioPlayer) {
+        this.prioPlayer = prioPlayer;
+    }
+
+    public boolean isActivePlayer() {
+        return activePlayer.get();
+    }
+
+    public BooleanProperty activePlayerProperty() {
+        return activePlayer;
+    }
+
+    public void setActivePlayer(boolean activePlayer) {
+        this.activePlayer.set(activePlayer);
+    }
+
     private class ReadMessagesFromServer implements Runnable {
         DataInputStream in = null;
         DataOutputStream out = null;
@@ -231,10 +334,19 @@ public class Client {
 
                         }
                         if (message.getMessageType().equals(MessageType.CurrentPlayer)) {
-
+                            Client.this.activePlayer.set(true);
                         }
                         if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
-
+                            int clientID = message.getMessageBody().getClientID();
+                            if (Client.this.userIDProperty().get() == clientID) {
+                                Client.this.setX(message.getMessageBody().getX());
+                                Client.this.setY(message.getMessageBody().getY());
+                            }
+                            else {
+                                Client.this.setMovementX(message.getMessageBody().getX());
+                                Client.this.setMovementY(message.getMessageBody().getY());
+                                Client.this.setRobotID(message.getMessageBody().getClientID());
+                            }
                         }
                         if (message.getMessageType().equals(MessageType.GameStarted)) {
                             board.createBoard(message.getMessageBody().getGameMap());
@@ -247,6 +359,13 @@ public class Client {
                             Client.this.myCards.setAll(message.getMessageBody().getCardsInHand());
                         }
                         if (message.getMessageType().equals(MessageType.NotYourCards)) {
+                            int clientID = message.getMessageBody().getClientID();
+                            int cardsInHand = message.getMessageBody().getCardsAmountInHand();
+                            for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
+                                if (clientPlayerList.getPlayerList().get(i).getId() == clientID) {
+                                    Client.this.clientPlayerList.getPlayerList().get(i).setCardsInHand(cardsInHand);
+                                }
+                            }
 
                         }
                         if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
@@ -257,8 +376,32 @@ public class Client {
                             }
                         }
                         if (message.getMessageType().equals(MessageType.Movement)) {
+                            int clientID = message.getMessageBody().getClientID();
+                            if (Client.this.userIDProperty().get() == clientID) {
+                                Client.this.setX(message.getMessageBody().getX());
+                                Client.this.setY(message.getMessageBody().getY());
+                            }
+                            else {
+                                Client.this.setMovementX(message.getMessageBody().getX());
+                                Client.this.setMovementY(message.getMessageBody().getY());
+                                Client.this.setRobotID(message.getMessageBody().getClientID());
+                            }
+                        }
+                        if (message.getMessageType().equals(MessageType.CardSelected)) {
+                            int clientID = message.getMessageBody().getClientID();
+                            int register = message.getMessageBody().getRegister();
+                            boolean filled = message.getMessageBody().isFilled();
+                            for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
+                                if (clientPlayerList.getPlayerList().get(i).getId() == clientID) {
+                                    Client.this.clientPlayerList.getPlayerList().get(i).getRegisterInformations().add(new RegisterInformation(register, filled));
+                                }
+                            }
+                        }
+                        if (message.getMessageType().equals(MessageType.SelectionFinished)) {
 
-
+                        }
+                        if (message.getMessageType().equals(MessageType.TimerStarted)) {
+                            Client.this.setTimer(true);
                         }
                         if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
 
@@ -324,6 +467,7 @@ public class Client {
     }
     public void sendStartingPoint(int x, int y) {
         sendMessageToServer(messageCreator.generateSetStartingPointMessage(x, y));
+        this.activePlayer.set(false);
     }
     public void sendSelectCard(String card, int register) {
         sendMessageToServer(messageCreator.generateSelectedCardMessage(card, register));
@@ -341,8 +485,6 @@ public class Client {
     public void sendRegister(int register) {
         sendMessageToServer(messageCreator.generateChooseRegisterMessage(register));
     }
-
-
 
 
     public void sendMessageToServer(Message message) {

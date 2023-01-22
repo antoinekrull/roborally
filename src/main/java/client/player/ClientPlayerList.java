@@ -5,10 +5,13 @@ import javafx.collections.ObservableList;
 
 public class ClientPlayerList {
     private ObservableList<ClientPlayer> clientPlayerList;
+    private ClientPlayerListenerManager clientPlayerListenerManager;
+
 
     public ClientPlayerList() {
         clientPlayerList = FXCollections.observableArrayList();
         clientPlayerList.add(new ClientPlayer(-1, "Group", null));
+        clientPlayerListenerManager = new ClientPlayerListenerManager(clientPlayerList);
     }
 
     public ObservableList<ClientPlayer> getPlayerList() {
