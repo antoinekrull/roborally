@@ -68,6 +68,12 @@ public class Client {
     private BooleanProperty timer;
     private final Logger logger = LogManager.getLogger(Client.class);
 
+    public Board getBoard() {
+        return board;
+    }
+
+    private Board board = new Board();
+
 
     private Client() {
 
@@ -274,7 +280,6 @@ public class Client {
 
                         }
                         if (message.getMessageType().equals(MessageType.GameStarted)) {
-                            Board board = new Board();
                             board.createBoard(message.getMessageBody().getGameMap());
                             //TODO: connect to Model/ViewModel to switch scenes
                             System.out.println("game started");

@@ -4,6 +4,9 @@ import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import game.Game;
+import game.board.Direction;
+import game.board.EnergySpaceTile;
+import game.card.PowerUpCard;
 import game.player.Player;
 import game.player.Robot;
 import javafx.beans.property.BooleanProperty;
@@ -123,6 +126,13 @@ public class Server {
                             for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
                                     client.getValue().write(message);
                             }
+                        } else if (message.getMessageType() == MessageType.CurrentPlayer){
+                            int id = message.getMessageBody().getClientID();
+                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                                if (client.getKey() == id) {
+                                    client.getValue().write(message);
+                                }
+                            }
                         }
                         //Changed group messages: will only be displayed to other clients, not to yourself
                         //added private message to work in chat
@@ -151,6 +161,9 @@ public class Server {
         };
         writeMessages.start();
     }
+    public void addPlayerToGame(Player player) {
+        game.addPlayer(player);
+    }
 
     public void sendPlayerValuesToAll(int clientID, Message message) {
         for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
@@ -175,6 +188,14 @@ public class Server {
             logger.warn("An error occurred: " + e);
         }
     }
+    public void sendCheckpointReached(Pair<Integer, Integer> pair){
+        try{
+            messages.put(messageCreator.generateCheckPointReachedMessage(pair.getValue0(), pair.getValue1()));
+        } catch (InterruptedException e) {
+            logger.warn("An error occurred: " + e);
+        }
+    }
+
     public void sendGameStarted(String jsonMap) {
 
         try {
@@ -213,11 +234,26 @@ public class Server {
         }
     }
 
+    public void sendSelectionFinished(int id) {
+        try {
+            messages.put(messageCreator.generateSelectionFinishedMessage(id));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void sendShuffleCoding(Player player) {
         try {
             CLIENTS.get(player.getId()).write(messageCreator.generateShuffleCodingMessage(player.getId()));
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+    public void sendCurrentPlayer(int ID) {
+        try {
+            messages.put(messageCreator.generateCurrentPlayerMessage(ID));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -257,6 +293,11 @@ public class Server {
         }
     }
 
+    //TODO: Implement this
+    public void sendReplaceCards() {
+
+    }
+
     public void sendMovement(Robot robot) {
         try {
             messages.put(messageCreator.generateMovementMessage(robot.getId(), robot.getCurrentPosition().getValue0(),
@@ -269,6 +310,38 @@ public class Server {
     public void sendPlayerTurning(Robot robot) {
         try {
             messages.put(messageCreator.generatePlayerTurningMessage(robot.getId(), robot.getDirection().toString()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendReboot(Player player) {
+        try {
+            messages.put(messageCreator.generateRebootMessage(player.getId()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendRebootDirection(Direction direction) {
+        try {
+            messages.put(messageCreator.generateRebootDirectionMessage(direction.toString()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendEnergy(Player player, Object object) {
+        try {
+            String energySource = "";
+            if(object instanceof EnergySpaceTile) {
+                energySource = "EnergySpace";
+            } else if(object instanceof PowerUpCard) {
+                energySource = "PowerUpCard";
+            } else {
+                energySource = "error";
+            }
+            messages.put(messageCreator.generateEnergyMessage(player.getId(), player.getRobot().getEnergyCubes() ,energySource));
         } catch (Exception e) {
             e.printStackTrace();
         }

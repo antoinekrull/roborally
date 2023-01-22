@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class PlayerList implements Iterator<Player> {
+public class PlayerList extends ArrayList implements Iterator<Player> {
     private ArrayList<Player> playerList = new ArrayList<>();
     private int count = 0;
 
@@ -107,12 +107,14 @@ public class PlayerList implements Iterator<Player> {
         }
     }
 
-    public void remove(int id) {
+    @Override
+    public Object remove(int id) {
         for(int i = 0; i < playerList.size(); i++) {
             if(playerList.get(i).getId() == id) {
                 playerList.remove(i);
             }
         }
+        return null;
     }
 
     public void add(Player player) {
@@ -167,4 +169,26 @@ public class PlayerList implements Iterator<Player> {
         count++;
         return playerList.get(count - 1);
     }
+
+    public boolean robotNeedsReboot() {
+        boolean result = false;
+        for(Player player: playerList) {
+            if(player.getRobot().getRebootStatus()) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    public int numberOfNeededReboots() {
+        int result = 0;
+        for(Player player: playerList) {
+            if(player.getRobot().getRebootStatus()) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+
 }

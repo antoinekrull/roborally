@@ -1,6 +1,7 @@
 package game.player;
 
 import game.board.Direction;
+import game.board.RebootTile;
 import game.card.ProgrammingDeck;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -68,7 +69,6 @@ public class Robot {
     }
     public void setDirection(Direction direction) {
         this.direction = direction;
-        server.sendPlayerTurning(this);
     }
     public Direction getDirection() {
         return direction;
@@ -90,7 +90,7 @@ public class Robot {
     public void setDeck(ProgrammingDeck deck){
         this.deck = deck;
     }
-    public void reboot(int rebootTileIndex){}
+    //TODO: Implement this
     public boolean getRebootStatus() {return isRebooted;}
     public void setRebootStatus(boolean rebooted) {isRebooted = rebooted;}
     public int getActiveRegister() {return activeRegister;}

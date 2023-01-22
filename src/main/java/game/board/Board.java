@@ -2,14 +2,11 @@ package game.board;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.geometry.Orientation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
 
 import java.util.ArrayList;
-
-import static java.lang.Integer.parseInt;
 
 /**0
  * @author Antoine, Moritz, Firas
@@ -18,22 +15,23 @@ import static java.lang.Integer.parseInt;
 public class Board {
     protected static int columns;
     protected static int rows;
-    private int checkPointCount;
-    protected static ArrayList<ArrayList<ArrayList<Tile>>> board = new ArrayList<ArrayList<ArrayList<Tile>>>();
+    private int checkPointCount = 0;
+    protected ArrayList<ArrayList<ArrayList<Tile>>> board = new ArrayList<ArrayList<ArrayList<Tile>>>();
     //Lists of used tiles on the board, would be iterated on during the activation phase
-    public static ArrayList<ConveyorBeltTile> conveyorBelt2List = new ArrayList<>();
-    public static ArrayList<ConveyorBeltTile> conveyorBelt1List = new ArrayList<>();
-    public static ArrayList<PushPanelTile> pushPanelList = new ArrayList<>();
-    public static ArrayList<GearTile> gearTileList = new ArrayList<>();
-    public static ArrayList<LaserTile> laserTileList = new ArrayList<>();
-    public static ArrayList<CheckpointTile> checkpointList = new ArrayList<>();
-    public static ArrayList<EnergySpaceTile> energySpaceList = new ArrayList<>();
-    public static ArrayList<RebootTile> rebootTileList = new ArrayList<>();
-    public static ArrayList<StartTile> startTileList = new ArrayList<>();
-    public static Antenna antenna;
+    private ArrayList<ConveyorBeltTile> conveyorBelt2List = new ArrayList<>();
+    private ArrayList<ConveyorBeltTile> conveyorBelt1List = new ArrayList<>();
+    private ArrayList<PushPanelTile> pushPanelList = new ArrayList<>();
+    private ArrayList<GearTile> gearTileList = new ArrayList<>();
+    private ArrayList<LaserTile> laserTileList = new ArrayList<>();
+    private ArrayList<CheckpointTile> checkpointList = new ArrayList<>();
+    private ArrayList<EnergySpaceTile> energySpaceList = new ArrayList<>();
+    private RebootTile rebootTile;
+    private ArrayList<StartTile> startTileList = new ArrayList<>();
+    private Antenna antenna;
+    private ArrayList<PitTile> pitList = new ArrayList<>();
     private final static Logger logger = LogManager.getLogger(Board.class);
 
-    public static ArrayList<Tile> getTile(Pair<Integer, Integer> position){
+    public ArrayList<Tile> getTile(Pair<Integer, Integer> position){
         try {
             return board.get(position.getValue0()).get(position.getValue1());
         } catch(IndexOutOfBoundsException e) {
@@ -43,17 +41,17 @@ public class Board {
     }
 
     public boolean tileIsBlocking(ArrayList<Tile> tileList) {
-        boolean result = false;
+        boolean result;
         if(tileList.size() == 1) {
             result = tileList.get(0).isBlocking();
         } else {
             result = tileList.get(0).isBlocking() || tileList.get(1).isBlocking();
         }
-        return result;
+        return !result;
     }
 
-    public static int getColumns() {return columns;}
-    public static int getRows() {return rows;}
+    public int getColumns() {return columns;}
+    public int getRows() {return rows;}
     public int getCheckPointCount() {
         return checkPointCount;
     }
@@ -93,8 +91,9 @@ public class Board {
                         switch (type) {
                             case "Empty", "tbd" -> replaceTileInMap(board, x, y, tile, new NormalTile(x, y));
                             case "EnergySpace" -> {
-                                replaceTileInMap(board, x, y, tile, new EnergySpaceTile(x, y));
-                                energySpaceList.add(new EnergySpaceTile(x, y));
+                                EnergySpaceTile energy = new EnergySpaceTile(x, y);
+                                replaceTileInMap(board, x, y, tile, energy);
+                                energySpaceList.add(energy);
                             }
                             case "ConveyorBelt" -> {
                                 ArrayList<Direction> in = new ArrayList<>();
@@ -147,16 +146,20 @@ public class Board {
                             }
                             //TODO: needs to work with directions, once they have been added to json
                             case "RestartPoint" -> {
-                                replaceTileInMap(board, x, y, tile, new RebootTile(x, y));
-                                rebootTileList.add(new RebootTile(x, y));
+                                RebootTile reboot =  new RebootTile(x, y);
+                                replaceTileInMap(board, x, y, tile,reboot);
+                                rebootTile = reboot;
                             }
                             case "CheckPoint" -> {
-                                replaceTileInMap(board, x, y, tile, new CheckpointTile(x, y));
+                                CheckpointTile checkpoint = new CheckpointTile(x, y, tile.getCount());
+                                replaceTileInMap(board, x, y, tile, checkpoint);
                                 increaseCheckPointCount();
-                                checkpointList.add(new CheckpointTile(x, y));
+                                checkpointList.add(checkpoint);
                             }
                             case "StartPoint" -> {
-                                replaceTileInMap(board, x, y, tile, new StartTile(x, y));
+                                StartTile startTile = new StartTile(x, y);
+                                replaceTileInMap(board, x, y, tile, startTile);
+                                startTileList.add(startTile);
                             }
                             case "Antenna" -> {
                                 replaceTileInMap(board, x, y, tile, new Antenna(x, y));
@@ -170,7 +173,9 @@ public class Board {
                                 pushPanelList.add(pushTile);
                             }
                             case "Pit" -> {
-                                replaceTileInMap(board, x, y, tile, new PitTile(x, y));
+                                PitTile pitTile = new PitTile(x, y);
+                                replaceTileInMap(board, x, y, tile, pitTile);
+                                pitList.add(pitTile);
                             }
                             case "Gear" -> {
                                 replaceTileInMap(board, x, y, tile, new GearTile(x, y, parseDirection(tile.getOrientations().get(0))));
@@ -224,6 +229,53 @@ public class Board {
         return Math.abs(angel1 - angel2);
     }
 
+    public ArrayList<ConveyorBeltTile> getConveyorBelt2List() {
+        return conveyorBelt2List;
+    }
+
+    public ArrayList<ConveyorBeltTile> getConveyorBelt1List() {
+        return conveyorBelt1List;
+    }
+
+    public ArrayList<PushPanelTile> getPushPanelList() {
+        return pushPanelList;
+    }
+
+    public ArrayList<GearTile> getGearTileList() {
+        return gearTileList;
+    }
+
+    public ArrayList<LaserTile> getLaserTileList() {
+        return laserTileList;
+    }
+
+    public ArrayList<CheckpointTile> getCheckpointList() {
+        return checkpointList;
+    }
+
+    public void setCheckpointList(ArrayList<CheckpointTile> checkpointList) {
+        this.checkpointList = checkpointList;
+    }
+
+    public ArrayList<EnergySpaceTile> getEnergySpaceList() {
+        return energySpaceList;
+    }
+
+    public RebootTile getRebootTile() {
+        return rebootTile;
+    }
+
+    public ArrayList<StartTile> getStartTileList() {
+        return startTileList;
+    }
+
+    public Antenna getAntenna() {
+        return antenna;
+    }
+
+    public ArrayList<PitTile> getPitList() {
+        return pitList;
+    }
 }
 
 

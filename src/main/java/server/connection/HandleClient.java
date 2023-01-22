@@ -203,6 +203,8 @@ public class HandleClient implements Runnable{
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
                         this.jsonMap = content.lines().collect(Collectors.joining());
                         game.setJsonMap(jsonMap);
+                        game.createBoard(jsonMap);
+                        game.setStartDirectionForRobot(map);
                         server.messages.put(messageCreator.generateMapSelectedMessage(map));
                         //write(messageCreator.generateMapSelectedMessage(map));
 
@@ -210,7 +212,11 @@ public class HandleClient implements Runnable{
 
                     } else if (incomingMessage.getMessageType() == MessageType.CurrentPlayer) {
                         Game.playerList.getPlayerFromList(incomingMessage.getMessageBody().getClientID()).setPlaying(true);
-                    } else if (incomingMessage.getMessageType() == MessageType.SelectedCard) {
+                    } else if (incomingMessage.getMessageType() == MessageType.PlayCard) {
+                        server.messages.put(messageCreator.generateCardPlayedMessage(incomingMessage.getMessageBody().getCard(),
+                                getClientID()));
+                    }
+                    else if (incomingMessage.getMessageType() == MessageType.SelectedCard) {
                         Game.playerList.getPlayerFromList(getClientID()).playCard(incomingMessage.getMessageBody().getCard(),
                                 incomingMessage.getMessageBody().getRegister());
                         if(incomingMessage.getMessageBody().getCard().equals("Null")) {
@@ -223,25 +229,33 @@ public class HandleClient implements Runnable{
                             write(cardPlayedMessage);
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.SetStartingPoint) {
-                        int x = incomingMessage.getMessageBody().getX();
-                        int y = incomingMessage.getMessageBody().getY();
-                        Message startingPointTakenMessage = messageCreator.generateSetStartingPointMessage(x, y);
-                        if(game.checkIfStartTileIsTaken(x, y)){
-                            server.messages.put(startingPointTakenMessage);
+                        if (clientID==game.getActivePlayer().getId()) {
+                            int x = incomingMessage.getMessageBody().getX();
+                            int y = incomingMessage.getMessageBody().getY();
+                            Message startingPointTakenMessage = messageCreator.generateStartingPointTakenMessage(x, y, clientID);
+                            if (!game.checkIfStartTileIsTaken(x, y)) {
+                                game.setStartPoint(x, y);
+                                server.messages.put(startingPointTakenMessage);
+                                game.setRobotSet(true);
+                            }
+                            else {
+                                write(messageCreator.generateErrorMessage("Starting point is already taken"));
+
+                            }
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
                         this.username = incomingMessage.getMessageBody().getName();
                         int figure = incomingMessage.getMessageBody().getFigure();
-                        if (server.players.size() == 0) {
+                        if (game.playerList.size() == 0) {
                             Message robotAcceptedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
                             write(robotAcceptedMessage);
-                            server.players.add(new Player(getClientID(), incomingMessage.getMessageBody().getName()
+                            server.addPlayerToGame(new Player(getClientID(), incomingMessage.getMessageBody().getName()
                                     , new Robot(incomingMessage.getMessageBody().getFigure())));
                         }
                         else {
                             boolean taken = false;
-                            for (int i = 0; i < server.players.size(); i++) {
-                                if (server.players.get(i).getRobot().getFigure() == figure) {
+                            for (int i = 0; i < game.playerList.size(); i++) {
+                                if (game.playerList.get(i).getRobot().getFigure() == figure) {
                                     taken = true;
                                     write(messageCreator.generateErrorMessage("Your figure was already chosen. Choose another one."));
                                     break;
@@ -252,18 +266,21 @@ public class HandleClient implements Runnable{
                                 Message robotAcceptedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
                                 write(robotAcceptedMessage);
 
-                                server.players.add(new Player(getClientID(), incomingMessage.getMessageBody().getName()
+                                server.addPlayerToGame(new Player(getClientID(), incomingMessage.getMessageBody().getName()
                                         , new Robot(incomingMessage.getMessageBody().getFigure())));
                                 Message playerAddedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
                                 server.sendPlayerValuesToAll(getClientID(), playerAddedMessage);
 
-                                for(int i = 0; i < server.players.size(); i++) {
-                                    if(server.players.get(i).getId() != getClientID()) {
-                                        Message addOtherPlayer = messageCreator.generatePlayerAddedMessage(server.players.get(i).getUsername(), server.players.get(i).getRobot().getFigure(), server.players.get(i).getId());
+                                for(int i = 0; i < game.playerList.size(); i++) {
+                                    if(game.playerList.get(i).getId() != getClientID()) {
+                                        Message addOtherPlayer = messageCreator.generatePlayerAddedMessage(game.playerList.get(i).getUsername(), game.playerList.get(i).getRobot().getFigure(), game.playerList.get(i).getId());
                                         write(addOtherPlayer);
                                     }
                                 }
                             }
+                        }
+                        for (int i = 0; i < game.playerList.size(); i++) {
+                            logger.debug(game.playerList.get(i).getId() + " " + game.playerList.get(i).getUsername());
                         }
                     } else if(incomingMessage.getMessageType() == MessageType.SetStatus) {
                         boolean ready = incomingMessage.getMessageBody().isReady();
@@ -295,7 +312,7 @@ public class HandleClient implements Runnable{
 
     private void closeConnection(){
         try {
-            server.players.remove(threadID);
+            game.playerList.remove(threadID);
             server.CLIENTS.remove(threadID);
             this.in.close();
             this.out.close();
