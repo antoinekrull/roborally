@@ -110,7 +110,6 @@ public class Game implements Runnable {
                 }
             }
         }
-        //TODO: needs to be changed (?)
         for(int x = 0; x < board.getLaserTileList().size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getLaserTileList().get(x).getPosition())) {
@@ -334,38 +333,33 @@ public class Game implements Runnable {
         server.sendActivePhase(0);
         try {
             Thread.sleep(100);
-
             logger.debug("Running Setup Phase now");
             for (int i = 0; i < readyList.size(); i++) {
                 activePlayer = playerList.getPlayerFromList(readyList.get(i));
                 server.sendCurrentPlayer(readyList.get(i));
                 Thread.sleep(100);
-
                 while (!robotSet) {
-                    Thread.sleep(100);
                 }
-                Thread.sleep(100);
-                System.out.println("die Setupphase geht weiter");
                 this.robotSet = false;
+                server.sendStartPointTaken(activePlayer.getId(), activePlayer.getRobot().getCurrentPosition());
                 Thread.sleep(100);
+                logger.debug(maps[0]);
+                playerList.setPlayerReadiness(false);
+                while (!playerList.playersAreReady()) {
+                    //TODO: implement this properly
+                    //pickStartLocationForRobot();
+                }
+                //map name logic
+                setStartDirectionForRobot(maps[0]);
             }
-            logger.debug(maps[0]);
-            playerList.setPlayerReadiness(false);
-            while (!playerList.playersAreReady()) {
-                //TODO: implement this properly
-                //pickStartLocationForRobot();
-            }
-        }catch (InterruptedException e) {
-                e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
-
-        //map name logic
-        setStartDirectionForRobot(maps[0]);
-
     }
 
     private void runUpgradePhase(){
         server.sendActivePhase(1);
+        determinePriority();
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -397,11 +391,7 @@ public class Game implements Runnable {
         server.sendActivePhase(3);
         try {
             Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         ArrayList<Pair<Integer, String>> dataList = new ArrayList<>();
-        try {
         Pair<Integer, String> dataPoint;
         while(!playerList.allPlayerRegistersActivated()) {
             for(int i = 0; i < playerList.size(); i++) {
@@ -446,11 +436,7 @@ public class Game implements Runnable {
                 logger.debug("The winning player is: " + winner);
                 //sends a message to all clients
                 server.sendGameFinished(winner);
-                try {
                     Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 //stops the game thread
                 gameIsRunning = false;
             }
@@ -509,11 +495,7 @@ public class Game implements Runnable {
             player.getCardFromRegister(currentRegister).applyEffect(player);
             if(player.getCardFromRegister(currentRegister) instanceof PowerUpCard) {
                 server.sendEnergy(player, player.getCardFromRegister(currentRegister));
-                try {
                     Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
             if(player.getCardFromRegister(currentRegister) instanceof WormCard) {
                 reboot(player);
@@ -523,7 +505,7 @@ public class Game implements Runnable {
                     reboot(player);
                 }
             }
-        } catch (IndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException | InterruptedException e) {
             logger.warn("This register was not activated because you're Robot can not move past this point" + e);
         }
     }
