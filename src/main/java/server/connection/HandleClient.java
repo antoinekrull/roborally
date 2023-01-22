@@ -204,6 +204,7 @@ public class HandleClient implements Runnable{
                         this.jsonMap = content.lines().collect(Collectors.joining());
                         game.setJsonMap(jsonMap);
                         game.createBoard(jsonMap);
+                        game.setStartDirectionForRobot(map);
                         server.messages.put(messageCreator.generateMapSelectedMessage(map));
                         //write(messageCreator.generateMapSelectedMessage(map));
 
@@ -236,6 +237,10 @@ public class HandleClient implements Runnable{
                                 game.setStartPoint(x, y);
                                 server.messages.put(startingPointTakenMessage);
                                 game.setRobotSet(true);
+                            }
+                            else {
+                                write(messageCreator.generateErrorMessage("Starting point is already taken"));
+
                             }
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {

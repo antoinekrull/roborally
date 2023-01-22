@@ -69,7 +69,6 @@ public class Robot {
     }
     public void setDirection(Direction direction) {
         this.direction = direction;
-        server.sendPlayerTurning(this);
     }
     public Direction getDirection() {
         return direction;

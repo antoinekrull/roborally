@@ -204,16 +204,6 @@ public class Server {
             throw new RuntimeException(e);
         }
     }
-    public void sendStartPointTaken(int id, Pair<Integer, Integer> coordinates){
-        int x = coordinates.getValue0();
-        int y = coordinates.getValue1();
-        try {
-            messages.put(messageCreator.generateStartingPointTakenMessage(id,x,y));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
     public void sendSelectMap(String[] maps){
         try {
             messages.put(messageCreator.generateSelectMapMessage(maps));

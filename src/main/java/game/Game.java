@@ -308,13 +308,7 @@ public class Game implements Runnable {
         this.currentGamePhase = currentGamePhase;
     }
 
-    private void pickStartLocationForRobot(Player player, int x, int y) {
-        Pair<Integer, Integer> input = new Pair<>(x, y);
-        player.getRobot().setCurrentPosition(input);
-        player.setReady(true);
-    }
-
-    private void setStartDirectionForRobot(String input) {
+    public void setStartDirectionForRobot(String input) {
         switch(input) {
             case "Deathtrap" -> {
                 for(int i = 0; i < playerList.size(); i++) {
@@ -339,9 +333,9 @@ public class Game implements Runnable {
                 server.sendCurrentPlayer(readyList.get(i));
                 Thread.sleep(100);
                 while (!robotSet) {
+                    Thread.sleep(100);
                 }
                 this.robotSet = false;
-                server.sendStartPointTaken(activePlayer.getId(), activePlayer.getRobot().getCurrentPosition());
                 Thread.sleep(100);
                 logger.debug(maps[0]);
                 playerList.setPlayerReadiness(false);
