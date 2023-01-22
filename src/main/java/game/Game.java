@@ -372,6 +372,7 @@ public class Game implements Runnable {
             server.sendCurrentCards(dataList);
             dataList.clear();
             currentRegister++;
+            Thread.sleep(3000);
             determinePriority();
             //checks if all registers have been activated
             if(currentRegister == playerRegisterLength) {
