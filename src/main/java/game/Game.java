@@ -345,6 +345,7 @@ public class Game implements Runnable {
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
         server.sendActivePhase(2);
         for(int i = 0; i < playerList.size(); i++) {
+            playerList.get(i).drawFullHand();
             server.sendYourCards(playerList.get(i));
         }
         playerList.setPlayersPlaying(true);
