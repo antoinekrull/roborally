@@ -1,5 +1,6 @@
 package game;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.*;
 import game.card.*;
 import game.player.Player;
@@ -76,34 +77,34 @@ public class Game implements Runnable {
 
     private void applyAllTileEffects() throws Exception {
         try {
-            for(int x = 0; x < Board.conveyorBelt2List.size(); x++) {
+            for(int x = 0; x < board.conveyorBelt2List.size(); x++) {
                 for(int y = 0; y < playerList.size(); y++) {
-                    if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.conveyorBelt2List.get(x).getPosition())) {
-                        Board.conveyorBelt2List.get(x).applyEffect(playerList.get(y));
+                    if(playerList.get(y).getRobot().getCurrentPosition().equals(board.conveyorBelt2List.get(x).getPosition())) {
+                        board.conveyorBelt2List.get(x).applyEffect(playerList.get(y));
                     }
                 }
             }
 
-        for(int x = 0; x < Board.conveyorBelt1List.size(); x++) {
+        for(int x = 0; x < board.conveyorBelt1List.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
-                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.conveyorBelt1List.get(x).getPosition())) {
-                    Board.conveyorBelt1List.get(x).applyEffect(playerList.get(y));
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(board.conveyorBelt1List.get(x).getPosition())) {
+                    board.conveyorBelt1List.get(x).applyEffect(playerList.get(y));
                 }
             }
         }
         applyPushPanelEffects();
-        for(int x = 0; x < Board.gearTileList.size(); x++) {
+        for(int x = 0; x < board.gearTileList.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
-                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.gearTileList.get(x).getPosition())) {
-                    Board.gearTileList.get(x).applyEffect(playerList.get(y));
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(board.gearTileList.get(x).getPosition())) {
+                    board.gearTileList.get(x).applyEffect(playerList.get(y));
                 }
             }
         }
         //TODO: needs to be changed (?)
-        for(int x = 0; x < Board.laserTileList.size(); x++) {
+        for(int x = 0; x < board.laserTileList.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
-                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.laserTileList.get(x).getPosition())) {
-                    Board.laserTileList.get(x).applyEffect(playerList.get(y));
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(board.laserTileList.get(x).getPosition())) {
+                    board.laserTileList.get(x).applyEffect(playerList.get(y));
                 }
             }
         }
@@ -120,17 +121,17 @@ public class Game implements Runnable {
         }
         robotLaserList.clear();
 
-        for(int x = 0; x < Board.energySpaceList.size(); x++) {
+        for(int x = 0; x < board.energySpaceList.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
-                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.energySpaceList.get(x).getPosition())) {
-                    Board.energySpaceList.get(x).applyEffect(playerList.get(y));
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(board.energySpaceList.get(x).getPosition())) {
+                    board.energySpaceList.get(x).applyEffect(playerList.get(y));
                 }
             }
         }
-        for(int x = 0; x < Board.checkpointList.size(); x++) {
+        for(int x = 0; x < board.checkpointList.size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
-                if(playerList.get(y).getRobot().getCurrentPosition().equals(Board.checkpointList.get(x).getPosition())) {
-                    Board.checkpointList.get(x).applyEffect(playerList.get(y));
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(board.checkpointList.get(x).getPosition())) {
+                    board.checkpointList.get(x).applyEffect(playerList.get(y));
                 }
             }
         }
@@ -141,11 +142,11 @@ public class Game implements Runnable {
 
     private void applyPushPanelEffects() throws Exception {
         for (int i = 0; i < playerList.size(); i++) {
-            if((pushPanelInTile(Objects.requireNonNull(Board.getTile(playerList.get(i).getRobot().getCurrentPosition()))).getValue0())){
-                int index = pushPanelInTile(Objects.requireNonNull(Board.getTile(playerList.get(i).getRobot().getCurrentPosition()))).getValue1();
-                if(((PushPanelTile) Board.getTile(playerList.get(i).getRobot().getCurrentPosition()).get(index))
+            if((pushPanelInTile(Objects.requireNonNull(board.getTile(playerList.get(i).getRobot().getCurrentPosition()))).getValue0())){
+                int index = pushPanelInTile(Objects.requireNonNull(board.getTile(playerList.get(i).getRobot().getCurrentPosition()))).getValue1();
+                if(((PushPanelTile) board.getTile(playerList.get(i).getRobot().getCurrentPosition()).get(index))
                         .getActiveRegisterList().contains(currentRegister)) {
-                    applyTileEffects(Objects.requireNonNull(Board.getTile(playerList.get(i).getRobot().getCurrentPosition())), playerList.getPlayerFromList(i));
+                    applyTileEffects(Objects.requireNonNull(board.getTile(playerList.get(i).getRobot().getCurrentPosition())), playerList.getPlayerFromList(i));
                 }
             }
         }
@@ -172,7 +173,7 @@ public class Game implements Runnable {
     }
 
     private ArrayList<Player> determinePriority() {
-        Pair<Integer, Integer> antennaPosition = Board.antenna.getPosition();
+        Pair<Integer, Integer> antennaPosition = board.antenna.getPosition();
         ArrayList<Player> priorityList = new ArrayList<>();
         for (PlayerList it = playerList; it.hasNext(); ) {
             Player player = it.next();
@@ -477,18 +478,33 @@ public class Game implements Runnable {
     public void setJsonMap(String jsonMap) {
         this.jsonMap = jsonMap;
     }
+    public void createBoard(String map) {
+        try {
+            board.createBoard(map);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public boolean checkIfStartTileIsTaken(int x, int y) {
         boolean result = false;
-        for(StartTile startTile: Board.startTileList) {
+        for(StartTile startTile: board.startTileList) {
             if(startTile.getXCoordinate() == x && startTile.getYCoordinate() == y) {
                 if(startTile.isTaken()) {
                     result = true;
-                    //Board.startTileList.remove(startTile);
                 }
             }
         }
         return result;
+    }
+    public void setStartPoint(int x, int y) {
+        for(StartTile startTile: board.startTileList) {
+            if(startTile.getXCoordinate() == x && startTile.getYCoordinate() == y) {
+                if(!startTile.isTaken()) {
+                    startTile.setTaken(true);
+                }
+            }
+        }
     }
 
     @Override
@@ -502,7 +518,8 @@ public class Game implements Runnable {
                     //thread needs to sleep to check the if statement probably
                     Thread.sleep(100);
                     //if condition checks if at least two players are ready and a map was selected and if every joined player is ready
-                    if (readyList.size() >= 2 && this.jsonMap != null && readyList.size()==playerList.size()) {
+                    //TODO: ZU DEBUG ZWECKEN WURDE DIE MINDESTANZAHL AUF 1 GESETZT! MUSS WIEDER AUF 2
+                    if (readyList.size() >= 1 && this.jsonMap != null && readyList.size()==playerList.size()) {
                         server.sendGameStarted(jsonMap);
                         Thread.sleep(100);
                         readyToStart = true;
@@ -526,5 +543,4 @@ public class Game implements Runnable {
             }
         }
     }
-
 }

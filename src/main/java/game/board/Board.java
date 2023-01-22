@@ -93,8 +93,9 @@ public class Board {
                         switch (type) {
                             case "Empty", "tbd" -> replaceTileInMap(board, x, y, tile, new NormalTile(x, y));
                             case "EnergySpace" -> {
-                                replaceTileInMap(board, x, y, tile, new EnergySpaceTile(x, y));
-                                energySpaceList.add(new EnergySpaceTile(x, y));
+                                EnergySpaceTile energy = new EnergySpaceTile(x, y);
+                                replaceTileInMap(board, x, y, tile, energy);
+                                energySpaceList.add(energy);
                             }
                             case "ConveyorBelt" -> {
                                 ArrayList<Direction> in = new ArrayList<>();
@@ -147,16 +148,20 @@ public class Board {
                             }
                             //TODO: needs to work with directions, once they have been added to json
                             case "RestartPoint" -> {
-                                replaceTileInMap(board, x, y, tile, new RebootTile(x, y));
-                                rebootTileList.add(new RebootTile(x, y));
+                                RebootTile reboot =  new RebootTile(x, y);
+                                replaceTileInMap(board, x, y, tile,reboot);
+                                rebootTileList.add(reboot);
                             }
                             case "CheckPoint" -> {
-                                replaceTileInMap(board, x, y, tile, new CheckpointTile(x, y));
+                                CheckpointTile checkpoint = new CheckpointTile(x, y);
+                                replaceTileInMap(board, x, y, tile, checkpoint);
                                 increaseCheckPointCount();
-                                checkpointList.add(new CheckpointTile(x, y));
+                                checkpointList.add(checkpoint);
                             }
                             case "StartPoint" -> {
-                                replaceTileInMap(board, x, y, tile, new StartTile(x, y));
+                                StartTile startTile = new StartTile(x, y);
+                                replaceTileInMap(board, x, y, tile, startTile);
+                                startTileList.add(startTile);
                             }
                             case "Antenna" -> {
                                 replaceTileInMap(board, x, y, tile, new Antenna(x, y));

@@ -100,10 +100,10 @@ public class Tile {
         this.position = position;
     }
     public int getXCoordinate() {
-        return position.getValue0();
+        return xCoordinate;
     }
     public int getYCoordinate(){
-        return position.getValue1();
+        return yCoordinate;
     }
     public void applyEffect(Player player) throws Exception{}
 
