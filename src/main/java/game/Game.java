@@ -77,34 +77,34 @@ public class Game implements Runnable {
 
     private void applyAllTileEffects() throws Exception {
         try {
-            for(int x = 0; x < board.conveyorBelt2List.size(); x++) {
+            for(int x = 0; x < board.getConveyorBelt2List().size(); x++) {
                 for(int y = 0; y < playerList.size(); y++) {
-                    if(playerList.get(y).getRobot().getCurrentPosition().equals(board.conveyorBelt2List.get(x).getPosition())) {
-                        board.conveyorBelt2List.get(x).applyEffect(playerList.get(y));
+                    if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getConveyorBelt2List().get(x).getPosition())) {
+                        board.getConveyorBelt2List().get(x).applyEffect(playerList.get(y));
                     }
                 }
             }
 
-        for(int x = 0; x < board.conveyorBelt1List.size(); x++) {
+        for(int x = 0; x < board.getConveyorBelt1List().size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
-                if(playerList.get(y).getRobot().getCurrentPosition().equals(board.conveyorBelt1List.get(x).getPosition())) {
-                    board.conveyorBelt1List.get(x).applyEffect(playerList.get(y));
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getConveyorBelt1List().get(x).getPosition())) {
+                    board.getConveyorBelt1List().get(x).applyEffect(playerList.get(y));
                 }
             }
         }
         applyPushPanelEffects();
-        for(int x = 0; x < board.gearTileList.size(); x++) {
+        for(int x = 0; x < board.getGearTileList().size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
-                if(playerList.get(y).getRobot().getCurrentPosition().equals(board.gearTileList.get(x).getPosition())) {
-                    board.gearTileList.get(x).applyEffect(playerList.get(y));
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getGearTileList().get(x).getPosition())) {
+                    board.getGearTileList().get(x).applyEffect(playerList.get(y));
                 }
             }
         }
         //TODO: needs to be changed (?)
-        for(int x = 0; x < board.laserTileList.size(); x++) {
+        for(int x = 0; x < board.getLaserTileList().size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
-                if(playerList.get(y).getRobot().getCurrentPosition().equals(board.laserTileList.get(x).getPosition())) {
-                    board.laserTileList.get(x).applyEffect(playerList.get(y));
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getLaserTileList().get(x).getPosition())) {
+                    board.getLaserTileList().get(x).applyEffect(playerList.get(y));
                 }
             }
         }
@@ -121,17 +121,18 @@ public class Game implements Runnable {
         }
         robotLaserList.clear();
 
-        for(int x = 0; x < board.energySpaceList.size(); x++) {
+        for(int x = 0; x < board.getEnergySpaceList().size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
-                if(playerList.get(y).getRobot().getCurrentPosition().equals(board.energySpaceList.get(x).getPosition())) {
-                    board.energySpaceList.get(x).applyEffect(playerList.get(y));
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getEnergySpaceList().get(x).getPosition())) {
+                    board.getEnergySpaceList().get(x).applyEffect(playerList.get(y));
+                    server.sendEnergy(playerList.get(y), board.getEnergySpaceList().get(x));
                 }
             }
         }
-        for(int x = 0; x < board.checkpointList.size(); x++) {
+        for(int x = 0; x < board.getCheckpointList().size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
-                if(playerList.get(y).getRobot().getCurrentPosition().equals(board.checkpointList.get(x).getPosition())) {
-                    board.checkpointList.get(x).applyEffect(playerList.get(y));
+                if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getCheckpointList().get(x).getPosition())) {
+                    board.getCheckpointList().get(x).applyEffect(playerList.get(y));
                 }
             }
         }
@@ -173,7 +174,7 @@ public class Game implements Runnable {
     }
 
     private ArrayList<Player> determinePriority() {
-        Pair<Integer, Integer> antennaPosition = board.antenna.getPosition();
+        Pair<Integer, Integer> antennaPosition = board.getAntenna().getPosition();
         ArrayList<Player> priorityList = new ArrayList<>();
         for (PlayerList it = playerList; it.hasNext(); ) {
             Player player = it.next();
@@ -373,7 +374,13 @@ public class Game implements Runnable {
             server.sendCurrentCards(dataList);
             dataList.clear();
             currentRegister++;
-            Thread.sleep(3000);
+            Thread.sleep(1000);
+            if(playerList.robotNeedsReboot()) {
+                for(int i = 0; i < playerList.numberOfNeededReboots(); i++) {
+                    //playerList.get(i).getRobot().reboot(board.getRebootTile());
+                }
+            }
+            Thread.sleep(1000);
             determinePriority();
             //checks if all registers have been activated
             if(currentRegister == 5) {
@@ -413,7 +420,7 @@ public class Game implements Runnable {
      * @return returns if at least one robot stands on a checkpoint
      */
     public boolean checkIfPlayersReachedCheckPoints(PlayerList playerList){
-        for(CheckpointTile checkpointTile: Board.checkpointList) {
+        for(CheckpointTile checkpointTile: board.getCheckpointList()) {
             for (int i = 0; i < playerList.size(); i++) {
                 //checks if any robot is on a checkpoint and his current objective matches the checkpoint-number
                 if (playerList.get(i).getRobot().getCurrentPosition().getValue0() == checkpointTile.getXCoordinate() &&
@@ -434,7 +441,7 @@ public class Game implements Runnable {
      */
     public ArrayList<Pair<Integer, Integer>> playersThatReachedCheckpoints(PlayerList playerList){
         ArrayList<Pair<Integer, Integer>> playersThatReachedCheckpointsList = new ArrayList<>();
-        for(CheckpointTile checkpointTile: Board.checkpointList) {
+        for(CheckpointTile checkpointTile: board.getCheckpointList()) {
             for (int i = 0; i < playerList.size(); i++) {
                 //checks if any robot is on a checkpoint and his current objective matches the checkpoint-number.
                 //If so, the player ID is added to the list in combination with the checkpoint-number
@@ -451,6 +458,9 @@ public class Game implements Runnable {
     private void activateRegister(Player player) throws Exception {
         try{
             player.getCardFromRegister(currentRegister).applyEffect(player);
+            if(player.getCardFromRegister(currentRegister) instanceof PowerUpCard) {
+                server.sendEnergy(player, player.getCardFromRegister(currentRegister));
+            }
         } catch (IndexOutOfBoundsException e) {
             logger.warn("This register was not activated because you're Robot can not move past this point" + e);
         }
@@ -537,7 +547,7 @@ public class Game implements Runnable {
 
     public boolean checkIfStartTileIsTaken(int x, int y) {
         boolean result = false;
-        for(StartTile startTile: board.startTileList) {
+        for(StartTile startTile: board.getStartTileList()) {
             if(startTile.getXCoordinate() == x && startTile.getYCoordinate() == y) {
                 if(startTile.isTaken()) {
                     result = true;
@@ -547,7 +557,7 @@ public class Game implements Runnable {
         return result;
     }
     public void setStartPoint(int x, int y) {
-        for(StartTile startTile: board.startTileList) {
+        for(StartTile startTile: board.getStartTileList()) {
             if(startTile.getXCoordinate() == x && startTile.getYCoordinate() == y) {
                 if(!startTile.isTaken()) {
                     startTile.setTaken(true);

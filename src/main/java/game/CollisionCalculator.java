@@ -61,53 +61,53 @@ public class CollisionCalculator {
     public static boolean checkLaserCollision(Player player){
         Pair<Integer, Integer> playerPosition = player.getRobot().getCurrentPosition();
 
-        for(int i = 0; i < Board.laserTileList.size(); i++){
-            Pair<Integer, Integer> laserEndpoint = new Pair<>(Board.laserTileList.get(i).getXCoordinate(),
-                    Board.laserTileList.get(i).getYCoordinate());
-            Direction laserDirection = Board.laserTileList.get(i).getLos();
+        for(int i = 0; i < board.getLaserTileList().size(); i++){
+            Pair<Integer, Integer> laserEndpoint = new Pair<>(board.getLaserTileList().get(i).getXCoordinate(),
+                    board.getLaserTileList().get(i).getYCoordinate());
+            Direction laserDirection = board.getLaserTileList().get(i).getLos();
             switch(laserDirection){
                 case NORTH-> {
-                    for(int j = Board.laserTileList.get(i).getYCoordinate(); j >= 0; j--){
+                    for(int j = board.getLaserTileList().get(i).getYCoordinate(); j >= 0; j--){
                         laserEndpoint.setAt1(j);
-                        if(tileIsBlocking(Board.getTile(laserEndpoint))){
+                        if(tileIsBlocking(board.getTile(laserEndpoint))){
                             break;
                         }
-                         return (playerPosition.getValue0().equals(Board.laserTileList.get(i).getXCoordinate())
+                         return (playerPosition.getValue0().equals(board.getLaserTileList().get(i).getXCoordinate())
                                 && player.getRobot().getCurrentPosition().getValue1() >= laserEndpoint.getValue1()
-                                && player.getRobot().getCurrentPosition().getValue1() <= Board.laserTileList.get(i).getYCoordinate());
+                                && player.getRobot().getCurrentPosition().getValue1() <= board.getLaserTileList().get(i).getYCoordinate());
                     }
                 }
                 case SOUTH -> {
-                    for(int j = Board.laserTileList.get(i).getYCoordinate(); j <= Board.getRows(); j++){
+                    for(int j = board.getLaserTileList().get(i).getYCoordinate(); j <= board.getRows(); j++){
                     laserEndpoint.setAt1(j);
-                    if(tileIsBlocking(Board.getTile(laserEndpoint))){
+                    if(tileIsBlocking(board.getTile(laserEndpoint))){
                         break;
                     }
-                    return (playerPosition.getValue0().equals(Board.laserTileList.get(i).getXCoordinate())
+                    return (playerPosition.getValue0().equals(board.getLaserTileList().get(i).getXCoordinate())
                             && player.getRobot().getCurrentPosition().getValue1() <= laserEndpoint.getValue1()
-                            && player.getRobot().getCurrentPosition().getValue1() >= Board.laserTileList.get(i).getYCoordinate());
+                            && player.getRobot().getCurrentPosition().getValue1() >= board.getLaserTileList().get(i).getYCoordinate());
                     }
                 }
                 case EAST -> {
-                    for(int j = Board.laserTileList.get(i).getXCoordinate(); j <= Board.getColumns(); j++){
+                    for(int j = board.getLaserTileList().get(i).getXCoordinate(); j <= board.getColumns(); j++){
                         laserEndpoint.setAt0(j);
-                        if(tileIsBlocking(Board.getTile(laserEndpoint))){
+                        if(tileIsBlocking(board.getTile(laserEndpoint))){
                             break;
                         }
-                        return (playerPosition.getValue1().equals(Board.laserTileList.get(i).getYCoordinate())
+                        return (playerPosition.getValue1().equals(board.getLaserTileList().get(i).getYCoordinate())
                                 && player.getRobot().getCurrentPosition().getValue0() <= laserEndpoint.getValue0()
-                                && player.getRobot().getCurrentPosition().getValue0() >= Board.laserTileList.get(i).getXCoordinate());
+                                && player.getRobot().getCurrentPosition().getValue0() >= board.getLaserTileList().get(i).getXCoordinate());
                     }
                 }
                 case WEST -> {
-                    for(int j = Board.laserTileList.get(i).getXCoordinate(); j >= 0; j--){
+                    for(int j = board.getLaserTileList().get(i).getXCoordinate(); j >= 0; j--){
                         laserEndpoint.setAt0(j);
-                        if(tileIsBlocking(Board.getTile(laserEndpoint))){
+                        if(tileIsBlocking(board.getTile(laserEndpoint))){
                             break;
                         }
-                        return (playerPosition.getValue1().equals(Board.laserTileList.get(i).getYCoordinate())
+                        return (playerPosition.getValue1().equals(board.getLaserTileList().get(i).getYCoordinate())
                                 && player.getRobot().getCurrentPosition().getValue0() >= laserEndpoint.getValue0()
-                                && player.getRobot().getCurrentPosition().getValue0() <= Board.laserTileList.get(i).getXCoordinate());
+                                && player.getRobot().getCurrentPosition().getValue0() <= board.getLaserTileList().get(i).getXCoordinate());
                     }
                 }
             }

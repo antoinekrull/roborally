@@ -167,4 +167,24 @@ public class PlayerList implements Iterator<Player> {
         count++;
         return playerList.get(count - 1);
     }
+
+    public boolean robotNeedsReboot() {
+        boolean result = false;
+        for(Player player: playerList) {
+            if(player.getRobot().getRebootStatus()) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    public int numberOfNeededReboots() {
+        int result = 0;
+        for(Player player: playerList) {
+            if(player.getRobot().getRebootStatus()) {
+                result++;
+            }
+        }
+        return result;
+    }
 }

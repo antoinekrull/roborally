@@ -10,6 +10,6 @@ public class WormCard extends Card {
     }
     @Override
     public void applyEffect(Player player) throws Exception {
-        player.getRobot().reboot(0);
+        //player.getRobot().reboot(0);
     }
 }

@@ -4,6 +4,9 @@ import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
 import game.Game;
+import game.board.Direction;
+import game.board.EnergySpaceTile;
+import game.card.PowerUpCard;
 import game.player.Player;
 import game.player.Robot;
 import javafx.beans.property.BooleanProperty;
@@ -304,6 +307,38 @@ public class Server {
     public void sendPlayerTurning(Robot robot) {
         try {
             messages.put(messageCreator.generatePlayerTurningMessage(robot.getId(), robot.getDirection().toString()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendReboot(Player player) {
+        try {
+            messages.put(messageCreator.generateRebootMessage(player.getId()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendRebootDirection(Direction direction) {
+        try {
+            messages.put(messageCreator.generateRebootDirectionMessage(direction.toString()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendEnergy(Player player, Object object) {
+        try {
+            String energySource = "";
+            if(object instanceof EnergySpaceTile) {
+                energySource = "EnergySpace";
+            } else if(object instanceof PowerUpCard) {
+                energySource = "PowerUpCard";
+            } else {
+                energySource = "error";
+            }
+            messages.put(messageCreator.generateEnergyMessage(player.getId(), player.getRobot().getEnergyCubes() ,energySource));
         } catch (Exception e) {
             e.printStackTrace();
         }
