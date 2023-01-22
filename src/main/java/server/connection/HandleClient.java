@@ -211,7 +211,11 @@ public class HandleClient implements Runnable{
 
                     } else if (incomingMessage.getMessageType() == MessageType.CurrentPlayer) {
                         Game.playerList.getPlayerFromList(incomingMessage.getMessageBody().getClientID()).setPlaying(true);
-                    } else if (incomingMessage.getMessageType() == MessageType.SelectedCard) {
+                    } else if (incomingMessage.getMessageType() == MessageType.PlayCard) {
+                        server.messages.put(messageCreator.generateCardPlayedMessage(incomingMessage.getMessageBody().getCard(),
+                                getClientID()));
+                    }
+                    else if (incomingMessage.getMessageType() == MessageType.SelectedCard) {
                         Game.playerList.getPlayerFromList(getClientID()).playCard(incomingMessage.getMessageBody().getCard(),
                                 incomingMessage.getMessageBody().getRegister());
                         if(incomingMessage.getMessageBody().getCard().equals("Null")) {

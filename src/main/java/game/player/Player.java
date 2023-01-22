@@ -179,6 +179,7 @@ public class Player {
         }
         if(getEmptyRegisterAmount() == 0) {
             setReady(true);
+            server.sendSelectionFinished(id);
         }
     }
 

@@ -244,6 +244,14 @@ public class Server {
         }
     }
 
+    public void sendSelectionFinished(int id) {
+        try {
+            messages.put(messageCreator.generateSelectionFinishedMessage(id));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void sendShuffleCoding(Player player) {
         try {
             CLIENTS.get(player.getId()).write(messageCreator.generateShuffleCodingMessage(player.getId()));
@@ -293,6 +301,11 @@ public class Server {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    //TODO: Implement this
+    public void sendReplaceCards() {
+
     }
 
     public void sendMovement(Robot robot) {
