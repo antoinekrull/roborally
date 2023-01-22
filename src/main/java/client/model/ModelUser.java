@@ -42,7 +42,7 @@ public class ModelUser {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 if (accepted.get()) {
-                    notifyChangeSupport.notifyInstance();
+                    notifyChangeSupport.robotAccepted();
                 }
             }
         });

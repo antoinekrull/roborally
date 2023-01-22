@@ -5,6 +5,8 @@ package communication;
  * @version 1.0
  * This class resolves the name ambiguity for the cardsInHand attribute together with MessageBodyCardsInHandStringInteger
  */
+
+/*
 public class MessageBodyCardsInHandStringArray extends MessageBody{
     private String[] cardsInHand;
 
@@ -16,3 +18,5 @@ public class MessageBodyCardsInHandStringArray extends MessageBody{
         this.cardsInHand = cardsInHand;
     }
 }
+
+ */

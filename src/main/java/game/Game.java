@@ -3,7 +3,6 @@ package game;
 import game.board.*;
 import game.card.*;
 import game.player.Player;
-import game.player.Robot;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
@@ -266,7 +265,7 @@ public class Game implements Runnable {
         return result;
     }
 
-    public void runTimer() {
+    private void runTimer() {
         server.sendTimerStarted();
         TimerTask timerTask = new TimerTask() {
             @Override
@@ -295,14 +294,13 @@ public class Game implements Runnable {
         this.currentGamePhase = currentGamePhase;
     }
 
-    //TODO: finish this once client server connection allows for it
-    public void pickStartLocationForRobot(Player player, int x, int y) {
+    private void pickStartLocationForRobot(Player player, int x, int y) {
         Pair<Integer, Integer> input = new Pair<>(x, y);
         player.getRobot().setCurrentPosition(input);
         player.setReady(true);
     }
 
-    public void setStartDirectionForRobot(String input) {
+    private void setStartDirectionForRobot(String input) {
         switch(input) {
             case "Deathtrap" -> {
                 for(int i = 0; i < playerList.size(); i++) {
@@ -385,7 +383,7 @@ public class Game implements Runnable {
             logger.debug("Applying tile effects");
             applyAllTileEffects();
             if(checkIfPlayerWon(playerList)){
-                Player winner = determineWichPlayerWon(playerList);
+                Player winner = determineWhichPlayerWon(playerList);
                 logger.debug("The winning player is: " + winner);
                 //sends a message to all clients
                 server.sendGameFinished(winner);
@@ -460,7 +458,7 @@ public class Game implements Runnable {
      * @param playerList The list of players who are playing the game at the moment
      * @return returns the Player that has won the game
      */
-    public Player determineWichPlayerWon(PlayerList playerList){
+    private Player determineWhichPlayerWon(PlayerList playerList){
         int checkpointsInGame = board.getCheckPointCount();
         for(int i = 0; i < playerList.size(); i++){
             if(playerList.get(i).getRobot().getCurrentObjective() == checkpointsInGame){

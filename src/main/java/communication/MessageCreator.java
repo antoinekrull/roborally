@@ -135,15 +135,32 @@ import java.util.ArrayList;
             messageBody.setClientID(clientID);
             return new Message(MessageType.StartingPointTaken, messageBody);
         }
+        /*
         public Message generateYourCardsMessage(String[] cardsInHand){
             MessageBodyCardsInHandStringArray messageBody = new MessageBodyCardsInHandStringArray();
             messageBody.setCardsInHand(cardsInHand);
             return new Message(MessageType.YourCards, messageBody);
         }
+
+         */
+        /*
         public Message generateNotYourCardsMessage(int clientID, int cardsInHand){
             MessageBodyCardsInHandInteger messageBody = new MessageBodyCardsInHandInteger();
             messageBody.setClientID(clientID);
             messageBody.setCardsInHand(cardsInHand);
+            return new Message(MessageType.NotYourCards, messageBody);
+        }
+
+         */
+        public Message generateYourCardsMessage(String[] cardsInHand){
+            MessageBody messageBody = new MessageBody();
+            messageBody.setCardsInHand(cardsInHand);
+            return new Message(MessageType.YourCards, messageBody);
+        }
+        public Message generateNotYourCardsMessage(int clientID, int cardsAmountInHand){
+            MessageBody messageBody = new MessageBody();
+            messageBody.setClientID(clientID);
+            messageBody.setCardsAmountInHand(cardsAmountInHand);
             return new Message(MessageType.NotYourCards, messageBody);
         }
         public Message generateShuffleCodingMessage(int clientID){
@@ -178,8 +195,15 @@ import java.util.ArrayList;
             messageBody.setClientIDs(clientIDs);
             return new Message(MessageType.TimerEnded, messageBody);
         }
+        /*
         public Message generateCardsYouGotNowMessage(String[] cards){
             MessageBodyCardsInHandStringArray messageBody = new MessageBodyCardsInHandStringArray();
+            messageBody.setCardsInHand(cards);
+            return new Message(MessageType.CardsYouGotNow, messageBody);
+        }
+         */
+        public Message generateCardsYouGotNowMessage(String[] cards){
+            MessageBody messageBody = new MessageBody();
             messageBody.setCardsInHand(cards);
             return new Message(MessageType.CardsYouGotNow, messageBody);
         }

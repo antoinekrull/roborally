@@ -41,7 +41,7 @@ public class ModelChat {
         chatMessage.addListener((observable, oldValue, newValue) -> {
             try {
                 MESSSAGES.put(client.messageProperty().getValue());
-                notifyChangeSupport.notifyInstance();
+                notifyChangeSupport.messageArrived();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

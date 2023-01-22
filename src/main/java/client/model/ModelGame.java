@@ -7,22 +7,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import game.Game;
 import game.board.Board;
 import game.board.Tile;
+import java.io.IOException;
 import java.util.ArrayList;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Model for game
@@ -50,7 +45,9 @@ public class ModelGame {
     private ObservableList<String> maps;
     private BooleanProperty readyToPlay;
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
+    private ObservableList<String> myHandCards;
     private ClientPlayerList clientPlayerList;
+
     private Game game;
 
 
@@ -79,6 +76,13 @@ public class ModelGame {
         this.clientPlayerList = client.getPlayerList();
         this.errorMessage = new SimpleStringProperty();
         errorMessage.bind(client.errorMessageProperty());
+        this.myHandCards = FXCollections.observableArrayList(client.getMyCards());
+        myHandCards.addListener(new ListChangeListener<String>() {
+            @Override
+            public void onChanged(Change<? extends String> c) {
+                notifyChangeSupport.updateProgrammingHandCards();
+            }
+        });
     }
 
     public static ModelGame getInstance() {
@@ -101,10 +105,6 @@ public class ModelGame {
     public void setRobotProperty(int robotProperty) {
         this.robotProperty.set(robotProperty);
     }
-    public void createMap(String jsonMap) throws JsonProcessingException {
-        gameBoard.createBoard(jsonMap);
-        this.gameMap = gameBoard.getBoard();
-    }
     public SimpleStringProperty errorMessageProperty() {
         return errorMessage;
     }
@@ -120,6 +120,16 @@ public class ModelGame {
         this.gameMap = gameBoard.getBoard();
         return gameMap;
     }
+
+    public ObservableList<String> getMyHandCards() {
+        return myHandCards;
+    }
+
+    public void createMap(String jsonMap) throws JsonProcessingException {
+        gameBoard.createBoard(jsonMap);
+        this.gameMap = gameBoard.getBoard();
+    }
+
     public void sendPlayerInformation(String nickname) {
         client.sendPlayerValuesMessage(nickname, robotProperty.get());
     }
@@ -127,4 +137,9 @@ public class ModelGame {
     public void sendStarttileCoordinates( int x, int y){
         client.sendStartingPoint(x, y);
     }
+
+    public void sendSelectedCard(String card, int register) {
+        client.sendSelectCard(card, register);
+    }
+
 }
