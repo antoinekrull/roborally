@@ -203,6 +203,7 @@ public class HandleClient implements Runnable{
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
                         this.jsonMap = content.lines().collect(Collectors.joining());
                         game.setJsonMap(jsonMap);
+                        game.createBoard(jsonMap);
                         server.messages.put(messageCreator.generateMapSelectedMessage(map));
                         //write(messageCreator.generateMapSelectedMessage(map));
 
@@ -225,8 +226,10 @@ public class HandleClient implements Runnable{
                     } else if (incomingMessage.getMessageType() == MessageType.SetStartingPoint) {
                         int x = incomingMessage.getMessageBody().getX();
                         int y = incomingMessage.getMessageBody().getY();
-                        Message startingPointTakenMessage = messageCreator.generateSetStartingPointMessage(x, y);
-                        if(game.checkIfStartTileIsTaken(x, y)){
+                        System.out.println(clientID);
+                        Message startingPointTakenMessage = messageCreator.generateStartingPointTakenMessage(x, y, clientID);
+                        if(!game.checkIfStartTileIsTaken(x, y)){
+                            game.setStartPoint(x, y);
                             server.messages.put(startingPointTakenMessage);
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {
