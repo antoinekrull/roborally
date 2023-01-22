@@ -266,7 +266,7 @@ public class HandleClient implements Runnable{
                             }
                         }
                         for (int i = 0; i < game.playerList.size(); i++) {
-                            System.out.println(game.playerList.get(i).getId() + " " + game.playerList.get(i).getUsername());
+                            logger.debug(game.playerList.get(i).getId() + " " + game.playerList.get(i).getUsername());
                         }
                     } else if(incomingMessage.getMessageType() == MessageType.SetStatus) {
                         boolean ready = incomingMessage.getMessageBody().isReady();

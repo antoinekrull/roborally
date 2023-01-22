@@ -185,6 +185,14 @@ public class Server {
             logger.warn("An error occurred: " + e);
         }
     }
+    public void sendCheckpointReached(Pair<Integer, Integer> pair){
+        try{
+            messages.put(messageCreator.generateCheckPointReachedMessage(pair.getValue0(), pair.getValue1()));
+        } catch (InterruptedException e) {
+            logger.warn("An error occurred: " + e);
+        }
+    }
+
     public void sendGameStarted(String jsonMap) {
 
         try {

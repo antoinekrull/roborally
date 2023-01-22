@@ -198,7 +198,7 @@ public class Game implements Runnable {
                 case EAST -> {
                     currentPosition = playerList.get(i).getRobot().getCurrentPosition();
                     currentPosition.setAt0(currentPosition.getValue0() + 1);
-                    while(!board.tileIsBlocking(board.getTile(currentPosition))){
+                    while(board.tileIsBlocking(board.getTile(currentPosition))){
                         robotLaserList.get(i).add(currentPosition);
                         if(TileTakenByRobot(currentPosition)){
                             break;
@@ -212,7 +212,7 @@ public class Game implements Runnable {
                 case SOUTH -> {
                     currentPosition = playerList.get(i).getRobot().getCurrentPosition();
                     currentPosition.setAt1(currentPosition.getValue1() + 1);
-                    while(!board.tileIsBlocking(board.getTile(currentPosition))){
+                    while(board.tileIsBlocking(board.getTile(currentPosition))){
                         robotLaserList.get(i).add(currentPosition);
                         if(TileTakenByRobot(currentPosition)){
                             break;
@@ -226,7 +226,7 @@ public class Game implements Runnable {
                 case WEST -> {
                     currentPosition = playerList.get(i).getRobot().getCurrentPosition();
                     currentPosition.setAt0(currentPosition.getValue0() - 1);
-                    while(!board.tileIsBlocking(board.getTile(currentPosition))){
+                    while(board.tileIsBlocking(board.getTile(currentPosition))){
                         robotLaserList.get(i).add(currentPosition);
                         if(TileTakenByRobot(currentPosition)){
                             break;
@@ -240,7 +240,7 @@ public class Game implements Runnable {
                 case NORTH -> {
                     currentPosition = playerList.get(i).getRobot().getCurrentPosition();
                     currentPosition.setAt1(currentPosition.getValue1() - 1);
-                    while(!board.tileIsBlocking(board.getTile(currentPosition))){
+                    while(board.tileIsBlocking(board.getTile(currentPosition))){
                         robotLaserList.get(i).add(currentPosition);
                         if(TileTakenByRobot(currentPosition)){
                             break;
@@ -359,7 +359,6 @@ public class Game implements Runnable {
     }
     private void runActivationPhase() throws Exception {
         server.sendActivePhase(3);
-        int playerRegisterLength = 5;
         ArrayList<Pair<Integer, String>> dataList = new ArrayList<>();
         Pair<Integer, String> dataPoint;
         while(!playerList.allPlayerRegistersActivated()) {
@@ -376,7 +375,7 @@ public class Game implements Runnable {
             Thread.sleep(3000);
             determinePriority();
             //checks if all registers have been activated
-            if(currentRegister == playerRegisterLength) {
+            if(currentRegister == 5) {
                 for(int i = 0; i < playerList.size(); i++) {
                     logger.debug("Emptying card registers");
                     playerList.get(i).emptyAllCardRegisters();
@@ -384,6 +383,14 @@ public class Game implements Runnable {
             }
             logger.debug("Applying tile effects");
             applyAllTileEffects();
+            if(checkIfPlayersReachedCheckPoints(playerList)){
+                ArrayList<Pair<Integer, Integer>> playersReachedCheckpoints = playersThatReachedCheckpoints(playerList);
+                for (Pair<Integer, Integer> playersReachedCheckpoint : playersReachedCheckpoints) {
+                    //sends the player id and the number of the reached checkpoint for every player that reaches a
+                    //checkpoint each played register
+                    server.sendCheckpointReached(playersReachedCheckpoint);
+                }
+            }
             if(checkIfPlayerWon(playerList)){
                 Player winner = determineWhichPlayerWon(playerList);
                 logger.debug("The winning player is: " + winner);
@@ -396,6 +403,48 @@ public class Game implements Runnable {
     }
     public void setServer(Server server) {
         this.server = server;
+    }
+
+    /**
+     * Checks every game round if a robot stands on a checkpoint that is his current objective.
+     *
+     * @param playerList The list of players who are playing the game at the moment
+     * @return returns if at least one robot stands on a checkpoint
+     */
+    public boolean checkIfPlayersReachedCheckPoints(PlayerList playerList){
+        for(CheckpointTile checkpointTile: Board.checkpointList) {
+            for (int i = 0; i < playerList.size(); i++) {
+                //checks if any robot is on a checkpoint and his current objective matches the checkpoint-number
+                if (playerList.get(i).getRobot().getCurrentPosition().getValue0() == checkpointTile.getXCoordinate() &&
+                    playerList.get(i).getRobot().getCurrentPosition().getValue1() == checkpointTile.getYCoordinate() &&
+                    playerList.get(i).getRobot().getCurrentObjective() == checkpointTile.getNumber()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks every game round if a robot stands on a checkpoint that is his current objective.
+     *
+     * @param playerList The list of players who are playing the game at the moment
+     * @return returns a list on (playerID, checkpointNumber) of each player that reached his current objective
+     */
+    public ArrayList<Pair<Integer, Integer>> playersThatReachedCheckpoints(PlayerList playerList){
+        ArrayList<Pair<Integer, Integer>> playersThatReachedCheckpointsList = new ArrayList<>();
+        for(CheckpointTile checkpointTile: Board.checkpointList) {
+            for (int i = 0; i < playerList.size(); i++) {
+                //checks if any robot is on a checkpoint and his current objective matches the checkpoint-number.
+                //If so, the player ID is added to the list in combination with the checkpoint-number
+                if (playerList.get(i).getRobot().getCurrentPosition().getValue0() == checkpointTile.getXCoordinate() &&
+                    playerList.get(i).getRobot().getCurrentPosition().getValue1() == checkpointTile.getYCoordinate() &&
+                    playerList.get(i).getRobot().getCurrentObjective() == checkpointTile.getNumber()) {
+                    playersThatReachedCheckpointsList.add(new Pair<>(playerList.get(i).getId(), checkpointTile.getNumber()));
+                }
+            }
+        }
+        return playersThatReachedCheckpointsList;
     }
 
     private void activateRegister(Player player) throws Exception {
