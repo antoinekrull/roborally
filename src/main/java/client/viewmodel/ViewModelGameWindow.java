@@ -118,7 +118,7 @@ public class ViewModelGameWindow {
 
     public void initialize() {
         ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
-
+        selectStarttile();
 
         handCardsUI = FXCollections.observableArrayList(modelGame.getMyHandCards());
 
@@ -133,9 +133,8 @@ public class ViewModelGameWindow {
 
         gameboardRegion.widthProperty().addListener((obs, oldValue, newValue) -> {
             double width = newValue.doubleValue() * 0.04;
-            gameboardTileWidth = width;
+            this.gameboardTileWidth = width;
             updateWidth(gameboardTileWidth);
-            selectStarttile(modelGame.robotProperty().get(), gameboardTileWidth);
         });
 
         playerGameInfo = new PlayerGameInfo(playerInfoGrid, modelGame.getPlayerList());
@@ -321,27 +320,22 @@ public class ViewModelGameWindow {
         }
     }
 
-    public void selectStarttile (int robot, double width) {
-        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + robot + "_bunt.png");
-        Image im = new Image(input);
-        ImageView img = new ImageView(im);
-        img.setFitWidth(width);
-        img.setPreserveRatio(true);
-        //to identify the robot in other methods
-        img.setId("Robot_" + robot);
+    public void selectStarttile() {
         gameboard.setOnMouseClicked(event -> {
-            Node target = event.getPickResult().getIntersectedNode();
-            Integer colIndex = GridPane.getColumnIndex(target);
-            Integer rowIndex = GridPane.getRowIndex(target);
-            //check imageviews for type of tile
-            if(target.getId() != null && target.getId().equals("StartTile")){
-                gameboard.getChildren().remove(img);
-                gameboard.add(img, colIndex, rowIndex);
-                //when starttile, insert img of robot and send coordinates
-                modelGame.sendStarttileCoordinates(colIndex, rowIndex);
+            if (modelGame.activePlayerProperty().get()){
+                Node target = event.getPickResult().getIntersectedNode();
+                Integer colIndex = GridPane.getColumnIndex(target);
+                Integer rowIndex = GridPane.getRowIndex(target);
+                //check imageviews for type of tile
+                if (target.getId() != null && target.getId().equals("StartTile")) {
+                    //when starttile, insert img of robot and send coordinates
+                    modelGame.sendStarttileCoordinates(colIndex, rowIndex);
+                } else {
+                    System.out.println("Is not a starttile");
+                }
             }
-            else{
-                System.out.println("Ist kein Starttile");
+            else {
+                System.out.println("Not your turn");
             }
         });
     }
