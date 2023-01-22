@@ -13,8 +13,6 @@ import java.util.ArrayList;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -38,12 +36,20 @@ public class ModelGame {
     private IntegerProperty y;
     private boolean yChanged;
     private boolean xChanged;
+    private IntegerProperty movementX;
+    private IntegerProperty movementY;
+    private IntegerProperty playerID;
+    private boolean movementXChanged;
+    private boolean movementYChanged;
+    private boolean playerIDChanged;
     private BooleanProperty timer;
+    private BooleanProperty activePlayer;
     private ObservableList<String> maps;
     private BooleanProperty readyToPlay;
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
     private ObservableList<String> myHandCards;
     private ClientPlayerList clientPlayerList;
+
 
     private Game game;
 
@@ -53,6 +59,11 @@ public class ModelGame {
         this.notifyChangeSupport = NotifyChangeSupport.getInstance();
         this.xChanged = false;
         this.yChanged = false;
+        this.movementYChanged = false;
+        this.movementXChanged = false;
+        this.playerIDChanged = false;
+        this.activePlayer = new SimpleBooleanProperty(false);
+        this.activePlayer.bind(client.activePlayerProperty());
         this.robotProperty = new SimpleIntegerProperty();
         this.readyList = FXCollections.observableArrayList();
         this.readyToPlay = new SimpleBooleanProperty();
@@ -93,6 +104,7 @@ public class ModelGame {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 yChanged = true;
+                check_x_y_changed();
             }
         });
 
@@ -109,6 +121,35 @@ public class ModelGame {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 notifyChangeSupport.startTimer();
+            }
+        });
+
+        this.movementX = new SimpleIntegerProperty();
+        movementX.bind(client.movementXProperty());
+        movementX.addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                movementXChanged = true;
+                check_X_Y_ID();
+            }
+        });
+
+        this.movementY = new SimpleIntegerProperty();
+        movementY.bind(client.movementYProperty());
+        movementY.addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                movementYChanged = true;
+                check_X_Y_ID();
+            }
+        });
+
+        this.playerID = new SimpleIntegerProperty();
+        playerID.addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                playerIDChanged = true;
+                check_X_Y_ID();
             }
         });
     }
@@ -174,13 +215,63 @@ public class ModelGame {
         return y;
     }
 
+    public int getMovementX() {
+        return movementX.get();
+    }
+
+    public IntegerProperty movementXProperty() {
+        return movementX;
+    }
+
+    public int getMovementY() {
+        return movementY.get();
+    }
+
+    public IntegerProperty movementYProperty() {
+        return movementY;
+    }
+
+    public int getPlayerID() {
+        return playerID.get();
+    }
+
+    public IntegerProperty playerIDProperty() {
+        return playerID;
+    }
+
+    public boolean isMovementXChanged() {
+        return movementXChanged;
+    }
+
+    public boolean isMovementYChanged() {
+        return movementYChanged;
+    }
+
+    public boolean isPlayerIDChanged() {
+        return playerIDChanged;
+    }
+
+    public BooleanProperty activePlayerProperty() {
+        return activePlayer;
+    }
+
+    public void check_X_Y_ID() {
+        if (movementXChanged && movementYChanged && playerIDChanged) {
+            notifyChangeSupport.robotSetPosition(movementX.get(), movementY.get(), playerID.get());
+            movementYChanged = false;
+            movementXChanged = false;
+            playerIDChanged = false;
+        }
+    }
+
     public void check_x_y_changed() {
         if (xChanged && yChanged) {
-            notifyChangeSupport.robotMovement(xProperty().get(), yProperty().get(), robotProperty.get());
+            notifyChangeSupport.robotSetPosition(xProperty().get(), yProperty().get(), robotProperty.get());
             xChanged = false;
             yChanged = false;
         }
     }
+
     public void createMap(String jsonMap) throws JsonProcessingException {
         gameBoard.createBoard(jsonMap);
         this.gameMap = gameBoard.getBoard();

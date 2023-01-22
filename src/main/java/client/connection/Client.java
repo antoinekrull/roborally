@@ -45,16 +45,17 @@ public class Client {
     private BooleanProperty connected;
     private BooleanProperty accepted;
     private BooleanProperty isAI;
-
-
-
     private BooleanProperty gameStarted;
     private ObjectProperty<Message> message;
     private IntegerProperty userID;
     private StringProperty errorMessage;
     private IntegerProperty x;
     private IntegerProperty y;
-    private Boolean prioPlayer = false;
+    private IntegerProperty movementX;
+    private IntegerProperty movementY;
+    private IntegerProperty robotID;
+    private boolean prioPlayer = false;
+    private BooleanProperty activePlayer;
 
     public static ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
     public ObservableList<String> myCards;
@@ -81,6 +82,7 @@ public class Client {
         this.message = new SimpleObjectProperty<>();
         this.userID = new SimpleIntegerProperty();
         this.gameStarted = new SimpleBooleanProperty();
+        this.activePlayer = new SimpleBooleanProperty(false);
         this.isAI = new SimpleBooleanProperty();
         this.maps = FXCollections.observableArrayList();
         this.connected = new SimpleBooleanProperty();
@@ -91,6 +93,8 @@ public class Client {
         this.x = new SimpleIntegerProperty();
         this.y = new SimpleIntegerProperty();
         this.timer = new SimpleBooleanProperty(false);
+        this.movementX = new SimpleIntegerProperty();
+        this.movementY = new SimpleIntegerProperty();
     }
 
     public static Client getInstance() {
@@ -202,6 +206,62 @@ public class Client {
         this.timer.set(timer);
     }
 
+    public int getMovementX() {
+        return movementX.get();
+    }
+
+    public IntegerProperty movementXProperty() {
+        return movementX;
+    }
+
+    public void setMovementX(int movementX) {
+        this.movementX.set(movementX);
+    }
+
+    public int getMovementY() {
+        return movementY.get();
+    }
+
+    public IntegerProperty movementYProperty() {
+        return movementY;
+    }
+
+    public void setMovementY(int movementY) {
+        this.movementY.set(movementY);
+    }
+
+    public int getRobotID() {
+        return robotID.get();
+    }
+
+    public IntegerProperty robotIDProperty() {
+        return robotID;
+    }
+
+    public void setRobotID(int robotID) {
+        this.robotID.set(robotID);
+    }
+
+    public Boolean getPrioPlayer() {
+        return prioPlayer;
+    }
+
+    public void setPrioPlayer(Boolean prioPlayer) {
+        this.prioPlayer = prioPlayer;
+    }
+
+    public boolean isActivePlayer() {
+        return activePlayer.get();
+    }
+
+    public BooleanProperty activePlayerProperty() {
+        return activePlayer;
+    }
+
+    public void setActivePlayer(boolean activePlayer) {
+        this.activePlayer.set(activePlayer);
+    }
+
     private class ReadMessagesFromServer implements Runnable {
         DataInputStream in = null;
         DataOutputStream out = null;
@@ -274,10 +334,19 @@ public class Client {
 
                         }
                         if (message.getMessageType().equals(MessageType.CurrentPlayer)) {
-
+                            Client.this.activePlayer.set(true);
                         }
                         if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
-
+                            int clientID = message.getMessageBody().getClientID();
+                            if (Client.this.userIDProperty().get() == clientID) {
+                                Client.this.setX(message.getMessageBody().getX());
+                                Client.this.setY(message.getMessageBody().getY());
+                            }
+                            else {
+                                Client.this.setMovementX(message.getMessageBody().getX());
+                                Client.this.setMovementY(message.getMessageBody().getY());
+                                Client.this.setRobotID(message.getMessageBody().getClientID());
+                            }
                         }
                         if (message.getMessageType().equals(MessageType.GameStarted)) {
                             board.createBoard(message.getMessageBody().getGameMap());
@@ -312,11 +381,11 @@ public class Client {
                                 Client.this.setX(message.getMessageBody().getX());
                                 Client.this.setY(message.getMessageBody().getY());
                             }
-                            //TODO: movement for other players
                             else {
-
+                                Client.this.setMovementX(message.getMessageBody().getX());
+                                Client.this.setMovementY(message.getMessageBody().getY());
+                                Client.this.setRobotID(message.getMessageBody().getClientID());
                             }
-
                         }
                         if (message.getMessageType().equals(MessageType.CardSelected)) {
                             int clientID = message.getMessageBody().getClientID();
@@ -398,6 +467,7 @@ public class Client {
     }
     public void sendStartingPoint(int x, int y) {
         sendMessageToServer(messageCreator.generateSetStartingPointMessage(x, y));
+        this.activePlayer.set(false);
     }
     public void sendSelectCard(String card, int register) {
         sendMessageToServer(messageCreator.generateSelectedCardMessage(card, register));
@@ -415,8 +485,6 @@ public class Client {
     public void sendRegister(int register) {
         sendMessageToServer(messageCreator.generateChooseRegisterMessage(register));
     }
-
-
 
 
     public void sendMessageToServer(Message message) {
