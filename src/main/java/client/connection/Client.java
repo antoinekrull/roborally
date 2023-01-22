@@ -95,6 +95,7 @@ public class Client {
         this.timer = new SimpleBooleanProperty(false);
         this.movementX = new SimpleIntegerProperty();
         this.movementY = new SimpleIntegerProperty();
+        this.robotID = new SimpleIntegerProperty();
     }
 
     public static Client getInstance() {
