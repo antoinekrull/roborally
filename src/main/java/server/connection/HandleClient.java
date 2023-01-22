@@ -235,6 +235,7 @@ public class HandleClient implements Runnable{
                             if (!game.checkIfStartTileIsTaken(x, y)) {
                                 game.setStartPoint(x, y);
                                 server.messages.put(startingPointTakenMessage);
+                                game.setRobotSet(true);
                             }
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.PlayerValues) {

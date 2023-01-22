@@ -334,35 +334,31 @@ public class Game implements Runnable {
         server.sendActivePhase(0);
         try {
             Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+
+            logger.debug("Running Setup Phase now");
+            for (int i = 0; i < readyList.size(); i++) {
+                activePlayer = playerList.getPlayerFromList(readyList.get(i));
+                server.sendCurrentPlayer(readyList.get(i));
+                Thread.sleep(100);
+
+                while (!robotSet) {
+                    Thread.sleep(100);
+                }
+                Thread.sleep(100);
+                System.out.println("die Setupphase geht weiter");
+                this.robotSet = false;
+                Thread.sleep(100);
+            }
+            logger.debug(maps[0]);
+            playerList.setPlayerReadiness(false);
+            while (!playerList.playersAreReady()) {
+                //TODO: implement this properly
+                //pickStartLocationForRobot();
+            }
+        }catch (InterruptedException e) {
+                e.printStackTrace();
         }
 
-        logger.debug("Running Setup Phase now");
-        for (int i =0; i < readyList.size(); i++) {
-            activePlayer = playerList.getPlayerFromList(readyList.get(i));
-            server.sendCurrentPlayer(readyList.get(i));
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            while(!robotSet){}
-            this.robotSet=false;
-            server.sendStartPointTaken(activePlayer.getId(),activePlayer.getRobot().getCurrentPosition());
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        logger.debug(maps[0]);
-        playerList.setPlayerReadiness(false);
-        while(!playerList.playersAreReady()) {
-            //TODO: implement this properly
-            //pickStartLocationForRobot();
-
-        }
         //map name logic
         setStartDirectionForRobot(maps[0]);
 
@@ -538,7 +534,7 @@ public class Game implements Runnable {
             server.sendSelectMap(maps);
             try {
                 Thread.sleep(100);
-            } catch (InterruptedException e) {
+            }catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
