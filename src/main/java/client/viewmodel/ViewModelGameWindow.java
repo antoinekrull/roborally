@@ -341,6 +341,7 @@ public class ViewModelGameWindow {
     }
 
     public void robotSetPosition(int x, int y, int robot) {
+        Platform.runLater(() ->{
         InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + robot + "_bunt.png");
         Image im = new Image(input);
         ImageView img = new ImageView(im);
@@ -358,6 +359,7 @@ public class ViewModelGameWindow {
         }
         //adds new Image
         gameboard.add(img, x, y);
+    });
     }
 
     public void setOnDragDetected(Pane source) {
