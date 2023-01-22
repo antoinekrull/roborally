@@ -416,8 +416,7 @@ public class Game implements Runnable {
                 playerList.get(i).setStatusRegister(true, currentRegister);
             }
             server.sendCurrentCards(dataList);
-
-                Thread.sleep(100);
+            Thread.sleep(100);
             dataList.clear();
             currentRegister++;
             Thread.sleep(1000);
