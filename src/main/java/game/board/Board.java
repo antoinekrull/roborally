@@ -2,14 +2,11 @@ package game.board;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import javafx.geometry.Orientation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
 
 import java.util.ArrayList;
-
-import static java.lang.Integer.parseInt;
 
 /**0
  * @author Antoine, Moritz, Firas
@@ -18,7 +15,7 @@ import static java.lang.Integer.parseInt;
 public class Board {
     protected static int columns;
     protected static int rows;
-    private int checkPointCount;
+    private int checkPointCount = 0;
     protected static ArrayList<ArrayList<ArrayList<Tile>>> board = new ArrayList<ArrayList<ArrayList<Tile>>>();
     //Lists of used tiles on the board, would be iterated on during the activation phase
     public static ArrayList<ConveyorBeltTile> conveyorBelt2List = new ArrayList<>();
@@ -43,13 +40,13 @@ public class Board {
     }
 
     public boolean tileIsBlocking(ArrayList<Tile> tileList) {
-        boolean result = false;
+        boolean result;
         if(tileList.size() == 1) {
             result = tileList.get(0).isBlocking();
         } else {
             result = tileList.get(0).isBlocking() || tileList.get(1).isBlocking();
         }
-        return result;
+        return !result;
     }
 
     public static int getColumns() {return columns;}
@@ -151,9 +148,9 @@ public class Board {
                                 rebootTileList.add(new RebootTile(x, y));
                             }
                             case "CheckPoint" -> {
-                                replaceTileInMap(board, x, y, tile, new CheckpointTile(x, y));
                                 increaseCheckPointCount();
-                                checkpointList.add(new CheckpointTile(x, y));
+                                replaceTileInMap(board, x, y, tile, new CheckpointTile(x, y, checkPointCount));
+                                checkpointList.add(new CheckpointTile(x, y, checkPointCount));
                             }
                             case "StartPoint" -> {
                                 replaceTileInMap(board, x, y, tile, new StartTile(x, y));
