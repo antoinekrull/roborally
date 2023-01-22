@@ -38,7 +38,7 @@ public class ModelGame {
     private IntegerProperty y;
     private boolean yChanged;
     private boolean xChanged;
-
+    private BooleanProperty timer;
     private ObservableList<String> maps;
     private BooleanProperty readyToPlay;
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
@@ -100,6 +100,15 @@ public class ModelGame {
             @Override
             public void onChanged(Change<? extends String> c) {
                 notifyChangeSupport.updateProgrammingHandCards();
+            }
+        });
+
+        this.timer = new SimpleBooleanProperty();
+        timer.bind(client.timerProperty());
+        timer.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                notifyChangeSupport.startTimer();
             }
         });
     }

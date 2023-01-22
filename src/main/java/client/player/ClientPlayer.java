@@ -23,6 +23,7 @@ public class ClientPlayer {
     private IntegerProperty x;
     private IntegerProperty y;
 
+
     private ObservableList<RegisterInformation> registerInformations;
 
     public ClientPlayer(int id, String username, Robot robot) {

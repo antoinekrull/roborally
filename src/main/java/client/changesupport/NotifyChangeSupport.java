@@ -86,4 +86,10 @@ public class NotifyChangeSupport {
             viewModelGameWindow.robotMovement(x, y, figure);
         }
     }
+
+    public void startTimer() {
+        if(gamewindow) {
+            viewModelGameWindow.startTimer();
+        }
+    }
 }

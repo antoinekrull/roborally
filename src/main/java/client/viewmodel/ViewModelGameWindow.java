@@ -602,5 +602,8 @@ public class ViewModelGameWindow {
             }
         }
     }
+
+    public void startTimer() {
+    }
 }
 

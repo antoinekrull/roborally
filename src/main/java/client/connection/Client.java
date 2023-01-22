@@ -65,6 +65,7 @@ public class Client {
     private String group = "KnorrigeKorrelate";
     private ClientPlayerList clientPlayerList;
     private ObservableList<String> maps;
+    private BooleanProperty timer;
     private final Logger logger = LogManager.getLogger(Client.class);
 
 
@@ -83,6 +84,7 @@ public class Client {
         this.myCards = FXCollections.observableArrayList();
         this.x = new SimpleIntegerProperty();
         this.y = new SimpleIntegerProperty();
+        this.timer = new SimpleBooleanProperty(false);
     }
 
     public static Client getInstance() {
@@ -180,6 +182,18 @@ public class Client {
 
     public void setY(int y) {
         this.y.set(y);
+    }
+
+    public boolean isTimer() {
+        return timer.get();
+    }
+
+    public BooleanProperty timerProperty() {
+        return timer;
+    }
+
+    public void setTimer(boolean timer) {
+        this.timer.set(timer);
     }
 
     private class ReadMessagesFromServer implements Runnable {
@@ -308,6 +322,12 @@ public class Client {
                                     Client.this.clientPlayerList.getPlayerList().get(i).getRegisterInformations().add(new RegisterInformation(register, filled));
                                 }
                             }
+                        }
+                        if (message.getMessageType().equals(MessageType.SelectionFinished)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.TimerStarted)) {
+                            Client.this.setTimer(true);
                         }
                         if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
 
