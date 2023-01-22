@@ -120,7 +120,6 @@ public class ViewModelGameWindow {
         ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
 
 
-
         handCardsUI = FXCollections.observableArrayList(modelGame.getMyHandCards());
 
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());

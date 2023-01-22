@@ -71,6 +71,9 @@ public class Game implements Runnable {
     public void addPlayer(Player player) {
         playerList.add(player);
     }
+    public Player getActivePlayer() {
+        return activePlayer;
+    }
     public void setPlayerList(PlayerList playerList) {
         Game.playerList = playerList;
     }

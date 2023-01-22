@@ -72,7 +72,7 @@ public class ModelGame {
         });
         this.maps = client.getMaps();
         //this.maps = FXCollections.observableArrayList(client.getMaps());
-        this.gameBoard = new Board();
+        this.gameBoard = client.getBoard();
         this.clientPlayerList = client.getPlayerList();
         this.errorMessage = new SimpleStringProperty();
         errorMessage.bind(client.errorMessageProperty());
