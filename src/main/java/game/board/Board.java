@@ -28,6 +28,7 @@ public class Board {
     private RebootTile rebootTile;
     private ArrayList<StartTile> startTileList = new ArrayList<>();
     private Antenna antenna;
+    private ArrayList<PitTile> pitList = new ArrayList<>();
     private final static Logger logger = LogManager.getLogger(Board.class);
 
     public ArrayList<Tile> getTile(Pair<Integer, Integer> position){
@@ -172,7 +173,9 @@ public class Board {
                                 pushPanelList.add(pushTile);
                             }
                             case "Pit" -> {
-                                replaceTileInMap(board, x, y, tile, new PitTile(x, y));
+                                PitTile pitTile = new PitTile(x, y);
+                                replaceTileInMap(board, x, y, tile, pitTile);
+                                pitList.add(pitTile);
                             }
                             case "Gear" -> {
                                 replaceTileInMap(board, x, y, tile, new GearTile(x, y, parseDirection(tile.getOrientations().get(0))));
@@ -230,40 +233,20 @@ public class Board {
         return conveyorBelt2List;
     }
 
-    public void setConveyorBelt2List(ArrayList<ConveyorBeltTile> conveyorBelt2List) {
-        this.conveyorBelt2List = conveyorBelt2List;
-    }
-
     public ArrayList<ConveyorBeltTile> getConveyorBelt1List() {
         return conveyorBelt1List;
-    }
-
-    public void setConveyorBelt1List(ArrayList<ConveyorBeltTile> conveyorBelt1List) {
-        this.conveyorBelt1List = conveyorBelt1List;
     }
 
     public ArrayList<PushPanelTile> getPushPanelList() {
         return pushPanelList;
     }
 
-    public void setPushPanelList(ArrayList<PushPanelTile> pushPanelList) {
-        this.pushPanelList = pushPanelList;
-    }
-
     public ArrayList<GearTile> getGearTileList() {
         return gearTileList;
     }
 
-    public void setGearTileList(ArrayList<GearTile> gearTileList) {
-        this.gearTileList = gearTileList;
-    }
-
     public ArrayList<LaserTile> getLaserTileList() {
         return laserTileList;
-    }
-
-    public void setLaserTileList(ArrayList<LaserTile> laserTileList) {
-        this.laserTileList = laserTileList;
     }
 
     public ArrayList<CheckpointTile> getCheckpointList() {
@@ -278,33 +261,21 @@ public class Board {
         return energySpaceList;
     }
 
-    public void setEnergySpaceList(ArrayList<EnergySpaceTile> energySpaceList) {
-        this.energySpaceList = energySpaceList;
-    }
-
     public RebootTile getRebootTile() {
         return rebootTile;
     }
 
-    public void setRebootTile(RebootTile rebootTile) {
-        this.rebootTile = rebootTile;
-    }
     public ArrayList<StartTile> getStartTileList() {
         return startTileList;
-    }
-
-    public void setStartTileList(ArrayList<StartTile> startTileList) {
-        this.startTileList = startTileList;
     }
 
     public Antenna getAntenna() {
         return antenna;
     }
 
-    public void setAntenna(Antenna antenna) {
-        this.antenna = antenna;
+    public ArrayList<PitTile> getPitList() {
+        return pitList;
     }
-
 }
 
 

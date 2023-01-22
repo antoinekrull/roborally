@@ -36,5 +36,6 @@ public class MoveCard3 extends Card {
             }
         }
         player.getRobot().setCurrentPosition(newPosition);
+        //TODO: Add pit check
     }
 }

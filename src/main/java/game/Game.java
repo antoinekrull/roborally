@@ -81,6 +81,7 @@ public class Game implements Runnable {
                 for(int y = 0; y < playerList.size(); y++) {
                     if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getConveyorBelt2List().get(x).getPosition())) {
                         board.getConveyorBelt2List().get(x).applyEffect(playerList.get(y));
+                        //TODO: Add pit check
                     }
                 }
             }
@@ -89,6 +90,11 @@ public class Game implements Runnable {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getConveyorBelt1List().get(x).getPosition())) {
                     board.getConveyorBelt1List().get(x).applyEffect(playerList.get(y));
+                    for(PitTile pitTile: board.getPitList()) {
+                        if(pitTile.getPosition().equals(playerList.get(y).getRobot().getCurrentPosition())) {
+                            reboot(playerList.get(y));
+                        }
+                    }
                 }
             }
         }
@@ -126,6 +132,7 @@ public class Game implements Runnable {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getEnergySpaceList().get(x).getPosition())) {
                     board.getEnergySpaceList().get(x).applyEffect(playerList.get(y));
                     server.sendEnergy(playerList.get(y), board.getEnergySpaceList().get(x));
+                    Thread.sleep(100);
                 }
             }
         }
@@ -147,7 +154,12 @@ public class Game implements Runnable {
                 int index = pushPanelInTile(Objects.requireNonNull(board.getTile(playerList.get(i).getRobot().getCurrentPosition()))).getValue1();
                 if(((PushPanelTile) board.getTile(playerList.get(i).getRobot().getCurrentPosition()).get(index))
                         .getActiveRegisterList().contains(currentRegister)) {
-                    applyTileEffects(Objects.requireNonNull(board.getTile(playerList.get(i).getRobot().getCurrentPosition())), playerList.getPlayerFromList(i));
+                    applyTileEffects(Objects.requireNonNull(board.getTile(playerList.get(i).getRobot().getCurrentPosition())), playerList.get(i));
+                    for(PitTile pitTile: board.getPitList()) {
+                        if(pitTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
+                            reboot(playerList.get(i));
+                        }
+                    }
                 }
             }
         }
@@ -319,14 +331,29 @@ public class Game implements Runnable {
 
     private void runSetupPhase() {
         server.sendActivePhase(0);
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         logger.debug("Running Setup Phase now");
         for (int i =0; i < readyList.size(); i++) {
             activePlayer = playerList.getPlayerFromList(readyList.get(i));
             server.sendCurrentPlayer(readyList.get(i));
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             while(!robotSet){}
             this.robotSet=false;
             server.sendStartPointTaken(activePlayer.getId(),activePlayer.getRobot().getCurrentPosition());
-
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         logger.debug(maps[0]);
         playerList.setPlayerReadiness(false);
@@ -342,10 +369,20 @@ public class Game implements Runnable {
 
     private void runUpgradePhase(){
         server.sendActivePhase(1);
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
         server.sendActivePhase(2);
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         for(int i = 0; i < playerList.size(); i++) {
             playerList.get(i).drawFullHand();
             server.sendYourCards(playerList.get(i));
@@ -361,6 +398,11 @@ public class Game implements Runnable {
     }
     private void runActivationPhase() throws Exception {
         server.sendActivePhase(3);
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         ArrayList<Pair<Integer, String>> dataList = new ArrayList<>();
         Pair<Integer, String> dataPoint;
         while(!playerList.allPlayerRegistersActivated()) {
@@ -372,6 +414,11 @@ public class Game implements Runnable {
                 playerList.get(i).setStatusRegister(true, currentRegister);
             }
             server.sendCurrentCards(dataList);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             dataList.clear();
             currentRegister++;
             Thread.sleep(1000);
@@ -397,6 +444,11 @@ public class Game implements Runnable {
                     //sends the player id and the number of the reached checkpoint for every player that reaches a
                     //checkpoint each played register
                     server.sendCheckpointReached(playersReachedCheckpoint);
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
             if(checkIfPlayerWon(playerList)){
@@ -404,6 +456,11 @@ public class Game implements Runnable {
                 logger.debug("The winning player is: " + winner);
                 //sends a message to all clients
                 server.sendGameFinished(winner);
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 //stops the game thread
                 gameIsRunning = false;
             }
@@ -460,6 +517,19 @@ public class Game implements Runnable {
             player.getCardFromRegister(currentRegister).applyEffect(player);
             if(player.getCardFromRegister(currentRegister) instanceof PowerUpCard) {
                 server.sendEnergy(player, player.getCardFromRegister(currentRegister));
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(player.getCardFromRegister(currentRegister) instanceof WormCard) {
+                reboot(player);
+            }
+            for(PitTile pitTile: board.getPitList()) {
+                if (pitTile.getPosition().equals(player.getRobot().getCurrentPosition())) {
+                    reboot(player);
+                }
             }
         } catch (IndexOutOfBoundsException e) {
             logger.warn("This register was not activated because you're Robot can not move past this point" + e);
@@ -470,6 +540,11 @@ public class Game implements Runnable {
         readyList.add(clientID);
         if(clientID == getFirstReadyID()){
             server.sendSelectMap(maps);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -481,6 +556,11 @@ public class Game implements Runnable {
                 readyList.remove(i);
                 if(temp==first){
                     server.sendSelectMap(maps);
+                    try {
+                        Thread.sleep(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -564,6 +644,20 @@ public class Game implements Runnable {
                 }
             }
         }
+    }
+
+    public void reboot(Player player) {
+        player.addCard(spamDeck.popCardFromDeck());
+        player.addCard(spamDeck.popCardFromDeck());
+        player.emptyAllCardRegisters();
+        player.getRobot().setCurrentPosition(board.getRebootTile().getPosition());
+        server.sendReboot(player);
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //TODO: Implement additional robo check
     }
 
     @Override
