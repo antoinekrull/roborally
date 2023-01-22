@@ -405,6 +405,7 @@ public class Game implements Runnable {
             e.printStackTrace();
         }
         ArrayList<Pair<Integer, String>> dataList = new ArrayList<>();
+        try {
         Pair<Integer, String> dataPoint;
         while(!playerList.allPlayerRegistersActivated()) {
             for(int i = 0; i < playerList.size(); i++) {
@@ -415,11 +416,8 @@ public class Game implements Runnable {
                 playerList.get(i).setStatusRegister(true, currentRegister);
             }
             server.sendCurrentCards(dataList);
-            try {
+
                 Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             dataList.clear();
             currentRegister++;
             Thread.sleep(1000);
@@ -445,11 +443,7 @@ public class Game implements Runnable {
                     //sends the player id and the number of the reached checkpoint for every player that reaches a
                     //checkpoint each played register
                     server.sendCheckpointReached(playersReachedCheckpoint);
-                    try {
                         Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                 }
             }
             if(checkIfPlayerWon(playerList)){
@@ -465,6 +459,8 @@ public class Game implements Runnable {
                 //stops the game thread
                 gameIsRunning = false;
             }
+        } } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
     public void setServer(Server server) {
