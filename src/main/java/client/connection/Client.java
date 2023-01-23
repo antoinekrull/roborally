@@ -1,5 +1,6 @@
 package client.connection;
 
+import client.player.ClientPlayer;
 import client.player.ClientPlayerList;
 import client.player.RegisterInformation;
 import communication.JsonSerializer;
@@ -9,21 +10,26 @@ import communication.MessageType;
 import game.board.Board;
 import game.card.Card;
 import game.player.Robot;
-import client.player.ClientPlayer;
-import javafx.application.Platform;
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.javatuples.Pair;
-
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.javatuples.Pair;
 
 /**
  *
@@ -340,10 +346,11 @@ public class Client {
                         if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
                             System.out.println("Y: " + message.getMessageBody().getX() + " - X: " + message.getMessageBody().getY());
                             System.out.println("Client ID: " + message.getMessageBody().getClientID());
-                            int clientID = message.getMessageBody().getClientID();
                             Client.this.setX(message.getMessageBody().getX());
                             Client.this.setY(message.getMessageBody().getY());
-                            Client.this.setRobotID(message.getMessageBody().getClientID());
+                            int clientID = message.getMessageBody().getClientID();
+                            int robotID = clientPlayerList.getPlayer(clientID).getRobot().getFigure();
+                            Client.this.setRobotID(robotID);
 
 //                            if (Client.this.userIDProperty().get() == clientID) {
 //                                Client.this.setX(message.getMessageBody().getX());

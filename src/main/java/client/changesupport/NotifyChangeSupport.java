@@ -81,9 +81,10 @@ public class NotifyChangeSupport {
         }
     }
 
-    public void robotSetPosition(int x, int y, int robotID) {
+    public void robotSetPosition(int x, int y, int figure) {
         if (gamewindow) {
-            viewModelGameWindow.robotSetPosition(x, y, robotID);
+            viewModelGameWindow.robotSetPosition(x, y, figure);
+            System.out.println("RobotID: " + figure);
         }
     }
 
