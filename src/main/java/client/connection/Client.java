@@ -338,6 +338,7 @@ public class Client {
                         if (message.getMessageType().equals(MessageType.CardPlayed)) {
                             int clientID = message.getMessageBody().getClientID();
                             String card = message.getMessageBody().getCard();
+
                         }
                         if (message.getMessageType().equals(MessageType.CurrentPlayer)) {
                             Client.this.activePlayer.set(true);
