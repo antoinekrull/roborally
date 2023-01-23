@@ -325,6 +325,7 @@ public class Game implements Runnable {
 
     private void runSetupPhase() {
         server.sendActivePhase(0);
+        setServerForPlayers();
         try {
             Thread.sleep(100);
             logger.debug("Running Setup Phase now");
