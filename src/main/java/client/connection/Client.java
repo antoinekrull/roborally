@@ -299,7 +299,7 @@ public class Client {
                                 String username = message.getMessageBody().getName();
                                 int figure = message.getMessageBody().getFigure();
                                 if (!clientPlayerList.containsPlayer(clientID)) {
-                                    Platform.runLater(() -> Client.this.getPlayerList().add(new ClientPlayer(clientID, username, new Robot(figure))));
+                                    Platform.runLater(() -> Client.this.getPlayerList().add(new ClientPlayer(clientID, username, new Robot(figure, clientID))));
                                 }
                             }
                         }

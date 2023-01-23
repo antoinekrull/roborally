@@ -32,11 +32,12 @@ public class Robot {
     private Server server;
     private final Logger logger = LogManager.getLogger(Robot.class);
 
-    public Robot(int figure) {
+    public Robot(int figure, int id) {
         this.figure = figure;
         deck.createDeck();
         energyCubes = 0;
         currentObjective = 1;
+        this.id = id;
     }
 
     public Pair<Integer, Integer> getCurrentPosition() {

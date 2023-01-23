@@ -250,7 +250,7 @@ public class HandleClient implements Runnable{
                             Message robotAcceptedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
                             write(robotAcceptedMessage);
                             server.addPlayerToGame(new Player(getClientID(), incomingMessage.getMessageBody().getName()
-                                    , new Robot(incomingMessage.getMessageBody().getFigure())));
+                                    , new Robot(incomingMessage.getMessageBody().getFigure(), getClientID())));
                         }
                         else {
                             boolean taken = false;
@@ -267,7 +267,7 @@ public class HandleClient implements Runnable{
                                 write(robotAcceptedMessage);
 
                                 server.addPlayerToGame(new Player(getClientID(), incomingMessage.getMessageBody().getName()
-                                        , new Robot(incomingMessage.getMessageBody().getFigure())));
+                                        , new Robot(incomingMessage.getMessageBody().getFigure(), getClientID())));
                                 Message playerAddedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
                                 server.sendPlayerValuesToAll(getClientID(), playerAddedMessage);
 
