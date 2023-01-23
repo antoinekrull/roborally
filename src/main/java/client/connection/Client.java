@@ -397,15 +397,20 @@ public class Client {
                             }
                         }
                         if (message.getMessageType().equals(MessageType.Movement)) {
-                            int clientID = message.getMessageBody().getClientID();
-                            if (Client.this.userIDProperty().get() == clientID) {
+                            int clientRobot = message.getMessageBody().getClientID();
+                            if (Client.this.userIDProperty().get() == clientRobot) {
                                 Client.this.setX(message.getMessageBody().getX());
                                 Client.this.setY(message.getMessageBody().getY());
+                                System.out.println("X= " + message.getMessageBody().getX() + " | Y= " + message.getMessageBody().getY());
+                                System.out.println("My Robot");
                             }
                             else {
+                                int robotIDclient = clientPlayerList.getPlayer(clientRobot).getRobot().getFigure();
                                 Client.this.setMovementX(message.getMessageBody().getX());
                                 Client.this.setMovementY(message.getMessageBody().getY());
-                                Client.this.setRobotID(message.getMessageBody().getClientID());
+                                Client.this.setRobotID(robotIDclient);
+                                System.out.println("X = " + message.getMessageBody().getX() + " | Y = " + message.getMessageBody().getY());
+                                System.out.println("RobotID in Client: : " + robotIDclient);
                             }
                         }
                         if (message.getMessageType().equals(MessageType.CardSelected)) {
