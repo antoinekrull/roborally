@@ -19,8 +19,6 @@ import java.util.TimerTask;
 public class Game implements Runnable {
     private GamePhase currentGamePhase;
     private final Timer timer = new Timer();
-    //TODO: needs to be set
-    private String mapName;
     public static PlayerList playerList = new PlayerList();
     public Board board = new Board();
     private Player activePlayer;
@@ -40,8 +38,6 @@ public class Game implements Runnable {
     private String jsonMap;
     private boolean gameIsRunning = true;
 
-    //TODO: discuss ShuffleCoding functionality
-
     private Game(){
         new Thread(this).start();
     }
@@ -52,8 +48,6 @@ public class Game implements Runnable {
         }
         return INSTANCE;
     }
-
-    //TODO: needs to be used somewhere, once all players have been added
     public void setServerForPlayers() {
         for(int i = 0; i < playerList.size(); i++) {
             playerList.get(i).setServerForPlayerAndRobot(server);

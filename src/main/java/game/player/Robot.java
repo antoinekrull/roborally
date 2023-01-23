@@ -119,7 +119,6 @@ public class Robot {
     public void setDeck(ProgrammingDeck deck){
         this.deck = deck;
     }
-    //TODO: Implement this
     public boolean getRebootStatus() {return isRebooted;}
     public void setRebootStatus(boolean rebooted) {isRebooted = rebooted;}
     public int getActiveRegister() {return activeRegister;}

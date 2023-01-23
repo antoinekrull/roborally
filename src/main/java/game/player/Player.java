@@ -154,7 +154,6 @@ public class Player {
         }
     }
 
-    //TODO: Add GUI functionality / exceptions
     public void playCard(Card card, int index) {
         if(index == 0 && card instanceof AgainCard) {
             logger.info("You cant play this card in the first register, please try again!");
