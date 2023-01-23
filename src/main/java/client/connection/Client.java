@@ -338,7 +338,6 @@ public class Client {
                         if (message.getMessageType().equals(MessageType.CardPlayed)) {
                             int clientID = message.getMessageBody().getClientID();
                             String card = message.getMessageBody().getCard();
-
                         }
                         if (message.getMessageType().equals(MessageType.CurrentPlayer)) {
                             Client.this.activePlayer.set(true);
@@ -365,7 +364,6 @@ public class Client {
                             //TODO: connect to Model/ViewModel to switch scenes
                             System.out.println("game started");
                             gameStarted.set(true);
-
                         }
                         if (message.getMessageType().equals(MessageType.YourCards)) {
                             String[] cardsInHand = message.getMessageBody().getCardsInHand();
@@ -374,10 +372,12 @@ public class Client {
                                 String temp = cards;
                                 cards = temp + "" + cardsInHand[i];
                                 System.out.println(cards);
-
                             }
                             System.out.println(cards);
-                            Client.this.myCards.setAll(message.getMessageBody().getCardsInHand());
+                            Client.this.myCards.setAll(cardsInHand);
+                            for (int i = 0; i < myCards.size(); i++) {
+                                System.out.println(myCards.get(i));
+                            }
                         }
                         if (message.getMessageType().equals(MessageType.NotYourCards)) {
                             int clientID = message.getMessageBody().getClientID();
@@ -387,7 +387,6 @@ public class Client {
                                     Client.this.clientPlayerList.getPlayerList().get(i).setCardsInHand(cardsInHand);
                                 }
                             }
-
                         }
                         if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
                             int clientID = message.getMessageBody().getClientID();

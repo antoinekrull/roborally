@@ -17,6 +17,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -121,6 +122,34 @@ public class ViewModelGameWindow {
         selectStarttile();
 
         handCardsUI = FXCollections.observableArrayList(modelGame.getMyHandCards());
+
+        handCardsUI.addListener(new ListChangeListener<String>() {
+            @Override
+            public void onChanged(Change<? extends String> c) {
+                while(c.next()) {
+                    if(c.wasUpdated()) {
+                        System.out.println("wasUpdated");
+                        notifyChangeSupport.updateProgrammingHandCards();
+                    }
+                    if(c.wasAdded()) {
+                        System.out.println("wasAdded");
+                        notifyChangeSupport.updateProgrammingHandCards();
+                    }
+                    if(c.wasRemoved()) {
+                        System.out.println("wasRemoved");
+                        notifyChangeSupport.updateProgrammingHandCards();
+                    }
+                    if(c.wasPermutated()) {
+                        System.out.println("wasPermutated");
+                        notifyChangeSupport.updateProgrammingHandCards();
+                    }
+                    if(c.wasReplaced()) {
+                        System.out.println("wasReplaced");
+                        notifyChangeSupport.updateProgrammingHandCards();
+                    }
+                }
+            }
+        });
 
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());

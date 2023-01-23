@@ -108,12 +108,36 @@ public class ModelGame {
             }
         });
 
+        /*
         myHandCards.addListener(new ListChangeListener<String>() {
             @Override
             public void onChanged(Change<? extends String> c) {
-                notifyChangeSupport.updateProgrammingHandCards();
+                while(c.next()) {
+                    if(c.wasUpdated()) {
+                        System.out.println("wasUpdated");
+                        notifyChangeSupport.updateProgrammingHandCards();
+                    }
+                    if(c.wasAdded()) {
+                        System.out.println("wasAdded");
+                        notifyChangeSupport.updateProgrammingHandCards();
+                    }
+                    if(c.wasRemoved()) {
+                        System.out.println("wasRemoved");
+                        notifyChangeSupport.updateProgrammingHandCards();
+                    }
+                    if(c.wasPermutated()) {
+                        System.out.println("wasPermutated");
+                        notifyChangeSupport.updateProgrammingHandCards();
+                    }
+                    if(c.wasReplaced()) {
+                        System.out.println("wasReplaced");
+                        notifyChangeSupport.updateProgrammingHandCards();
+                    }
+                }
             }
         });
+
+         */
 
         this.timer = new SimpleBooleanProperty();
         timer.bind(client.timerProperty());

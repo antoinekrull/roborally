@@ -76,7 +76,9 @@ public class NotifyChangeSupport {
     }
 
     public void updateProgrammingHandCards() {
+        System.out.println("hehe");
         if (gamewindow) {
+            System.out.println("programmingHandCards");
             viewModelGameWindow.fillHandCards();
         }
     }
