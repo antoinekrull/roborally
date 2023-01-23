@@ -1,11 +1,14 @@
 package game.player;
 
+import game.Game;
 import game.board.Direction;
 import game.board.RebootTile;
 import game.card.ProgrammingDeck;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
 import server.connection.Server;
 
@@ -27,6 +30,7 @@ public class Robot {
     private int activeRegister;
     private int id;
     private Server server;
+    private final Logger logger = LogManager.getLogger(Robot.class);
 
     public Robot(int figure) {
         this.figure = figure;
@@ -69,6 +73,30 @@ public class Robot {
     }
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+    public void rotateRobot(Direction direction) {
+        try{
+            server.sendPlayerTurning(this, direction);
+            if(direction == Direction.RIGHT){
+                switch (this.getDirection()){
+                    case NORTH -> this.setDirection(Direction.EAST);
+                    case EAST -> this.setDirection(Direction.SOUTH);
+                    case SOUTH -> this.setDirection(Direction.WEST);
+                    case WEST -> this.setDirection(Direction.NORTH);
+                }
+            } else if(direction == Direction.LEFT){
+                switch (this.getDirection()){
+                    case NORTH -> this.setDirection(Direction.WEST);
+                    case WEST -> this.setDirection(Direction.SOUTH);
+                    case SOUTH -> this.setDirection(Direction.EAST);
+                    case EAST -> this.setDirection(Direction.NORTH);
+                }
+            } else {
+                logger.warn("Invalid location");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     public Direction getDirection() {
         return direction;

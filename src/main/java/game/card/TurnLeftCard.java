@@ -8,7 +8,7 @@ public class TurnLeftCard extends Card {
 
     public TurnLeftCard(){
         cardType = CardType.PROGRAMMING_CARD;
-        setCardName("Left Turn");
+        setCardName("TurnLeft");
     }
 
     public Direction getRotationType(){
@@ -17,12 +17,6 @@ public class TurnLeftCard extends Card {
 
     @Override
     public void applyEffect(Player player) throws Exception {
-        switch (player.getRobot().getDirection()){
-            case NORTH -> player.getRobot().setDirection(Direction.WEST);
-            case WEST -> player.getRobot().setDirection(Direction.SOUTH);
-            case SOUTH -> player.getRobot().setDirection(Direction.EAST);
-            case EAST -> player.getRobot().setDirection(Direction.NORTH);
-            default -> throw new Exception("Invalid direction");
-        }
+        player.getRobot().rotateRobot(rotationType);
     }
 }
