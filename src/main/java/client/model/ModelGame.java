@@ -130,7 +130,7 @@ public class ModelGame {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 movementXChanged = true;
-                check_X_Y_ID();
+                check_x_y_id();
             }
         });
 
@@ -140,7 +140,7 @@ public class ModelGame {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 movementYChanged = true;
-                check_X_Y_ID();
+                check_x_y_id();
             }
         });
 
@@ -150,7 +150,7 @@ public class ModelGame {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 robotIDChanged = true;
-                check_X_Y_ID();
+                check_x_y_id();
             }
         });
     }
@@ -256,7 +256,7 @@ public class ModelGame {
         return activePlayer;
     }
 
-    public void check_X_Y_ID() {
+    public void check_x_y_id() {
         if (movementXChanged && movementYChanged && robotIDChanged) {
             notifyChangeSupport.robotSetPosition(movementX.get(), movementY.get(), robotID.get());
             movementYChanged = false;

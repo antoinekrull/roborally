@@ -353,7 +353,7 @@ public class Client {
                             }
                             else {
                                 int robotIDclient = clientPlayerList.getPlayer(clientRobot).getRobot().getFigure();
-                                Client.this.setMovementY(message.getMessageBody().getX());
+                                Client.this.setMovementX(message.getMessageBody().getX());
                                 Client.this.setMovementY(message.getMessageBody().getY());
                                 Client.this.setRobotID(robotIDclient);
                                 System.out.println("X = " + message.getMessageBody().getX() + " | Y = " + message.getMessageBody().getY());
