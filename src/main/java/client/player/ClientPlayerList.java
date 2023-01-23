@@ -11,7 +11,7 @@ public class ClientPlayerList {
     public ClientPlayerList() {
         clientPlayerList = FXCollections.observableArrayList();
         clientPlayerList.add(new ClientPlayer(-1, "Group", null));
-        clientPlayerListenerManager = new ClientPlayerListenerManager(clientPlayerList);
+        //clientPlayerListenerManager = new ClientPlayerListenerManager(clientPlayerList);
     }
 
     public ObservableList<ClientPlayer> getPlayerList() {

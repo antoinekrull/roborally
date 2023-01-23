@@ -53,6 +53,7 @@ public class Client {
     private BooleanProperty isAI;
     private BooleanProperty gameStarted;
     private ObjectProperty<Message> message;
+    private ObjectProperty<Message> movement;
     private IntegerProperty userID;
     private StringProperty errorMessage;
     private IntegerProperty x;
@@ -102,6 +103,7 @@ public class Client {
         this.movementX = new SimpleIntegerProperty();
         this.movementY = new SimpleIntegerProperty();
         this.robotID = new SimpleIntegerProperty();
+        this.movement = new SimpleObjectProperty<>();
     }
 
     public static Client getInstance() {
@@ -237,6 +239,18 @@ public class Client {
         this.movementY.set(movementY);
     }
 
+    public Message getMovement() {
+        return movement.get();
+    }
+
+    public ObjectProperty<Message> movementProperty() {
+        return movement;
+    }
+
+    public void setMovement(Message movement) {
+        this.movement.set(movement);
+    }
+
     public int getRobotID() {
         return robotID.get();
     }
@@ -344,6 +358,8 @@ public class Client {
                             Client.this.activePlayer.set(true);
                         }
                         if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
+                            Client.this.setMovement(message);
+                            /*
                             int clientRobot = message.getMessageBody().getClientID();
                             if (Client.this.userIDProperty().get() == clientRobot) {
                                  Client.this.setX(message.getMessageBody().getX());
@@ -359,6 +375,8 @@ public class Client {
                                 System.out.println("X = " + message.getMessageBody().getX() + " | Y = " + message.getMessageBody().getY());
                                 System.out.println("RobotID in Client: : " + robotIDclient);
                             }
+
+                             */
                         }
                         if (message.getMessageType().equals(MessageType.GameStarted)) {
                             board.createBoard(message.getMessageBody().getGameMap());
@@ -368,14 +386,10 @@ public class Client {
                         }
                         if (message.getMessageType().equals(MessageType.YourCards)) {
                             String[] cardsInHand = message.getMessageBody().getCardsInHand();
-                            String cards = "";
-                            for(int i = 0; i < cardsInHand.length; i++) {
-                                String temp = cards;
-                                cards = temp + "" + cardsInHand[i];
-                                System.out.println(cards);
-                            }
-                            System.out.println(cards);
-                            Client.this.myCards.setAll(cardsInHand);
+                            Platform.runLater(() -> {
+                                Client.this.myCards.clear();
+                                Client.this.myCards.addAll(cardsInHand);
+                            });
                             for (int i = 0; i < myCards.size(); i++) {
                                 System.out.println(myCards.get(i));
                             }
@@ -397,6 +411,8 @@ public class Client {
                             }
                         }
                         if (message.getMessageType().equals(MessageType.Movement)) {
+                            Client.this.setMovement(message);
+                            /*
                             int clientRobot = message.getMessageBody().getClientID();
                             if (Client.this.userIDProperty().get() == clientRobot) {
                                 Client.this.setX(message.getMessageBody().getX());
@@ -412,6 +428,8 @@ public class Client {
                                 System.out.println("X = " + message.getMessageBody().getX() + " | Y = " + message.getMessageBody().getY());
                                 System.out.println("RobotID in Client: : " + robotIDclient);
                             }
+
+                             */
                         }
                         if (message.getMessageType().equals(MessageType.CardSelected)) {
                             int clientID = message.getMessageBody().getClientID();

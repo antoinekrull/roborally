@@ -100,7 +100,7 @@ public class ViewModelGameWindow {
     private int height = 150;
     private int columnIndex;
     private PlayerGameInfo playerGameInfo;
-    private ObservableList<String> handCardsUI;
+    //private ObservableList<String> handCardsUI;
 
     private Tutorial tutorial;
 
@@ -121,11 +121,13 @@ public class ViewModelGameWindow {
         ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
         selectStarttile();
 
-        handCardsUI = FXCollections.observableArrayList(modelGame.getMyHandCards());
+        //handCardsUI = FXCollections.observableArrayList(modelGame.getMyHandCards());
 
+        /*
         handCardsUI.addListener(new ListChangeListener<String>() {
             @Override
             public void onChanged(Change<? extends String> c) {
+                System.out.println("hella");
                 while(c.next()) {
                     if(c.wasUpdated()) {
                         System.out.println("wasUpdated");
@@ -150,6 +152,8 @@ public class ViewModelGameWindow {
                 }
             }
         });
+
+         */
 
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
@@ -369,19 +373,35 @@ public class ViewModelGameWindow {
         });
     }
 
-    public void robotSetPosition(int x, int y, int robot) {
+    public void robotSetPosition() {
+        Message robotMovement;
+        try {
+            robotMovement = modelGame.getPLAYERMOVEMENTS().take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        int x = robotMovement.getMessageBody().getX();
+        int y = robotMovement.getMessageBody().getY();
+        int clientID = robotMovement.getMessageBody().getClientID();
+        int figure;
+        if (modelUser.userIDProperty().get() == clientID) {
+            figure = modelGame.robotProperty().get();
+        }
+        else {
+            figure = modelGame.getPlayerList().getPlayer(clientID).getRobot().getFigure();
+        }
         Platform.runLater(() ->{
-            System.out.println("RobotID in viewModel: " + robot);
-        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + robot + "_bunt.png");
+            System.out.println("RobotID in viewModel: " + figure);
+        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + figure + "_bunt.png");
         Image im = new Image(input);
         ImageView img = new ImageView(im);
         img.setFitWidth(gameboardTileWidth);
         img.setPreserveRatio(true);
-        img.setId("Robot_" + robot);
+        img.setId("Robot_" + figure);
         //Current robot image gets searched and then removed
         for (Node node : gameboard.getChildren()) {
             if (node instanceof ImageView imageView) {
-                if (imageView.getId() != null && imageView.getId().equals("Robot_" + robot)) {
+                if (imageView.getId() != null && imageView.getId().equals("Robot_" + figure)) {
                     gameboard.getChildren().remove(imageView);
                     break;
                 }
@@ -563,65 +583,87 @@ public class ViewModelGameWindow {
 
     public void fillHandCards () {
         System.out.println("Filling your cards");
-        for (int i = 0; i < handGrid.getChildren().size(); i++) {
-            Pane pane = (Pane) handGrid.getChildren().get(i);
-            switch (handCardsUI.get(i)) {
-                case "MoveI" -> {
-                    InputStream input = getClass().getResourceAsStream("/textures/cards/Move1.png");
-                    Image image = new Image(input);
-                    ImageView imageView = new ImageView(image);
-                    pane.getChildren().add(imageView);
-                }
-                case "MoveII" -> {
-                    InputStream input2 = getClass().getResourceAsStream("/textures/cards/Move2.png");
-                    Image image2 = new Image(input2);
-                    ImageView imageView2 = new ImageView(image2);
-                    pane.getChildren().add(imageView2);
-                }
-                case "MoveIII" -> {
-                    InputStream input3 = getClass().getResourceAsStream("/textures/cards/Move3.png");
-                    Image image3 = new Image(input3);
-                    ImageView imageView3 = new ImageView(image3);
-                    pane.getChildren().add(imageView3);
-                }
-                case "TurnLeft" -> {
-                    InputStream input4 = getClass().getResourceAsStream("/textures/cards/leftTurn.png");
-                    Image image4 = new Image(input4);
-                    ImageView imageView4 = new ImageView(image4);
-                    pane.getChildren().add(imageView4);
-                }
-                case "TurnRight" -> {
-                    InputStream input5 = getClass().getResourceAsStream("/textures/cards/rightTurn.png");
-                    Image image5 = new Image(input5);
-                    ImageView imageView5 = new ImageView(image5);
-                    pane.getChildren().add(imageView5);
-                }
-                case "UTurn" -> {
-                    InputStream input6 = getClass().getResourceAsStream("/textures/cards/uTurn.png");
-                    Image image6 = new Image(input6);
-                    ImageView imageView6 = new ImageView(image6);
-                    pane.getChildren().add(imageView6);
-                }
-                case "BackUp" -> {
-                    InputStream input7 = getClass().getResourceAsStream("/textures/cards/moveBack.png");
-                    Image image7 = new Image(input7);
-                    ImageView imageView7 = new ImageView(image7);
-                    pane.getChildren().add(imageView7);
-                }
-                case "PowerUp" -> {
-                    InputStream input8 = getClass().getResourceAsStream("/textures/cards/powerUp.png");
-                    Image image8 = new Image(input8);
-                    ImageView imageView8 = new ImageView(image8);
-                    pane.getChildren().add(imageView8);
-                }
-                case "Again" -> {
-                    InputStream input9 = getClass().getResourceAsStream("/textures/cards/Again.png");
-                    Image image9 = new Image(input9);
-                    ImageView imageView9 = new ImageView(image9);
-                    pane.getChildren().add(imageView9);
+        ArrayList<String> handCards = new ArrayList<>(modelGame.getMyHandCards());
+        Platform.runLater(() -> {
+            for (int i = 0; i < handGrid.getChildren().size(); i++) {
+                Pane pane = (Pane) handGrid.getChildren().get(i);
+                switch (handCards.get(i)) {
+                    case "MoveI" -> {
+                        InputStream input = getClass().getResourceAsStream("/textures/cards/Move1.png");
+                        Image image = new Image(input);
+                        ImageView imageView = new ImageView(image);
+                        imageView.setFitHeight(90);
+                        imageView.setFitWidth(60);
+                        pane.getChildren().add(imageView);
+                    }
+                    case "MoveII" -> {
+                        InputStream input2 = getClass().getResourceAsStream("/textures/cards/Move2.png");
+                        Image image2 = new Image(input2);
+                        ImageView imageView2 = new ImageView(image2);
+                        imageView2.setFitHeight(90);
+                        imageView2.setFitWidth(60);
+                        pane.getChildren().add(imageView2);
+                    }
+                    case "MoveIII" -> {
+                        InputStream input3 = getClass().getResourceAsStream("/textures/cards/Move3.png");
+                        Image image3 = new Image(input3);
+                        ImageView imageView3 = new ImageView(image3);
+                        imageView3.setFitHeight(90);
+                        imageView3.setFitWidth(60);
+                        pane.getChildren().add(imageView3);
+                    }
+                    case "TurnLeft" -> {
+                        InputStream input4 = getClass().getResourceAsStream("/textures/cards/leftTurn.png");
+                        Image image4 = new Image(input4);
+                        ImageView imageView4 = new ImageView(image4);
+                        imageView4.setFitHeight(90);
+                        imageView4.setFitWidth(60);
+                        pane.getChildren().add(imageView4);
+                    }
+                    case "TurnRight" -> {
+                        InputStream input5 = getClass().getResourceAsStream("/textures/cards/rightTurn.png");
+                        Image image5 = new Image(input5);
+                        ImageView imageView5 = new ImageView(image5);
+                        imageView5.setFitHeight(90);
+                        imageView5.setFitWidth(60);
+                        pane.getChildren().add(imageView5);
+                    }
+                    case "UTurn" -> {
+                        InputStream input6 = getClass().getResourceAsStream("/textures/cards/uTurn.png");
+                        Image image6 = new Image(input6);
+                        ImageView imageView6 = new ImageView(image6);
+                        imageView6.setFitHeight(90);
+                        imageView6.setFitWidth(60);
+                        pane.getChildren().add(imageView6);
+                    }
+                    case "BackUp" -> {
+                        InputStream input7 = getClass().getResourceAsStream("/textures/cards/moveBack.png");
+                        Image image7 = new Image(input7);
+                        ImageView imageView7 = new ImageView(image7);
+                        imageView7.setFitHeight(90);
+                        imageView7.setFitWidth(60);
+                        pane.getChildren().add(imageView7);
+                    }
+                    case "PowerUp" -> {
+                        InputStream input8 = getClass().getResourceAsStream("/textures/cards/powerUp.png");
+                        Image image8 = new Image(input8);
+                        ImageView imageView8 = new ImageView(image8);
+                        imageView8.setFitHeight(90);
+                        imageView8.setFitWidth(60);
+                        pane.getChildren().add(imageView8);
+                    }
+                    case "Again" -> {
+                        InputStream input9 = getClass().getResourceAsStream("/textures/cards/Again.png");
+                        Image image9 = new Image(input9);
+                        ImageView imageView9 = new ImageView(image9);
+                        imageView9.setFitHeight(90);
+                        imageView9.setFitWidth(60);
+                        pane.getChildren().add(imageView9);
+                    }
                 }
             }
-        }
+        });
+
     }
 
     public void startTimer() {
