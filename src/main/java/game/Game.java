@@ -57,6 +57,7 @@ public class Game implements Runnable {
     public void setServerForPlayers() {
         for(int i = 0; i < playerList.size(); i++) {
             playerList.get(i).setServerForPlayerAndRobot(server);
+            playerList.get(i).getRobot().setServer(server);
         }
     }
     public void setRobotSet(boolean robotSet) {
@@ -364,6 +365,7 @@ public class Game implements Runnable {
         }
         for(int i = 0; i < playerList.size(); i++) {
             playerList.get(i).drawFullHand();
+            playerList.get(i).printHand();
             server.sendYourCards(playerList.get(i));
         }
         playerList.setPlayersPlaying(true);
