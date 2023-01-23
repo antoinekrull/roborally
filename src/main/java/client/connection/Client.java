@@ -372,9 +372,7 @@ public class Client {
                             String cards = "";
                             for(int i = 0; i < cardsInHand.length; i++) {
                                 String temp = cards;
-                                cards = temp + "" + cardsInHand[i];
-                                System.out.println(cards);
-
+                                cards = temp + " " + cardsInHand[i];
                             }
                             System.out.println(cards);
                             Client.this.myCards.setAll(message.getMessageBody().getCardsInHand());
