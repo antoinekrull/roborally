@@ -338,16 +338,22 @@ public class Client {
                             Client.this.activePlayer.set(true);
                         }
                         if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
+                            System.out.println("Y: " + message.getMessageBody().getX() + " - X: " + message.getMessageBody().getY());
+                            System.out.println("Client ID: " + message.getMessageBody().getClientID());
                             int clientID = message.getMessageBody().getClientID();
-                            if (Client.this.userIDProperty().get() == clientID) {
-                                Client.this.setX(message.getMessageBody().getX());
-                                Client.this.setY(message.getMessageBody().getY());
-                            }
-                            else {
-                                Client.this.setMovementX(message.getMessageBody().getX());
-                                Client.this.setMovementY(message.getMessageBody().getY());
-                                Client.this.setRobotID(message.getMessageBody().getClientID());
-                            }
+                            Client.this.setX(message.getMessageBody().getX());
+                            Client.this.setY(message.getMessageBody().getY());
+                            Client.this.setRobotID(message.getMessageBody().getClientID());
+
+//                            if (Client.this.userIDProperty().get() == clientID) {
+//                                Client.this.setX(message.getMessageBody().getX());
+//                                Client.this.setY(message.getMessageBody().getY());
+//                            }
+//                            else {
+//                                Client.this.setMovementX(message.getMessageBody().getX());
+//                                Client.this.setMovementY(message.getMessageBody().getY());
+//                                Client.this.setRobotID(message.getMessageBody().getClientID());
+//                            }
                         }
                         if (message.getMessageType().equals(MessageType.GameStarted)) {
                             board.createBoard(message.getMessageBody().getGameMap());
@@ -357,6 +363,14 @@ public class Client {
 
                         }
                         if (message.getMessageType().equals(MessageType.YourCards)) {
+                            String[] cardsInHand = message.getMessageBody().getCardsInHand();
+                            String cards = "";
+                            for(int i = 0; i < cardsInHand.length; i++) {
+                                String temp = cards;
+                                cards = temp + "" + cardsInHand[i];
+
+                            }
+                            System.out.println(cards);
                             Client.this.myCards.setAll(message.getMessageBody().getCardsInHand());
                         }
                         if (message.getMessageType().equals(MessageType.NotYourCards)) {
