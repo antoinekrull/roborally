@@ -342,7 +342,7 @@ public class ViewModelGameWindow {
 
     public void robotSetPosition(int x, int y, int robot) {
         Platform.runLater(() ->{
-            System.out.println("Robot:" + robot);
+            System.out.println("RobotID in viewModel: " + robot);
         InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + robot + "_bunt.png");
         Image im = new Image(input);
         ImageView img = new ImageView(im);

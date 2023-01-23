@@ -356,8 +356,8 @@ public class Client {
                                 Client.this.setMovementY(message.getMessageBody().getX());
                                 Client.this.setMovementY(message.getMessageBody().getY());
                                 Client.this.setRobotID(robotIDclient);
-                                System.out.println("X= " + message.getMessageBody().getX() + " | Y= " + message.getMessageBody().getY());
-                                System.out.println("Client Roboter: " + robotIDclient);
+                                System.out.println("X = " + message.getMessageBody().getX() + " | Y = " + message.getMessageBody().getY());
+                                System.out.println("RobotID in Client: : " + robotIDclient);
                             }
                         }
                         if (message.getMessageType().equals(MessageType.GameStarted)) {
