@@ -30,7 +30,7 @@ public class Player {
     private Card[] cardRegister = new Card[5];
     private boolean[] statusRegister = new boolean[5];
     private ProgrammingDeck personalDiscardPile;
-    private Robot robot;
+    protected Robot robot;
     private final Logger logger = LogManager.getLogger(Player.class);
 
     private Server server;
