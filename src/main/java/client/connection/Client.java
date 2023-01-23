@@ -95,6 +95,7 @@ public class Client {
         this.timer = new SimpleBooleanProperty(false);
         this.movementX = new SimpleIntegerProperty();
         this.movementY = new SimpleIntegerProperty();
+        this.robotID = new SimpleIntegerProperty();
     }
 
     public static Client getInstance() {
@@ -337,15 +338,18 @@ public class Client {
                             Client.this.activePlayer.set(true);
                         }
                         if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
-                            int clientID = message.getMessageBody().getClientID();
-                            if (Client.this.userIDProperty().get() == clientID) {
-                                Client.this.setX(message.getMessageBody().getX());
-                                Client.this.setY(message.getMessageBody().getY());
+                            int clientRobot = message.getMessageBody().getClientID();
+                            if (Client.this.userIDProperty().get() == clientRobot) {
+                                 Client.this.setX(message.getMessageBody().getX());
+                                 Client.this.setY(message.getMessageBody().getY());
+                                 System.out.println("My Robot");
                             }
                             else {
-                                Client.this.setMovementX(message.getMessageBody().getX());
+                                int robotIDclient = clientPlayerList.getPlayer(clientRobot).getRobot().getFigure();
+                                Client.this.setMovementY(message.getMessageBody().getX());
                                 Client.this.setMovementY(message.getMessageBody().getY());
-                                Client.this.setRobotID(message.getMessageBody().getClientID());
+                                Client.this.setRobotID(robotIDclient);
+                                System.out.println("Client Roboter: " + robotIDclient);
                             }
                         }
                         if (message.getMessageType().equals(MessageType.GameStarted)) {
