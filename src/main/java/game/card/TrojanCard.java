@@ -7,7 +7,7 @@ public class TrojanCard extends Card{
     //immediately take 2 spam, play the top card of your programming deck this register
     public TrojanCard(){
         cardType = CardType.DAMAGE_CARD;
-        setCardName("Trojan Horse");
+        setCardName("Trojan");
     }
     @Override
     public void applyEffect(Player player) throws Exception {

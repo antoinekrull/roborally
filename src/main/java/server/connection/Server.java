@@ -214,11 +214,21 @@ public class Server {
     }
     public void sendActivePhase(int phase) {
         try {
+
+            String[] cardsInHand = new String[9];
+            String cards = "";
+            for(int i = 0; i < cardsInHand.length; i++) {
+                String temp = cards;
+                cards = cards + "" + cardsInHand[i];
+            }
+
             messages.put(messageCreator.generateActivePhaseMessage(phase));
         } catch (Exception e){
             e.printStackTrace();
         }
     }
+
+
 
     public void sendYourCards(Player player) {
         String[] cardsInHand = new String[player.getHand().size()];
@@ -307,9 +317,9 @@ public class Server {
         }
     }
 
-    public void sendPlayerTurning(Robot robot) {
+    public void sendPlayerTurning(Robot robot, Direction direction) {
         try {
-            messages.put(messageCreator.generatePlayerTurningMessage(robot.getId(), robot.getDirection().toString()));
+            messages.put(messageCreator.generatePlayerTurningMessage(robot.getId(), direction.toString()));
         } catch (Exception e) {
             e.printStackTrace();
         }

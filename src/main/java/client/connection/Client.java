@@ -1,5 +1,6 @@
 package client.connection;
 
+import client.player.ClientPlayer;
 import client.player.ClientPlayerList;
 import client.player.RegisterInformation;
 import communication.JsonSerializer;
@@ -9,21 +10,26 @@ import communication.MessageType;
 import game.board.Board;
 import game.card.Card;
 import game.player.Robot;
-import client.player.ClientPlayer;
-import javafx.application.Platform;
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.javatuples.Pair;
-
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.javatuples.Pair;
 
 /**
  *
@@ -299,7 +305,7 @@ public class Client {
                                 String username = message.getMessageBody().getName();
                                 int figure = message.getMessageBody().getFigure();
                                 if (!clientPlayerList.containsPlayer(clientID)) {
-                                    Platform.runLater(() -> Client.this.getPlayerList().add(new ClientPlayer(clientID, username, new Robot(figure))));
+                                    Platform.runLater(() -> Client.this.getPlayerList().add(new ClientPlayer(clientID, username, new Robot(figure, clientID))));
                                 }
                             }
                         }
@@ -360,6 +366,14 @@ public class Client {
 
                         }
                         if (message.getMessageType().equals(MessageType.YourCards)) {
+                            String[] cardsInHand = message.getMessageBody().getCardsInHand();
+                            String cards = "";
+                            for(int i = 0; i < cardsInHand.length; i++) {
+                                String temp = cards;
+                                cards = temp + "" + cardsInHand[i];
+
+                            }
+                            System.out.println(cards);
                             Client.this.myCards.setAll(message.getMessageBody().getCardsInHand());
                         }
                         if (message.getMessageType().equals(MessageType.NotYourCards)) {

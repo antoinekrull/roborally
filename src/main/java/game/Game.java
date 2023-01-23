@@ -57,6 +57,7 @@ public class Game implements Runnable {
     public void setServerForPlayers() {
         for(int i = 0; i < playerList.size(); i++) {
             playerList.get(i).setServerForPlayerAndRobot(server);
+            playerList.get(i).getRobot().setServer(server);
         }
     }
     public void setRobotSet(boolean robotSet) {
@@ -325,6 +326,7 @@ public class Game implements Runnable {
 
     private void runSetupPhase() {
         server.sendActivePhase(0);
+        setServerForPlayers();
         try {
             Thread.sleep(100);
             logger.debug("Running Setup Phase now");
@@ -337,15 +339,8 @@ public class Game implements Runnable {
                 }
                 this.robotSet = false;
                 Thread.sleep(100);
-                logger.debug(maps[0]);
-                playerList.setPlayerReadiness(false);
-                while (!playerList.playersAreReady()) {
-                    //TODO: implement this properly
-                    //pickStartLocationForRobot();
-                }
-                //map name logic
-                setStartDirectionForRobot(maps[0]);
             }
+            logger.debug("finished setupphase");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -370,6 +365,7 @@ public class Game implements Runnable {
         }
         for(int i = 0; i < playerList.size(); i++) {
             playerList.get(i).drawFullHand();
+            playerList.get(i).printHand();
             server.sendYourCards(playerList.get(i));
         }
         playerList.setPlayersPlaying(true);
@@ -652,7 +648,7 @@ public class Game implements Runnable {
             }
             runSetupPhase();
             logger.debug("This game is running the Upgrade Phase now");
-            runUpgradePhase();
+            //runUpgradePhase();
             try {
                 logger.debug("This game is running the Programming Phase now");
                 runProgrammingPhase(playerList);

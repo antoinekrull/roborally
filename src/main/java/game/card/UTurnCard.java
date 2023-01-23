@@ -7,7 +7,7 @@ public class UTurnCard extends Card {
 
     public UTurnCard(){
         cardType = CardType.PROGRAMMING_CARD;
-        setCardName("U-Turn");
+        setCardName("UTurn");
     }
 
     @Override
