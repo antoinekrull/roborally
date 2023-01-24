@@ -359,6 +359,7 @@ public class Client {
                         }
                         if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
                             Client.this.setMovement(message);
+                            logger.debug("StartingPointTaken message: " + message);
                             /*
                             int clientRobot = message.getMessageBody().getClientID();
                             if (Client.this.userIDProperty().get() == clientRobot) {
@@ -415,6 +416,7 @@ public class Client {
                         }
                         if (message.getMessageType().equals(MessageType.Movement)) {
                             Client.this.setMovement(message);
+                            logger.debug("Movement message: " + message);
                             /*
                             int clientRobot = message.getMessageBody().getClientID();
                             if (Client.this.userIDProperty().get() == clientRobot) {
