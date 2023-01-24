@@ -5,6 +5,8 @@ import client.viewmodel.ViewModelLobby;
 import client.viewmodel.ViewModelRobotSelection;
 
 import java.io.IOException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Notifier class. Actively notifies specific instances for changes.
@@ -22,6 +24,7 @@ public class NotifyChangeSupport {
     private boolean lobby;
     private boolean gamewindow;
     private boolean robotselection;
+    private final Logger logger = LogManager.getLogger(ViewModelGameWindow.class);
 
     private NotifyChangeSupport() {
 
@@ -75,9 +78,8 @@ public class NotifyChangeSupport {
     }
 
     public void updateProgrammingHandCards() {
-        System.out.println("hehe");
         if (gamewindow) {
-            System.out.println("programmingHandCards");
+            logger.debug("programmingHandCards");
             viewModelGameWindow.fillHandCards();
         }
     }
@@ -85,7 +87,7 @@ public class NotifyChangeSupport {
     public void robotSetPosition() {
         if (gamewindow) {
             viewModelGameWindow.robotSetPosition();
-            System.out.println("RobotID in robotSetPosition: ");
+            logger.debug("RobotID in robotSetPosition: ");
         }
     }
 

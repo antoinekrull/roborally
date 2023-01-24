@@ -3,6 +3,7 @@ package client.model;
 import client.connection.Client;
 import client.changesupport.NotifyChangeSupport;
 import client.player.ClientPlayerList;
+import client.viewmodel.ViewModelGameWindow;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import communication.Message;
 import game.Game;
@@ -18,6 +19,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Model for game
@@ -53,6 +56,7 @@ public class ModelGame {
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
     private ObservableList<String> myHandCards;
     private ClientPlayerList clientPlayerList;
+    private final Logger logger = LogManager.getLogger(ViewModelGameWindow.class);
 
 
     private Game game;
@@ -76,7 +80,7 @@ public class ModelGame {
         myHandCards.addListener(new ListChangeListener<String>() {
             @Override
             public void onChanged(Change<? extends String> c) {
-                System.out.println("changed list");
+                logger.debug("changed list");
                 notifyChangeSupport.updateProgrammingHandCards();
             }
         });
