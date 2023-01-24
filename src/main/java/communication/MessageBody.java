@@ -35,7 +35,10 @@ public class MessageBody {
     private int register;
     private boolean filled;
     private int[] clientIDs;
-    private ArrayList<ArrayList<Object>> activeCards = new ArrayList<ArrayList<Object>>();
+    //TODO: fix this
+    //private ArrayList<ArrayList<Object>> activeCards = new ArrayList<ArrayList<Object>>();
+    private ArrayList<Object[]> activeCards = new ArrayList<Object[]>();
+
     private String newCard;
     private String rotation;
     private String type;
@@ -227,19 +230,24 @@ public class MessageBody {
         this.clientIDs = clientIDs;
     }
 
-    public ArrayList<ArrayList<Object>> getActiveCards() {
+    //TODO: Fix this
+    /*
+    public ArrayList<Object[]> getActiveCards() {
         return activeCards;
     }
 
     public void setActiveCards(ArrayList<Integer> intergerList, ArrayList<String> stringList) {
         if(intergerList.size() == stringList.size()) {
             for(int i = 0; i < intergerList.size(); i++) {
-                activeCards.get(i).add(new ArrayList<Object>() {});
+                activeCards.get(i).add(intergerList.get(i));
                 activeCards.get(i).add(intergerList.get(i));
                 activeCards.get(i).add(stringList.get(i));
             }
         }
     }
+     */
+
+
 
     public String getNewCard() {
         return newCard;

@@ -209,7 +209,7 @@ import java.util.ArrayList;
         }
         public Message generateCurrentCardsMessage(ArrayList<Integer> intergerList, ArrayList<String> stringList){
             MessageBody messageBody = new MessageBody();
-            messageBody.setActiveCards(intergerList, stringList);
+            //messageBody.setActiveCards(intergerList, stringList);
             return new Message(MessageType.CurrentCards, messageBody);
         }
         public Message generateReplaceCardMessage(int register, String newCard, int clientID){
