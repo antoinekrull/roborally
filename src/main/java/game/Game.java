@@ -398,7 +398,6 @@ public class Game implements Runnable {
             Thread.sleep(100);
             cardList.clear();
             logger.debug(currentRegister);
-            currentRegister++;
             Thread.sleep(1000);
             if(playerList.robotNeedsReboot()) {
                 for(int i = 0; i < playerList.numberOfNeededReboots(); i++) {
@@ -408,7 +407,7 @@ public class Game implements Runnable {
             Thread.sleep(1000);
             determinePriority();
             //checks if all registers have been activated
-            if(currentRegister == 5) {
+            if(currentRegister == 4) {
                 for(int i = 0; i < playerList.size(); i++) {
                     logger.debug("Emptying card registers");
                     playerList.get(i).emptyAllCardRegisters();
@@ -416,6 +415,8 @@ public class Game implements Runnable {
             }
             logger.debug("Applying tile effects");
             applyAllTileEffects();
+            currentRegister++;
+            /*
             if(checkIfPlayersReachedCheckPoints(playerList)){
                 ArrayList<Pair<Integer, Integer>> playersReachedCheckpoints = playersThatReachedCheckpoints(playerList);
                 for (Pair<Integer, Integer> playersReachedCheckpoint : playersReachedCheckpoints) {
@@ -434,10 +435,14 @@ public class Game implements Runnable {
                     Thread.sleep(100);
                 //stops the game thread
                 gameIsRunning = false;
+
+
             }
+        */
         } } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        currentRegister = 0;
     }
     public void setServer(Server server) {
         this.server = server;

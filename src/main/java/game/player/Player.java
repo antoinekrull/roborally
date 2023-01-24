@@ -243,6 +243,7 @@ public class Player {
                 cardRegister[i] = null;
             }
             setCardRegister(null, i);
+            setStatusRegister(false, i);
         }
     }
     @Override
