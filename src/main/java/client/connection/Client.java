@@ -358,7 +358,6 @@ public class Client {
                             Client.this.activePlayer.set(true);
                         }
                         if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
-                            logger.debug(message.getMessageBody());
                             Client.this.setMovement(message);
                             /*
                             int clientRobot = message.getMessageBody().getClientID();

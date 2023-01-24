@@ -356,8 +356,7 @@ public class Game implements Runnable {
         server.sendActivePhase(2);
 
         //TODO: Remove this once robo placement is working
-        playerList.get(0).getRobot().setCurrentPosition(new Pair<>(3, 3));
-        playerList.get(0).getRobot().setDirection(Direction.NORTH);
+        //playerList.get(0).getRobot().setDirection(Direction.NORTH);
 
         timerIsRunning = false;
         try {

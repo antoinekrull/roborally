@@ -45,13 +45,13 @@ public class Robot {
     }
     public void setCurrentPosition(Pair<Integer, Integer> currentPosition) {
         this.currentPosition = currentPosition;
-        if(currentPosition.getValue0() < 13) {
+        if(currentPosition.getValue0() > 12) {
             this.currentPosition = currentPosition.setAt0(12);
-        } else if(currentPosition.getValue0() > 0) {
+        } else if(currentPosition.getValue0() < 0) {
             this.currentPosition = currentPosition.setAt0(0);
-        } else if(currentPosition.getValue1() < 10) {
-            this.currentPosition = currentPosition.setAt1(10);
-        } else if(currentPosition.getValue1() > 0) {
+        } else if(currentPosition.getValue1() > 10) {
+            this.currentPosition = currentPosition.setAt1(9);
+        } else if(currentPosition.getValue1() < 0) {
             this.currentPosition = currentPosition.setAt1(0);
         }
         server.sendMovement(this);
