@@ -42,13 +42,13 @@ public class Board {
     }
 
     public boolean tileIsBlocking(ArrayList<Tile> tileList) {
-        boolean result;
+        boolean result = false;
         if(tileList.size() == 1) {
             result = tileList.get(0).isBlocking();
         } else {
             result = tileList.get(0).isBlocking() || tileList.get(1).isBlocking();
         }
-        return !result;
+        return result;
     }
 
     public int getColumns() {return columns;}

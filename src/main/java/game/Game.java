@@ -354,6 +354,11 @@ public class Game implements Runnable {
     }
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
         server.sendActivePhase(2);
+
+        //TODO: Remove this once robo placement is working
+        playerList.get(0).getRobot().setCurrentPosition(new Pair<>(3, 3));
+        playerList.get(0).getRobot().setDirection(Direction.NORTH);
+
         timerIsRunning = false;
         try {
             Thread.sleep(100);
