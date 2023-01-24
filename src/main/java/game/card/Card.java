@@ -12,14 +12,12 @@ import game.player.Player;
  */
 public abstract class Card {
 
-
     private int clientID;
     private String card;
     private boolean isActivated = false;
     protected boolean isDamageCard = false;
     private String cardEffect;
     protected CardType cardType;
-
     public int getClientID() {
         return clientID;
     }
@@ -53,7 +51,5 @@ public abstract class Card {
     public void setDamageCard(boolean damageCard) {
         isDamageCard = damageCard;
     }
-
     public void applyEffect(Player player) throws Exception {}
-
 }
