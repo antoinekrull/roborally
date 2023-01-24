@@ -13,7 +13,7 @@ import game.player.Player;
 public abstract class Card {
 
 
-    int clientID;
+    private int clientID;
     private String card;
     private boolean isActivated = false;
     protected boolean isDamageCard = false;
