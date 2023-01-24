@@ -434,7 +434,7 @@ public class ViewModelGameWindow {
                 event.consume();
                 columnIndex = handGrid.getChildren().indexOf(source);
                 source.getChildren().clear();
-                logger.debug(columnIndex);
+                logger.debug("Element from Column " + columnIndex);
 
             }
         });
@@ -444,6 +444,8 @@ public class ViewModelGameWindow {
         target.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
+                //logger.debug("setOnDragOver");
+
                 //data is dragged over target
                 //accept it only if it is not dragged from the same node and if it hasImage
                 if (event.getGestureSource() != target && event.getDragboard().hasImage()) {
@@ -459,6 +461,7 @@ public class ViewModelGameWindow {
         target.setOnDragEntered(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
+                logger.debug("setOnDragEntered");
                 //drag-and-drop gesture entered target
                 //Show entering visually
                 if (event.getGestureSource() != target && event.getDragboard().hasImage()) {
@@ -473,6 +476,7 @@ public class ViewModelGameWindow {
         target.setOnDragExited(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
+                logger.debug("setOnDragExited");
                 //mouse moves out of enntered area
                 //remove visuals
                 target.setStyle("-fx-border-color: transparent;");
@@ -486,6 +490,7 @@ public class ViewModelGameWindow {
         target.setOnDragDropped(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
+                logger.debug("setOnDragDropped");
                 //data dropped
                 boolean success = false;
                 if (target.getChildren().isEmpty()) {
@@ -531,7 +536,17 @@ public class ViewModelGameWindow {
                         logger.debug(columnIndex);
                     }
                 }
+                ObservableList<Node> children = programmingGrid.getChildren();
+                logger.debug("ProgramGrid now: ");
+                for (Node child : children) {
+                    logger.debug(child);
+                    if (child instanceof Pane) {
+                        Pane pane = (Pane) child;
+                        logger.debug("Pane contains: " + pane.getChildren());
+                    }
+                }
             }
+
         });
     }
 

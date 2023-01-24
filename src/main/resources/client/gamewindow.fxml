@@ -321,7 +321,14 @@
                     <RowConstraints minHeight="10.0" valignment="BOTTOM" vgrow="SOMETIMES" />
                   </rowConstraints>
                   <children>
-                              <Pane fx:id="programCard1" />
+                              <Pane fx:id="programCard1">
+                                       <children>
+                                          <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../textures/cards/Move3.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children></Pane>
                               <Pane fx:id="programCard2" GridPane.columnIndex="1" />
                               <Pane fx:id="programCard3" GridPane.columnIndex="2" />
                               <Pane fx:id="programCard4" GridPane.columnIndex="3" />
