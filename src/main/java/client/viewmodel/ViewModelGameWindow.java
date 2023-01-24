@@ -386,6 +386,7 @@ public class ViewModelGameWindow {
         }
         int x = robotMovement.getMessageBody().getX();
         int y = robotMovement.getMessageBody().getY();
+        logger.debug("In viewModel - X: " + x + " | Y: " + y);
         int clientID = robotMovement.getMessageBody().getClientID();
         int figure;
         if (modelUser.userIDProperty().get() == clientID) {
