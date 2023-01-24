@@ -689,14 +689,14 @@ public class ViewModelGameWindow {
     }
 
     private void loadDecks (){
-        InputStream upgradeImg = getClass().getResourceAsStream("/textures/cards/roborally_upgrade.jpg");
+        InputStream upgradeImg = getClass().getResourceAsStream("/textures/cards/upgradeDeck.png");
         Image imUpgrade = new Image(upgradeImg);
         ImageView imgUpgrade = new ImageView(imUpgrade);
         imgUpgrade.setFitWidth(programcardsWidth);
         imgUpgrade.setPreserveRatio(true);
         upgradeDeck.getChildren().add(imgUpgrade);
 
-        InputStream damageImg = getClass().getResourceAsStream("/textures/cards/SPAM.png");
+        InputStream damageImg = getClass().getResourceAsStream("/textures/cards/damageDeck.png");
         Image imDamage = new Image(damageImg);
         ImageView imgDamage = new ImageView(imDamage);
         imgDamage.setFitWidth(programcardsWidth);
