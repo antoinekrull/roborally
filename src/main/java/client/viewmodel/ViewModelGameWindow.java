@@ -438,7 +438,6 @@ public class ViewModelGameWindow {
                 columnIndex = handGrid.getChildren().indexOf(source);
                 source.getChildren().clear();
                 logger.debug("Element from Column " + columnIndex);
-
             }
         });
     }
@@ -500,6 +499,8 @@ public class ViewModelGameWindow {
                 if (target.getChildren().isEmpty()) {
                     Dragboard db = event.getDragboard();
                     if (db.hasImage()) {
+
+                        String cardName = db.getString();
                         Image data = db.getImage();
                         ImageView card = new ImageView(data);
                         card.setFitHeight(height);
@@ -605,8 +606,7 @@ public class ViewModelGameWindow {
         Platform.runLater(() -> {
             logger.debug("handGrid children size: " + handGrid.getChildren().size());
             for (int i = 0; i < 9; i++) {
-                if (handGrid.getChildren().get(i) instanceof Pane) {
-                    Pane pane = (Pane) handGrid.getChildren().get(i);
+                if (handGrid.getChildren().get(i) instanceof Pane pane) {
                     switch (handCards.get(i)) {
                         case "MoveI" -> {
                             InputStream input = getClass().getResourceAsStream(

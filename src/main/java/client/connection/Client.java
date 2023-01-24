@@ -519,6 +519,7 @@ public class Client {
         this.activePlayer.set(false);
     }
     public void sendSelectCard(String card, int register) {
+        logger.debug("Selected card: " + card + " and register: " + register);
         sendMessageToServer(messageCreator.generateSelectedCardMessage(card, register));
     }
     //TODO: add method in messageCreator
