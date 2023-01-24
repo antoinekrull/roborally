@@ -21,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
@@ -53,14 +54,15 @@ import org.apache.logging.log4j.Logger;
  * @version 0.1
  */
 public class ViewModelGameWindow {
-
+    public Pane programspacePane;
     @FXML
     private Pane gameboardRegion;
     @FXML
     private ColumnConstraints gameboardColumn;
-    public Pane programspacePane;
     @FXML
     private Button chatButton;
+    @FXML
+    private GridPane deckGrid;
     @FXML
     private TextField chatTextfield;
     @FXML
@@ -81,9 +83,10 @@ public class ViewModelGameWindow {
     private GridPane handGrid;
     @FXML
     private GridPane playerInfoGrid;
-
     @FXML
-    private Pane cardDeck;
+    private Pane upgradeDeck;
+    @FXML
+    private Pane damageDeck;
     @FXML
     private StackPane baseStackPane;
     @FXML
@@ -96,16 +99,12 @@ public class ViewModelGameWindow {
     private ModelChat modelChat;
     private ModelGame modelGame;
     private ModelUser modelUser;
-
-    private int height = 150;
     private int columnIndex;
     private PlayerGameInfo playerGameInfo;
     //private ObservableList<String> handCardsUI;
-
     private Tutorial tutorial;
-
     private double gameboardTileWidth;
-
+    private double programcardsWidth;
     private NotifyChangeSupport notifyChangeSupport;
     private final Logger logger = LogManager.getLogger(ViewModelGameWindow.class);
 
@@ -123,41 +122,10 @@ public class ViewModelGameWindow {
         for (Node child : children) {
             logger.debug("Initialize handGrid: " + child);
         }
+
         selectStarttile();
 
-        //handCardsUI = FXCollections.observableArrayList(modelGame.getMyHandCards());
-
-        /*
-        handCardsUI.addListener(new ListChangeListener<String>() {
-            @Override
-            public void onChanged(Change<? extends String> c) {
-
-                while(c.next()) {
-                    if(c.wasUpdated()) {
-                        System.out.println("wasUpdated");
-                        notifyChangeSupport.updateProgrammingHandCards();
-                    }
-                    if(c.wasAdded()) {
-                        System.out.println("wasAdded");
-                        notifyChangeSupport.updateProgrammingHandCards();
-                    }
-                    if(c.wasRemoved()) {
-                        System.out.println("wasRemoved");
-                        notifyChangeSupport.updateProgrammingHandCards();
-                    }
-                    if(c.wasPermutated()) {
-                        System.out.println("wasPermutated");
-                        notifyChangeSupport.updateProgrammingHandCards();
-                    }
-                    if(c.wasReplaced()) {
-                        System.out.println("wasReplaced");
-                        notifyChangeSupport.updateProgrammingHandCards();
-                    }
-                }
-            }
-        });
-
-         */
+        loadDecks();
 
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
@@ -169,9 +137,10 @@ public class ViewModelGameWindow {
         });
 
         gameboardRegion.widthProperty().addListener((obs, oldValue, newValue) -> {
-            double width = newValue.doubleValue() * 0.04;
-            this.gameboardTileWidth = width;
-            updateWidth(gameboardTileWidth);
+            double width = newValue.doubleValue();
+            this.gameboardTileWidth = width * 0.04;
+            this.programcardsWidth = width * 0.07;
+            updateWidth(width);
         });
 
         playerGameInfo = new PlayerGameInfo(playerInfoGrid, modelGame.getPlayerList());
@@ -229,15 +198,24 @@ public class ViewModelGameWindow {
          */
     }
 
-
-    private void updateWidth(double width) {
-        for(Node node: gameboard.getChildren()){
-            if(node instanceof ImageView){
-                ImageView img = (ImageView)node;
-                img.setFitWidth(width);
+    private void scaleImages(Parent parent, double width, double scaleFactor) {
+        for (Node node : parent.getChildrenUnmodifiable()) {
+            if (node instanceof ImageView) {
+                ImageView img = (ImageView) node;
+                img.setFitWidth(width * scaleFactor);
                 img.setPreserveRatio(true);
+            } else if (node instanceof Parent) {
+                scaleImages((Parent) node, width, scaleFactor);
             }
         }
+    }
+
+    private void updateWidth(double width) {
+        scaleImages(gameboard, width, 0.04);
+        scaleImages(handGrid, width, 0.07);
+        scaleImages(programmingGrid, width, 0.07);
+        scaleImages(playerInfoGrid, width, 0.05);
+        scaleImages(deckGrid, width, 0.07);
     }
 
     public void receivedMessage() {
@@ -499,20 +477,14 @@ public class ViewModelGameWindow {
                 if (target.getChildren().isEmpty()) {
                     Dragboard db = event.getDragboard();
                     if (db.hasImage()) {
-
+                        logger.debug("VM - ColumnIndex of Target: " + GridPane.getColumnIndex(target));
                         String cardName = db.getString();
                         Image data = db.getImage();
                         ImageView card = new ImageView(data);
-                        card.setFitHeight(height);
+                        card.setFitWidth(programcardsWidth);
                         card.setPreserveRatio(true);
                         target.getChildren().add(card);
-                        int targetIndex;
-                        if(GridPane.getColumnIndex(target)== null) {
-                            targetIndex = 1;
-                        }
-                        else {
-                            targetIndex = GridPane.getColumnIndex(target) + 1;
-                        }
+                        int targetIndex = GridPane.getColumnIndex(target) + 1;
                         logger.debug("VM - 1 Cardname: " + cardName);
                         success = true;
                         logger.debug("VM - 3 target for message: " + targetIndex);
@@ -528,7 +500,7 @@ public class ViewModelGameWindow {
                         Image data = db.getImage();
                         Pane source = (Pane) handGrid.getChildren().get(columnIndex);
                         ImageView card = new ImageView(data);
-                        card.setFitHeight(height);
+                        card.setFitWidth(programcardsWidth);
                         card.setPreserveRatio(true);
                         source.getChildren().add(card);
                         logger.debug(columnIndex);
@@ -555,7 +527,7 @@ public class ViewModelGameWindow {
                         if (index != -1) {
                             Pane emptyPane = (Pane) handGrid.getChildren().get(index);
                             ImageView newCard = new ImageView(data);
-                            newCard.setFitHeight(height);
+                            newCard.setFitWidth(programcardsWidth);
                             newCard.setPreserveRatio(true);
                             emptyPane.getChildren().add(newCard);
                         }
@@ -614,8 +586,8 @@ public class ViewModelGameWindow {
                             Image image = new Image(input);
                             ImageView imageView = new ImageView(image);
                             imageView.setId("MoveI");
-                            imageView.setFitHeight(90);
-                            imageView.setFitWidth(60);
+                            imageView.setFitWidth(programcardsWidth);
+                            imageView.setPreserveRatio(true);
                             pane.getChildren().add(imageView);
                         }
                         case "MoveII" -> {
@@ -624,8 +596,8 @@ public class ViewModelGameWindow {
                             Image image2 = new Image(input2);
                             ImageView imageView2 = new ImageView(image2);
                             imageView2.setId("MoveII");
-                            imageView2.setFitHeight(90);
-                            imageView2.setFitWidth(60);
+                            imageView2.setFitWidth(programcardsWidth);
+                            imageView2.setPreserveRatio(true);
                             pane.getChildren().add(imageView2);
                         }
                         case "MoveIII" -> {
@@ -634,8 +606,8 @@ public class ViewModelGameWindow {
                             Image image3 = new Image(input3);
                             ImageView imageView3 = new ImageView(image3);
                             imageView3.setId("MoveIII");
-                            imageView3.setFitHeight(90);
-                            imageView3.setFitWidth(60);
+                            imageView3.setFitWidth(programcardsWidth);
+                            imageView3.setPreserveRatio(true);
                             pane.getChildren().add(imageView3);
                         }
                         case "TurnLeft" -> {
@@ -644,8 +616,8 @@ public class ViewModelGameWindow {
                             Image image4 = new Image(input4);
                             ImageView imageView4 = new ImageView(image4);
                             imageView4.setId("TurnLeft");
-                            imageView4.setFitHeight(90);
-                            imageView4.setFitWidth(60);
+                            imageView4.setFitWidth(programcardsWidth);
+                            imageView4.setPreserveRatio(true);
                             pane.getChildren().add(imageView4);
                         }
                         case "TurnRight" -> {
@@ -654,8 +626,8 @@ public class ViewModelGameWindow {
                             Image image5 = new Image(input5);
                             ImageView imageView5 = new ImageView(image5);
                             imageView5.setId("TurnRight");
-                            imageView5.setFitHeight(90);
-                            imageView5.setFitWidth(60);
+                            imageView5.setFitWidth(programcardsWidth);
+                            imageView5.setPreserveRatio(true);
                             pane.getChildren().add(imageView5);
                         }
                         case "UTurn" -> {
@@ -664,8 +636,8 @@ public class ViewModelGameWindow {
                             Image image6 = new Image(input6);
                             ImageView imageView6 = new ImageView(image6);
                             imageView6.setId("UTurn");
-                            imageView6.setFitHeight(90);
-                            imageView6.setFitWidth(60);
+                            imageView6.setFitWidth(programcardsWidth);
+                            imageView6.setPreserveRatio(true);
                             pane.getChildren().add(imageView6);
                         }
                         case "BackUp" -> {
@@ -674,8 +646,8 @@ public class ViewModelGameWindow {
                             Image image7 = new Image(input7);
                             ImageView imageView7 = new ImageView(image7);
                             imageView7.setId("BackUp");
-                            imageView7.setFitHeight(90);
-                            imageView7.setFitWidth(60);
+                            imageView7.setFitWidth(programcardsWidth);
+                            imageView7.setPreserveRatio(true);
                             pane.getChildren().add(imageView7);
                         }
                         case "PowerUp" -> {
@@ -684,8 +656,8 @@ public class ViewModelGameWindow {
                             Image image8 = new Image(input8);
                             ImageView imageView8 = new ImageView(image8);
                             imageView8.setId("PowerUp");
-                            imageView8.setFitHeight(90);
-                            imageView8.setFitWidth(60);
+                            imageView8.setFitWidth(programcardsWidth);
+                            imageView8.setPreserveRatio(true);
                             pane.getChildren().add(imageView8);
                         }
                         case "Again" -> {
@@ -694,8 +666,8 @@ public class ViewModelGameWindow {
                             Image image9 = new Image(input9);
                             ImageView imageView9 = new ImageView(image9);
                             imageView9.setId("Again");
-                            imageView9.setFitHeight(90);
-                            imageView9.setFitWidth(60);
+                            imageView9.setFitWidth(programcardsWidth);
+                            imageView9.setPreserveRatio(true);
                             pane.getChildren().add(imageView9);
                         }
                     }
@@ -714,6 +686,22 @@ public class ViewModelGameWindow {
             }
         });
 
+    }
+
+    private void loadDecks (){
+        InputStream upgradeImg = getClass().getResourceAsStream("/textures/cards/roborally_upgrade.jpg");
+        Image imUpgrade = new Image(upgradeImg);
+        ImageView imgUpgrade = new ImageView(imUpgrade);
+        imgUpgrade.setFitWidth(programcardsWidth);
+        imgUpgrade.setPreserveRatio(true);
+        upgradeDeck.getChildren().add(imgUpgrade);
+
+        InputStream damageImg = getClass().getResourceAsStream("/textures/cards/SPAM.png");
+        Image imDamage = new Image(damageImg);
+        ImageView imgDamage = new ImageView(imDamage);
+        imgDamage.setFitWidth(programcardsWidth);
+        imgDamage.setPreserveRatio(true);
+        damageDeck.getChildren().add(imgDamage);
     }
 
     public void startTimer() {
