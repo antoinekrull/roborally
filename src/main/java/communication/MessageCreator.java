@@ -208,8 +208,9 @@ import java.util.ArrayList;
             return new Message(MessageType.CardsYouGotNow, messageBody);
         }
         public Message generateCurrentCardsMessage(ArrayList<Card> cardArrayList){
+            String jsonString = cardArrayList.toString();
             MessageBody messageBody = new MessageBody();
-            messageBody.setActiveCards(cardArrayList);
+            messageBody.setActiveCards(jsonString);
             return new Message(MessageType.CurrentCards, messageBody);
         }
         public Message generateReplaceCardMessage(int register, String newCard, int clientID){

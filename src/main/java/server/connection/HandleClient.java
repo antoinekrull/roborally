@@ -204,6 +204,7 @@ public class HandleClient implements Runnable{
                         InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream(fileName));
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
                         this.jsonMap = content.lines().collect(Collectors.joining());
+
                         game.setJsonMap(jsonMap);
                         game.setCurrentMap(map);
                         game.createBoard(jsonMap);

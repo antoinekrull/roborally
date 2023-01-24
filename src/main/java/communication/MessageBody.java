@@ -33,7 +33,7 @@ public class MessageBody {
     private int register;
     private boolean filled;
     private int[] clientIDs;
-    private ArrayList<Card> activeCards = new ArrayList<Card>();
+    private String activeCards;
 
     private String newCard;
     private String rotation;
@@ -226,11 +226,11 @@ public class MessageBody {
         this.clientIDs = clientIDs;
     }
 
-    public ArrayList<Card> getActiveCards() {
+    public String getActiveCards() {
         return activeCards;
     }
 
-    public void setActiveCards(ArrayList<Card> cardList) {
+    public void setActiveCards(String cardList) {
             activeCards = cardList;
     }
 

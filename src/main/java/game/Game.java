@@ -312,7 +312,7 @@ public class Game implements Runnable {
 
     public void setStartDirectionForRobot(String input) {
         switch(input) {
-            case "Deathtrap" -> {
+            case "DeathTrap" -> {
                 for(int i = 0; i < playerList.size(); i++) {
                     playerList.get(i).getRobot().setDirection(Direction.WEST);
                 }
@@ -394,7 +394,7 @@ public class Game implements Runnable {
         while(currentRegister < 5) {
             for(int i = 0; i < playerList.size(); i++) {
                 logger.debug("Activating registers");
-                playerList.get(i).getCardFromRegister(currentRegister).setClientId(playerList.get(i).getId());
+                playerList.get(i).getCardFromRegister(currentRegister).setClientID(playerList.get(i).getId());
                 cardList.add(playerList.get(i).getCardFromRegister(currentRegister));
                 activateRegister(playerList.get(i));
                 //playerList.get(i).setStatusRegister(true, currentRegister);
