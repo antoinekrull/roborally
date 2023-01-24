@@ -218,6 +218,7 @@ public class HandleClient implements Runnable{
                                 getClientID()));
                     }
                     else if (incomingMessage.getMessageType() == MessageType.SelectedCard) {
+                        logger.debug(incomingMessage.getMessageBody());
                         Game.playerList.getPlayerFromList(getClientID()).playCard(incomingMessage.getMessageBody().getCard(),
                                 incomingMessage.getMessageBody().getRegister());
                         if(incomingMessage.getMessageBody().getCard().equals("Null")) {

@@ -363,7 +363,7 @@ public class Game implements Runnable {
         playerList.setPlayersPlaying(true);
         while(!playerList.playersAreReady()) {
             Thread.sleep(3000);
-            if(playerList.getAmountOfReadyPlayers() <= 1) {
+            if(playerList.getAmountOfReadyPlayers() >= 1) {
                 runTimer();
             }
         }
