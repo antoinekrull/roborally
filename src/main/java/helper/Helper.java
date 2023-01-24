@@ -2,6 +2,8 @@ package helper;
 
 import game.board.Board;
 import game.board.CheckpointTile;
+import game.board.Tile;
+import game.player.Robot;
 import org.javatuples.Pair;
 
 public class Helper {
@@ -21,5 +23,10 @@ public class Helper {
             }
         }
         return null;
+    }
+
+    public static boolean isRobotOnTile(Robot robot, Tile tile){
+        return robot.getCurrentPosition().getValue0() == tile.getXCoordinate() &&
+                robot.getCurrentPosition().getValue1() == tile.getYCoordinate();
     }
 }
