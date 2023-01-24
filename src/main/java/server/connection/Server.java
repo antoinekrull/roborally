@@ -318,9 +318,9 @@ public class Server {
         }
     }
 
-    public void sendPlayerTurning(Robot robot, Direction direction) {
+    public void sendPlayerTurning(Robot robot, String direction) {
         try {
-            messages.put(messageCreator.generatePlayerTurningMessage(robot.getId(), direction.toString()));
+            messages.put(messageCreator.generatePlayerTurningMessage(robot.getId(), direction));
         } catch (Exception e) {
             e.printStackTrace();
         }

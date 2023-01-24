@@ -1,5 +1,6 @@
 package game;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.Board;
 import game.board.PushPanelTile;
 import game.board.Direction;
@@ -153,4 +154,7 @@ public class CollisionCalculator {
         board = newBoard;
     }
 
+    public static void createBoard(String jsonMap) throws JsonProcessingException {
+        board.createBoard(jsonMap);
+    }
 }

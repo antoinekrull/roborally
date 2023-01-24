@@ -77,20 +77,43 @@ public class Robot {
     }
     public void rotateRobot(Direction direction) {
         try{
-            server.sendPlayerTurning(this, direction);
             if(direction == Direction.RIGHT){
                 switch (this.getDirection()){
-                    case NORTH -> this.setDirection(Direction.EAST);
-                    case EAST -> this.setDirection(Direction.SOUTH);
-                    case SOUTH -> this.setDirection(Direction.WEST);
-                    case WEST -> this.setDirection(Direction.NORTH);
+                    case NORTH -> {
+                        this.setDirection(Direction.EAST);
+                        server.sendPlayerTurning(this, "clockwise");
+                    }
+                    case EAST -> {
+                        this.setDirection(Direction.SOUTH);
+                        server.sendPlayerTurning(this, "clockwise");
+                    }
+                    case SOUTH -> {
+                        this.setDirection(Direction.WEST);
+                        server.sendPlayerTurning(this, "clockwise");
+                    }
+                    case WEST -> {
+                        this.setDirection(Direction.NORTH);
+                        server.sendPlayerTurning(this, "clockwise");
+                    }
                 }
             } else if(direction == Direction.LEFT){
                 switch (this.getDirection()){
-                    case NORTH -> this.setDirection(Direction.WEST);
-                    case WEST -> this.setDirection(Direction.SOUTH);
-                    case SOUTH -> this.setDirection(Direction.EAST);
-                    case EAST -> this.setDirection(Direction.NORTH);
+                    case NORTH -> {
+                        this.setDirection(Direction.WEST);
+                        server.sendPlayerTurning(this, "counterclockwise");
+                    }
+                    case WEST -> {
+                        this.setDirection(Direction.SOUTH);
+                        server.sendPlayerTurning(this, "counterclockwise");
+                    }
+                    case SOUTH -> {
+                        this.setDirection(Direction.EAST);
+                        server.sendPlayerTurning(this, "counterclockwise");
+                    }
+                    case EAST -> {
+                        this.setDirection(Direction.NORTH);
+                        server.sendPlayerTurning(this, "counterclockwise");
+                    }
                 }
             } else {
                 logger.warn("Invalid location");

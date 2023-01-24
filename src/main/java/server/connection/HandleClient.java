@@ -4,6 +4,7 @@ import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
+import game.CollisionCalculator;
 import game.Game;
 import game.player.Player;
 import game.player.Robot;
@@ -205,6 +206,7 @@ public class HandleClient implements Runnable{
                         this.jsonMap = content.lines().collect(Collectors.joining());
                         game.setJsonMap(jsonMap);
                         game.createBoard(jsonMap);
+                        CollisionCalculator.createBoard(jsonMap);
                         game.setStartDirectionForRobot(map);
                         server.messages.put(messageCreator.generateMapSelectedMessage(map));
                         //write(messageCreator.generateMapSelectedMessage(map));
