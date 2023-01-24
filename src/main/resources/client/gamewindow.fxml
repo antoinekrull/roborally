@@ -275,21 +275,29 @@
                         </GridPane>
               </children>
             </GridPane>
-            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
+                  <GridPane GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+              <StackPane fx:id="handStackPane" GridPane.columnIndex="1">
               <children>
-              <StackPane fx:id="handStackPane" HBox.hgrow="ALWAYS">
-              <children>
-                <GridPane fx:id="handGrid" alignment="CENTER" gridLinesVisible="true" maxHeight="130.0" maxWidth="700.0" nodeOrientation="RIGHT_TO_LEFT" prefWidth="700.0" HBox.hgrow="ALWAYS">
+                <GridPane fx:id="handGrid" alignment="CENTER" gridLinesVisible="true" maxHeight="140.0" maxWidth="800.0" nodeOrientation="RIGHT_TO_LEFT" prefWidth="700.0" HBox.hgrow="ALWAYS">
                   <columnConstraints>
                     <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
                     <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
                     <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
                   </columnConstraints>
                   <rowConstraints>
                     <RowConstraints minHeight="10.0" valignment="BOTTOM" vgrow="SOMETIMES" />
@@ -308,8 +316,16 @@
                 </GridPane>
               </children>
               </StackPane>
-              </children>
-            </HBox>
+                        <GridPane fx:id="myEnergyBar">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                        </GridPane>
+                     </children>
+                  </GridPane>
           </children>
           <BorderPane.margin>
             <Insets top="20.0" />
@@ -331,7 +347,7 @@
                       </Menu>
                     </menus>
                   </MenuBar>
-                        <Label text="??? Turn - 00:00 left" />
+                        <Label text="00:00 left" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="5.0" />
