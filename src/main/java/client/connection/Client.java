@@ -389,9 +389,12 @@ public class Client {
                             Platform.runLater(() -> {
                                 Client.this.myCards.clear();
                                 Client.this.myCards.addAll(cardsInHand);
+                                for(String card: cardsInHand){
+                                    logger.debug("Client - cardsInHand" + card);
+                                }
                             });
                             for (int i = 0; i < myCards.size(); i++) {
-                                System.out.println(myCards.get(i));
+                                logger.debug("Client - myCards: " + myCards.get(i));
                             }
                         }
                         if (message.getMessageType().equals(MessageType.NotYourCards)) {
