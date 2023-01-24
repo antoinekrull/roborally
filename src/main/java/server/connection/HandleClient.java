@@ -10,6 +10,7 @@ import game.player.Robot;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.javatuples.Pair;
 
 import java.io.*;
 import java.net.Socket;
@@ -237,6 +238,7 @@ public class HandleClient implements Runnable{
                                 game.setStartPoint(x, y);
                                 server.messages.put(startingPointTakenMessage);
                                 game.setRobotSet(true);
+                                game.getPlayerFromPlayerListById(clientID).getRobot().setCurrentPosition(new Pair<>(x, y));
                             }
                             else {
                                 write(messageCreator.generateErrorMessage("Starting point is already taken"));

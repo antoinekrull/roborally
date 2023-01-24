@@ -207,9 +207,9 @@ import java.util.ArrayList;
             messageBody.setCardsInHand(cards);
             return new Message(MessageType.CardsYouGotNow, messageBody);
         }
-        public Message generateCurrentCardsMessage(ArrayList<Pair<Integer, String>> activeCards){
+        public Message generateCurrentCardsMessage(ArrayList<Integer> intergerList, ArrayList<String> stringList){
             MessageBody messageBody = new MessageBody();
-            messageBody.setActiveCards(activeCards);
+            messageBody.setActiveCards(intergerList, stringList);
             return new Message(MessageType.CurrentCards, messageBody);
         }
         public Message generateReplaceCardMessage(int register, String newCard, int clientID){

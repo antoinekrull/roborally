@@ -197,6 +197,7 @@ public class Player {
     }
 
     //if timer runs out all unfilled registers of player get filled with random cards
+    //TODO: Fix this
     public String[] fillRegisterWithRandomCards() {
         Random random = new Random();
         String[] cardNames = new String[getEmptyRegisterAmount()];

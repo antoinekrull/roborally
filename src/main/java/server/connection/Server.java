@@ -295,9 +295,9 @@ public class Server {
         }
     }
 
-    public void sendCurrentCards(ArrayList<Pair<Integer, String>> input) {
+    public void sendCurrentCards(ArrayList<Integer> intergerList, ArrayList<String> stringList) {
         try {
-            messages.put(messageCreator.generateCurrentCardsMessage(input));
+            messages.put(messageCreator.generateCurrentCardsMessage(intergerList, stringList));
         } catch (Exception e) {
             e.printStackTrace();
         }

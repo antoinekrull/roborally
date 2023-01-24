@@ -4,6 +4,7 @@ import org.javatuples.Pair;
 import server.connection.PlayerList;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Antoine, Firas
@@ -34,7 +35,7 @@ public class MessageBody {
     private int register;
     private boolean filled;
     private int[] clientIDs;
-    private ArrayList<Pair<Integer, String>> activeCards;
+    private ArrayList<ArrayList<Object>> activeCards = new ArrayList<ArrayList<Object>>();
     private String newCard;
     private String rotation;
     private String type;
@@ -226,12 +227,18 @@ public class MessageBody {
         this.clientIDs = clientIDs;
     }
 
-    public ArrayList<Pair<Integer, String>> getActiveCards() {
+    public ArrayList<ArrayList<Object>> getActiveCards() {
         return activeCards;
     }
 
-    public void setActiveCards(ArrayList<Pair<Integer, String>> activeCards) {
-        this.activeCards = activeCards;
+    public void setActiveCards(ArrayList<Integer> intergerList, ArrayList<String> stringList) {
+        if(intergerList.size() == stringList.size()) {
+            for(int i = 0; i < intergerList.size(); i++) {
+                activeCards.get(i).add(new ArrayList<Object>() {});
+                activeCards.get(i).add(intergerList.get(i));
+                activeCards.get(i).add(stringList.get(i));
+            }
+        }
     }
 
     public String getNewCard() {

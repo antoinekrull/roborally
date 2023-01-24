@@ -7,6 +7,7 @@ import game.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
+import org.javatuples.Tuple;
 import server.connection.PlayerList;
 import server.connection.Server;
 
@@ -59,6 +60,13 @@ public class Game implements Runnable {
     }
     public Board getBoard() {
         return board;
+    }
+    public PlayerList getPlayerList() {
+        return playerList;
+    }
+
+    public Player getPlayerFromPlayerListById(int id) {
+        return playerList.getPlayerFromList(id);
     }
 
     public void setBoard(Board board) {
@@ -148,15 +156,21 @@ public class Game implements Runnable {
 
     private void applyPushPanelEffects() throws Exception {
         for (int i = 0; i < playerList.size(); i++) {
-            if((pushPanelInTile(Objects.requireNonNull(board.getTile(playerList.get(i).getRobot().getCurrentPosition()))).getValue0())){
-                int index = pushPanelInTile(Objects.requireNonNull(board.getTile(playerList.get(i).getRobot().getCurrentPosition()))).getValue1();
-                if(((PushPanelTile) board.getTile(playerList.get(i).getRobot().getCurrentPosition()).get(index))
-                        .getActiveRegisterList().contains(currentRegister)) {
-                    applyTileEffects(Objects.requireNonNull(board.getTile(playerList.get(i).getRobot().getCurrentPosition())), playerList.get(i));
-                    for(PitTile pitTile: board.getPitList()) {
-                        if(pitTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
-                            reboot(playerList.get(i));
-                        }
+            for (PushPanelTile pushPanelTile : board.getPushPanelList()) {
+                //checks if any robos on pushPanel
+                if (pushPanelTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
+                    //checks if pushpanel would be active in current register
+                    if (pushPanelTile.getActiveRegisterList().contains(currentRegister)) {
+                        logger.debug(3);
+                        //activates effect of pushpanel
+                        applyTileEffects(board.getTile(playerList.get(i).getRobot().getCurrentPosition()), playerList.get(i));
+                        logger.debug(4);
+                    }
+                }
+                //pit check
+                for (PitTile pitTile : board.getPitList()) {
+                    if (pitTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
+                        reboot(playerList.get(i));
                     }
                 }
             }
@@ -169,19 +183,6 @@ public class Game implements Runnable {
         }
     }
 
-    private Pair<Boolean, Integer> pushPanelInTile(ArrayList<Tile> tileList) {
-        boolean result = false;
-        int index= -1;
-        if(tileList.size() == 1) {
-            result = tileList.get(0) instanceof PushPanelTile;
-            if(result){index =0;}
-        } else {
-            result = tileList.get(0) instanceof PushPanelTile || tileList.get(1) instanceof PushPanelTile;
-            if(tileList.get(0) instanceof PushPanelTile){index = 0;}
-            else if(tileList.get(1) instanceof PushPanelTile){index = 1;}
-        }
-        return new Pair<>(result, index);
-    }
 
     private void determinePriority() {
         Pair<Integer, Integer> antennaPosition = board.getAntenna().getPosition();
@@ -288,11 +289,12 @@ public class Game implements Runnable {
                     // for testing purposes
                     unreadyPlayers.get(i).printRegisters();
                     logger.info("Time ran through");
+                    server.sendTimerEnded(playerList.getUnreadyPlayers());
+                    playerList.setPlayerReadiness(true);
                 }
             }
         };
         timer.schedule(timerTask, 30000);
-        server.sendTimerEnded(playerList.getUnreadyPlayers());
     }
 
     public GamePhase getCurrentGamePhase() {
@@ -374,19 +376,24 @@ public class Game implements Runnable {
         server.sendActivePhase(3);
         try {
             Thread.sleep(100);
-        ArrayList<Pair<Integer, String>> dataList = new ArrayList<>();
-        Pair<Integer, String> dataPoint;
+        ArrayList<Integer> intList = new ArrayList<>();
+        int intData;
+        ArrayList<String> stringList = new ArrayList<>();
+        String stringData;
         while(!playerList.allPlayerRegistersActivated()) {
             for(int i = 0; i < playerList.size(); i++) {
                 logger.debug("Activating registers");
-                dataPoint = new Pair<>(playerList.get(i).getId(), playerList.get(i).getCardFromRegister(currentRegister).getCardName());
-                dataList.add(dataPoint);
+                intData = playerList.get(i).getId();
+                stringData = playerList.get(i).getCardFromRegister(currentRegister).getCardName();
+                intList.add(intData);
+                stringList.add(stringData);
                 activateRegister(playerList.get(i));
                 playerList.get(i).setStatusRegister(true, currentRegister);
             }
-            server.sendCurrentCards(dataList);
+            server.sendCurrentCards(intList, stringList);
             Thread.sleep(100);
-            dataList.clear();
+            intList.clear();
+            stringList.clear();
             currentRegister++;
             Thread.sleep(1000);
             if(playerList.robotNeedsReboot()) {
