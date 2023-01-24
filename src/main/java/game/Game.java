@@ -38,6 +38,7 @@ public class Game implements Runnable {
     private Server server;
     private final Logger logger = LogManager.getLogger(Game.class);
     private String jsonMap;
+    private String currentMap;
     private boolean gameIsRunning = true;
 
     private Game(){
@@ -49,6 +50,9 @@ public class Game implements Runnable {
             INSTANCE = new Game();
         }
         return INSTANCE;
+    }
+    public void setCurrentMap(String currentMap) {
+        this.currentMap = currentMap;
     }
     public void setServerForPlayers() {
         for(int i = 0; i < playerList.size(); i++) {
@@ -311,6 +315,7 @@ public class Game implements Runnable {
             case "Deathtrap" -> {
                 for(int i = 0; i < playerList.size(); i++) {
                     playerList.get(i).getRobot().setDirection(Direction.WEST);
+                    System.out.println();
                 }
             }
             case "DizzyHighway", "ExtraCrispy", "LostBearings", "Twister" -> {
@@ -341,6 +346,7 @@ public class Game implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        setStartDirectionForRobot(currentMap);
         setUpDone = true;
     }
 
@@ -386,7 +392,7 @@ public class Game implements Runnable {
         try {
             Thread.sleep(100);
         ArrayList<Card> cardList = new ArrayList<>();
-        while(!playerList.allPlayerRegistersActivated()) {
+        while(currentRegister<5) {
             for(int i = 0; i < playerList.size(); i++) {
                 logger.debug("Activating registers");
                 playerList.get(i).getCardFromRegister(currentRegister).setClientId(playerList.get(i).getId());

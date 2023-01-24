@@ -205,9 +205,9 @@ public class HandleClient implements Runnable{
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
                         this.jsonMap = content.lines().collect(Collectors.joining());
                         game.setJsonMap(jsonMap);
+                        game.setCurrentMap(map);
                         game.createBoard(jsonMap);
                         CollisionCalculator.createBoard(jsonMap);
-                        game.setStartDirectionForRobot(map);
                         server.messages.put(messageCreator.generateMapSelectedMessage(map));
                         //write(messageCreator.generateMapSelectedMessage(map));
 
