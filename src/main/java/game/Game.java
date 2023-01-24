@@ -293,6 +293,7 @@ public class Game implements Runnable {
                 }
             }
         };
+        //TODO: MAKE THIS 30000 AGAIN!!!!
         timer.schedule(timerTask, 3000);
     }
 
