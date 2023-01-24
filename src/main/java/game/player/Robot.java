@@ -49,7 +49,7 @@ public class Robot {
             this.currentPosition = currentPosition.setAt0(12);
         } else if(currentPosition.getValue0() < 0) {
             this.currentPosition = currentPosition.setAt0(0);
-        } else if(currentPosition.getValue1() > 10) {
+        } else if(currentPosition.getValue1() > 9) {
             this.currentPosition = currentPosition.setAt1(9);
         } else if(currentPosition.getValue1() < 0) {
             this.currentPosition = currentPosition.setAt1(0);
