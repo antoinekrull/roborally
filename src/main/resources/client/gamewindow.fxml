@@ -48,19 +48,19 @@
                            <children>
                       <GridPane fx:id="gameboard" alignment="CENTER" gridLinesVisible="true" StackPane.alignment="CENTER_LEFT">
                         <columnConstraints>
-                          <ColumnConstraints fx:id="gameboardColumn" halignment="CENTER" hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
+                          <ColumnConstraints fx:id="gameboardColumn" fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
                         </columnConstraints>
                         <rowConstraints>
                           <RowConstraints fillHeight="false" vgrow="NEVER" />
