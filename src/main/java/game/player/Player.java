@@ -136,6 +136,11 @@ public class Player {
         hand.remove(index);
         return discardedCard;
     }
+    public void discardEntireHand() {
+        for(int i = hand.size()-1; i > 0; i--) {
+            hand.remove(i);
+        }
+    }
     public void refillDeck(){
         robot.setDeck(personalDiscardPile);
         robot.getDeck().shuffleDeck();
@@ -198,17 +203,16 @@ public class Player {
     //if timer runs out all unfilled registers of player get filled with random cards
     //TODO: Fix this
     public String[] fillRegisterWithRandomCards() {
-        Random random = new Random();
+        discardEntireHand();
         String[] cardNames = new String[getEmptyRegisterAmount()];
         int iterator = 0;
-        for(int x = 0; x < getEmptyRegisterAmount(); x++) {
-            for(int y = 0; y < cardRegister.length; y++) {
-                if(cardRegister[y] == null) {
-                    if(hand.size() > 0) {
-                        cardRegister[y] = discard(random.nextInt(hand.size()));
-                        cardNames[iterator++] = cardRegister[y].getCard();
-                    }
-                    logger.info("Hand too empty to fill all registers");
+        for(int y = 0; y < cardRegister.length; y++) {
+            if (cardRegister[y] == null) {
+                if (hand.size() > 0) {
+                    drawCard();
+                    cardRegister[y] = discard(0);
+                    cardNames[iterator++] = cardRegister[y].getCard();
+
                 }
             }
         }

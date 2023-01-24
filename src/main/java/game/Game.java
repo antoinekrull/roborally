@@ -27,6 +27,7 @@ public class Game implements Runnable {
     public static TrojanDeck trojanDeck = new TrojanDeck();
     public static WormDeck wormDeck = new WormDeck();
     public static int currentRegister = 0;
+    private boolean timerIsRunning=false;
     private LinkedList<Integer> readyList = new LinkedList<>();
     private final String[] maps = {"DizzyHighway", "ExtraCrispy", "DeathTrap", "LostBearings", "Twister"};
     private static Game INSTANCE;
@@ -272,6 +273,8 @@ public class Game implements Runnable {
     }
 
     private void runTimer() {
+        timerIsRunning=true;
+        System.out.println("Timer is running");
         server.sendTimerStarted();
         TimerTask timerTask = new TimerTask() {
             @Override
@@ -290,7 +293,7 @@ public class Game implements Runnable {
                 }
             }
         };
-        timer.schedule(timerTask, 30000);
+        timer.schedule(timerTask, 3000);
     }
 
     public GamePhase getCurrentGamePhase() {
@@ -350,6 +353,7 @@ public class Game implements Runnable {
     }
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
         server.sendActivePhase(2);
+        timerIsRunning = false;
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -363,10 +367,13 @@ public class Game implements Runnable {
         playerList.setPlayersPlaying(true);
         while(!playerList.playersAreReady()) {
             Thread.sleep(3000);
-            if(playerList.getAmountOfReadyPlayers() >= 1) {
-                runTimer();
+            if (playerList.getAmountOfReadyPlayers() <= 1) {
+                if(!timerIsRunning) {
+                    runTimer();
+                }
             }
         }
+        timerIsRunning=false;
     }
     private void runActivationPhase() throws Exception {
         server.sendActivePhase(3);
