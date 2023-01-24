@@ -1,5 +1,6 @@
 package client.connection;
 
+import client.player.ClientPlayer;
 import client.player.ClientPlayerList;
 import client.player.RegisterInformation;
 import communication.JsonSerializer;
@@ -9,21 +10,26 @@ import communication.MessageType;
 import game.board.Board;
 import game.card.Card;
 import game.player.Robot;
-import client.player.ClientPlayer;
-import javafx.application.Platform;
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.javatuples.Pair;
-
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.javatuples.Pair;
 
 /**
  *
@@ -338,15 +344,20 @@ public class Client {
                             Client.this.activePlayer.set(true);
                         }
                         if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
-                            int clientID = message.getMessageBody().getClientID();
-                            if (Client.this.userIDProperty().get() == clientID) {
-                                Client.this.setX(message.getMessageBody().getX());
-                                Client.this.setY(message.getMessageBody().getY());
+                            int clientRobot = message.getMessageBody().getClientID();
+                            if (Client.this.userIDProperty().get() == clientRobot) {
+                                 Client.this.setX(message.getMessageBody().getX());
+                                 Client.this.setY(message.getMessageBody().getY());
+                                 System.out.println("X= " + message.getMessageBody().getX() + " | Y= " + message.getMessageBody().getY());
+                                 System.out.println("My Robot");
                             }
                             else {
+                                int robotIDclient = clientPlayerList.getPlayer(clientRobot).getRobot().getFigure();
                                 Client.this.setMovementX(message.getMessageBody().getX());
                                 Client.this.setMovementY(message.getMessageBody().getY());
-                                Client.this.setRobotID(message.getMessageBody().getClientID());
+                                Client.this.setRobotID(robotIDclient);
+                                System.out.println("X = " + message.getMessageBody().getX() + " | Y = " + message.getMessageBody().getY());
+                                System.out.println("RobotID in Client: : " + robotIDclient);
                             }
                         }
                         if (message.getMessageType().equals(MessageType.GameStarted)) {
@@ -357,6 +368,13 @@ public class Client {
 
                         }
                         if (message.getMessageType().equals(MessageType.YourCards)) {
+                            String[] cardsInHand = message.getMessageBody().getCardsInHand();
+                            String cards = "";
+                            for(int i = 0; i < cardsInHand.length; i++) {
+                                String temp = cards;
+                                cards = temp + " " + cardsInHand[i];
+                            }
+                            System.out.println(cards);
                             Client.this.myCards.setAll(message.getMessageBody().getCardsInHand());
                         }
                         if (message.getMessageType().equals(MessageType.NotYourCards)) {
@@ -377,15 +395,20 @@ public class Client {
                             }
                         }
                         if (message.getMessageType().equals(MessageType.Movement)) {
-                            int clientID = message.getMessageBody().getClientID();
-                            if (Client.this.userIDProperty().get() == clientID) {
+                            int clientRobot = message.getMessageBody().getClientID();
+                            if (Client.this.userIDProperty().get() == clientRobot) {
                                 Client.this.setX(message.getMessageBody().getX());
                                 Client.this.setY(message.getMessageBody().getY());
+                                System.out.println("X= " + message.getMessageBody().getX() + " | Y= " + message.getMessageBody().getY());
+                                System.out.println("My Robot");
                             }
                             else {
+                                int robotIDclient = clientPlayerList.getPlayer(clientRobot).getRobot().getFigure();
                                 Client.this.setMovementX(message.getMessageBody().getX());
                                 Client.this.setMovementY(message.getMessageBody().getY());
-                                Client.this.setRobotID(message.getMessageBody().getClientID());
+                                Client.this.setRobotID(robotIDclient);
+                                System.out.println("X = " + message.getMessageBody().getX() + " | Y = " + message.getMessageBody().getY());
+                                System.out.println("RobotID in Client: : " + robotIDclient);
                             }
                         }
                         if (message.getMessageType().equals(MessageType.CardSelected)) {

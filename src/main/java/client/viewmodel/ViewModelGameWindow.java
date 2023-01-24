@@ -342,6 +342,7 @@ public class ViewModelGameWindow {
 
     public void robotSetPosition(int x, int y, int robot) {
         Platform.runLater(() ->{
+            System.out.println("RobotID in viewModel: " + robot);
         InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + robot + "_bunt.png");
         Image im = new Image(input);
         ImageView img = new ImageView(im);
@@ -532,6 +533,7 @@ public class ViewModelGameWindow {
     }
 
     public void fillHandCards () {
+        System.out.println("Filling your cards");
         for (int i = 0; i < handGrid.getChildren().size(); i++) {
             Pane pane = (Pane) handGrid.getChildren().get(i);
             switch (handCardsUI.get(i)) {

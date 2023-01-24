@@ -32,16 +32,16 @@ public class ModelGame {
     private SimpleStringProperty errorMessage;
     private ObservableList<Integer> readyList;
     private NotifyChangeSupport notifyChangeSupport;
-    private IntegerProperty x;
-    private IntegerProperty y;
+    private SimpleIntegerProperty x;
+    private SimpleIntegerProperty y;
     private boolean yChanged;
     private boolean xChanged;
-    private IntegerProperty movementX;
-    private IntegerProperty movementY;
-    private IntegerProperty playerID;
+    private SimpleIntegerProperty movementX;
+    private SimpleIntegerProperty movementY;
+    private SimpleIntegerProperty robotID;
     private boolean movementXChanged;
     private boolean movementYChanged;
-    private boolean playerIDChanged;
+    private boolean robotIDChanged;
     private BooleanProperty timer;
     private BooleanProperty activePlayer;
     private ObservableList<String> maps;
@@ -61,7 +61,7 @@ public class ModelGame {
         this.yChanged = false;
         this.movementYChanged = false;
         this.movementXChanged = false;
-        this.playerIDChanged = false;
+        this.robotIDChanged = false;
         this.activePlayer = new SimpleBooleanProperty(false);
         this.activePlayer.bind(client.activePlayerProperty());
         this.robotProperty = new SimpleIntegerProperty();
@@ -130,7 +130,7 @@ public class ModelGame {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 movementXChanged = true;
-                check_X_Y_ID();
+                check_x_y_id();
             }
         });
 
@@ -140,16 +140,17 @@ public class ModelGame {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 movementYChanged = true;
-                check_X_Y_ID();
+                check_x_y_id();
             }
         });
 
-        this.playerID = new SimpleIntegerProperty();
-        playerID.addListener(new ChangeListener<Number>() {
+        this.robotID = new SimpleIntegerProperty();
+        robotID.bind(client.robotIDProperty());
+        robotID.addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                playerIDChanged = true;
-                check_X_Y_ID();
+                robotIDChanged = true;
+                check_x_y_id();
             }
         });
     }
@@ -232,11 +233,11 @@ public class ModelGame {
     }
 
     public int getPlayerID() {
-        return playerID.get();
+        return robotID.get();
     }
 
     public IntegerProperty playerIDProperty() {
-        return playerID;
+        return robotID;
     }
 
     public boolean isMovementXChanged() {
@@ -248,19 +249,19 @@ public class ModelGame {
     }
 
     public boolean isPlayerIDChanged() {
-        return playerIDChanged;
+        return robotIDChanged;
     }
 
     public BooleanProperty activePlayerProperty() {
         return activePlayer;
     }
 
-    public void check_X_Y_ID() {
-        if (movementXChanged && movementYChanged && playerIDChanged) {
-            notifyChangeSupport.robotSetPosition(movementX.get(), movementY.get(), playerID.get());
+    public void check_x_y_id() {
+        if (movementXChanged && movementYChanged && robotIDChanged) {
+            notifyChangeSupport.robotSetPosition(movementX.get(), movementY.get(), robotID.get());
             movementYChanged = false;
             movementXChanged = false;
-            playerIDChanged = false;
+            robotIDChanged = false;
         }
     }
 
