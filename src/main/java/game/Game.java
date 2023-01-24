@@ -79,9 +79,6 @@ public class Game implements Runnable {
     public Player getActivePlayer() {
         return activePlayer;
     }
-    public void setPlayerList(PlayerList playerList) {
-        Game.playerList = playerList;
-    }
 
     private void applyAllTileEffects() throws Exception {
         try {
@@ -389,7 +386,7 @@ public class Game implements Runnable {
         while(currentRegister < 5) {
             for(int i = 0; i < playerList.size(); i++) {
                 logger.debug("Activating registers");
-                playerList.get(i).getCardFromRegister(currentRegister).setClientId(playerList.get(i).getId());
+                playerList.get(i).getCardFromRegister(currentRegister).setClientID(playerList.get(i).getId());
                 cardList.add(playerList.get(i).getCardFromRegister(currentRegister));
                 activateRegister(playerList.get(i));
                 //playerList.get(i).setStatusRegister(true, currentRegister);
@@ -435,8 +432,6 @@ public class Game implements Runnable {
                     Thread.sleep(100);
                 //stops the game thread
                 gameIsRunning = false;
-
-
             }
         */
         } } catch (InterruptedException e) {
@@ -509,7 +504,6 @@ public class Game implements Runnable {
             logger.warn("This register was not activated because you're Robot can not move past this point" + e);
         }
     }
-    public String[] getMaps(){return this.maps;}
     public void addReady(int clientID) {
         readyList.add(clientID);
         if(clientID == getFirstReadyID()){
@@ -546,9 +540,6 @@ public class Game implements Runnable {
         else {
             return -1;
         }
-    }
-    public LinkedList<Integer> getReadyList() {
-        return readyList;
     }
 
     /**

@@ -58,14 +58,15 @@ public class ConveyorBeltTile extends Tile {
     public void applyEffect(Player player) throws Exception {
         player.getRobot().setDirection(this.directionOut);
         Pair<Integer, Integer> newPosition = new Pair<>(player.getRobot().getCurrentPosition().getValue0(), player.getRobot().getCurrentPosition().getValue1());
+        Pair<Integer, Integer> tempPosition;
         switch(this.directionOut){
-            case NORTH -> newPosition.setAt1(newPosition.getValue1() + velocity);
-            case SOUTH -> newPosition.setAt1(newPosition.getValue1() - velocity);
-            case EAST -> newPosition.setAt0(newPosition.getValue0() + velocity);
-            case WEST -> newPosition.setAt0(newPosition.getValue0() - velocity);
+            case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + velocity);
+            case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - velocity);
+            case EAST -> tempPosition = newPosition.setAt0(newPosition.getValue0() + velocity);
+            case WEST -> tempPosition = newPosition.setAt0(newPosition.getValue0() - velocity);
             default -> throw(new Exception("Invalid direction"));
         }
-        player.getRobot().setCurrentPosition(newPosition);
+        player.getRobot().setCurrentPosition(tempPosition);
     }
     @Override
     public void makeImage(GridPane tiles) {

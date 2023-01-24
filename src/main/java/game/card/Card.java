@@ -13,18 +13,18 @@ import game.player.Player;
 public abstract class Card {
 
 
-    int clientId;
+    private int clientID;
     private String card;
     private boolean isActivated = false;
     protected boolean isDamageCard = false;
     private String cardEffect;
     protected CardType cardType;
 
-    public int getClientId() {
-        return clientId;
+    public int getClientID() {
+        return clientID;
     }
-    public void setClientId(int clientId) {
-        this.clientId = clientId;
+    public void setClientID(int clientID) {
+        this.clientID = clientID;
     }
     public CardType getCardType() {
         return cardType;
