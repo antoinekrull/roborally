@@ -27,7 +27,7 @@ public class Player {
     private boolean isReady;
     private ArrayList<Card> hand;
     private Card[] cardRegister = new Card[5];
-    private boolean[] statusRegister = new boolean[5];
+    //private boolean[] statusRegister = new boolean[5];
     private ProgrammingDeck personalDiscardPile;
     private Robot robot;
     private final Logger logger = LogManager.getLogger(Player.class);
@@ -93,20 +93,20 @@ public class Player {
     public void setCardRegister(Card card, int index) {
         cardRegister[index] = card;
     }
-    public boolean[] getStatusRegister() {
-        return statusRegister;
-    }
-    public void setStatusRegister(boolean setter, int index) {
-        statusRegister[index] = setter;
-    }
+//    public boolean[] getStatusRegister() {
+//        return statusRegister;
+//    }
+//    public void setStatusRegister(boolean setter, int index) {
+//        statusRegister[index] = setter;
+//    }
     public ProgrammingDeck getPersonalDiscardPile() {
         return personalDiscardPile;
     }
-    public void setStatusRegister(boolean setAll) {
-        for(boolean status: statusRegister ){
-            status = setAll;
-        }
-    }
+//    public void setStatusRegister(boolean setAll) {
+//        for(boolean status: statusRegister ){
+//            status = setAll;
+//        }
+//    }
     public void setServerForPlayerAndRobot(Server server) {
         this.server = server;
         robot.setServer(server);
@@ -186,6 +186,7 @@ public class Player {
         }
     }
 
+    /*
     public boolean allRegistersActivated() {
         boolean result = false;
         int registerCount = 0;
@@ -199,6 +200,7 @@ public class Player {
         }
         return result;
     }
+    */
 
     //if timer runs out all unfilled registers of player get filled with random cards
     //TODO: Fix this
@@ -243,7 +245,7 @@ public class Player {
                 cardRegister[i] = null;
             }
             setCardRegister(null, i);
-            setStatusRegister(false, i);
+            //setStatusRegister(false, i);
         }
     }
     @Override

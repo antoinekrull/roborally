@@ -129,19 +129,19 @@ public class PlayerList extends ArrayList implements Iterator<Player> {
         return playerList.get(index);
     }
 
-    public boolean allPlayerRegistersActivated() {
-        boolean result = false;
-        int count = 0;
-        for(int i = 0; i < playerList.size(); i++) {
-            if(playerList.get(i).allRegistersActivated()) {
-                count++;
-            }
-        }
-        if(count == playerList.size()) {
-            result = true;
-        }
-        return result;
-    }
+//    public boolean allPlayerRegistersActivated() {
+//        boolean result = false;
+//        int count = 0;
+//        for(int i = 0; i < playerList.size(); i++) {
+//            if(playerList.get(i).allRegistersActivated()) {
+//                count++;
+//            }
+//        }
+//        if(count == playerList.size()) {
+//            result = true;
+//        }
+//        return result;
+//    }
 
     public PlayerList getUnreadyPlayers() {
         PlayerList unreadyPlayers = new PlayerList();
