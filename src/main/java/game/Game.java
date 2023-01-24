@@ -186,14 +186,11 @@ public class Game implements Runnable {
 
     private void determinePriority() {
         Pair<Integer, Integer> antennaPosition = board.getAntenna().getPosition();
-        //TODO: make sort sort through the playerlist already in the server, to determine priority
-        /*
-        playerList.sort((p1, p2) -> {
+        playerList.getPlayerList().sort((p1, p2) -> {
             double dist1 = Math.sqrt(Math.pow(p1.getRobot().getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(p1.getRobot().getCurrentPosition().getValue1() - antennaPosition.getValue1(), 2));
             double dist2 = Math.sqrt(Math.pow(p2.getRobot().getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(p2.getRobot().getCurrentPosition().getValue1(), 2));
             return Double.compare(dist1, dist2);
         });
-         */
     }
 
     private void computeRobotLaserPositions(){
