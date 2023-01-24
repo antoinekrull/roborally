@@ -386,13 +386,13 @@ public class Game implements Runnable {
         try {
             Thread.sleep(100);
         ArrayList<Card> cardList = new ArrayList<>();
-        while(!playerList.allPlayerRegistersActivated()) {
+        while(currentRegister < 5) {
             for(int i = 0; i < playerList.size(); i++) {
                 logger.debug("Activating registers");
                 playerList.get(i).getCardFromRegister(currentRegister).setClientId(playerList.get(i).getId());
                 cardList.add(playerList.get(i).getCardFromRegister(currentRegister));
                 activateRegister(playerList.get(i));
-                playerList.get(i).setStatusRegister(true, currentRegister);
+                //playerList.get(i).setStatusRegister(true, currentRegister);
             }
             server.sendCurrentCards(cardList);
             Thread.sleep(100);
@@ -583,10 +583,6 @@ public class Game implements Runnable {
         }
         return null;
     }
-    
-    public String getJsonMap() {
-        return jsonMap;
-    }
 
     public void setJsonMap(String jsonMap) {
         this.jsonMap = jsonMap;
@@ -621,8 +617,9 @@ public class Game implements Runnable {
     }
 
     public void reboot(Player player) {
-        player.addCard(spamDeck.popCardFromDeck());
-        player.addCard(spamDeck.popCardFromDeck());
+        player.getPersonalDiscardPile().addCard(spamDeck.popCardFromDeck());
+        player.getPersonalDiscardPile().addCard(spamDeck.popCardFromDeck());
+        player.discardEntireHand();
         player.emptyAllCardRegisters();
         player.getRobot().setCurrentPosition(board.getRebootTile().getPosition());
         server.sendReboot(player);

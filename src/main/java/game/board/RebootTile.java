@@ -36,22 +36,22 @@ public class RebootTile extends Tile {
 
     @Override
     public void applyEffect(Player player) throws Exception {
-        player.getRobot().setCurrentPosition(getPosition());
-        player.getRobot().setDirection(this.direction);
-        player.getRobot().setRebootStatus(true);
-        //take two spam cards and add them to your discard pile
-        player.getPersonalDiscardPile().addCard(spamDeck.popCardFromDeck());
-        player.getPersonalDiscardPile().addCard(spamDeck.popCardFromDeck());
-        //discard all cards in your programming deck, activation is cancelled
-        player.setStatusRegister(true);
-        for(int i = 0; i < 5; i++){
-            player.getPersonalDiscardPile().addCard(player.getCardFromRegister(i));
-        }
-        //discard all cards in hand
-        while(player.getHand().size()>0){
-            player.getPersonalDiscardPile().addCard(player.getHand().get(0));
-            player.getHand().remove(0);
-        }
+//        player.getRobot().setCurrentPosition(getPosition());
+//        player.getRobot().setDirection(this.direction);
+//        player.getRobot().setRebootStatus(true);
+//        //take two spam cards and add them to your discard pile
+//        player.getPersonalDiscardPile().addCard(spamDeck.popCardFromDeck());
+//        player.getPersonalDiscardPile().addCard(spamDeck.popCardFromDeck());
+//        //discard all cards in your programming deck, activation is cancelled
+//        player.setStatusRegister(true);
+//        for(int i = 0; i < 5; i++){
+//            player.getPersonalDiscardPile().addCard(player.getCardFromRegister(i));
+//        }
+//        //discard all cards in hand
+//        while(player.getHand().size()>0){
+//            player.getPersonalDiscardPile().addCard(player.getHand().get(0));
+//            player.getHand().remove(0);
+//        }
     }
 
 }
