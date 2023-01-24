@@ -12,20 +12,28 @@ import game.player.Player;
  */
 public abstract class Card {
 
-    private String cardName;
+
+    int clientId;
+    private String card;
     private boolean isActivated = false;
     protected boolean isDamageCard = false;
     private String cardEffect;
     protected CardType cardType;
 
+    public int getClientId() {
+        return clientId;
+    }
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
+    }
     public CardType getCardType() {
         return cardType;
     }
-    public String getCardName() {
-        return cardName;
+    public String getCard() {
+        return card;
     }
-    public void setCardName(String newCardName) {
-        this.cardName = newCardName;
+    public void setCard(String newCardName) {
+        this.card = newCardName;
     }
     public String getCardEffect() {
         return cardEffect;

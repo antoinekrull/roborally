@@ -6,7 +6,7 @@ public class PowerUpCard extends Card{
 
     public PowerUpCard(){
         cardType = CardType.PROGRAMMING_CARD;
-        setCardName("PowerUp");
+        setCard("PowerUp");
     }
 
     @Override

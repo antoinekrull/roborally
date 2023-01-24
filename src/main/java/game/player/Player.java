@@ -1,7 +1,6 @@
 package game.player;
 
 import game.Game;
-import game.board.Direction;
 import game.card.AgainCard;
 import game.card.Card;
 import game.card.CardType;
@@ -207,7 +206,7 @@ public class Player {
                 if(cardRegister[y] == null) {
                     if(hand.size() > 0) {
                         cardRegister[y] = discard(random.nextInt(hand.size()));
-                        cardNames[iterator++] = cardRegister[y].getCardName();
+                        cardNames[iterator++] = cardRegister[y].getCard();
                     }
                     logger.info("Hand too empty to fill all registers");
                 }
@@ -229,7 +228,7 @@ public class Player {
     public void emptyAllCardRegisters() {
         for(int i = 0; i < cardRegister.length; i++) {
             if(cardRegister[i].isDamageCard()) {
-                switch (cardRegister[i].getCardName()) {
+                switch (cardRegister[i].getCard()) {
                     case "Trojan Horse" -> Game.trojanDeck.addCard(cardRegister[i]);
                     case "Worm" -> Game.wormDeck.addCard(cardRegister[i]);
                     case "Spam" -> Game.spamDeck.addCard(cardRegister[i]);
@@ -249,7 +248,7 @@ public class Player {
     //for testing purposes
     public void printHand() {
         for(int i = 0; i < hand.size(); i++) {
-            logger.debug(hand.get(i).getCardName());
+            logger.debug(hand.get(i).getCard());
         }
     }
 
@@ -258,7 +257,7 @@ public class Player {
             if(cardRegister[i] == null) {
                 logger.debug("null");
             } else {
-                logger.info(cardRegister[i].getCardName());
+                logger.info(cardRegister[i].getCard());
             }
         }
     }
@@ -266,7 +265,7 @@ public class Player {
     public boolean cardNameInHand(String cardName) {
         boolean result = false;
         for(int i = 0; i < hand.size(); i++) {
-            if(cardName.equals(hand.get(i).getCardName())) {
+            if(cardName.equals(hand.get(i).getCard())) {
                 result = true;
             }
         }
@@ -277,7 +276,7 @@ public class Player {
         int result = -1;
         Object cardClass = card.getClass();
         for(int i = 0; i < hand.size(); i++) {
-            if(hand.get(i).getCardName().equals(card.getCardName())) {
+            if(hand.get(i).getCard().equals(card.getCard())) {
                 result = i;
                 break;
             }
@@ -289,7 +288,7 @@ public class Player {
         int result = -1;
         Object cardClass = cardName.getClass();
         for(int i = 0; i < hand.size(); i++) {
-            if(hand.get(i).getCardName().equals(cardName)) {
+            if(hand.get(i).getCard().equals(cardName)) {
                 result = i;
                 break;
             }

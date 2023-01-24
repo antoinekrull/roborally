@@ -7,7 +7,6 @@ import game.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
-import org.javatuples.Tuple;
 import server.connection.PlayerList;
 import server.connection.Server;
 
@@ -373,24 +372,18 @@ public class Game implements Runnable {
         server.sendActivePhase(3);
         try {
             Thread.sleep(100);
-        ArrayList<Integer> intList = new ArrayList<>();
-        int intData;
-        ArrayList<String> stringList = new ArrayList<>();
-        String stringData;
+        ArrayList<Card> cardList = new ArrayList<>();
         while(!playerList.allPlayerRegistersActivated()) {
             for(int i = 0; i < playerList.size(); i++) {
                 logger.debug("Activating registers");
-                intData = playerList.get(i).getId();
-                stringData = playerList.get(i).getCardFromRegister(currentRegister).getCardName();
-                intList.add(intData);
-                stringList.add(stringData);
+                playerList.get(i).getCardFromRegister(currentRegister).setClientId(playerList.get(i).getId());
+                cardList.add(playerList.get(i).getCardFromRegister(currentRegister));
                 activateRegister(playerList.get(i));
                 playerList.get(i).setStatusRegister(true, currentRegister);
             }
-            server.sendCurrentCards(intList, stringList);
+            server.sendCurrentCards(cardList);
             Thread.sleep(100);
-            intList.clear();
-            stringList.clear();
+            cardList.clear();
             currentRegister++;
             Thread.sleep(1000);
             if(playerList.robotNeedsReboot()) {

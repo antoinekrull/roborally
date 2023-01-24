@@ -1,10 +1,8 @@
 package communication;
 
-import org.javatuples.Pair;
-import server.connection.PlayerList;
+import game.card.Card;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Antoine, Firas
@@ -35,9 +33,7 @@ public class MessageBody {
     private int register;
     private boolean filled;
     private int[] clientIDs;
-    //TODO: fix this
-    //private ArrayList<ArrayList<Object>> activeCards = new ArrayList<ArrayList<Object>>();
-    private ArrayList<Object[]> activeCards = new ArrayList<Object[]>();
+    private ArrayList<Card> activeCards = new ArrayList<Card>();
 
     private String newCard;
     private String rotation;
@@ -230,24 +226,13 @@ public class MessageBody {
         this.clientIDs = clientIDs;
     }
 
-    //TODO: Fix this
-    /*
-    public ArrayList<Object[]> getActiveCards() {
+    public ArrayList<Card> getActiveCards() {
         return activeCards;
     }
 
-    public void setActiveCards(ArrayList<Integer> intergerList, ArrayList<String> stringList) {
-        if(intergerList.size() == stringList.size()) {
-            for(int i = 0; i < intergerList.size(); i++) {
-                activeCards.get(i).add(intergerList.get(i));
-                activeCards.get(i).add(intergerList.get(i));
-                activeCards.get(i).add(stringList.get(i));
-            }
-        }
+    public void setActiveCards(ArrayList<Card> cardList) {
+            activeCards = cardList;
     }
-     */
-
-
 
     public String getNewCard() {
         return newCard;

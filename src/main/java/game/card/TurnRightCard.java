@@ -8,7 +8,7 @@ public class TurnRightCard extends Card {
 
     public TurnRightCard(){
         cardType = CardType.PROGRAMMING_CARD;
-        setCardName("TurnRight");
+        setCard("TurnRight");
     }
 
     public Direction getRotationType(){

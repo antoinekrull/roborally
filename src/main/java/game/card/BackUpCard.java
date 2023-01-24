@@ -9,7 +9,7 @@ public class BackUpCard extends Card {
 
     public BackUpCard(){
         cardType = CardType.PROGRAMMING_CARD;
-        setCardName("BackUp");
+        setCard("BackUp");
     }
 
     @Override

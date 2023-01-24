@@ -6,6 +6,7 @@ import communication.MessageType;
 import game.Game;
 import game.board.Direction;
 import game.board.EnergySpaceTile;
+import game.card.Card;
 import game.card.PowerUpCard;
 import game.player.Player;
 import game.player.Robot;
@@ -233,7 +234,7 @@ public class Server {
     public void sendYourCards(Player player) {
         String[] cardsInHand = new String[player.getHand().size()];
         for(int i = 0; i < player.getHand().size(); i++) {
-            cardsInHand[i] = player.getHand().get(i).getCardName();
+            cardsInHand[i] = player.getHand().get(i).getCard();
         }
         try {
             CLIENTS.get(player.getId()).write(messageCreator.generateYourCardsMessage(cardsInHand));
@@ -295,9 +296,9 @@ public class Server {
         }
     }
 
-    public void sendCurrentCards(ArrayList<Integer> intergerList, ArrayList<String> stringList) {
+    public void sendCurrentCards(ArrayList<Card> cardArrayList) {
         try {
-            messages.put(messageCreator.generateCurrentCardsMessage(intergerList, stringList));
+            messages.put(messageCreator.generateCurrentCardsMessage(cardArrayList));
         } catch (Exception e) {
             e.printStackTrace();
         }

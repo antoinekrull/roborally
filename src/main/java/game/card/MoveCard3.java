@@ -9,7 +9,7 @@ public class MoveCard3 extends Card {
 
     public MoveCard3(){
         cardType = CardType.PROGRAMMING_CARD;
-        setCardName("MoveIII");
+        setCard("MoveIII");
     }
 
     public int getVelocity() {

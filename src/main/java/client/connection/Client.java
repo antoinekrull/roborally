@@ -506,7 +506,7 @@ public class Client {
         }
     }
     public void sendPlayCard(Card card) {
-        String sendCard = card.getCardName();
+        String sendCard = card.getCard();
         sendMessageToServer(messageCreator.generatePlayCardMessage(sendCard));
     }
     public void sendStartingPoint(int x, int y) {

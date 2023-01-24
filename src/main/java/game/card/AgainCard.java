@@ -7,7 +7,7 @@ public class AgainCard extends Card{
 
     public AgainCard(){
         cardType = CardType.PROGRAMMING_CARD;
-        setCardName("Again");
+        setCard("Again");
     }
 
     @Override

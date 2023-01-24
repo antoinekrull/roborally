@@ -36,6 +36,7 @@ public class Board {
             return board.get(position.getValue0()).get(position.getValue1());
         } catch(IndexOutOfBoundsException e) {
             logger.warn("This tile is invalid " + e);
+            logger.debug(position.getValue0() + " " + position.getValue1());
             return null;
         }
     }
