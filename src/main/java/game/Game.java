@@ -32,6 +32,7 @@ public class Game implements Runnable {
     private final String[] maps = {"DizzyHighway", "ExtraCrispy", "DeathTrap", "LostBearings", "Twister"};
     private static Game INSTANCE;
     private boolean robotSet = false;
+    private boolean setUpDone;
     private ArrayList<CheckpointTile> checkpointTileArrayList = null;
     private ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
     private Server server;
@@ -340,9 +341,11 @@ public class Game implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        setUpDone = true;
     }
 
     private void runUpgradePhase(){
+        logger.debug("This game is running the Upgrade Phase now");
         server.sendActivePhase(1);
         determinePriority();
         try {
@@ -353,11 +356,8 @@ public class Game implements Runnable {
 
     }
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
+        logger.debug("This game is running the Programming Phase now");
         server.sendActivePhase(2);
-
-        //TODO: Remove this once robo placement is working
-        //playerList.get(0).getRobot().setDirection(Direction.NORTH);
-
         timerIsRunning = false;
         try {
             Thread.sleep(100);
@@ -366,7 +366,6 @@ public class Game implements Runnable {
         }
         for(int i = 0; i < playerList.size(); i++) {
             playerList.get(i).drawFullHand();
-            playerList.get(i).printHand();
             server.sendYourCards(playerList.get(i));
         }
         playerList.setPlayersPlaying(true);
@@ -379,8 +378,10 @@ public class Game implements Runnable {
             }
         }
         timerIsRunning=false;
+        playerList.setPlayerReadiness(false);
     }
     private void runActivationPhase() throws Exception {
+        logger.debug("This game is running the Activation Phase now");
         server.sendActivePhase(3);
         try {
             Thread.sleep(100);
@@ -396,6 +397,7 @@ public class Game implements Runnable {
             server.sendCurrentCards(cardList);
             Thread.sleep(100);
             cardList.clear();
+            logger.debug(currentRegister);
             currentRegister++;
             Thread.sleep(1000);
             if(playerList.robotNeedsReboot()) {
@@ -424,10 +426,11 @@ public class Game implements Runnable {
                 }
             }
             if(checkIfPlayerWon(playerList)){
-                Player winner = determineWhichPlayerWon(playerList);
-                logger.debug("The winning player is: " + winner);
+                //TODO: winner not working
+                //Player winner = determineWhichPlayerWon(playerList);
+                //logger.debug("The winning player is: " + winner);
                 //sends a message to all clients
-                server.sendGameFinished(winner);
+                //server.sendGameFinished(winner);
                     Thread.sleep(100);
                 //stops the game thread
                 gameIsRunning = false;
@@ -648,13 +651,13 @@ public class Game implements Runnable {
                     throw new RuntimeException(e);
                 }
             }
-            runSetupPhase();
-            logger.debug("This game is running the Upgrade Phase now");
+            //TODO: Only run setup phase once
+            if(!setUpDone){
+                runSetupPhase();
+            }
             //runUpgradePhase();
             try {
-                logger.debug("This game is running the Programming Phase now");
                 runProgrammingPhase(playerList);
-                logger.debug("This game is running the Activation Phase now");
                 runActivationPhase();
             } catch (Exception e) {
                 logger.warn("An error occurred :" + e);

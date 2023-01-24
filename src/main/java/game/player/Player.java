@@ -138,7 +138,7 @@ public class Player {
     }
     public void discardEntireHand() {
         for(int i = hand.size()-1; i > 0; i--) {
-            hand.remove(i);
+            discard(i);
         }
     }
     public void refillDeck(){
@@ -240,6 +240,7 @@ public class Player {
                 }
             } else {
                 personalDiscardPile.addCard(cardRegister[i]);
+                cardRegister[i] = null;
             }
             setCardRegister(null, i);
         }
