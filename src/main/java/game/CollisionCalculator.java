@@ -25,20 +25,17 @@ public class CollisionCalculator {
         Pair<Integer, Integer> currentPosition = player.getRobot().getCurrentPosition();
         ArrayList<Tile> currentTile = board.getTile(currentPosition);
         ArrayList<Tile> targetTile = board.getTile(target);
-        System.out.println(target.getValue0() + " / "+ currentPosition.getValue0());
 
         //checks if robot is currently on a tile, if so onWall is true
         for(int i = 0; i < currentTile.size();i++){
             if(currentTile.get(i).getType().equals("Wall")){
                 onWall=true;
-                System.out.println("on wall");
                 onBlocked = getBlockingDirections(currentTile);
             }
         }
         for(int i=0; i<targetTile.size();i++){
             if(targetTile.get(i).getType().equals("Wall")){
                 toWall=true;
-                System.out.println("to wall");
                 toBlocked = getBlockingDirections(targetTile);
             }
         }
@@ -93,7 +90,6 @@ public class CollisionCalculator {
                 }
             }
         }
-        System.out.println(result);
         return result;
     }
 
