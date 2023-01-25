@@ -101,14 +101,14 @@ public class ViewModelGameWindow {
     private ModelChat modelChat;
     private ModelGame modelGame;
     private ModelUser modelUser;
-    private int columnIndex;
+    private NotifyChangeSupport notifyChangeSupport;
+    private final Logger logger = LogManager.getLogger(ViewModelGameWindow.class);
     private PlayerGameInfo playerGameInfo;
     //private ObservableList<String> handCardsUI;
     private Tutorial tutorial;
     private double gameboardTileWidth;
     private double programcardsWidth;
-    private NotifyChangeSupport notifyChangeSupport;
-    private final Logger logger = LogManager.getLogger(ViewModelGameWindow.class);
+    private int columnIndex;
 
     public ViewModelGameWindow() {
         this.modelChat = ModelChat.getInstance();
@@ -250,7 +250,6 @@ public class ViewModelGameWindow {
 
     }
 
-
     public void chatButtonOnAction() {
         /*
         String user = usersChoiceBox.getSelectionModel().getSelectedItem().getUsername();
@@ -351,10 +350,7 @@ public class ViewModelGameWindow {
             int clientID = logMessage.getMessageBody().getClientID();
             for (int i = 0; i < modelGame.getPlayerList().getPlayerList().size(); i++) {
                 if (modelGame.getPlayerList().getPlayerList().get(i).getId() == clientID) {
-                    //TODO: Adjust damage
-                    modelGame.setLife(modelGame.getLife() - 1);
                 }
-
             }
         }
         if (logMessage.getMessageType().equals(MessageType.GameFinished)) {
@@ -400,7 +396,7 @@ public class ViewModelGameWindow {
                 //check imageviews for type of tile
                 if (target.getId() != null && target.getId().equals("StartTile")) {
                     //when starttile, insert img of robot and send coordinates
-                    modelGame.sendStarttileCoordinates(colIndex, rowIndex);
+                    modelGame.sendStartTileCoordinates(colIndex, rowIndex);
                 } else {
                     logger.debug("Is not a starttile");
                 }
@@ -785,10 +781,6 @@ public class ViewModelGameWindow {
 
     public void setRobotAlignment() {
         //set Robot Alignment
-    }
-
-    public void adjustLive() {
-        //take damage
     }
 }
 

@@ -64,13 +64,14 @@ public class ViewModelLobby {
     @FXML
     private Button mapButton;
 
-    private Boolean ready = false;
     private ModelChat modelChat;
     private ModelUser modelUser;
     private ModelGame modelGame;
-
     private NotifyChangeSupport notifyChangeSupport;
     private final Logger logger = LogManager.getLogger(ViewModelLobby.class);
+
+    private Boolean ready = false;
+
 
     public ViewModelLobby() {
         modelChat = ModelChat.getInstance();

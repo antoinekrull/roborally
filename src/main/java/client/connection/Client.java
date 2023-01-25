@@ -57,12 +57,7 @@ public class Client {
     private ObjectProperty<Message> gameLogMessage;
     private IntegerProperty userID;
     private StringProperty errorMessage;
-    private IntegerProperty x;
-    private IntegerProperty y;
-    private IntegerProperty movementX;
-    private IntegerProperty movementY;
     private IntegerProperty robotID;
-    private IntegerProperty life;
     private StringProperty roboterAlignment;
     private boolean prioPlayer = false;
     private BooleanProperty activePlayer;
@@ -96,15 +91,10 @@ public class Client {
         this.clientPlayerList = new ClientPlayerList();
         this.errorMessage = new SimpleStringProperty();
         this.myCards = FXCollections.observableArrayList();
-        this.x = new SimpleIntegerProperty();
-        this.y = new SimpleIntegerProperty();
         this.timer = new SimpleBooleanProperty(false);
-        this.movementX = new SimpleIntegerProperty();
-        this.movementY = new SimpleIntegerProperty();
         this.robotID = new SimpleIntegerProperty();
         this.movement = new SimpleObjectProperty<>();
         this.roboterAlignment = new SimpleStringProperty();
-        this.life = new SimpleIntegerProperty();
         this.gameLogMessage = new SimpleObjectProperty<>();
         this.score = new SimpleIntegerProperty(0);
     }
@@ -182,14 +172,6 @@ public class Client {
         return myCards;
     }
 
-    public int getLife() {
-        return life.get();
-    }
-
-    public int getScore() {
-        return score.get();
-    }
-
     public IntegerProperty scoreProperty() {
         return score;
     }
@@ -198,41 +180,10 @@ public class Client {
         this.score.set(score);
     }
 
-    public IntegerProperty lifeProperty() {
-        return life;
-    }
-
-    public void setLife(int damage) {
-        this.life.set(getLife() - damage);
-    }
-
     public void setMyCards(ObservableList<String> myCards) {
         this.myCards = myCards;
     }
 
-    public int getX() {
-        return x.get();
-    }
-
-    public IntegerProperty xProperty() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x.set(x);
-    }
-
-    public int getY() {
-        return y.get();
-    }
-
-    public IntegerProperty yProperty() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y.set(y);
-    }
 
     public boolean isTimer() {
         return timer.get();
@@ -244,30 +195,6 @@ public class Client {
 
     public void setTimer(boolean timer) {
         this.timer.set(timer);
-    }
-
-    public int getMovementX() {
-        return movementX.get();
-    }
-
-    public IntegerProperty movementXProperty() {
-        return movementX;
-    }
-
-    public void setMovementX(int movementX) {
-        this.movementX.set(movementX);
-    }
-
-    public int getMovementY() {
-        return movementY.get();
-    }
-
-    public IntegerProperty movementYProperty() {
-        return movementY;
-    }
-
-    public void setMovementY(int movementY) {
-        this.movementY.set(movementY);
     }
 
     public Message getMovement() {
@@ -517,13 +444,10 @@ public class Client {
                             int clientID = message.getMessageBody().getClientID();
                             if (userIDProperty().get() == clientID) {
                                 //String[] damageCards = message.getMessageBody().getCard
-                                //int damage = ;
-                                Client.this.setLife(1);
                             }
                             else {
                                 Client.this.setGameLogMessage(message);
                             }
-
                         }
                         if (message.getMessageType().equals(MessageType.PickDamage)) {
                             //TODO: Show menu for picking a damageCard
@@ -578,7 +502,7 @@ public class Client {
     public void sendHelloServerMessage(String group, boolean isAI, String protocolVersion){
         sendMessageToServer(messageCreator.generateHelloServerMessage(group, isAI, protocolVersion));
     }
-    public void sendPlayerValuesMessage(String name, int figure){
+    public void sendPlayerValues(String name, int figure){
         sendMessageToServer(messageCreator.generatePlayerValuesMessage(name, figure));
     }
     public void sendSetStatusMessage(boolean ready){
@@ -613,11 +537,14 @@ public class Client {
     public void sendSelectedDamageCards() {
 
     }
+    public void sendSelectionFinished(int clientID) {
+        sendMessageToServer(messageCreator.generateSelectionFinishedMessage(clientID));
+    }
     public void sendRebootDirection(String direction) {
         sendMessageToServer(messageCreator.generateRebootDirectionMessage(direction));
     }
-    public void sendDiscardSome() {
-
+    public void sendDiscardSome(String[] discardSome) {
+        //sendMessageToServer(messageCreator.generateDiscardSome)
     }
     public void sendRegister(int register) {
         sendMessageToServer(messageCreator.generateChooseRegisterMessage(register));

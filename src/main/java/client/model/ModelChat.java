@@ -24,15 +24,14 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ModelChat {
 
     private static ModelChat modelChat;
+    private Client client;
+    private final Logger logger = LogManager.getLogger(ModelChat.class);
+    private NotifyChangeSupport notifyChangeSupport;
     private StringProperty textfieldProperty;
     private ObjectProperty<Message> chatMessage;
     private ObjectProperty<Message> logMessage;
     private final LinkedBlockingQueue<Message> GAMELOGMESSAGES;
     private final LinkedBlockingQueue<Message> MESSSAGES;
-    private NotifyChangeSupport notifyChangeSupport;
-
-    private Client client;
-    private final Logger logger = LogManager.getLogger(ModelChat.class);
 
 
     private ModelChat() {
