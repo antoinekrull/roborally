@@ -84,17 +84,26 @@ public class Game implements Runnable {
         return activePlayer;
     }
 
+    /*
+
+                     */
     private void applyAllTileEffects() throws Exception {
         try {
-            for(int x = 0; x < board.getConveyorBelt2List().size(); x++) {
-                for(int y = 0; y < playerList.size(); y++) {
-                    if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getConveyorBelt2List().get(x).getPosition())) {
-                        board.getConveyorBelt2List().get(x).applyEffect(playerList.get(y));
-                        //TODO: Add pit check
+            logger.debug("Applying conveyor belt 2 effects");
+            for (int x = 0; x < board.getConveyorBelt2List().size(); x++) {
+                for (int y = 0; y < playerList.size(); y++) {
+                    for (int i = 0; i < board.getConveyorBelt2List().get(x).getVelocity(); i++) {
+                        if (playerList.get(y).getRobot().getCurrentPosition().equals(board.getConveyorBelt2List().get(x).getPosition())) {
+                            board.getConveyorBelt2List().get(x).applyEffect(playerList.get(y));
+                            if(board.getTile(playerList.get(i).getRobot().getCurrentPosition()).get(0) instanceof PitTile) {
+                                reboot(playerList.get(i));
+                            }
+                        }
                     }
                 }
             }
         Thread.sleep(1000);
+            logger.debug("Applying conveyor belt 1 effects");
         for(int x = 0; x < board.getConveyorBelt1List().size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getConveyorBelt1List().get(x).getPosition())) {
@@ -108,6 +117,7 @@ public class Game implements Runnable {
             }
         }
             Thread.sleep(1000);
+            logger.debug("Applying pushpanel effects");
         applyPushPanelEffects();
         for(int x = 0; x < board.getGearTileList().size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
@@ -117,15 +127,18 @@ public class Game implements Runnable {
             }
         }
             Thread.sleep(1000);
+            logger.debug("Applying laser tile effects");
         for(int x = 0; x < board.getLaserTileList().size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getLaserTileList().get(x).getPosition())) {
                     board.getLaserTileList().get(x).applyEffect(playerList.get(y));
+                    drawDamageCards(playerList.get(y));
                 }
             }
         }
             Thread.sleep(1000);
         //robotLaser
+            logger.debug("Applying robot laser effects");
         computeRobotLaserPositions();
         for(int i = 0; i < playerList.size(); i++){
             for(int x = 0; x < robotLaserList.size(); x++) {
@@ -143,7 +156,8 @@ public class Game implements Runnable {
                     drawDamageCards(player);
                 }
             }
-            Thread.sleep(500);
+            Thread.sleep(1000);
+            logger.debug("Applying energy tile effects");
         for(int x = 0; x < board.getEnergySpaceList().size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getEnergySpaceList().get(x).getPosition())) {
@@ -154,6 +168,7 @@ public class Game implements Runnable {
             }
         }
             Thread.sleep(1000);
+            logger.debug("Applying checkpoint effects");
         for(int x = 0; x < board.getCheckpointList().size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getCheckpointList().get(x).getPosition())) {
@@ -284,18 +299,21 @@ public class Game implements Runnable {
                 if(spamDeck.getSize() > 0) {
                     player.addCard(spamDeck.popCardFromDeck());
                     drawnDamageCards[i] = "Spam";
+                    logger.debug("Spam added");
                 } else {
                     ArrayList<String> availableDecks = new ArrayList<>();
                     if(wormDeck.getSize() > 0) {
                         availableDecks.add("Worm");
+                        logger.debug("Worm added");
                     }
                     if(trojanDeck.getSize() > 0) {
                         availableDecks.add("Trojan");
+                        logger.debug("Trojan added");
                     }
                     if(virusDeck.getSize() > 0) {
                         availableDecks.add("Virus");
+                        logger.debug("Virus added");
                     }
-                    //TODO: Schmeißt fehler
                     String[] availablePiles = availableDecks.toArray(String[]::new);
                     server.sendPickDamage(player, availablePiles);
                     Thread.sleep(100);
@@ -399,7 +417,6 @@ public class Game implements Runnable {
         setServerForPlayers();
         try {
             Thread.sleep(100);
-            logger.debug("Running Setup Phase now");
             for (int i = 0; i < readyList.size(); i++) {
                 activePlayer = playerList.getPlayerFromList(readyList.get(i));
                 server.sendCurrentPlayer(readyList.get(i));
@@ -410,7 +427,6 @@ public class Game implements Runnable {
                 this.robotSet = false;
                 Thread.sleep(100);
             }
-            logger.debug("finished setupphase");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -430,7 +446,6 @@ public class Game implements Runnable {
 
     }
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
-        logger.debug("This game is running the Programming Phase now");
         server.sendActivePhase(2);
         timerIsRunning = false;
         try {
@@ -461,17 +476,20 @@ public class Game implements Runnable {
             Thread.sleep(100);
         ArrayList<Card> cardList = new ArrayList<>();
         while(currentRegister < 5) {
+            //TODO: Player cant activate cards while playing
             for(int i = 0; i < playerList.size(); i++) {
-                logger.debug("Activating registers");
                 playerList.get(i).getCardFromRegister(currentRegister).setClientID(playerList.get(i).getId());
                 cardList.add(playerList.get(i).getCardFromRegister(currentRegister));
                 activateRegister(playerList.get(i));
+                if(board.getTile(playerList.get(i).getRobot().getCurrentPosition()).get(0) instanceof PitTile) {
+                    reboot(playerList.get(i));
+                }
                 //playerList.get(i).setStatusRegister(true, currentRegister);
             }
             server.sendCurrentCards(cardList);
             Thread.sleep(100);
             cardList.clear();
-            logger.debug(currentRegister);
+            logger.debug("Current register = " + currentRegister);
             Thread.sleep(1000);
             if(playerList.robotNeedsReboot()) {
                 for(int i = 0; i < playerList.numberOfNeededReboots(); i++) {
@@ -483,7 +501,6 @@ public class Game implements Runnable {
             //checks if all registers have been activated
             if(currentRegister == 4) {
                 for(int i = 0; i < playerList.size(); i++) {
-                    logger.debug("Emptying card registers");
                     playerList.get(i).emptyAllCardRegisters();
                 }
             }
@@ -577,6 +594,9 @@ public class Game implements Runnable {
                 if (pitTile.getPosition().equals(player.getRobot().getCurrentPosition())) {
                     reboot(player);
                 }
+            }
+            if(player.getCardFromRegister(currentRegister) == null) {
+                logger.debug("No card in register" + currentRegister);
             }
         } catch (IndexOutOfBoundsException | InterruptedException e) {
             logger.warn("This register was not activated because you're Robot can not move past this point" + e);
@@ -686,6 +706,7 @@ public class Game implements Runnable {
     }
 
     public void reboot(Player player) {
+        logger.debug("Reboot under way");
         player.getRobot().increaseDamageCount();
         player.getRobot().increaseDamageCount();
         drawDamageCards(player);
