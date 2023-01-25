@@ -56,7 +56,6 @@ import org.apache.logging.log4j.Logger;
  * @version 0.1
  */
 public class ViewModelGameWindow {
-    public Pane programspacePane;
     @FXML
     private Pane gameboardRegion;
     @FXML
@@ -97,6 +96,8 @@ public class ViewModelGameWindow {
     private StackPane programmingSpaceStackPane;
     @FXML
     private StackPane gameboardStackPane;
+
+    public Pane programspacePane;
 
     private ModelChat modelChat;
     private ModelGame modelGame;
@@ -217,36 +218,6 @@ public class ViewModelGameWindow {
         scaleImages(deckGrid, width, 0.07);
     }
 
-    public void receivedMessage() {
-        Message message = null;
-        try {
-            message = modelChat.getMESSSAGES().take();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        assert message != null;
-        if (message.getMessageBody().isPrivate()) {
-            String privateMessage = message.getMessageBody().getMessage();
-            privateMessageToChat(privateMessage, true);
-        }
-        else {
-            String groupMessage = message.getMessageBody().getMessage();
-            groupMessageToChat(groupMessage, true);
-        }
-    }
-
-    public void receivedGameLogMessage() {
-        Message logmessage = null;
-        try {
-            logmessage = modelChat.getGAMELOGMESSAGES().take();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        assert logmessage != null;
-        logMessageToLogger(logmessage);
-
-    }
-
     public void chatButtonOnAction() {
         /*
         String user = usersChoiceBox.getSelectionModel().getSelectedItem().getUsername();
@@ -265,6 +236,23 @@ public class ViewModelGameWindow {
          */
     }
 
+    public void receivedChatMessage() {
+        Message message = null;
+        try {
+            message = modelChat.getCHAT_MESSSAGES().take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assert message != null;
+        if (message.getMessageBody().isPrivate()) {
+            String privateMessage = message.getMessageBody().getMessage();
+            privateMessageToChat(privateMessage, true);
+        }
+        else {
+            String groupMessage = message.getMessageBody().getMessage();
+            groupMessageToChat(groupMessage, true);
+        }
+    }
 
     public void groupMessageToChat(String groupMessage, boolean received) {
         HBox hBox = new HBox();
@@ -324,6 +312,18 @@ public class ViewModelGameWindow {
         }
     }
 
+
+    public void receivedGameLogMessage() {
+        Message logmessage = null;
+        try {
+            logmessage = modelChat.getGAME_LOG_MESSAGES().take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assert logmessage != null;
+        logMessageToLogger(logmessage);
+    }
+
     public void logMessageToLogger(Message logMessage) {
         if (logMessage.getMessageType().equals(MessageType.SelectionFinished)) {
             int clientID = logMessage.getMessageBody().getClientID();
@@ -368,10 +368,24 @@ public class ViewModelGameWindow {
         }
     }
 
-    public void exit() throws IOException {
-        //send disconnect notification to server
-        Platform.exit();
-        System.exit(0);
+    public void reveivedGameEventMessage() {
+        Message gamemessage = null;
+        try {
+            gamemessage = modelGame.getGAME_EVENT_MESSAGES().take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assert gamemessage != null;
+        handleGameEvent(gamemessage);
+    }
+
+    private void handleGameEvent(Message gamemessage) {
+        if (gamemessage.getMessageType().equals(MessageType.SelectionFinished)) {
+
+        }
+        if (gamemessage.getMessageType().equals(MessageType.DrawDamage)) {
+
+        }
     }
 
     private void placeTiles(ArrayList<ArrayList<ArrayList<Tile>>> map) {
@@ -408,7 +422,7 @@ public class ViewModelGameWindow {
         Platform.runLater(() ->{
         Message robotMovement;
         try {
-            robotMovement = modelGame.getPLAYERMOVEMENTS().take();
+            robotMovement = modelGame.getPLAYER_MOVEMENTS().take();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -443,155 +457,6 @@ public class ViewModelGameWindow {
         //adds new Image
         gameboard.add(img, x, y);
     });
-    }
-
-    public void setOnDragDetected(Pane source) {
-
-        source.setOnDragDetected(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                //drag was detected, start drag-and-drop gesture
-                logger.debug("Drag detected");
-
-                //Any TransferMode is allowed
-                Dragboard db = source.startDragAndDrop(TransferMode.ANY);
-                //put image on dragboard
-                ClipboardContent content = new ClipboardContent();
-                ImageView card = (ImageView) source.getChildren().get(0);
-                content.putImage(card.getImage());
-                content.putString(card.getId());
-                db.setContent(content);
-                event.consume();
-                columnIndex = handGrid.getChildren().indexOf(source);
-                source.getChildren().clear();
-                logger.debug("Element from Column " + columnIndex);
-            }
-        });
-    }
-
-    public void setOnDragOver(Pane target) {
-        target.setOnDragOver(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                //logger.debug("setOnDragOver");
-
-                //data is dragged over target
-                //accept it only if it is not dragged from the same node and if it hasImage
-                if (event.getGestureSource() != target && event.getDragboard().hasImage()) {
-                    //allow for copying and moving
-                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                }
-                event.consume();
-            }
-        });
-    }
-
-    public void setOnDragEntered(Pane target) {
-        target.setOnDragEntered(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                logger.debug("setOnDragEntered");
-                //drag-and-drop gesture entered target
-                //Show entering visually
-                if (event.getGestureSource() != target && event.getDragboard().hasImage()) {
-                    target.setStyle("-fx-border-color: green;");
-                }
-                event.consume();
-            }
-        });
-    }
-
-    public void setOnDragExited(Pane target) {
-        target.setOnDragExited(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                logger.debug("setOnDragExited");
-                //mouse moves out of enntered area
-                //remove visuals
-                target.setStyle("-fx-border-color: transparent;");
-                event.consume();
-            }
-        });
-
-    }
-
-    public void setOnDragDropped(Pane target) {
-        target.setOnDragDropped(new EventHandler<DragEvent>() {
-            @Override
-            public void handle(DragEvent event) {
-                logger.debug("setOnDragDropped");
-                //data dropped
-                boolean success = false;
-                logger.debug("VM - target Children: " + target.getChildren());
-                if (target.getChildren().isEmpty()) {
-                    Dragboard db = event.getDragboard();
-                    if (db.hasImage()) {
-                        logger.debug("VM - ColumnIndex of Target: " + GridPane.getColumnIndex(target));
-                        String cardName = db.getString();
-                        Image data = db.getImage();
-                        ImageView card = new ImageView(data);
-                        card.setId(cardName);
-                        card.setFitWidth(programcardsWidth);
-                        card.setPreserveRatio(true);
-                        target.getChildren().add(card);
-                        int targetIndex = GridPane.getColumnIndex(target) + 1;
-                        logger.debug("VM - 1 Cardname: " + cardName);
-                        success = true;
-                        logger.debug("VM - 3 target for message: " + targetIndex);
-                        logger.debug("VM - 4 SendSelectedCard sent: " + cardName);
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
-                        modelGame.sendSelectedCard(cardName, targetIndex);
-                    }
-                    event.setDropCompleted(success);
-                    event.consume();
-                }
-                else {
-                    Dragboard db = event.getDragboard();
-                    if (db.hasImage()) {
-                        Image data = db.getImage();
-                        Pane source = (Pane) handGrid.getChildren().get(columnIndex);
-                        ImageView card = new ImageView(data);
-                        card.setFitWidth(programcardsWidth);
-                        card.setPreserveRatio(true);
-                        source.getChildren().add(card);
-                        logger.debug(columnIndex);
-                    }
-                }
-            }
-        });
-    }
-
-    public void onRightClickRemoveProgrammingCard(Pane target) {
-        target.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.getButton() == MouseButton.SECONDARY) {
-                    Object targetNode = event.getTarget();
-                    if (targetNode instanceof ImageView) {
-                        ImageView card = (ImageView) targetNode;
-                        String cardName = card.getId();
-                        Image data = card.getImage();
-                        target.getChildren().remove(card);
-                        //Resets register when card is taken out:
-                        int targetIndex = GridPane.getColumnIndex(target);
-                        modelGame.sendSelectedCard(null, targetIndex);
-                        int index = getFirstFreeSlot();
-                        if (index != -1) {
-                            Pane emptyPane = (Pane) handGrid.getChildren().get(index);
-                            ImageView newCard = new ImageView(data);
-                            newCard.setFitWidth(programcardsWidth);
-                            newCard.setPreserveRatio(true);
-                            newCard.setId(cardName);
-                            emptyPane.getChildren().add(newCard);
-                        }
-                    }
-                }
-            }
-        });
     }
 
     public int getFirstFreeSlot() {
@@ -798,6 +663,156 @@ public class ViewModelGameWindow {
         damageDeck.getChildren().add(imgDamage);
     }
 
+
+    public void setOnDragDetected(Pane source) {
+
+        source.setOnDragDetected(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                //drag was detected, start drag-and-drop gesture
+                logger.debug("Drag detected");
+
+                //Any TransferMode is allowed
+                Dragboard db = source.startDragAndDrop(TransferMode.ANY);
+                //put image on dragboard
+                ClipboardContent content = new ClipboardContent();
+                ImageView card = (ImageView) source.getChildren().get(0);
+                content.putImage(card.getImage());
+                content.putString(card.getId());
+                db.setContent(content);
+                event.consume();
+                columnIndex = handGrid.getChildren().indexOf(source);
+                source.getChildren().clear();
+                logger.debug("Element from Column " + columnIndex);
+            }
+        });
+    }
+
+    public void setOnDragOver(Pane target) {
+        target.setOnDragOver(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                //logger.debug("setOnDragOver");
+
+                //data is dragged over target
+                //accept it only if it is not dragged from the same node and if it hasImage
+                if (event.getGestureSource() != target && event.getDragboard().hasImage()) {
+                    //allow for copying and moving
+                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                }
+                event.consume();
+            }
+        });
+    }
+
+    public void setOnDragEntered(Pane target) {
+        target.setOnDragEntered(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                logger.debug("setOnDragEntered");
+                //drag-and-drop gesture entered target
+                //Show entering visually
+                if (event.getGestureSource() != target && event.getDragboard().hasImage()) {
+                    target.setStyle("-fx-border-color: green;");
+                }
+                event.consume();
+            }
+        });
+    }
+
+    public void setOnDragExited(Pane target) {
+        target.setOnDragExited(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                logger.debug("setOnDragExited");
+                //mouse moves out of enntered area
+                //remove visuals
+                target.setStyle("-fx-border-color: transparent;");
+                event.consume();
+            }
+        });
+
+    }
+
+    public void setOnDragDropped(Pane target) {
+        target.setOnDragDropped(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                logger.debug("setOnDragDropped");
+                //data dropped
+                boolean success = false;
+                logger.debug("VM - target Children: " + target.getChildren());
+                if (target.getChildren().isEmpty()) {
+                    Dragboard db = event.getDragboard();
+                    if (db.hasImage()) {
+                        logger.debug("VM - ColumnIndex of Target: " + GridPane.getColumnIndex(target));
+                        String cardName = db.getString();
+                        Image data = db.getImage();
+                        ImageView card = new ImageView(data);
+                        card.setId(cardName);
+                        card.setFitWidth(programcardsWidth);
+                        card.setPreserveRatio(true);
+                        target.getChildren().add(card);
+                        int targetIndex = GridPane.getColumnIndex(target) + 1;
+                        logger.debug("VM - 1 Cardname: " + cardName);
+                        success = true;
+                        logger.debug("VM - 3 target for message: " + targetIndex);
+                        logger.debug("VM - 4 SendSelectedCard sent: " + cardName);
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
+                        modelGame.sendSelectedCard(cardName, targetIndex);
+                    }
+                    event.setDropCompleted(success);
+                    event.consume();
+                }
+                else {
+                    Dragboard db = event.getDragboard();
+                    if (db.hasImage()) {
+                        Image data = db.getImage();
+                        Pane source = (Pane) handGrid.getChildren().get(columnIndex);
+                        ImageView card = new ImageView(data);
+                        card.setFitWidth(programcardsWidth);
+                        card.setPreserveRatio(true);
+                        source.getChildren().add(card);
+                        logger.debug(columnIndex);
+                    }
+                }
+            }
+        });
+    }
+
+    public void onRightClickRemoveProgrammingCard(Pane target) {
+        target.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if (event.getButton() == MouseButton.SECONDARY) {
+                    Object targetNode = event.getTarget();
+                    if (targetNode instanceof ImageView) {
+                        ImageView card = (ImageView) targetNode;
+                        String cardName = card.getId();
+                        Image data = card.getImage();
+                        target.getChildren().remove(card);
+                        //Resets register when card is taken out:
+                        int targetIndex = GridPane.getColumnIndex(target);
+                        modelGame.sendSelectedCard(null, targetIndex);
+                        int index = getFirstFreeSlot();
+                        if (index != -1) {
+                            Pane emptyPane = (Pane) handGrid.getChildren().get(index);
+                            ImageView newCard = new ImageView(data);
+                            newCard.setFitWidth(programcardsWidth);
+                            newCard.setPreserveRatio(true);
+                            newCard.setId(cardName);
+                            emptyPane.getChildren().add(newCard);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     public void startTimer() {
         Timeline timeline = new Timeline();
         timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
@@ -819,5 +834,12 @@ public class ViewModelGameWindow {
     public void setRobotAlignment() {
         //set Robot Alignment
     }
+
+    public void exit() throws IOException {
+        //send disconnect notification to server
+        Platform.exit();
+        System.exit(0);
+    }
+
 }
 

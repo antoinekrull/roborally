@@ -43,8 +43,10 @@ public class ModelGame {
     private BooleanProperty readyToPlay;
     private BooleanProperty activePlayer;
     private ObservableList<Integer> readyList;
-    private LinkedBlockingQueue<Message> PLAYERMOVEMENTS;
+    private LinkedBlockingQueue<Message> PLAYER_MOVEMENTS;
     private ObjectProperty<Message> movement;
+    private LinkedBlockingQueue<Message> GAME_EVENT_MESSAGES;
+    private ObjectProperty<Message> gameEvent;
     private BooleanProperty timer;
     private SimpleStringProperty errorMessage;
     private ObservableList<String> maps;
@@ -80,7 +82,7 @@ public class ModelGame {
                 notifyChangeSupport.updateProgrammingHandCards();
             }
         });
-        this.PLAYERMOVEMENTS = new LinkedBlockingQueue<>();
+        this.PLAYER_MOVEMENTS = new LinkedBlockingQueue<>();
         readyToPlay.bind(client.gameStartedProperty());
         readyToPlay.addListener(new ChangeListener<Boolean>() {
             @Override
@@ -100,66 +102,28 @@ public class ModelGame {
             @Override
             public void changed(ObservableValue<? extends Message> observable, Message oldValue, Message newValue) {
                 try {
-                    PLAYERMOVEMENTS.put(client.getMovement());
+                    PLAYER_MOVEMENTS.put(client.getMovement());
                     notifyChangeSupport.robotSetPosition();
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
             }
         });
 
-        /*
-        this.myHandCards = FXCollections.observableArrayList(client.getMyCards());
-        this.x = new SimpleIntegerProperty();
-        this.y = new SimpleIntegerProperty();
-        x.bind(client.xProperty());
-        y.bind(client.yProperty());
-
-        x.addListener(new ChangeListener<Number>() {
+        this.GAME_EVENT_MESSAGES = new LinkedBlockingQueue<>();
+        this.gameEvent = new SimpleObjectProperty<>();
+        gameEvent.bind(client.gameEventMessageProperty());
+        gameEvent.addListener(new ChangeListener<Message>() {
             @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                xChanged = true;
-                check_x_y_changed();
-            }
-        });
-
-        y.addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                yChanged = true;
-                check_x_y_changed();
-            }
-        });
-
-        myHandCards.addListener(new ListChangeListener<String>() {
-            @Override
-            public void onChanged(Change<? extends String> c) {
-                while(c.next()) {
-                    if(c.wasUpdated()) {
-                        System.out.println("wasUpdated");
-                        notifyChangeSupport.updateProgrammingHandCards();
-                    }
-                    if(c.wasAdded()) {
-                        System.out.println("wasAdded");
-                        notifyChangeSupport.updateProgrammingHandCards();
-                    }
-                    if(c.wasRemoved()) {
-                        System.out.println("wasRemoved");
-                        notifyChangeSupport.updateProgrammingHandCards();
-                    }
-                    if(c.wasPermutated()) {
-                        System.out.println("wasPermutated");
-                        notifyChangeSupport.updateProgrammingHandCards();
-                    }
-                    if(c.wasReplaced()) {
-                        System.out.println("wasReplaced");
-                        notifyChangeSupport.updateProgrammingHandCards();
-                    }
+            public void changed(ObservableValue<? extends Message> observable, Message oldValue, Message newValue) {
+                try {
+                    GAME_EVENT_MESSAGES.put(client.getGameEventMessage());
+                    notifyChangeSupport.gameEventMessageArrived();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         });
-
-         */
 
         this.timer = new SimpleBooleanProperty();
         timer.bind(client.timerProperty());
@@ -178,38 +142,6 @@ public class ModelGame {
                 notifyChangeSupport.setRobotAlignment();
             }
         });
-
-        /*
-        this.movementX = new SimpleIntegerProperty();
-        movementX.bind(client.movementXProperty());
-        movementX.addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                movementXChanged = true;
-                check_x_y_id();
-            }
-        });
-
-        this.movementY = new SimpleIntegerProperty();
-        movementY.bind(client.movementYProperty());
-        movementY.addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                movementYChanged = true;
-                check_x_y_id();
-            }
-        });
-
-        this.robotID = new SimpleIntegerProperty();
-        robotID.bind(client.robotIDProperty());
-        robotID.addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                robotIDChanged = true;
-                check_x_y_id();
-            }
-        });
-         */
     }
 
     public static ModelGame getInstance() {
@@ -222,33 +154,11 @@ public class ModelGame {
     public ClientPlayerList getPlayerList() {
         return clientPlayerList;
     }
-    public LinkedBlockingQueue<Message> getPLAYERMOVEMENTS() {
-        return PLAYERMOVEMENTS;
-    }
     public SimpleIntegerProperty robotProperty() {
         return robotProperty;
     }
     public void setRobotProperty(int robotProperty) {
         this.robotProperty.set(robotProperty);
-    }
-    public SimpleStringProperty errorMessageProperty() {
-        return errorMessage;
-    }
-    public BooleanProperty readyToPlayProperty() {
-        return readyToPlay;
-    }
-    public ObservableList<String> getMaps() {
-        return maps;
-    }
-    public ArrayList<ArrayList<ArrayList<Tile>>> getGameMap() {
-        this.gameMap = gameBoard.getBoard();
-        return gameMap;
-    }
-    public ObservableList<String> getMyHandCards() {
-        return myHandCards;
-    }
-    public void setMaps(ObservableList<String> maps) {
-        this.maps = maps;
     }
     public ObservableList<Integer> getReadyList() {
         return readyList;
@@ -256,26 +166,33 @@ public class ModelGame {
     public BooleanProperty activePlayerProperty() {
         return activePlayer;
     }
-
-    /*
-    public void check_x_y_id() {
-        if (movementXChanged && movementYChanged && robotIDChanged) {
-            notifyChangeSupport.robotSetPosition(movementX.get(), movementY.get(), robotID.get());
-            movementYChanged = false;
-            movementXChanged = false;
-            robotIDChanged = false;
-        }
+    public BooleanProperty readyToPlayProperty() {
+        return readyToPlay;
+    }
+    public ObservableList<String> getMaps() {
+        return maps;
+    }
+    public void setMaps(ObservableList<String> maps) {
+        this.maps = maps;
+    }
+    public ArrayList<ArrayList<ArrayList<Tile>>> getGameMap() {
+        this.gameMap = gameBoard.getBoard();
+        return gameMap;
+    }
+    public SimpleStringProperty errorMessageProperty() {
+        return errorMessage;
+    }
+    public ObservableList<String> getMyHandCards() {
+        return myHandCards;
     }
 
-    public void check_x_y_changed() {
-        if (xChanged && yChanged) {
-            notifyChangeSupport.robotSetPosition(xProperty().get(), yProperty().get(), robotProperty.get());
-            xChanged = false;
-            yChanged = false;
-        }
+    public LinkedBlockingQueue<Message> getPLAYER_MOVEMENTS() {
+        return PLAYER_MOVEMENTS;
     }
 
-     */
+    public LinkedBlockingQueue<Message> getGAME_EVENT_MESSAGES() {
+        return GAME_EVENT_MESSAGES;
+    }
 
     public void createMap(String jsonMap) throws JsonProcessingException {
         gameBoard.createBoard(jsonMap);

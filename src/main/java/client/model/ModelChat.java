@@ -30,33 +30,33 @@ public class ModelChat {
     private StringProperty textfieldProperty;
     private ObjectProperty<Message> chatMessage;
     private ObjectProperty<Message> logMessage;
-    private final LinkedBlockingQueue<Message> GAMELOGMESSAGES;
-    private final LinkedBlockingQueue<Message> MESSSAGES;
+    private final LinkedBlockingQueue<Message> GAME_LOG_MESSAGES;
+    private final LinkedBlockingQueue<Message> CHAT_MESSSAGES;
 
 
     private ModelChat() {
         client = Client.getInstance();
         notifyChangeSupport = NotifyChangeSupport.getInstance();
         chatMessage = new SimpleObjectProperty<>();
-        this.MESSSAGES = new LinkedBlockingQueue<>();
+        this.CHAT_MESSSAGES = new LinkedBlockingQueue<>();
         textfieldProperty = new SimpleStringProperty("");
         chatMessage.bind(client.messageProperty());
         chatMessage.addListener((observable, oldValue, newValue) -> {
             try {
-                MESSSAGES.put(client.messageProperty().getValue());
-                notifyChangeSupport.messageArrived();
+                CHAT_MESSSAGES.put(client.messageProperty().getValue());
+                notifyChangeSupport.chatMessageArrived();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         });
-        this.GAMELOGMESSAGES = new LinkedBlockingQueue<>();
+        this.GAME_LOG_MESSAGES = new LinkedBlockingQueue<>();
         logMessage = new SimpleObjectProperty<>();
         logMessage.bind(client.gameLogMessageProperty());
         logMessage.addListener(new ChangeListener<Message>() {
             @Override
             public void changed(ObservableValue<? extends Message> observable, Message oldValue, Message newValue) {
                 try {
-                    GAMELOGMESSAGES.put(client.getGameLogMessage());
+                    GAME_LOG_MESSAGES.put(client.getGameLogMessage());
                     notifyChangeSupport.logMessageArrived();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -76,12 +76,12 @@ public class ModelChat {
         return textfieldProperty;
     }
 
-    public LinkedBlockingQueue<Message> getMESSSAGES() {
-        return MESSSAGES;
+    public LinkedBlockingQueue<Message> getCHAT_MESSSAGES() {
+        return CHAT_MESSSAGES;
     }
 
-    public LinkedBlockingQueue<Message> getGAMELOGMESSAGES() {
-        return GAMELOGMESSAGES;
+    public LinkedBlockingQueue<Message> getGAME_LOG_MESSAGES() {
+        return GAME_LOG_MESSAGES;
     }
 
     public void sendGroupMessage() {

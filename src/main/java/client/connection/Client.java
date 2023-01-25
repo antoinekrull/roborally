@@ -45,36 +45,36 @@ import org.javatuples.Pair;
 public class Client {
 
     private static Client client = null;
-    private Socket socket = null;
-    private DataInputStream in = null;
-    private DataOutputStream out = null;
-    private BooleanProperty connected;
-    private BooleanProperty accepted;
-    private BooleanProperty isAI;
-    private BooleanProperty gameStarted;
-    private ObjectProperty<Message> message;
-    private ObjectProperty<Message> movement;
-    private ObjectProperty<Message> gameLogMessage;
-    private IntegerProperty userID;
-    private StringProperty errorMessage;
-    private IntegerProperty robotID;
-    private StringProperty roboterAlignment;
-    private boolean prioPlayer = false;
-    private BooleanProperty activePlayer;
-    private IntegerProperty score;
-
-    public static ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
-    public ObservableList<String> myCards;
     MessageCreator messageCreator;
+    private Socket socket = null;
     String address = "localhost";
     int port = 3000;
+    private DataInputStream in = null;
+    private DataOutputStream out = null;
     private String protocolVersion = "Version 1.0";
     private String group = "KnorrigeKorrelate";
     private ClientPlayerList clientPlayerList;
-    private ObservableList<String> maps;
-    private BooleanProperty timer;
     private final Logger logger = LogManager.getLogger(Client.class);
     private Board board = new Board();
+    private IntegerProperty userID;
+    private BooleanProperty connected;
+    private BooleanProperty accepted;
+    private BooleanProperty isAI;
+    private StringProperty errorMessage;
+    private ObjectProperty<Message> message;
+    private ObjectProperty<Message> movement;
+    private ObjectProperty<Message> gameLogMessage;
+    private ObjectProperty<Message> gameEventMessage;
+    private BooleanProperty gameStarted;
+    private BooleanProperty activePlayer;
+    private boolean prioPlayer = false;
+    private IntegerProperty score;
+    public ObservableList<String> myCards;
+    private ObservableList<String> maps;
+    private StringProperty roboterAlignment;
+    private BooleanProperty timer;
+
+    public static ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
 
 
     private Client() {
@@ -92,7 +92,6 @@ public class Client {
         this.errorMessage = new SimpleStringProperty();
         this.myCards = FXCollections.observableArrayList();
         this.timer = new SimpleBooleanProperty(false);
-        this.robotID = new SimpleIntegerProperty();
         this.movement = new SimpleObjectProperty<>();
         this.roboterAlignment = new SimpleStringProperty();
         this.gameLogMessage = new SimpleObjectProperty<>();
@@ -104,6 +103,38 @@ public class Client {
             client = new Client();
         }
         return client;
+    }
+
+    public IntegerProperty userIDProperty() {
+        return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID.set(userID);
+    }
+
+    public IntegerProperty scoreProperty() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score.set(score);
+    }
+
+    public BooleanProperty isAIProperty() {
+        return isAI;
+    }
+
+    public BooleanProperty connectedProperty() {
+        return connected;
+    }
+
+    public ClientPlayerList getPlayerList() {
+        return clientPlayerList;
+    }
+
+    public ObservableList<String> getMaps() {
+        return maps;
     }
 
     public Board getBoard() {
@@ -118,23 +149,16 @@ public class Client {
         this.message.set(message);
     }
 
-    public IntegerProperty userIDProperty() {
-        return userID;
+    public Message getGameLogMessage() {
+        return gameLogMessage.get();
     }
 
-    public void setUserID(int userID) {
-        this.userID.set(userID);
+    public ObjectProperty<Message> gameLogMessageProperty() {
+        return gameLogMessage;
     }
 
-    public BooleanProperty isAIProperty() {
-        return isAI;
-    }
-
-    public BooleanProperty connectedProperty() {
-        return connected;
-    }
-    public ObservableList<String> getMaps() {
-        return maps;
+    public void setGameLogMessage(Message gameLogMessage) {
+        this.gameLogMessage.set(gameLogMessage);
     }
 
     public BooleanProperty acceptedProperty() {
@@ -145,14 +169,6 @@ public class Client {
         this.accepted.set(accepted);
     }
 
-    public ClientPlayerList getPlayerList() {
-        return clientPlayerList;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage.get();
-    }
-
     public StringProperty errorMessageProperty() {
         return errorMessage;
     }
@@ -160,41 +176,25 @@ public class Client {
     public void setErrorMessage(String errorMessage) {
         this.errorMessage.set(errorMessage);
     }
-    public boolean isGameStarted() {
-        return gameStarted.get();
-    }
 
     public BooleanProperty gameStartedProperty() {
         return gameStarted;
+    }
+
+    public BooleanProperty activePlayerProperty() {
+        return activePlayer;
+    }
+
+    public void setActivePlayer(boolean activePlayer) {
+        this.activePlayer.set(activePlayer);
     }
 
     public ObservableList<String> getMyCards() {
         return myCards;
     }
 
-    public IntegerProperty scoreProperty() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score.set(score);
-    }
-
     public void setMyCards(ObservableList<String> myCards) {
         this.myCards = myCards;
-    }
-
-
-    public boolean isTimer() {
-        return timer.get();
-    }
-
-    public BooleanProperty timerProperty() {
-        return timer;
-    }
-
-    public void setTimer(boolean timer) {
-        this.timer.set(timer);
     }
 
     public Message getMovement() {
@@ -209,52 +209,28 @@ public class Client {
         this.movement.set(movement);
     }
 
-    public int getRobotID() {
-        return robotID.get();
+    public Message getGameEventMessage() {
+        return gameEventMessage.get();
     }
 
-    public IntegerProperty robotIDProperty() {
-        return robotID;
+    public ObjectProperty<Message> gameEventMessageProperty() {
+        return gameEventMessage;
     }
 
-    public void setRobotID(int robotID) {
-        this.robotID.set(robotID);
+    public void setGameEventMessage(Message gameEventMessage) {
+        this.gameEventMessage.set(gameEventMessage);
     }
 
-    public Boolean getPrioPlayer() {
-        return prioPlayer;
+    public boolean isTimer() {
+        return timer.get();
     }
 
-    public void setPrioPlayer(Boolean prioPlayer) {
-        this.prioPlayer = prioPlayer;
+    public BooleanProperty timerProperty() {
+        return timer;
     }
 
-    public boolean isActivePlayer() {
-        return activePlayer.get();
-    }
-
-    public BooleanProperty activePlayerProperty() {
-        return activePlayer;
-    }
-
-    public void setActivePlayer(boolean activePlayer) {
-        this.activePlayer.set(activePlayer);
-    }
-
-    public Message getGameLogMessage() {
-        return gameLogMessage.get();
-    }
-
-    public ObjectProperty<Message> gameLogMessageProperty() {
-        return gameLogMessage;
-    }
-
-    public void setGameLogMessage(Message gameLogMessage) {
-        this.gameLogMessage.set(gameLogMessage);
-    }
-
-    public String getRoboterAlignment() {
-        return roboterAlignment.get();
+    public void setTimer(boolean timer) {
+        this.timer.set(timer);
     }
 
     public StringProperty roboterAlignmentProperty() {
@@ -311,6 +287,13 @@ public class Client {
                             boolean ready = message.getMessageBody().isReady();
                             clientPlayerList.changePlayerStatus(clientID, ready);
                         }
+                        if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
+                            int clientID = message.getMessageBody().getClientID();
+                            String action = message.getMessageBody().getAction();
+                            if (action.equals("Remove")) {
+                                Platform.runLater(() -> Client.this.clientPlayerList.remove(clientID));
+                            }
+                        }
                         if (message.getMessageType().equals(MessageType.SelectMap)) {
                             prioPlayer = true;
                             //TODO: if client looses prio because he removes ready or looses connection, he isn`t allowed to change map
@@ -332,38 +315,14 @@ public class Client {
                             logger.debug("Error: " + error);
                             Platform.runLater(() -> Client.this.setErrorMessage(error));
                         }
-                        if (message.getMessageType().equals(MessageType.CardPlayed)) {
-                            Client.this.setMessage(message);
-                        }
-                        if (message.getMessageType().equals(MessageType.CurrentPlayer)) {
-                            Client.this.activePlayer.set(true);
-                        }
-                        if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
-                            Client.this.setMovement(message);
-                            logger.debug("StartingPointTaken message: " + message);
-                            /*
-                            int clientRobot = message.getMessageBody().getClientID();
-                            if (Client.this.userIDProperty().get() == clientRobot) {
-                                 Client.this.setX(message.getMessageBody().getX());
-                                 Client.this.setY(message.getMessageBody().getY());
-                                 System.out.println("X= " + message.getMessageBody().getX() + " | Y= " + message.getMessageBody().getY());
-                                 System.out.println("My Robot");
-                            }
-                            else {
-                                int robotIDclient = clientPlayerList.getPlayer(clientRobot).getRobot().getFigure();
-                                Client.this.setMovementX(message.getMessageBody().getX());
-                                Client.this.setMovementY(message.getMessageBody().getY());
-                                Client.this.setRobotID(robotIDclient);
-                                System.out.println("X = " + message.getMessageBody().getX() + " | Y = " + message.getMessageBody().getY());
-                                System.out.println("RobotID in Client: : " + robotIDclient);
-                            }
-                             */
-                        }
                         if (message.getMessageType().equals(MessageType.GameStarted)) {
                             board.createBoard(message.getMessageBody().getGameMap());
                             //TODO: connect to Model/ViewModel to switch scenes
                             System.out.println("game started");
                             gameStarted.set(true);
+                        }
+                        if (message.getMessageType().equals(MessageType.CurrentPlayer)) {
+                            Client.this.activePlayer.set(true);
                         }
                         if (message.getMessageType().equals(MessageType.YourCards)) {
                             String[] cardsInHand = message.getMessageBody().getCardsInHand();
@@ -378,6 +337,9 @@ public class Client {
                                 logger.debug("Client - myCards: " + myCards.get(i));
                             }
                         }
+                        if (message.getMessageType().equals(MessageType.CardPlayed)) {
+                            Client.this.setMessage(message);
+                        }
                         if (message.getMessageType().equals(MessageType.NotYourCards)) {
                             int clientID = message.getMessageBody().getClientID();
                             int cardsInHand = message.getMessageBody().getCardsAmountInHand();
@@ -386,34 +348,6 @@ public class Client {
                                     Client.this.clientPlayerList.getPlayerList().get(i).setCardsInHand(cardsInHand);
                                 }
                             }
-                        }
-                        if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
-                            int clientID = message.getMessageBody().getClientID();
-                            String action = message.getMessageBody().getAction();
-                            if (action.equals("Remove")) {
-                                Platform.runLater(() -> Client.this.clientPlayerList.remove(clientID));
-                            }
-                        }
-                        if (message.getMessageType().equals(MessageType.Movement)) {
-                            Client.this.setMovement(message);
-                            logger.debug("Movement message: " + message);
-                            /*
-                            int clientRobot = message.getMessageBody().getClientID();
-                            if (Client.this.userIDProperty().get() == clientRobot) {
-                                Client.this.setX(message.getMessageBody().getX());
-                                Client.this.setY(message.getMessageBody().getY());
-                                System.out.println("X= " + message.getMessageBody().getX() + " | Y= " + message.getMessageBody().getY());
-                                System.out.println("My Robot");
-                            }
-                            else {
-                                int robotIDclient = clientPlayerList.getPlayer(clientRobot).getRobot().getFigure();
-                                Client.this.setMovementX(message.getMessageBody().getX());
-                                Client.this.setMovementY(message.getMessageBody().getY());
-                                Client.this.setRobotID(robotIDclient);
-                                System.out.println("X = " + message.getMessageBody().getX() + " | Y = " + message.getMessageBody().getY());
-                                System.out.println("RobotID in Client: : " + robotIDclient);
-                            }
-                             */
                         }
                         if (message.getMessageType().equals(MessageType.CardSelected)) {
                             int clientID = message.getMessageBody().getClientID();
@@ -426,32 +360,30 @@ public class Client {
                             }
                         }
                         if (message.getMessageType().equals(MessageType.SelectionFinished)) {
-                            Client.this.setGameLogMessage(message);
+                            Client.this.setGameEventMessage(message);
+                        }
+                        if (message.getMessageType().equals(MessageType.RegisterChosen)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
+                            Client.this.setMovement(message);
+                            logger.debug("StartingPointTaken message: " + message);
+                        }
+                        if (message.getMessageType().equals(MessageType.Movement)) {
+                            Client.this.setMovement(message);
+                            logger.debug("Movement message: " + message);
+                        }
+                        if (message.getMessageType().equals(MessageType.CheckpointMoved)) {
+
+                        }
+                        if (message.getMessageType().equals(MessageType.PlayerTurning)) {
+                            Client.this.setRoboterAlignment(message.getMessageBody().getRotation());
                         }
                         if (message.getMessageType().equals(MessageType.TimerStarted)) {
                             Client.this.setTimer(true);
                         }
                         if (message.getMessageType().equals(MessageType.TimerEnded)) {
                             Client.this.setGameLogMessage(message);
-                        }
-                        if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
-
-                        }
-                        if (message.getMessageType().equals(MessageType.PlayerTurning)) {
-                            Client.this.setRoboterAlignment(message.getMessageBody().getRotation());
-                        }
-                        if (message.getMessageType().equals(MessageType.DrawDamage)) {
-                            int clientID = message.getMessageBody().getClientID();
-                            if (userIDProperty().get() == clientID) {
-                                //String[] damageCards = message.getMessageBody().getCard
-                            }
-                            else {
-                                Client.this.setGameLogMessage(message);
-                            }
-                        }
-                        if (message.getMessageType().equals(MessageType.PickDamage)) {
-                            //TODO: Show menu for picking a damageCard
-
                         }
                         if (message.getMessageType().equals(MessageType.Energy)) {
                             int clientID = message.getMessageBody().getClientID();
@@ -463,14 +395,11 @@ public class Client {
 
                             }
                         }
-                        if (message.getMessageType().equals(MessageType.GameFinished)) {
-                            Client.this.setGameLogMessage(message);
-
+                        if (message.getMessageType().equals(MessageType.DrawDamage)) {
+                            Client.this.setGameEventMessage(message);
                         }
-                        if (message.getMessageType().equals(MessageType.CheckpointMoved)) {
-
-                        }
-                        if (message.getMessageType().equals(MessageType.RegisterChosen)) {
+                        if (message.getMessageType().equals(MessageType.PickDamage)) {
+                            //TODO: Show menu for picking a damageCard
 
                         }
                         if (message.getMessageType().equals(MessageType.CheckPointReached)) {
@@ -482,6 +411,10 @@ public class Client {
                                 clientPlayerList.getPlayer(clientID).setScore(message.getMessageBody().getNumber());
                                 Client.this.setGameLogMessage(message);
                             }
+                        }
+                        if (message.getMessageType().equals(MessageType.GameFinished)) {
+                            Client.this.setGameLogMessage(message);
+
                         }
                     }
                 }

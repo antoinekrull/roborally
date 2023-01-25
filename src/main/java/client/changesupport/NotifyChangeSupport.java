@@ -58,12 +58,12 @@ public class NotifyChangeSupport {
         this.robotselection = true;
     }
 
-    public void messageArrived() {
+    public void chatMessageArrived() {
         if (lobby) {
             viewModelLobby.receivedMessage();
         }
         if (gamewindow) {
-            viewModelGameWindow.receivedMessage();
+            viewModelGameWindow.receivedChatMessage();
         }
     }
 
@@ -94,17 +94,24 @@ public class NotifyChangeSupport {
         });
     }
 
+    public void logMessageArrived() {
+        if (gamewindow) {
+            viewModelGameWindow.receivedGameLogMessage();
+        }
+    }
+
+    public void gameEventMessageArrived() {
+        if (gamewindow) {
+            viewModelGameWindow.reveivedGameEventMessage();
+        }
+    }
+
     public void startTimer() {
         if(gamewindow) {
             viewModelGameWindow.startTimer();
         }
     }
 
-    public void logMessageArrived() {
-        if (gamewindow) {
-            viewModelGameWindow.receivedGameLogMessage();
-        }
-    }
 
     public void setRobotAlignment() {
         if (gamewindow) {

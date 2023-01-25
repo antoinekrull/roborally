@@ -152,7 +152,7 @@ public class ViewModelLobby {
     public void receivedMessage() {
         Message message = null;
         try {
-            message = modelChat.getMESSSAGES().take();
+            message = modelChat.getCHAT_MESSSAGES().take();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
