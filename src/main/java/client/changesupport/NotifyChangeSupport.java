@@ -99,4 +99,22 @@ public class NotifyChangeSupport {
             viewModelGameWindow.startTimer();
         }
     }
+
+    public void logMessageArrived() {
+        if (gamewindow) {
+            viewModelGameWindow.receivedGameLogMessage();
+        }
+    }
+
+    public void setRobotAlignment() {
+        if (gamewindow) {
+            viewModelGameWindow.setRobotAlignment();
+        }
+    }
+
+    public void adjustLive() {
+        if (gamewindow) {
+            viewModelGameWindow.adjustLive();
+        }
+    }
 }

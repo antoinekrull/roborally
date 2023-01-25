@@ -229,7 +229,7 @@ public class HandleClient implements Runnable{
                                     incomingMessage.getMessageBody().getRegister(), false);
                             write(cardRemovedMessage);
                         } else {
-                            logger.debug("Domi");
+                            logger.debug("else-case HandleClient for selectedCard");
                             Message cardPlayedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
                                     incomingMessage.getMessageBody().getRegister(), true);
                             write(cardPlayedMessage);

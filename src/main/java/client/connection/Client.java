@@ -54,6 +54,7 @@ public class Client {
     private BooleanProperty gameStarted;
     private ObjectProperty<Message> message;
     private ObjectProperty<Message> movement;
+    private ObjectProperty<Message> gameLogMessage;
     private IntegerProperty userID;
     private StringProperty errorMessage;
     private IntegerProperty x;
@@ -61,8 +62,11 @@ public class Client {
     private IntegerProperty movementX;
     private IntegerProperty movementY;
     private IntegerProperty robotID;
+    private IntegerProperty life;
+    private StringProperty roboterAlignment;
     private boolean prioPlayer = false;
     private BooleanProperty activePlayer;
+    private IntegerProperty score;
 
     public static ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
     public ObservableList<String> myCards;
@@ -75,11 +79,6 @@ public class Client {
     private ObservableList<String> maps;
     private BooleanProperty timer;
     private final Logger logger = LogManager.getLogger(Client.class);
-
-    public Board getBoard() {
-        return board;
-    }
-
     private Board board = new Board();
 
 
@@ -104,6 +103,10 @@ public class Client {
         this.movementY = new SimpleIntegerProperty();
         this.robotID = new SimpleIntegerProperty();
         this.movement = new SimpleObjectProperty<>();
+        this.roboterAlignment = new SimpleStringProperty();
+        this.life = new SimpleIntegerProperty();
+        this.gameLogMessage = new SimpleObjectProperty<>();
+        this.score = new SimpleIntegerProperty(0);
     }
 
     public static Client getInstance() {
@@ -111,6 +114,10 @@ public class Client {
             client = new Client();
         }
         return client;
+    }
+
+    public Board getBoard() {
+        return board;
     }
 
     public ObjectProperty<Message> messageProperty() {
@@ -173,6 +180,30 @@ public class Client {
 
     public ObservableList<String> getMyCards() {
         return myCards;
+    }
+
+    public int getLife() {
+        return life.get();
+    }
+
+    public int getScore() {
+        return score.get();
+    }
+
+    public IntegerProperty scoreProperty() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score.set(score);
+    }
+
+    public IntegerProperty lifeProperty() {
+        return life;
+    }
+
+    public void setLife(int damage) {
+        this.life.set(getLife() - damage);
     }
 
     public void setMyCards(ObservableList<String> myCards) {
@@ -283,6 +314,31 @@ public class Client {
         this.activePlayer.set(activePlayer);
     }
 
+    public Message getGameLogMessage() {
+        return gameLogMessage.get();
+    }
+
+    public ObjectProperty<Message> gameLogMessageProperty() {
+        return gameLogMessage;
+    }
+
+    public void setGameLogMessage(Message gameLogMessage) {
+        this.gameLogMessage.set(gameLogMessage);
+    }
+
+    public String getRoboterAlignment() {
+        return roboterAlignment.get();
+    }
+
+    public StringProperty roboterAlignmentProperty() {
+        return roboterAlignment;
+    }
+
+    public void setRoboterAlignment(String roboterAlignment) {
+        this.roboterAlignment.set(roboterAlignment);
+    }
+
+
     private class ReadMessagesFromServer implements Runnable {
         DataInputStream in = null;
         DataOutputStream out = null;
@@ -350,9 +406,7 @@ public class Client {
                             Platform.runLater(() -> Client.this.setErrorMessage(error));
                         }
                         if (message.getMessageType().equals(MessageType.CardPlayed)) {
-                            int clientID = message.getMessageBody().getClientID();
-                            String card = message.getMessageBody().getCard();
-
+                            Client.this.setMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.CurrentPlayer)) {
                             Client.this.activePlayer.set(true);
@@ -376,7 +430,6 @@ public class Client {
                                 System.out.println("X = " + message.getMessageBody().getX() + " | Y = " + message.getMessageBody().getY());
                                 System.out.println("RobotID in Client: : " + robotIDclient);
                             }
-
                              */
                         }
                         if (message.getMessageType().equals(MessageType.GameStarted)) {
@@ -433,7 +486,6 @@ public class Client {
                                 System.out.println("X = " + message.getMessageBody().getX() + " | Y = " + message.getMessageBody().getY());
                                 System.out.println("RobotID in Client: : " + robotIDclient);
                             }
-
                              */
                         }
                         if (message.getMessageType().equals(MessageType.CardSelected)) {
@@ -447,27 +499,48 @@ public class Client {
                             }
                         }
                         if (message.getMessageType().equals(MessageType.SelectionFinished)) {
-
+                            Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.TimerStarted)) {
                             Client.this.setTimer(true);
+                        }
+                        if (message.getMessageType().equals(MessageType.TimerEnded)) {
+                            Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
 
                         }
                         if (message.getMessageType().equals(MessageType.PlayerTurning)) {
-
+                            Client.this.setRoboterAlignment(message.getMessageBody().getRotation());
                         }
                         if (message.getMessageType().equals(MessageType.DrawDamage)) {
+                            int clientID = message.getMessageBody().getClientID();
+                            if (userIDProperty().get() == clientID) {
+                                //String[] damageCards = message.getMessageBody().getCard
+                                //int damage = ;
+                                Client.this.setLife(1);
+                            }
+                            else {
+                                Client.this.setGameLogMessage(message);
+                            }
 
                         }
                         if (message.getMessageType().equals(MessageType.PickDamage)) {
+                            //TODO: Show menu for picking a damageCard
 
                         }
                         if (message.getMessageType().equals(MessageType.Energy)) {
+                            int clientID = message.getMessageBody().getClientID();
+                            int count = message.getMessageBody().getCount();
+                            if (userIDProperty().get() == clientID) {
+                                Client.this.addEnergy(count);
+                            }
+                            else {
 
+                            }
                         }
                         if (message.getMessageType().equals(MessageType.GameFinished)) {
+                            Client.this.setGameLogMessage(message);
 
                         }
                         if (message.getMessageType().equals(MessageType.CheckpointMoved)) {
@@ -476,12 +549,26 @@ public class Client {
                         if (message.getMessageType().equals(MessageType.RegisterChosen)) {
 
                         }
+                        if (message.getMessageType().equals(MessageType.CheckPointReached)) {
+                            int clientID = message.getMessageBody().getClientID();
+                            if (Client.this.userIDProperty().get() == clientID) {
+                                Client.this.setScore(message.getMessageBody().getNumber());
+                            }
+                            else {
+                                clientPlayerList.getPlayer(clientID).setScore(message.getMessageBody().getNumber());
+                                Client.this.setGameLogMessage(message);
+                            }
+                        }
                     }
                 }
             } catch (IOException e) {
                 logger.warn("Lost connection to server " + e);
             }
         }
+    }
+
+    private void addEnergy(int count) {
+
     }
 
     //maybe are these methods redundant, but they are kept until everything is implemented for them to be there
@@ -534,6 +621,10 @@ public class Client {
     }
     public void sendRegister(int register) {
         sendMessageToServer(messageCreator.generateChooseRegisterMessage(register));
+    }
+
+    public void sendReturnCards(String[] returnCards) {
+        //sendMessageToServer(messageCreator.generateReturnCardsMessage(returnCards));
     }
 
 

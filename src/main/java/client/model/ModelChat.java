@@ -7,6 +7,8 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,6 +26,8 @@ public class ModelChat {
     private static ModelChat modelChat;
     private StringProperty textfieldProperty;
     private ObjectProperty<Message> chatMessage;
+    private ObjectProperty<Message> logMessage;
+    private final LinkedBlockingQueue<Message> GAMELOGMESSAGES;
     private final LinkedBlockingQueue<Message> MESSSAGES;
     private NotifyChangeSupport notifyChangeSupport;
 
@@ -46,6 +50,20 @@ public class ModelChat {
                 e.printStackTrace();
             }
         });
+        this.GAMELOGMESSAGES = new LinkedBlockingQueue<>();
+        logMessage = new SimpleObjectProperty<>();
+        logMessage.bind(client.gameLogMessageProperty());
+        logMessage.addListener(new ChangeListener<Message>() {
+            @Override
+            public void changed(ObservableValue<? extends Message> observable, Message oldValue, Message newValue) {
+                try {
+                    GAMELOGMESSAGES.put(client.getGameLogMessage());
+                    notifyChangeSupport.logMessageArrived();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public static ModelChat getInstance() {
@@ -61,6 +79,10 @@ public class ModelChat {
 
     public LinkedBlockingQueue<Message> getMESSSAGES() {
         return MESSSAGES;
+    }
+
+    public LinkedBlockingQueue<Message> getGAMELOGMESSAGES() {
+        return GAMELOGMESSAGES;
     }
 
     public void sendGroupMessage() {
