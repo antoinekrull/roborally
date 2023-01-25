@@ -102,6 +102,9 @@ public class Client {
         this.movementY = new SimpleIntegerProperty();
         this.robotID = new SimpleIntegerProperty();
         this.movement = new SimpleObjectProperty<>();
+        this.roboterAlignment = new SimpleStringProperty();
+        this.life = new SimpleIntegerProperty();
+        this.gameLogMessage = new SimpleObjectProperty<>();
     }
 
     public static Client getInstance() {

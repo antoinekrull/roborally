@@ -250,8 +250,9 @@ public class ViewModelGameWindow {
 
     }
 
-    /*
+
     public void chatButtonOnAction() {
+        /*
         String user = usersChoiceBox.getSelectionModel().getSelectedItem().getUsername();
 
         if(user.equals("Group")) {
@@ -264,9 +265,10 @@ public class ViewModelGameWindow {
             modelChat.sendPrivateMessage(userID);
             privateMessageToChat(chatTextfield.getText(), false);
         }
+
+         */
     }
 
-     */
 
     public void groupMessageToChat(String groupMessage, boolean received) {
         HBox hBox = new HBox();
