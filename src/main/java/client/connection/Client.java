@@ -525,6 +525,7 @@ public class Client {
 
                         }
                         if (message.getMessageType().equals(MessageType.PickDamage)) {
+                            //TODO: Show menu for picking a damageCard
 
                         }
                         if (message.getMessageType().equals(MessageType.Energy)) {
