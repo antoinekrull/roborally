@@ -37,11 +37,11 @@ public class ViewModelRobotSelection {
     @FXML
     private Label robot1, robot2, robot3, robot4, robot5, robot6;
     @FXML
-    private Button exitButton;
-    @FXML
     private Label errorLabelRobotSelection;
     @FXML
     ImageView selectedRobot;
+    @FXML
+    private Button exitButton;
 
     private ModelUser modelUser;
     private ModelGame modelGame;

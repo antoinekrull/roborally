@@ -40,6 +40,7 @@ public class ModelGame {
     private SimpleIntegerProperty robotProperty;
     private SimpleStringProperty robotAlignment;
     private SimpleIntegerProperty score;
+    private SimpleIntegerProperty energy;
     private BooleanProperty readyToPlay;
     private BooleanProperty activePlayer;
     private ObservableList<Integer> readyList;
@@ -60,17 +61,19 @@ public class ModelGame {
     private ModelGame() {
         client = Client.getInstance();
         this.notifyChangeSupport = NotifyChangeSupport.getInstance();
-        this.score = new SimpleIntegerProperty(0);
-        score.bind(client.scoreProperty());
-        this.activePlayer = new SimpleBooleanProperty(false);
-        this.activePlayer.bind(client.activePlayerProperty());
-        this.robotProperty = new SimpleIntegerProperty();
+        this.clientPlayerList = client.getPlayerList();
         this.readyList = FXCollections.observableArrayList();
         this.readyToPlay = new SimpleBooleanProperty();
         this.maps = client.getMaps();
-        //this.maps = FXCollections.observableArrayList(client.getMaps());
         this.gameBoard = client.getBoard();
-        this.clientPlayerList = client.getPlayerList();
+        this.robotProperty = new SimpleIntegerProperty();
+        this.score = new SimpleIntegerProperty(0);
+        score.bind(client.scoreProperty());
+        this.energy = new SimpleIntegerProperty();
+        energy.bind(client.energyProperty());
+        this.activePlayer = new SimpleBooleanProperty(false);
+        this.activePlayer.bind(client.activePlayerProperty());
+        //this.maps = FXCollections.observableArrayList(client.getMaps());
         this.errorMessage = new SimpleStringProperty();
         errorMessage.bind(client.errorMessageProperty());
         this.myHandCards = FXCollections.observableArrayList();
@@ -154,34 +157,49 @@ public class ModelGame {
     public ClientPlayerList getPlayerList() {
         return clientPlayerList;
     }
-    public SimpleIntegerProperty robotProperty() {
-        return robotProperty;
-    }
-    public void setRobotProperty(int robotProperty) {
-        this.robotProperty.set(robotProperty);
-    }
-    public ObservableList<Integer> getReadyList() {
-        return readyList;
-    }
-    public BooleanProperty activePlayerProperty() {
-        return activePlayer;
-    }
-    public BooleanProperty readyToPlayProperty() {
-        return readyToPlay;
-    }
-    public ObservableList<String> getMaps() {
-        return maps;
-    }
-    public void setMaps(ObservableList<String> maps) {
-        this.maps = maps;
-    }
+
     public ArrayList<ArrayList<ArrayList<Tile>>> getGameMap() {
         this.gameMap = gameBoard.getBoard();
         return gameMap;
     }
-    public SimpleStringProperty errorMessageProperty() {
-        return errorMessage;
+
+    public void createMap(String jsonMap) throws JsonProcessingException {
+        gameBoard.createBoard(jsonMap);
+        this.gameMap = gameBoard.getBoard();
     }
+
+    public SimpleIntegerProperty robotProperty() {
+        return robotProperty;
+    }
+
+    public void setRobotProperty(int robotProperty) {
+        this.robotProperty.set(robotProperty);
+    }
+
+    public ObservableList<Integer> getReadyList() {
+        return readyList;
+    }
+
+    public BooleanProperty activePlayerProperty() {
+        return activePlayer;
+    }
+
+    public BooleanProperty readyToPlayProperty() {
+        return readyToPlay;
+    }
+
+    public ObservableList<String> getMaps() {
+        return maps;
+    }
+
+    public void setMaps(ObservableList<String> maps) {
+        this.maps = maps;
+    }
+
+    public SimpleIntegerProperty energyProperty() {
+        return energy;
+    }
+
     public ObservableList<String> getMyHandCards() {
         return myHandCards;
     }
@@ -194,9 +212,8 @@ public class ModelGame {
         return GAME_EVENT_MESSAGES;
     }
 
-    public void createMap(String jsonMap) throws JsonProcessingException {
-        gameBoard.createBoard(jsonMap);
-        this.gameMap = gameBoard.getBoard();
+    public SimpleStringProperty errorMessageProperty() {
+        return errorMessage;
     }
 
     public void sendPlayerValues(String nickname) {
@@ -207,11 +224,14 @@ public class ModelGame {
         client.sendStartingPoint(x, y);
     }
 
+    public void sendPlayCard(String card) {
+        client.sendPlayCard(card);
+    }
     public void sendSelectedCard(String card, int register) {
-        client.sendSelectCard(card, register);
+        client.sendSelectedCard(card, register);
     }
 
-    public void sendRegisterChosen(int register) {
+    public void sendRegister(int register) {
         client.sendRegister(register);
     }
 
@@ -221,6 +241,10 @@ public class ModelGame {
 
     public void sendDiscardSomeCards(String[] discardSome) {
         client.sendDiscardSome(discardSome);
+    }
+
+    public void sendRebootDirection(String direction) {
+        client.sendRebootDirection(direction);
     }
 
 }

@@ -57,13 +57,9 @@ import org.apache.logging.log4j.Logger;
  */
 public class ViewModelGameWindow {
     @FXML
-    private Pane gameboardRegion;
-    @FXML
     private ColumnConstraints gameboardColumn;
     @FXML
     private Button chatButton;
-    @FXML
-    private GridPane deckGrid;
     @FXML
     private TextField chatTextfield;
     @FXML
@@ -71,31 +67,29 @@ public class ViewModelGameWindow {
     @FXML
     private ScrollPane chatScrollPane;
     @FXML
-    private MenuItem exitMenuItem;
+    private GridPane deckGrid, gameboard, programmingGrid;
     @FXML
-    private GridPane gameboard;
+    private Pane gameboardRegion;
     @FXML
     private Pane programCard1, programCard2, programCard3, programCard4, programCard5, programCard6, programCard7, programCard8, programCard9;
     @FXML
-    private GridPane programmingGrid;
-    @FXML
     private Pane programmingPane1, programmingPane2, programmingPane3, programmingPane4, programmingPane5;
     @FXML
-    private GridPane handGrid;
+    private GridPane handGrid, playerInfoGrid;
     @FXML
-    private GridPane playerInfoGrid;
+    private Pane upgradeDeck, damageDeck;
     @FXML
-    private Pane upgradeDeck;
+    private Label timerLabel, currentPhaseLabel, currentActivePlayerLabeL, myEnergyLabel;
     @FXML
-    private Pane damageDeck;
+    private HBox myPlayerInfoHBox;
     @FXML
-    private StackPane baseStackPane;
+    private VBox myPlayerInfoVBox;
     @FXML
-    private StackPane handStackPane;
+    private StackPane myEnergyStackPane, baseStackPane, handStackPane, ProgrammingSpaceStackPane, gameboardStackPane;
     @FXML
-    private StackPane programmingSpaceStackPane;
+    private ProgressBar myEnergyBar;
     @FXML
-    private StackPane gameboardStackPane;
+    private MenuItem exitMenuItem;
 
     public Pane programspacePane;
 
@@ -142,6 +136,14 @@ public class ViewModelGameWindow {
             this.programcardsWidth = width * 0.07;
             updateWidth(width);
         });
+
+        //TODO: setActivePlayer Text to bind
+        //currentActivePlayerLabeL.textProperty().bind("");
+
+        myEnergyBar.progressProperty().bind(modelGame.energyProperty());
+        myEnergyLabel.textProperty().bind(modelGame.energyProperty().asString());
+        myEnergyLabel.setStyle("-flex: red;");
+        StackPane.setAlignment(myEnergyLabel, Pos.CENTER);
 
         playerGameInfo = new PlayerGameInfo(playerInfoGrid, modelGame.getPlayerList());
         playerGameInfo.loadPlayerInfo();
@@ -312,7 +314,6 @@ public class ViewModelGameWindow {
         }
     }
 
-
     public void receivedGameLogMessage() {
         Message logmessage = null;
         try {
@@ -381,6 +382,12 @@ public class ViewModelGameWindow {
 
     private void handleGameEvent(Message gamemessage) {
         if (gamemessage.getMessageType().equals(MessageType.SelectionFinished)) {
+
+        }
+        if (gamemessage.getMessageType().equals(MessageType.CurrentCards)) {
+
+        }
+        if (gamemessage.getMessageType().equals(MessageType.ReplaceCard)) {
 
         }
         if (gamemessage.getMessageType().equals(MessageType.DrawDamage)) {
@@ -815,15 +822,18 @@ public class ViewModelGameWindow {
 
     public void startTimer() {
         Timeline timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new EventHandler<>() {
+            int timer = 30;
             @Override
             public void handle(ActionEvent event) {
-                int timer = 30;
-                //label.setText(timer);
+                timerLabel.setText(String.valueOf(timer));
+                if (timer <= 10) {
+                    timerLabel.setStyle("-fx-text-fill: red;");
+                }
                 timer--;
                 if (timer <= 0) {
                     timeline.stop();
-                  //here we want to do something i hope
+                    //TODO: something could happen after timer ended
                 }
             }
         }));

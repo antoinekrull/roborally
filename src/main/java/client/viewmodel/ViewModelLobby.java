@@ -11,8 +11,6 @@ import client.ui.PlayerListCell;
 import communication.Message;
 import client.player.ClientPlayer;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -46,11 +44,7 @@ public class ViewModelLobby {
     @FXML
     private TextField chatTextfield;
     @FXML
-    private Button chatButton;
-    @FXML
-    private MenuItem exitMenuItem;
-    @FXML
-    private MenuItem helpMenuItem;
+    private Button chatButton, readyButton, mapButton;
     @FXML
     private ListView<ClientPlayer> userList;
     @FXML
@@ -58,11 +52,9 @@ public class ViewModelLobby {
     @FXML
     private ChoiceBox<ClientPlayer> usersChoiceBox;
     @FXML
-    private Button readyButton;
+    private Label timerLabel;
     @FXML
-    private Label timeLabel;
-    @FXML
-    private Button mapButton;
+    private MenuItem exitMenuItem, helpMenuItem;
 
     private ModelChat modelChat;
     private ModelUser modelUser;
