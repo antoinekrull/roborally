@@ -94,7 +94,7 @@ public class Game implements Runnable {
                     }
                 }
             }
-
+        Thread.sleep(1000);
         for(int x = 0; x < board.getConveyorBelt1List().size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getConveyorBelt1List().get(x).getPosition())) {
@@ -107,6 +107,7 @@ public class Game implements Runnable {
                 }
             }
         }
+            Thread.sleep(1000);
         applyPushPanelEffects();
         for(int x = 0; x < board.getGearTileList().size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
@@ -115,6 +116,7 @@ public class Game implements Runnable {
                 }
             }
         }
+            Thread.sleep(1000);
         for(int x = 0; x < board.getLaserTileList().size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getLaserTileList().get(x).getPosition())) {
@@ -122,6 +124,7 @@ public class Game implements Runnable {
                 }
             }
         }
+            Thread.sleep(1000);
         //robotLaser
         computeRobotLaserPositions();
         for(int i = 0; i < playerList.size(); i++){
@@ -133,6 +136,7 @@ public class Game implements Runnable {
                 }
             }
         }
+            Thread.sleep(1000);
         robotLaserList.clear();
 
         for(int x = 0; x < board.getEnergySpaceList().size(); x++) {
@@ -144,6 +148,7 @@ public class Game implements Runnable {
                 }
             }
         }
+            Thread.sleep(1000);
         for(int x = 0; x < board.getCheckpointList().size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getCheckpointList().get(x).getPosition())) {
@@ -151,10 +156,12 @@ public class Game implements Runnable {
                 }
             }
         }
+            Thread.sleep(1000);
         } catch(IndexOutOfBoundsException e) {
             logger.warn("You're Robot can not move past this point." + e);
         }
     }
+
 
     private void applyPushPanelEffects() throws Exception {
         for (int i = 0; i < playerList.size(); i++) {
@@ -656,6 +663,7 @@ public class Game implements Runnable {
             //runUpgradePhase();
             try {
                 runProgrammingPhase(playerList);
+                Thread.sleep(100);
                 runActivationPhase();
             } catch (Exception e) {
                 logger.warn("An error occurred :" + e);
