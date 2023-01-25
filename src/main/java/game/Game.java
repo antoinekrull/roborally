@@ -418,6 +418,15 @@ public class Game implements Runnable {
             }
             case "TurnLeft" -> player.getRobot().rotateRobot(Direction.LEFT);
             case "TurnRight" -> player.getRobot().rotateRobot(Direction.RIGHT);
+            case "UTurn" -> {
+                switch (player.getRobot().getDirection()) {
+                    case NORTH -> player.getRobot().setDirection(Direction.SOUTH);
+                    case EAST -> player.getRobot().setDirection(Direction.WEST);
+                    case SOUTH -> player.getRobot().setDirection(Direction.NORTH);
+                    case WEST -> player.getRobot().setDirection(Direction.EAST);
+                    default -> logger.warn("Invalid Direction");
+                }
+            }
             case "Virus" -> {
                 for (int i = 0; i < Game.playerList.size(); i++) {
                     if (isInRangeOfVirus(player.getRobot(), Game.playerList.getPlayerFromList(i).getRobot())) {
