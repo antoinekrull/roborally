@@ -398,4 +398,8 @@ public class ModelGame {
         client.sendRegister(register);
     }
 
+    public void sendReturnCards(String[] returnCards) {
+        client.sendReturnCards(returnCards);
+    }
+
 }

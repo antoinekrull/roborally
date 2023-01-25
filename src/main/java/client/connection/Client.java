@@ -338,6 +338,7 @@ public class Client {
         this.roboterAlignment.set(roboterAlignment);
     }
 
+
     private class ReadMessagesFromServer implements Runnable {
         DataInputStream in = null;
         DataOutputStream out = null;
@@ -619,6 +620,10 @@ public class Client {
     }
     public void sendRegister(int register) {
         sendMessageToServer(messageCreator.generateChooseRegisterMessage(register));
+    }
+
+    public void sendReturnCards(String[] returnCards) {
+        //sendMessageToServer(messageCreator.generateReturnCardsMessage(returnCards));
     }
 
 
