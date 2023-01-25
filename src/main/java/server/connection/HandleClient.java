@@ -221,7 +221,7 @@ public class HandleClient implements Runnable{
                                 getClientID()));
                     }
                     else if (incomingMessage.getMessageType() == MessageType.SelectedCard) {
-                        logger.debug(incomingMessage.getMessageBody());
+                        logger.debug(incomingMessage.getMessageBody().getCard());
                         Game.playerList.getPlayerFromList(getClientID()).playCard(incomingMessage.getMessageBody().getCard(),
                                 incomingMessage.getMessageBody().getRegister());
                         if(incomingMessage.getMessageBody().getCard().equals("Null")) {
@@ -229,6 +229,7 @@ public class HandleClient implements Runnable{
                                     incomingMessage.getMessageBody().getRegister(), false);
                             write(cardRemovedMessage);
                         } else {
+                            logger.debug("Domi");
                             Message cardPlayedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
                                     incomingMessage.getMessageBody().getRegister(), true);
                             write(cardPlayedMessage);

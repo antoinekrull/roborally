@@ -5,6 +5,7 @@ import client.viewmodel.ViewModelLobby;
 import client.viewmodel.ViewModelRobotSelection;
 
 import java.io.IOException;
+import javafx.application.Platform;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -85,10 +86,12 @@ public class NotifyChangeSupport {
     }
 
     public void robotSetPosition() {
-        if (gamewindow) {
-            viewModelGameWindow.robotSetPosition();
-            logger.debug("RobotID in robotSetPosition: ");
-        }
+        Platform.runLater(() -> {
+            if (gamewindow) {
+                viewModelGameWindow.robotSetPosition();
+                logger.debug("RobotID in robotSetPosition: ");
+            }
+        });
     }
 
     public void startTimer() {

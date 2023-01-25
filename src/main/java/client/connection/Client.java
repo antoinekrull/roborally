@@ -359,6 +359,7 @@ public class Client {
                         }
                         if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
                             Client.this.setMovement(message);
+                            logger.debug("StartingPointTaken message: " + message);
                             /*
                             int clientRobot = message.getMessageBody().getClientID();
                             if (Client.this.userIDProperty().get() == clientRobot) {
@@ -415,6 +416,7 @@ public class Client {
                         }
                         if (message.getMessageType().equals(MessageType.Movement)) {
                             Client.this.setMovement(message);
+                            logger.debug("Movement message: " + message);
                             /*
                             int clientRobot = message.getMessageBody().getClientID();
                             if (Client.this.userIDProperty().get() == clientRobot) {
@@ -517,6 +519,7 @@ public class Client {
         this.activePlayer.set(false);
     }
     public void sendSelectCard(String card, int register) {
+        logger.debug("Selected card: " + card + " and register: " + register);
         sendMessageToServer(messageCreator.generateSelectedCardMessage(card, register));
     }
     //TODO: add method in messageCreator

@@ -378,6 +378,7 @@ public class ViewModelGameWindow {
     }
 
     public void robotSetPosition() {
+        Platform.runLater(() ->{
         Message robotMovement;
         try {
             robotMovement = modelGame.getPLAYERMOVEMENTS().take();
@@ -386,6 +387,7 @@ public class ViewModelGameWindow {
         }
         int x = robotMovement.getMessageBody().getX();
         int y = robotMovement.getMessageBody().getY();
+        logger.debug("In viewModel - X: " + x + " | Y: " + y);
         int clientID = robotMovement.getMessageBody().getClientID();
         int figure;
         if (modelUser.userIDProperty().get() == clientID) {
@@ -394,7 +396,7 @@ public class ViewModelGameWindow {
         else {
             figure = modelGame.getPlayerList().getPlayer(clientID).getRobot().getFigure();
         }
-        Platform.runLater(() ->{
+
             logger.debug("RobotID in viewModel: " + figure);
         InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + figure + "_bunt.png");
         Image im = new Image(input);
@@ -430,12 +432,12 @@ public class ViewModelGameWindow {
                 ClipboardContent content = new ClipboardContent();
                 ImageView card = (ImageView) source.getChildren().get(0);
                 content.putImage(card.getImage());
+                content.putString(card.getId());
                 db.setContent(content);
                 event.consume();
                 columnIndex = handGrid.getChildren().indexOf(source);
                 source.getChildren().clear();
                 logger.debug("Element from Column " + columnIndex);
-
             }
         });
     }
@@ -493,32 +495,28 @@ public class ViewModelGameWindow {
                 logger.debug("setOnDragDropped");
                 //data dropped
                 boolean success = false;
+                logger.debug("VM - target Children: " + target.getChildren());
                 if (target.getChildren().isEmpty()) {
                     Dragboard db = event.getDragboard();
                     if (db.hasImage()) {
+
+                        String cardName = db.getString();
                         Image data = db.getImage();
                         ImageView card = new ImageView(data);
                         card.setFitHeight(height);
                         card.setPreserveRatio(true);
-                        //add image from dragboard to slots (Pane)
                         target.getChildren().add(card);
+                        int targetIndex;
+                        if(GridPane.getColumnIndex(target)== null) {
+                            targetIndex = 1;
+                        }
+                        else {
+                            targetIndex = GridPane.getColumnIndex(target) + 1;
+                        }
+                        logger.debug("VM - 1 Cardname: " + cardName);
                         success = true;
-                        Pane source = (Pane) handGrid.getChildren().get(columnIndex);
-                        source.getChildren().clear();
-                        //Send cardtype and register of played Card:
-                        String cardName = switch (data.getUrl()) {
-                            case "Move1.png" -> "MoveI";
-                            case "Move2.png" -> "MoveII";
-                            case "Move3.png" -> "MoveIII";
-                            case "leftTurn.png" -> "TurnLeft";
-                            case "rightTurn.png" -> "TurnRight";
-                            case "uTurn.png" -> "UTurn";
-                            case "moveBack.png" -> "BackUp";
-                            case "powerUp.png" -> "PowerUp";
-                            case "Again.png" -> "Again";
-                            default -> "";
-                        };
-                        int targetIndex = GridPane.getColumnIndex(target);
+                        logger.debug("VM - 3 target for message: " + targetIndex);
+                        logger.debug("VM - 4 SendSelectedCard sent: " + cardName);
                         modelGame.sendSelectedCard(cardName, targetIndex);
                     }
                     event.setDropCompleted(success);
@@ -536,17 +534,7 @@ public class ViewModelGameWindow {
                         logger.debug(columnIndex);
                     }
                 }
-                ObservableList<Node> children = programmingGrid.getChildren();
-                logger.debug("ProgramGrid now: ");
-                for (Node child : children) {
-                    logger.debug(child);
-                    if (child instanceof Pane) {
-                        Pane pane = (Pane) child;
-                        logger.debug("Pane contains: " + pane.getChildren());
-                    }
-                }
             }
-
         });
     }
 
@@ -618,14 +606,14 @@ public class ViewModelGameWindow {
         Platform.runLater(() -> {
             logger.debug("handGrid children size: " + handGrid.getChildren().size());
             for (int i = 0; i < 9; i++) {
-                if (handGrid.getChildren().get(i) instanceof Pane) {
-                    Pane pane = (Pane) handGrid.getChildren().get(i);
+                if (handGrid.getChildren().get(i) instanceof Pane pane) {
                     switch (handCards.get(i)) {
                         case "MoveI" -> {
                             InputStream input = getClass().getResourceAsStream(
                                 "/textures/cards/Move1.png");
                             Image image = new Image(input);
                             ImageView imageView = new ImageView(image);
+                            imageView.setId("MoveI");
                             imageView.setFitHeight(90);
                             imageView.setFitWidth(60);
                             pane.getChildren().add(imageView);
@@ -635,6 +623,7 @@ public class ViewModelGameWindow {
                                 "/textures/cards/Move2.png");
                             Image image2 = new Image(input2);
                             ImageView imageView2 = new ImageView(image2);
+                            imageView2.setId("MoveII");
                             imageView2.setFitHeight(90);
                             imageView2.setFitWidth(60);
                             pane.getChildren().add(imageView2);
@@ -644,6 +633,7 @@ public class ViewModelGameWindow {
                                 "/textures/cards/Move3.png");
                             Image image3 = new Image(input3);
                             ImageView imageView3 = new ImageView(image3);
+                            imageView3.setId("MoveIII");
                             imageView3.setFitHeight(90);
                             imageView3.setFitWidth(60);
                             pane.getChildren().add(imageView3);
@@ -653,6 +643,7 @@ public class ViewModelGameWindow {
                                 "/textures/cards/leftTurn.png");
                             Image image4 = new Image(input4);
                             ImageView imageView4 = new ImageView(image4);
+                            imageView4.setId("TurnLeft");
                             imageView4.setFitHeight(90);
                             imageView4.setFitWidth(60);
                             pane.getChildren().add(imageView4);
@@ -662,6 +653,7 @@ public class ViewModelGameWindow {
                                 "/textures/cards/rightTurn.png");
                             Image image5 = new Image(input5);
                             ImageView imageView5 = new ImageView(image5);
+                            imageView5.setId("TurnRight");
                             imageView5.setFitHeight(90);
                             imageView5.setFitWidth(60);
                             pane.getChildren().add(imageView5);
@@ -671,6 +663,7 @@ public class ViewModelGameWindow {
                                 "/textures/cards/uTurn.png");
                             Image image6 = new Image(input6);
                             ImageView imageView6 = new ImageView(image6);
+                            imageView6.setId("UTurn");
                             imageView6.setFitHeight(90);
                             imageView6.setFitWidth(60);
                             pane.getChildren().add(imageView6);
@@ -680,6 +673,7 @@ public class ViewModelGameWindow {
                                 "/textures/cards/moveBack.png");
                             Image image7 = new Image(input7);
                             ImageView imageView7 = new ImageView(image7);
+                            imageView7.setId("BackUp");
                             imageView7.setFitHeight(90);
                             imageView7.setFitWidth(60);
                             pane.getChildren().add(imageView7);
@@ -689,6 +683,7 @@ public class ViewModelGameWindow {
                                 "/textures/cards/powerUp.png");
                             Image image8 = new Image(input8);
                             ImageView imageView8 = new ImageView(image8);
+                            imageView8.setId("PowerUp");
                             imageView8.setFitHeight(90);
                             imageView8.setFitWidth(60);
                             pane.getChildren().add(imageView8);
@@ -698,6 +693,7 @@ public class ViewModelGameWindow {
                                 "/textures/cards/Again.png");
                             Image image9 = new Image(input9);
                             ImageView imageView9 = new ImageView(image9);
+                            imageView9.setId("Again");
                             imageView9.setFitHeight(90);
                             imageView9.setFitWidth(60);
                             pane.getChildren().add(imageView9);
