@@ -506,7 +506,7 @@ public class Game implements Runnable {
             Thread.sleep(1000);
             logger.debug("Applying tile effects");
             applyAllTileEffects();
-            currentRegister++;
+            ++currentRegister;
             /*
             if(checkIfPlayersReachedCheckPoints(playerList)){
                 ArrayList<Pair<Integer, Integer>> playersReachedCheckpoints = playersThatReachedCheckpoints(playerList);
