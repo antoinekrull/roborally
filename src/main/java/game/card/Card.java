@@ -14,6 +14,8 @@ public abstract class Card {
 
     private int clientID;
     private String card;
+
+    private int velocity;
     private boolean isActivated = false;
     protected boolean isDamageCard = false;
     private String cardEffect;
@@ -38,6 +40,12 @@ public abstract class Card {
     }
     public void setCardEffect(String newCardEffect) {
         this.cardEffect = newCardEffect;
+    }
+    public int getVelocity() {
+        return velocity;
+    }
+    public void setVelocity(int velocity) {
+        this.velocity = velocity;
     }
     public boolean isActivated() {
         return isActivated;

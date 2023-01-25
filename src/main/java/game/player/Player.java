@@ -83,6 +83,8 @@ public class Player {
     public Card[] getCardRegister() {
         return cardRegister;
     }
+
+    //TODO: Fix crash if reboot happened
     public Card getCardFromRegister(int index){
         return cardRegister[index];
     }
@@ -175,7 +177,7 @@ public class Player {
         }
         if(index == 0 && card instanceof AgainCard) {
             System.out.println("You cant play this card in the first register, please try again!");
-        } else if(index > 0 || index < cardRegister.length){
+        } else if(index < 0 || index > cardRegister.length){
             System.out.println("The register has not been addressed properly, please try again!");
         } else {
             cardRegister[index] = card;
@@ -233,19 +235,19 @@ public class Player {
 
     public void emptyAllCardRegisters() {
         for(int i = 0; i < cardRegister.length; i++) {
-            if(cardRegister[i].isDamageCard()) {
-                switch (cardRegister[i].getCard()) {
-                    case "Trojan" -> Game.trojanDeck.addCard(cardRegister[i]);
-                    case "Worm" -> Game.wormDeck.addCard(cardRegister[i]);
-                    case "Spam" -> Game.spamDeck.addCard(cardRegister[i]);
-                    case "Virus" -> Game.virusDeck.addCard(cardRegister[i]);
+            if(cardRegister[i] == null) {
+                if(cardRegister[i].isDamageCard()) {
+                    switch (cardRegister[i].getCard()) {
+                        case "Trojan" -> Game.trojanDeck.addCard(cardRegister[i]);
+                        case "Worm" -> Game.wormDeck.addCard(cardRegister[i]);
+                        case "Spam" -> Game.spamDeck.addCard(cardRegister[i]);
+                        case "Virus" -> Game.virusDeck.addCard(cardRegister[i]);
+                    }
+                } else {
+                    personalDiscardPile.addCard(cardRegister[i]);
+                    cardRegister[i] = null;
                 }
-            } else {
-                personalDiscardPile.addCard(cardRegister[i]);
-                cardRegister[i] = null;
             }
-            setCardRegister(null, i);
-            //setStatusRegister(false, i);
         }
     }
     @Override

@@ -223,7 +223,7 @@ public class HandleClient implements Runnable{
                     else if (incomingMessage.getMessageType() == MessageType.SelectedCard) {
                         logger.debug(incomingMessage.getMessageBody().getCard());
                         Game.playerList.getPlayerFromList(getClientID()).playCard(incomingMessage.getMessageBody().getCard(),
-                                incomingMessage.getMessageBody().getRegister());
+                                incomingMessage.getMessageBody().getRegister() - 1);
                         if(incomingMessage.getMessageBody().getCard().equals("Null")) {
                             Message cardRemovedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
                                     incomingMessage.getMessageBody().getRegister(), false);
