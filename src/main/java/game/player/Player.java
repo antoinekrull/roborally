@@ -235,7 +235,7 @@ public class Player {
         for(int i = 0; i < cardRegister.length; i++) {
             if(cardRegister[i].isDamageCard()) {
                 switch (cardRegister[i].getCard()) {
-                    case "Trojan Horse" -> Game.trojanDeck.addCard(cardRegister[i]);
+                    case "Trojan" -> Game.trojanDeck.addCard(cardRegister[i]);
                     case "Worm" -> Game.wormDeck.addCard(cardRegister[i]);
                     case "Spam" -> Game.spamDeck.addCard(cardRegister[i]);
                     case "Virus" -> Game.virusDeck.addCard(cardRegister[i]);

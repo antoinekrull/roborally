@@ -238,6 +238,23 @@ import java.util.ArrayList;
             messageBody.setType(type);
             return new Message(MessageType.Animation, messageBody);
         }
+        public Message generateDrawDamageMessage(int clientID, String[] drawnCards) {
+            MessageBody messageBody = new MessageBody();
+            messageBody.setClientID(clientID);
+            messageBody.setCards(drawnCards);
+            return new Message(MessageType.DrawDamage, messageBody);
+        }
+        public Message generatePickDamage(int clientID, String[] availablePiles) {
+            MessageBody messageBody = new MessageBody();
+            messageBody.setClientID(clientID);
+            messageBody.setAvailablePiles(availablePiles);
+            return new Message(MessageType.PickDamage, messageBody);
+        }
+        public Message generateSelectDamage(String[] cards) {
+            MessageBody messageBody = new MessageBody();
+            messageBody.setCards(cards);
+            return new Message(MessageType.SelectedDamage, messageBody);
+        }
         public Message generateRebootMessage(int clientID){
             MessageBody messageBody = new MessageBody();
             messageBody.setClientID(clientID);

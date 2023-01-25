@@ -326,6 +326,22 @@ public class Server {
         }
     }
 
+    public void sendDrawDamage(Player player, String[] damageCards) {
+        try {
+            CLIENTS.get(player.getId()).write(messageCreator.generateDrawDamageMessage(player.getId(), damageCards));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendPickDamage(Player player, String[] availablePiles) {
+        try {
+            CLIENTS.get(player.getId()).write(messageCreator.generatePickDamage(player.getId(), availablePiles));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void sendReboot(Player player) {
         try {
             messages.put(messageCreator.generateRebootMessage(player.getId()));

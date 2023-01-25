@@ -48,7 +48,9 @@ public class MessageBody {
     private boolean isBuying;
     private int checkpointID;
     private String[] cardsInHand;
+    private String[] cards;
     private int cardsAmountInHand;
+    private String[] availablePiles;
 
     public int getNumber() {
         return number;
@@ -337,4 +339,14 @@ public class MessageBody {
     }
 
 
+    public void setCards(String[] cards) {
+        this.cards = cards;
+    }
+    public String[] getCards() {
+        return cards;
+    }
+
+    public void setAvailablePiles(String[] availablePiles) {
+        this.availablePiles = availablePiles;
+    }
 }

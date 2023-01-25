@@ -8,6 +8,6 @@ public class Antenna extends Tile{
         this.imageFXid = "Antenna";
         setType("Antenna");
         isDanger = false;
-        isBlocking = true;
+        isBlocking = false;
     }
 }

@@ -143,6 +143,15 @@ public class PlayerList extends ArrayList implements Iterator<Player> {
 //        return result;
 //    }
 
+    public ArrayList<Player> getDamagedPlayers() {
+        ArrayList<Player> damagedPlayers = new ArrayList<>();
+        for(Player player: playerList) {
+            if(player.getRobot().getDamageCount() != 0) {
+                damagedPlayers.add(player);
+            }
+        }
+        return damagedPlayers;
+    }
     public PlayerList getUnreadyPlayers() {
         PlayerList unreadyPlayers = new PlayerList();
         for(int i = 0; i < playerList.size(); i++) {

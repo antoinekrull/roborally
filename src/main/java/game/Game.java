@@ -131,14 +131,19 @@ public class Game implements Runnable {
             for(int x = 0; x < robotLaserList.size(); x++) {
                 for(int y = 0; y < robotLaserList.get(x).size(); y++) {
                     if(playerList.get(i).getRobot().getCurrentPosition().equals(robotLaserList.get(y))) {
-                        playerList.get(i).addCard(game.Game.spamDeck.popCardFromDeck());
+                        playerList.get(i).getRobot().increaseDamageCount();
                     }
                 }
             }
         }
             Thread.sleep(1000);
         robotLaserList.clear();
-
+            if(playerList.getDamagedPlayers().size() != 0) {
+                for(Player player: playerList.getDamagedPlayers()) {
+                    drawDamageCards(player);
+                }
+            }
+            Thread.sleep(500);
         for(int x = 0; x < board.getEnergySpaceList().size(); x++) {
             for(int y = 0; y < playerList.size(); y++) {
                 if(playerList.get(y).getRobot().getCurrentPosition().equals(board.getEnergySpaceList().get(x).getPosition())) {
@@ -268,6 +273,66 @@ public class Game implements Runnable {
                     }
                 }
             }
+        }
+    }
+
+    //method for applying damage to robot
+    private void drawDamageCards(Player player) {
+        try {
+            String[] drawnDamageCards = new String[player.getRobot().getDamageCount()];
+            for(int i = 0; i < player.getRobot().getDamageCount(); i++) {
+                if(spamDeck.getSize() > 0) {
+                    player.addCard(spamDeck.popCardFromDeck());
+                    drawnDamageCards[i] = "Spam";
+                } else {
+                    ArrayList<String> availableDecks = new ArrayList<>();
+                    if(wormDeck.getSize() > 0) {
+                        availableDecks.add("Worm");
+                    }
+                    if(trojanDeck.getSize() > 0) {
+                        availableDecks.add("Trojan");
+                    }
+                    if(virusDeck.getSize() > 0) {
+                        availableDecks.add("Virus");
+                    }
+                    //TODO: Schmeißt fehler
+                    String[] availablePiles = availableDecks.toArray(String[]::new);
+                    server.sendPickDamage(player, availablePiles);
+                    Thread.sleep(100);
+                }
+            }
+            player.getRobot().setDamageCount(0);
+            server.sendDrawDamage(player, drawnDamageCards);
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //called by HandleCLient when player chooses what cards to draw
+    public void drawChosenDamageCards(Player player, String[] selectedDecks) {
+        try {
+            String[] drawnDamageCards = new String[selectedDecks.length];
+            for(int i = 0; i < selectedDecks.length; i++) {
+                switch (selectedDecks[i]) {
+                    case "Worm" -> {
+                        player.addCard(wormDeck.popCardFromDeck());
+                        drawnDamageCards[i] = "Worm";
+                    }
+                    case "Trojan" -> {
+                        player.addCard(trojanDeck.popCardFromDeck());
+                        drawnDamageCards[i] = "Trojan";
+                    }
+                    case "Virus" -> {
+                        player.addCard(virusDeck.popCardFromDeck());
+                        drawnDamageCards[i] = "Virus";
+                    }
+                }
+            }
+            server.sendDrawDamage(player, drawnDamageCards);
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -620,8 +685,9 @@ public class Game implements Runnable {
     }
 
     public void reboot(Player player) {
-        player.getPersonalDiscardPile().addCard(spamDeck.popCardFromDeck());
-        player.getPersonalDiscardPile().addCard(spamDeck.popCardFromDeck());
+        player.getRobot().increaseDamageCount();
+        player.getRobot().increaseDamageCount();
+        drawDamageCards(player);
         player.discardEntireHand();
         player.emptyAllCardRegisters();
         player.getRobot().setCurrentPosition(board.getRebootTile().getPosition());

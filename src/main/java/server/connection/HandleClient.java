@@ -234,6 +234,10 @@ public class HandleClient implements Runnable{
                                     incomingMessage.getMessageBody().getRegister(), true);
                             write(cardPlayedMessage);
                         }
+                    } else if (incomingMessage.getMessageType() == MessageType.SelectedDamage) {
+                        //Should be damage card
+                        game.drawChosenDamageCards(game.getPlayerFromPlayerListById(getClientID())
+                                , incomingMessage.getMessageBody().getCards());
                     } else if (incomingMessage.getMessageType() == MessageType.SetStartingPoint) {
                         if (clientID==game.getActivePlayer().getId()) {
                             int x = incomingMessage.getMessageBody().getX();

@@ -27,6 +27,7 @@ public class Robot {
     private Pair<Integer, Integer> currentPosition;
     private ProgrammingDeck deck = new ProgrammingDeck();
     private boolean isRebooted = false;
+    private int damageCount;
     private int activeRegister;
     private int id;
     private Server server;
@@ -144,6 +145,15 @@ public class Robot {
     }
     public boolean getRebootStatus() {return isRebooted;}
     public void setRebootStatus(boolean rebooted) {isRebooted = rebooted;}
+    public int getDamageCount() {
+        return damageCount;
+    }
+    public void setDamageCount(int damageCount) {
+        this.damageCount = damageCount;
+    }
+    public void increaseDamageCount() {
+        damageCount++;
+    }
     public int getActiveRegister() {return activeRegister;}
     public void setActiveRegister(int activeRegister) {this.activeRegister = activeRegister;}
 

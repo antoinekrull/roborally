@@ -20,7 +20,7 @@ public class WallTile extends Tile {
         this.imageFXid = "WallTile";
         setType("Wall");
         isDanger = false;
-        isBlocking = true;
+        isBlocking = false;
         this.blockedDirections = blockedDirections;
     }
 
