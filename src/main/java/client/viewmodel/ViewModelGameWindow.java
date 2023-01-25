@@ -330,6 +330,10 @@ public class ViewModelGameWindow {
     }
 
     public void logMessageToLogger(Message logMessage) {
+        if (logMessage.getMessageType().equals(MessageType.SelectionFinished)) {
+            int clientID = logMessage.getMessageBody().getClientID();
+            //show selectionfinished for this client
+        }
         if (logMessage.getMessageType().equals(MessageType.CardPlayed)) {
             int clientID = logMessage.getMessageBody().getClientID();
             String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
@@ -745,6 +749,10 @@ public class ViewModelGameWindow {
         }));
         timeline.setCycleCount(30);
         timeline.play();
+    }
+
+    public void setRobotAlignment() {
+        //set Robot Alignment
     }
 }
 

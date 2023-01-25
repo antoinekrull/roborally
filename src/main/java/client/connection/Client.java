@@ -62,6 +62,7 @@ public class Client {
     private IntegerProperty movementX;
     private IntegerProperty movementY;
     private IntegerProperty robotID;
+    private StringProperty roboterAlignment;
     private boolean prioPlayer = false;
     private BooleanProperty activePlayer;
 
@@ -296,6 +297,18 @@ public class Client {
         this.gameLogMessage.set(gameLogMessage);
     }
 
+    public String getRoboterAlignment() {
+        return roboterAlignment.get();
+    }
+
+    public StringProperty roboterAlignmentProperty() {
+        return roboterAlignment;
+    }
+
+    public void setRoboterAlignment(String roboterAlignment) {
+        this.roboterAlignment.set(roboterAlignment);
+    }
+
     private class ReadMessagesFromServer implements Runnable {
         DataInputStream in = null;
         DataOutputStream out = null;
@@ -456,7 +469,7 @@ public class Client {
                             }
                         }
                         if (message.getMessageType().equals(MessageType.SelectionFinished)) {
-
+                            Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.TimerStarted)) {
                             Client.this.setTimer(true);
@@ -468,7 +481,7 @@ public class Client {
 
                         }
                         if (message.getMessageType().equals(MessageType.PlayerTurning)) {
-
+                            Client.this.setRoboterAlignment(message.getMessageBody().getRotation());
                         }
                         if (message.getMessageType().equals(MessageType.DrawDamage)) {
 

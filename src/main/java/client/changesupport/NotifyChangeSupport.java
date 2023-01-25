@@ -105,4 +105,10 @@ public class NotifyChangeSupport {
             viewModelGameWindow.receivedGameLogMessage();
         }
     }
+
+    public void setRobotAlignment() {
+        if (gamewindow) {
+            viewModelGameWindow.setRobotAlignment();
+        }
+    }
 }

@@ -4,6 +4,7 @@ import client.connection.Client;
 import client.changesupport.NotifyChangeSupport;
 import client.player.ClientPlayerList;
 import client.viewmodel.ViewModelGameWindow;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import communication.Message;
 import game.Game;
@@ -33,10 +34,11 @@ public class ModelGame {
     private static ModelGame modelGame;
     private Client client;
     private Board gameBoard;
+    private NotifyChangeSupport notifyChangeSupport;
     private SimpleIntegerProperty robotProperty;
     private SimpleStringProperty errorMessage;
     private ObservableList<Integer> readyList;
-    private NotifyChangeSupport notifyChangeSupport;
+    private SimpleStringProperty robotAlignment;
     private SimpleIntegerProperty x;
     private SimpleIntegerProperty y;
     private boolean yChanged;
@@ -177,6 +179,15 @@ public class ModelGame {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 notifyChangeSupport.startTimer();
+            }
+        });
+
+        this.robotAlignment = new SimpleStringProperty();
+        robotAlignment.bind(client.roboterAlignmentProperty());
+        robotAlignment.addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                notifyChangeSupport.setRobotAlignment();
             }
         });
 
