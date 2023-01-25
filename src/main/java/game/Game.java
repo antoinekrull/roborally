@@ -558,13 +558,6 @@ public class Game implements Runnable {
             e.printStackTrace();
         }
         for(int i = 0; i < playerList.size(); i++) {
-            /*
-            System.out.println(wormDeck.popCardFromDeck().getCard());
-            playerList.get(i).addCardToHand(wormDeck.popCardFromDeck());
-            playerList.get(i).addCardToHand(trojanDeck.popCardFromDeck());
-            playerList.get(i).addCardToHand(spamDeck.popCardFromDeck());
-            playerList.get(i).addCardToHand(virusDeck.popCardFromDeck());
-            */
             playerList.get(i).drawFullHand();
             Thread.sleep(100);
             server.sendYourCards(playerList.get(i));
