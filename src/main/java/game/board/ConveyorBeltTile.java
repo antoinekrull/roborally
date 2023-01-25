@@ -60,8 +60,10 @@ public class ConveyorBeltTile extends Tile {
         Pair<Integer, Integer> newPosition = new Pair<>(player.getRobot().getCurrentPosition().getValue0(), player.getRobot().getCurrentPosition().getValue1());
         Pair<Integer, Integer> tempPosition;
         switch(this.directionOut){
-            case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + velocity);
-            case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - velocity);
+            //TODO: 1.Conveyorbelts sollen den robo drehen wenn sie um die ecke gehen
+            //TODO: 2.Conveyorbelts sollen robo nur so weit schieben bis er wieder auf normalem boden steht. Siehe Regeln
+            case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - velocity);
+            case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + velocity);
             case EAST -> tempPosition = newPosition.setAt0(newPosition.getValue0() + velocity);
             case WEST -> tempPosition = newPosition.setAt0(newPosition.getValue0() - velocity);
             default -> throw(new Exception("Invalid direction"));

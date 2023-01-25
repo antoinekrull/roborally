@@ -487,6 +487,7 @@ public class Game implements Runnable {
                     playerList.get(i).emptyAllCardRegisters();
                 }
             }
+            Thread.sleep(1000);
             logger.debug("Applying tile effects");
             applyAllTileEffects();
             currentRegister++;
