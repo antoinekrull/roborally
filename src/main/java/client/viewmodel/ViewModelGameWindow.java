@@ -545,6 +545,11 @@ public class ViewModelGameWindow {
                         success = true;
                         logger.debug("VM - 3 target for message: " + targetIndex);
                         logger.debug("VM - 4 SendSelectedCard sent: " + cardName);
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                         modelGame.sendSelectedCard(cardName, targetIndex);
                     }
                     event.setDropCompleted(success);
