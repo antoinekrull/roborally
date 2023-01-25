@@ -549,6 +549,7 @@ public class Game implements Runnable {
         }
         for(int i = 0; i < playerList.size(); i++) {
             playerList.get(i).drawFullHand();
+            Thread.sleep(100);
             server.sendYourCards(playerList.get(i));
         }
         playerList.setPlayersPlaying(true);
