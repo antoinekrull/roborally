@@ -208,7 +208,6 @@ public class HandleClient implements Runnable{
                         game.setJsonMap(jsonMap);
                         game.setCurrentMap(map);
                         game.createBoard(jsonMap);
-                        CollisionCalculator.createBoard(jsonMap);
                         server.messages.put(messageCreator.generateMapSelectedMessage(map));
                         //write(messageCreator.generateMapSelectedMessage(map));
 
@@ -221,7 +220,6 @@ public class HandleClient implements Runnable{
                                 getClientID()));
                     }
                     else if (incomingMessage.getMessageType() == MessageType.SelectedCard) {
-                        logger.debug(incomingMessage.getMessageBody().getCard());
                         Game.playerList.getPlayerFromList(getClientID()).playCard(incomingMessage.getMessageBody().getCard(),
                                 incomingMessage.getMessageBody().getRegister() - 1);
                         if(incomingMessage.getMessageBody().getCard().equals("Null")) {
@@ -229,7 +227,6 @@ public class HandleClient implements Runnable{
                                     incomingMessage.getMessageBody().getRegister(), false);
                             server.messages.put(cardRemovedMessage);
                         } else {
-                            logger.debug("else-case HandleClient for selectedCard");
                             Message cardPlayedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
                                     incomingMessage.getMessageBody().getRegister(), true);
                             server.messages.put(cardPlayedMessage);

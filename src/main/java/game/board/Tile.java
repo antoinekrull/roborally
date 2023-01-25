@@ -21,6 +21,9 @@ public class Tile {
     private int count;
     private ArrayList<Integer> registers;
 
+
+    private ArrayList<Direction> blockedDirections;
+
     public void setOrientations(ArrayList<String> orientations) {
         this.orientations = orientations;
     }
@@ -39,6 +42,13 @@ public class Tile {
 
     public void setCount(int count) {
         this.count = count;
+    }
+    public ArrayList<Direction> getBlockedDirections() {
+        return blockedDirections;
+    }
+
+    public void setBlockedDirections(ArrayList<Direction> blockedDirections) {
+        this.blockedDirections = blockedDirections;
     }
 
     public String getType() {
@@ -62,7 +72,6 @@ public class Tile {
     public void setRegisters(ArrayList<Integer> registers) {
         this.registers = registers;
     }
-
     String path;
     String imageFXid;
     protected int xCoordinate;
