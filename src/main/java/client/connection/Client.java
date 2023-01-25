@@ -54,6 +54,7 @@ public class Client {
     private BooleanProperty gameStarted;
     private ObjectProperty<Message> message;
     private ObjectProperty<Message> movement;
+    private ObjectProperty<Message> gameLogMessage;
     private IntegerProperty userID;
     private StringProperty errorMessage;
     private IntegerProperty x;
@@ -283,6 +284,18 @@ public class Client {
         this.activePlayer.set(activePlayer);
     }
 
+    public Message getGameLogMessage() {
+        return gameLogMessage.get();
+    }
+
+    public ObjectProperty<Message> gameLogMessageProperty() {
+        return gameLogMessage;
+    }
+
+    public void setGameLogMessage(Message gameLogMessage) {
+        this.gameLogMessage.set(gameLogMessage);
+    }
+
     private class ReadMessagesFromServer implements Runnable {
         DataInputStream in = null;
         DataOutputStream out = null;
@@ -350,9 +363,7 @@ public class Client {
                             Platform.runLater(() -> Client.this.setErrorMessage(error));
                         }
                         if (message.getMessageType().equals(MessageType.CardPlayed)) {
-                            int clientID = message.getMessageBody().getClientID();
-                            String card = message.getMessageBody().getCard();
-
+                            Client.this.setMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.CurrentPlayer)) {
                             Client.this.activePlayer.set(true);
@@ -376,7 +387,6 @@ public class Client {
                                 System.out.println("X = " + message.getMessageBody().getX() + " | Y = " + message.getMessageBody().getY());
                                 System.out.println("RobotID in Client: : " + robotIDclient);
                             }
-
                              */
                         }
                         if (message.getMessageType().equals(MessageType.GameStarted)) {
@@ -433,7 +443,6 @@ public class Client {
                                 System.out.println("X = " + message.getMessageBody().getX() + " | Y = " + message.getMessageBody().getY());
                                 System.out.println("RobotID in Client: : " + robotIDclient);
                             }
-
                              */
                         }
                         if (message.getMessageType().equals(MessageType.CardSelected)) {
@@ -451,6 +460,9 @@ public class Client {
                         }
                         if (message.getMessageType().equals(MessageType.TimerStarted)) {
                             Client.this.setTimer(true);
+                        }
+                        if (message.getMessageType().equals(MessageType.TimerEnded)) {
+                            Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
 

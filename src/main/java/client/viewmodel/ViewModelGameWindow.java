@@ -7,15 +7,20 @@ import client.model.ModelUser;
 import client.ui.PlayerGameInfo;
 import client.ui.Tutorial;
 import communication.Message;
+import communication.MessageType;
 import game.board.Tile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -225,98 +230,118 @@ public class ViewModelGameWindow {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         assert message != null;
         if (message.getMessageBody().isPrivate()) {
             String privateMessage = message.getMessageBody().getMessage();
-            privateMessageToChat(privateMessage);
+            privateMessageToChat(privateMessage, true);
         }
         else {
             String groupMessage = message.getMessageBody().getMessage();
-            groupMessageToChat(groupMessage);
+            groupMessageToChat(groupMessage, true);
         }
     }
 
-    public void chatButtonOnAction() {
-        /*String user = usersChoiceBox.getSelectionModel().getSelectedItem();
-        int userID = modelUser.getUserID();
+    public void receivedGameLogMessage() {
+        Message logmessage = null;
+        try {
+            logmessage = modelChat.getGAMELOGMESSAGES().take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assert logmessage != null;
+        logMessageToLogger(logmessage);
 
-        if(user.equals("All")) {
-            modelChat.sendGroupMessage(userID);
+    }
+
+    /*
+    public void chatButtonOnAction() {
+        String user = usersChoiceBox.getSelectionModel().getSelectedItem().getUsername();
+
+        if(user.equals("Group")) {
+            modelChat.sendGroupMessage();
+            groupMessageToChat(chatTextfield.getText(), false);
         }
         else {
+            int userNumber = usersChoiceBox.getSelectionModel().getSelectedIndex();
+            int userID = modelGame.getPlayerList().getPlayerList().get(userNumber).getId();
             modelChat.sendPrivateMessage(userID);
+            privateMessageToChat(chatTextfield.getText(), false);
         }
-         */
-
-        int userID = modelUser.userIDProperty().get();
-        modelChat.sendGroupMessage();
-        addToChat(chatTextfield.getText());
     }
 
-    public void addToChat(String message) {
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new Insets(5, 5, 5, 10));
+     */
 
-        Text text = new Text(message);
-        TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle(
-            "-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
-                "fx-background-radius: 40px; -fx-opacity: 100;");
-        textFlow.setPadding(new Insets(5, 10, 5, 10));
-        text.setFill(Color.color(0.934, 0.945, 0.996));
-
-        hBox.getChildren().add(textFlow);
-        chatVBox.getChildren().add(hBox);
-
-        chatTextfield.clear();
-        chatTextfield.requestFocus();
-    }
-
-    public void groupMessageToChat(String privateMessage) {
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new Insets(5, 5, 5, 10));
-
-        Text text = new Text(privateMessage);
-        TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle(
-            "-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
-                "fx-background-radius: 40px; -fx-opacity: 100;");
-        textFlow.setPadding(new Insets(5, 10, 5, 10));
-        text.setFill(Color.color(0.934, 0.945, 0.996));
-
-        hBox.getChildren().add(textFlow);
-
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                chatVBox.getChildren().add(hBox);
-            }
-        });
-    }
-
-    public void privateMessageToChat(String groupMessage) {
+    public void groupMessageToChat(String groupMessage, boolean received) {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setPadding(new Insets(5, 5, 5, 10));
 
         Text text = new Text(groupMessage);
         TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle(
-            "-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(208,167,15);" +
+        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
                 "fx-background-radius: 40px; -fx-opacity: 100;");
         textFlow.setPadding(new Insets(5, 10, 5, 10));
         text.setFill(Color.color(0.934, 0.945, 0.996));
 
         hBox.getChildren().add(textFlow);
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                chatVBox.getChildren().add(hBox);
+        if (!received) {
+            chatVBox.getChildren().add(hBox);
+
+            chatTextfield.clear();
+            chatTextfield.requestFocus();
+        }
+        else {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    chatVBox.getChildren().add(hBox);
+                }
+            });
+        }
+    }
+
+    public void privateMessageToChat(String privateMessage, boolean received) {
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        hBox.setPadding(new Insets(5, 5, 5, 10));
+
+        Text text = new Text(privateMessage);
+        TextFlow textFlow = new TextFlow(text);
+        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(213,170,16);" +
+                "fx-background-radius: 40px; -fx-opacity: 100;");
+        textFlow.setPadding(new Insets(5, 10, 5, 10));
+        text.setFill(Color.color(0.934, 0.945, 0.996));
+
+        hBox.getChildren().add(textFlow);
+        if (!received) {
+            chatVBox.getChildren().add(hBox);
+
+            chatTextfield.clear();
+            chatTextfield.requestFocus();
+        }
+        else {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    chatVBox.getChildren().add(hBox);
+                }
+            });
+        }
+    }
+
+    public void logMessageToLogger(Message logMessage) {
+        if (logMessage.getMessageType().equals(MessageType.CardPlayed)) {
+            int clientID = logMessage.getMessageBody().getClientID();
+            String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
+            String card = logMessage.getMessageBody().getCard();
+            //Show something on log Screen
+        }
+        if (logMessage.getMessageType().equals(MessageType.TimerEnded)) {
+            for (int i = 0; i < logMessage.getMessageBody().getClientIDs().length; i++) {
+                int clientID = logMessage.getMessageBody().getClientIDs()[i];
+                //Show something on log Screen
             }
-        });
+        }
     }
 
     public void exit() throws IOException {
@@ -705,6 +730,21 @@ public class ViewModelGameWindow {
     }
 
     public void startTimer() {
+        Timeline timeline = new Timeline();
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                int timer = 30;
+                //label.setText(timer);
+                timer--;
+                if (timer <= 0) {
+                    timeline.stop();
+                  //here we want to do something i hope
+                }
+            }
+        }));
+        timeline.setCycleCount(30);
+        timeline.play();
     }
 }
 

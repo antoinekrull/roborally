@@ -99,4 +99,10 @@ public class NotifyChangeSupport {
             viewModelGameWindow.startTimer();
         }
     }
+
+    public void logMessageArrived() {
+        if (gamewindow) {
+            viewModelGameWindow.receivedGameLogMessage();
+        }
+    }
 }
