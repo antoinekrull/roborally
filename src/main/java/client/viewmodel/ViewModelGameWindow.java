@@ -7,24 +7,27 @@ import client.model.ModelUser;
 import client.ui.PlayerGameInfo;
 import client.ui.Tutorial;
 import communication.Message;
+import communication.MessageType;
 import game.board.Tile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -53,14 +56,15 @@ import org.apache.logging.log4j.Logger;
  * @version 0.1
  */
 public class ViewModelGameWindow {
-
+    public Pane programspacePane;
     @FXML
     private Pane gameboardRegion;
     @FXML
     private ColumnConstraints gameboardColumn;
-    public Pane programspacePane;
     @FXML
     private Button chatButton;
+    @FXML
+    private GridPane deckGrid;
     @FXML
     private TextField chatTextfield;
     @FXML
@@ -81,9 +85,10 @@ public class ViewModelGameWindow {
     private GridPane handGrid;
     @FXML
     private GridPane playerInfoGrid;
-
     @FXML
-    private Pane cardDeck;
+    private Pane upgradeDeck;
+    @FXML
+    private Pane damageDeck;
     @FXML
     private StackPane baseStackPane;
     @FXML
@@ -96,16 +101,12 @@ public class ViewModelGameWindow {
     private ModelChat modelChat;
     private ModelGame modelGame;
     private ModelUser modelUser;
-
-    private int height = 150;
     private int columnIndex;
     private PlayerGameInfo playerGameInfo;
     //private ObservableList<String> handCardsUI;
-
     private Tutorial tutorial;
-
     private double gameboardTileWidth;
-
+    private double programcardsWidth;
     private NotifyChangeSupport notifyChangeSupport;
     private final Logger logger = LogManager.getLogger(ViewModelGameWindow.class);
 
@@ -123,41 +124,10 @@ public class ViewModelGameWindow {
         for (Node child : children) {
             logger.debug("Initialize handGrid: " + child);
         }
+
         selectStarttile();
 
-        //handCardsUI = FXCollections.observableArrayList(modelGame.getMyHandCards());
-
-        /*
-        handCardsUI.addListener(new ListChangeListener<String>() {
-            @Override
-            public void onChanged(Change<? extends String> c) {
-
-                while(c.next()) {
-                    if(c.wasUpdated()) {
-                        System.out.println("wasUpdated");
-                        notifyChangeSupport.updateProgrammingHandCards();
-                    }
-                    if(c.wasAdded()) {
-                        System.out.println("wasAdded");
-                        notifyChangeSupport.updateProgrammingHandCards();
-                    }
-                    if(c.wasRemoved()) {
-                        System.out.println("wasRemoved");
-                        notifyChangeSupport.updateProgrammingHandCards();
-                    }
-                    if(c.wasPermutated()) {
-                        System.out.println("wasPermutated");
-                        notifyChangeSupport.updateProgrammingHandCards();
-                    }
-                    if(c.wasReplaced()) {
-                        System.out.println("wasReplaced");
-                        notifyChangeSupport.updateProgrammingHandCards();
-                    }
-                }
-            }
-        });
-
-         */
+        loadDecks();
 
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
@@ -169,9 +139,10 @@ public class ViewModelGameWindow {
         });
 
         gameboardRegion.widthProperty().addListener((obs, oldValue, newValue) -> {
-            double width = newValue.doubleValue() * 0.04;
-            this.gameboardTileWidth = width;
-            updateWidth(gameboardTileWidth);
+            double width = newValue.doubleValue();
+            this.gameboardTileWidth = width * 0.04;
+            this.programcardsWidth = width * 0.07;
+            updateWidth(width);
         });
 
         playerGameInfo = new PlayerGameInfo(playerInfoGrid, modelGame.getPlayerList());
@@ -229,15 +200,24 @@ public class ViewModelGameWindow {
          */
     }
 
-
-    private void updateWidth(double width) {
-        for(Node node: gameboard.getChildren()){
-            if(node instanceof ImageView){
-                ImageView img = (ImageView)node;
-                img.setFitWidth(width);
+    private void scaleImages(Parent parent, double width, double scaleFactor) {
+        for (Node node : parent.getChildrenUnmodifiable()) {
+            if (node instanceof ImageView) {
+                ImageView img = (ImageView) node;
+                img.setFitWidth(width * scaleFactor);
                 img.setPreserveRatio(true);
+            } else if (node instanceof Parent) {
+                scaleImages((Parent) node, width, scaleFactor);
             }
         }
+    }
+
+    private void updateWidth(double width) {
+        scaleImages(gameboard, width, 0.04);
+        scaleImages(handGrid, width, 0.07);
+        scaleImages(programmingGrid, width, 0.07);
+        scaleImages(playerInfoGrid, width, 0.05);
+        scaleImages(deckGrid, width, 0.07);
     }
 
     public void receivedMessage() {
@@ -247,98 +227,152 @@ public class ViewModelGameWindow {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         assert message != null;
         if (message.getMessageBody().isPrivate()) {
             String privateMessage = message.getMessageBody().getMessage();
-            privateMessageToChat(privateMessage);
+            privateMessageToChat(privateMessage, true);
         }
         else {
             String groupMessage = message.getMessageBody().getMessage();
-            groupMessageToChat(groupMessage);
+            groupMessageToChat(groupMessage, true);
         }
     }
+
+    public void receivedGameLogMessage() {
+        Message logmessage = null;
+        try {
+            logmessage = modelChat.getGAMELOGMESSAGES().take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assert logmessage != null;
+        logMessageToLogger(logmessage);
+
+    }
+
 
     public void chatButtonOnAction() {
-        /*String user = usersChoiceBox.getSelectionModel().getSelectedItem();
-        int userID = modelUser.getUserID();
+        /*
+        String user = usersChoiceBox.getSelectionModel().getSelectedItem().getUsername();
 
-        if(user.equals("All")) {
-            modelChat.sendGroupMessage(userID);
+        if(user.equals("Group")) {
+            modelChat.sendGroupMessage();
+            groupMessageToChat(chatTextfield.getText(), false);
         }
         else {
+            int userNumber = usersChoiceBox.getSelectionModel().getSelectedIndex();
+            int userID = modelGame.getPlayerList().getPlayerList().get(userNumber).getId();
             modelChat.sendPrivateMessage(userID);
+            privateMessageToChat(chatTextfield.getText(), false);
         }
+
          */
-
-        int userID = modelUser.userIDProperty().get();
-        modelChat.sendGroupMessage();
-        addToChat(chatTextfield.getText());
     }
 
-    public void addToChat(String message) {
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new Insets(5, 5, 5, 10));
 
-        Text text = new Text(message);
-        TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle(
-            "-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
-                "fx-background-radius: 40px; -fx-opacity: 100;");
-        textFlow.setPadding(new Insets(5, 10, 5, 10));
-        text.setFill(Color.color(0.934, 0.945, 0.996));
-
-        hBox.getChildren().add(textFlow);
-        chatVBox.getChildren().add(hBox);
-
-        chatTextfield.clear();
-        chatTextfield.requestFocus();
-    }
-
-    public void groupMessageToChat(String privateMessage) {
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new Insets(5, 5, 5, 10));
-
-        Text text = new Text(privateMessage);
-        TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle(
-            "-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
-                "fx-background-radius: 40px; -fx-opacity: 100;");
-        textFlow.setPadding(new Insets(5, 10, 5, 10));
-        text.setFill(Color.color(0.934, 0.945, 0.996));
-
-        hBox.getChildren().add(textFlow);
-
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                chatVBox.getChildren().add(hBox);
-            }
-        });
-    }
-
-    public void privateMessageToChat(String groupMessage) {
+    public void groupMessageToChat(String groupMessage, boolean received) {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setPadding(new Insets(5, 5, 5, 10));
 
         Text text = new Text(groupMessage);
         TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle(
-            "-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(208,167,15);" +
+        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
                 "fx-background-radius: 40px; -fx-opacity: 100;");
         textFlow.setPadding(new Insets(5, 10, 5, 10));
         text.setFill(Color.color(0.934, 0.945, 0.996));
 
         hBox.getChildren().add(textFlow);
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                chatVBox.getChildren().add(hBox);
+        if (!received) {
+            chatVBox.getChildren().add(hBox);
+
+            chatTextfield.clear();
+            chatTextfield.requestFocus();
+        }
+        else {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    chatVBox.getChildren().add(hBox);
+                }
+            });
+        }
+    }
+
+    public void privateMessageToChat(String privateMessage, boolean received) {
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        hBox.setPadding(new Insets(5, 5, 5, 10));
+
+        Text text = new Text(privateMessage);
+        TextFlow textFlow = new TextFlow(text);
+        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(213,170,16);" +
+                "fx-background-radius: 40px; -fx-opacity: 100;");
+        textFlow.setPadding(new Insets(5, 10, 5, 10));
+        text.setFill(Color.color(0.934, 0.945, 0.996));
+
+        hBox.getChildren().add(textFlow);
+        if (!received) {
+            chatVBox.getChildren().add(hBox);
+
+            chatTextfield.clear();
+            chatTextfield.requestFocus();
+        }
+        else {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    chatVBox.getChildren().add(hBox);
+                }
+            });
+        }
+    }
+
+    public void logMessageToLogger(Message logMessage) {
+        if (logMessage.getMessageType().equals(MessageType.SelectionFinished)) {
+            int clientID = logMessage.getMessageBody().getClientID();
+            //show selectionfinished for this client
+        }
+        if (logMessage.getMessageType().equals(MessageType.CardPlayed)) {
+            int clientID = logMessage.getMessageBody().getClientID();
+            String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
+            String card = logMessage.getMessageBody().getCard();
+            //Show something on log Screen
+        }
+        if (logMessage.getMessageType().equals(MessageType.TimerEnded)) {
+            for (int i = 0; i < logMessage.getMessageBody().getClientIDs().length; i++) {
+                int clientID = logMessage.getMessageBody().getClientIDs()[i];
+                //Show something on log Screen
             }
-        });
+        }
+        if (logMessage.getMessageType().equals(MessageType.DrawDamage)) {
+            //int[] damageCards = logmessage.getMessageBody().getCards();
+            //add all damage: int damage;
+            int clientID = logMessage.getMessageBody().getClientID();
+            for (int i = 0; i < modelGame.getPlayerList().getPlayerList().size(); i++) {
+                if (modelGame.getPlayerList().getPlayerList().get(i).getId() == clientID) {
+                    //TODO: Adjust damage
+                    modelGame.setLife(modelGame.getLife() - 1);
+                }
+
+            }
+        }
+        if (logMessage.getMessageType().equals(MessageType.GameFinished)) {
+            int clientID = logMessage.getMessageBody().getClientID();
+            String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
+            Label winnerLabel = new Label(username);
+            VBox winnerVBox = new VBox();
+            StackPane winnerStackPane = new StackPane();
+            Button winnerButton = new Button("Easy Win");
+            winnerVBox.getChildren().addAll(winnerLabel, winnerButton);
+            winnerStackPane.getChildren().add(winnerVBox);
+
+            //TODO: making button return scene and set StackPane over everything
+        }
+        if (logMessage.getMessageType().equals(MessageType.CheckPointReached)) {
+            int clientID = logMessage.getMessageBody().getClientID();
+            //add message to logger
+        }
     }
 
     public void exit() throws IOException {
@@ -499,24 +533,23 @@ public class ViewModelGameWindow {
                 if (target.getChildren().isEmpty()) {
                     Dragboard db = event.getDragboard();
                     if (db.hasImage()) {
-
+                        logger.debug("VM - ColumnIndex of Target: " + GridPane.getColumnIndex(target));
                         String cardName = db.getString();
                         Image data = db.getImage();
                         ImageView card = new ImageView(data);
-                        card.setFitHeight(height);
+                        card.setFitWidth(programcardsWidth);
                         card.setPreserveRatio(true);
                         target.getChildren().add(card);
-                        int targetIndex;
-                        if(GridPane.getColumnIndex(target)== null) {
-                            targetIndex = 1;
-                        }
-                        else {
-                            targetIndex = GridPane.getColumnIndex(target) + 1;
-                        }
+                        int targetIndex = GridPane.getColumnIndex(target) + 1;
                         logger.debug("VM - 1 Cardname: " + cardName);
                         success = true;
                         logger.debug("VM - 3 target for message: " + targetIndex);
                         logger.debug("VM - 4 SendSelectedCard sent: " + cardName);
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                         modelGame.sendSelectedCard(cardName, targetIndex);
                     }
                     event.setDropCompleted(success);
@@ -528,7 +561,7 @@ public class ViewModelGameWindow {
                         Image data = db.getImage();
                         Pane source = (Pane) handGrid.getChildren().get(columnIndex);
                         ImageView card = new ImageView(data);
-                        card.setFitHeight(height);
+                        card.setFitWidth(programcardsWidth);
                         card.setPreserveRatio(true);
                         source.getChildren().add(card);
                         logger.debug(columnIndex);
@@ -555,7 +588,7 @@ public class ViewModelGameWindow {
                         if (index != -1) {
                             Pane emptyPane = (Pane) handGrid.getChildren().get(index);
                             ImageView newCard = new ImageView(data);
-                            newCard.setFitHeight(height);
+                            newCard.setFitWidth(programcardsWidth);
                             newCard.setPreserveRatio(true);
                             emptyPane.getChildren().add(newCard);
                         }
@@ -614,8 +647,8 @@ public class ViewModelGameWindow {
                             Image image = new Image(input);
                             ImageView imageView = new ImageView(image);
                             imageView.setId("MoveI");
-                            imageView.setFitHeight(90);
-                            imageView.setFitWidth(60);
+                            imageView.setFitWidth(programcardsWidth);
+                            imageView.setPreserveRatio(true);
                             pane.getChildren().add(imageView);
                         }
                         case "MoveII" -> {
@@ -624,8 +657,8 @@ public class ViewModelGameWindow {
                             Image image2 = new Image(input2);
                             ImageView imageView2 = new ImageView(image2);
                             imageView2.setId("MoveII");
-                            imageView2.setFitHeight(90);
-                            imageView2.setFitWidth(60);
+                            imageView2.setFitWidth(programcardsWidth);
+                            imageView2.setPreserveRatio(true);
                             pane.getChildren().add(imageView2);
                         }
                         case "MoveIII" -> {
@@ -634,8 +667,8 @@ public class ViewModelGameWindow {
                             Image image3 = new Image(input3);
                             ImageView imageView3 = new ImageView(image3);
                             imageView3.setId("MoveIII");
-                            imageView3.setFitHeight(90);
-                            imageView3.setFitWidth(60);
+                            imageView3.setFitWidth(programcardsWidth);
+                            imageView3.setPreserveRatio(true);
                             pane.getChildren().add(imageView3);
                         }
                         case "TurnLeft" -> {
@@ -644,8 +677,8 @@ public class ViewModelGameWindow {
                             Image image4 = new Image(input4);
                             ImageView imageView4 = new ImageView(image4);
                             imageView4.setId("TurnLeft");
-                            imageView4.setFitHeight(90);
-                            imageView4.setFitWidth(60);
+                            imageView4.setFitWidth(programcardsWidth);
+                            imageView4.setPreserveRatio(true);
                             pane.getChildren().add(imageView4);
                         }
                         case "TurnRight" -> {
@@ -654,8 +687,8 @@ public class ViewModelGameWindow {
                             Image image5 = new Image(input5);
                             ImageView imageView5 = new ImageView(image5);
                             imageView5.setId("TurnRight");
-                            imageView5.setFitHeight(90);
-                            imageView5.setFitWidth(60);
+                            imageView5.setFitWidth(programcardsWidth);
+                            imageView5.setPreserveRatio(true);
                             pane.getChildren().add(imageView5);
                         }
                         case "UTurn" -> {
@@ -664,8 +697,8 @@ public class ViewModelGameWindow {
                             Image image6 = new Image(input6);
                             ImageView imageView6 = new ImageView(image6);
                             imageView6.setId("UTurn");
-                            imageView6.setFitHeight(90);
-                            imageView6.setFitWidth(60);
+                            imageView6.setFitWidth(programcardsWidth);
+                            imageView6.setPreserveRatio(true);
                             pane.getChildren().add(imageView6);
                         }
                         case "BackUp" -> {
@@ -674,8 +707,8 @@ public class ViewModelGameWindow {
                             Image image7 = new Image(input7);
                             ImageView imageView7 = new ImageView(image7);
                             imageView7.setId("BackUp");
-                            imageView7.setFitHeight(90);
-                            imageView7.setFitWidth(60);
+                            imageView7.setFitWidth(programcardsWidth);
+                            imageView7.setPreserveRatio(true);
                             pane.getChildren().add(imageView7);
                         }
                         case "PowerUp" -> {
@@ -684,8 +717,8 @@ public class ViewModelGameWindow {
                             Image image8 = new Image(input8);
                             ImageView imageView8 = new ImageView(image8);
                             imageView8.setId("PowerUp");
-                            imageView8.setFitHeight(90);
-                            imageView8.setFitWidth(60);
+                            imageView8.setFitWidth(programcardsWidth);
+                            imageView8.setPreserveRatio(true);
                             pane.getChildren().add(imageView8);
                         }
                         case "Again" -> {
@@ -694,8 +727,8 @@ public class ViewModelGameWindow {
                             Image image9 = new Image(input9);
                             ImageView imageView9 = new ImageView(image9);
                             imageView9.setId("Again");
-                            imageView9.setFitHeight(90);
-                            imageView9.setFitWidth(60);
+                            imageView9.setFitWidth(programcardsWidth);
+                            imageView9.setPreserveRatio(true);
                             pane.getChildren().add(imageView9);
                         }
                     }
@@ -716,7 +749,46 @@ public class ViewModelGameWindow {
 
     }
 
+    private void loadDecks (){
+        InputStream upgradeImg = getClass().getResourceAsStream("/textures/cards/upgradeDeck.png");
+        Image imUpgrade = new Image(upgradeImg);
+        ImageView imgUpgrade = new ImageView(imUpgrade);
+        imgUpgrade.setFitWidth(programcardsWidth);
+        imgUpgrade.setPreserveRatio(true);
+        upgradeDeck.getChildren().add(imgUpgrade);
+
+        InputStream damageImg = getClass().getResourceAsStream("/textures/cards/damageDeck.png");
+        Image imDamage = new Image(damageImg);
+        ImageView imgDamage = new ImageView(imDamage);
+        imgDamage.setFitWidth(programcardsWidth);
+        imgDamage.setPreserveRatio(true);
+        damageDeck.getChildren().add(imgDamage);
+    }
+
     public void startTimer() {
+        Timeline timeline = new Timeline();
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                int timer = 30;
+                //label.setText(timer);
+                timer--;
+                if (timer <= 0) {
+                    timeline.stop();
+                  //here we want to do something i hope
+                }
+            }
+        }));
+        timeline.setCycleCount(30);
+        timeline.play();
+    }
+
+    public void setRobotAlignment() {
+        //set Robot Alignment
+    }
+
+    public void adjustLive() {
+        //take damage
     }
 }
 

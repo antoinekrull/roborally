@@ -22,6 +22,7 @@ public class ClientPlayer {
     private IntegerProperty cardsInHand;
     private IntegerProperty x;
     private IntegerProperty y;
+    private IntegerProperty life;
 
 
     private ObservableList<RegisterInformation> registerInformations;
@@ -36,6 +37,7 @@ public class ClientPlayer {
         this.energyCubes = new SimpleDoubleProperty(5);
         this.cardsInHand = new SimpleIntegerProperty(9);
         this.registerInformations = FXCollections.observableArrayList();
+        this.life = new SimpleIntegerProperty(100);
     }
 
     public String getUsername() {
@@ -169,6 +171,18 @@ public class ClientPlayer {
 
     public void setY(int y) {
         this.y.set(y);
+    }
+
+    public int getLife() {
+        return life.get();
+    }
+
+    public IntegerProperty lifeProperty() {
+        return life;
+    }
+
+    public void setLife(int life) {
+        this.life.set(life);
     }
 
     public ObservableList<RegisterInformation> getRegisterInformations() {
