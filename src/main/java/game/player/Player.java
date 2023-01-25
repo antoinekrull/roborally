@@ -7,7 +7,6 @@ import game.card.CardType;
 import game.card.ProgrammingDeck;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
@@ -148,7 +147,7 @@ public class Player {
         robot.getDeck().shuffleDeck();
         server.sendShuffleCoding(this);
     }
-    public void addCard(Card drawnCard) {
+    public void addCardToHand(Card drawnCard) {
         hand.add(drawnCard);
     }
     public void drawCard() {

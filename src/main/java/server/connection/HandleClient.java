@@ -227,12 +227,12 @@ public class HandleClient implements Runnable{
                         if(incomingMessage.getMessageBody().getCard().equals("Null")) {
                             Message cardRemovedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
                                     incomingMessage.getMessageBody().getRegister(), false);
-                            write(cardRemovedMessage);
+                            server.messages.put(cardRemovedMessage);
                         } else {
                             logger.debug("else-case HandleClient for selectedCard");
                             Message cardPlayedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
                                     incomingMessage.getMessageBody().getRegister(), true);
-                            write(cardPlayedMessage);
+                            server.messages.put(cardPlayedMessage);
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.SelectedDamage) {
                         //Should be damage card
@@ -306,7 +306,7 @@ public class HandleClient implements Runnable{
                         } else {
                             game.removeReady(clientID);
                         }
-                        write(messageCreator.generatePlayerStatusMessage(clientID, ready));
+                        server.messages.put(messageCreator.generatePlayerStatusMessage(clientID, ready));
                         //server.messages.put(messageCreator.generatePlayerStatusMessage(clientID, ready));
                     }
                     else if (incomingMessage.getMessageType() == MessageType.ConnectionUpdate) {

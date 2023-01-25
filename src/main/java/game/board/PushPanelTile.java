@@ -29,7 +29,7 @@ public class PushPanelTile extends Tile {
         }
 
         setType("PushPanel");
-        isBlocking = true;
+        isBlocking = false;
         isDanger = false;
         this.pushDirection = pushDirection;
         this.registers = registers;
@@ -49,10 +49,10 @@ public class PushPanelTile extends Tile {
             if(player.getRobot().getCurrentPosition().equals(tileLocation)){
                 Pair<Integer, Integer> tempPosition;
                 switch(this.pushDirection){
-                    case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
-                    case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
-                    case EAST -> tempPosition = newPosition.setAt0(newPosition.getValue0() + 1);
-                    case WEST -> tempPosition = newPosition.setAt0(newPosition.getValue0() - 1);
+                    case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
+                    case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
+                    case EAST -> tempPosition = newPosition.setAt0(newPosition.getValue0() - 1);
+                    case WEST -> tempPosition = newPosition.setAt0(newPosition.getValue0() + 1);
                     default -> throw(new Exception("Invalid direction"));
                 }
                 player.getRobot().setCurrentPosition(tempPosition);
