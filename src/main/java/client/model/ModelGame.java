@@ -3,12 +3,16 @@ package client.model;
 import client.connection.Client;
 import client.changesupport.NotifyChangeSupport;
 import client.player.ClientPlayerList;
+import client.viewmodel.ViewModelGameWindow;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import communication.Message;
 import game.Game;
 import game.board.Board;
 import game.board.Tile;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
@@ -16,6 +20,8 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Model for game
@@ -28,27 +34,33 @@ public class ModelGame {
     private static ModelGame modelGame;
     private Client client;
     private Board gameBoard;
+    private NotifyChangeSupport notifyChangeSupport;
     private SimpleIntegerProperty robotProperty;
     private SimpleStringProperty errorMessage;
     private ObservableList<Integer> readyList;
-    private NotifyChangeSupport notifyChangeSupport;
-    private IntegerProperty x;
-    private IntegerProperty y;
+    private SimpleStringProperty robotAlignment;
+    private IntegerProperty life;
+    private SimpleIntegerProperty x;
+    private SimpleIntegerProperty y;
     private boolean yChanged;
     private boolean xChanged;
-    private IntegerProperty movementX;
-    private IntegerProperty movementY;
-    private IntegerProperty playerID;
+    private SimpleIntegerProperty movementX;
+    private SimpleIntegerProperty movementY;
+    private SimpleIntegerProperty robotID;
+    private ObjectProperty<Message> movement;
+    private LinkedBlockingQueue<Message> PLAYERMOVEMENTS;
     private boolean movementXChanged;
     private boolean movementYChanged;
-    private boolean playerIDChanged;
+    private boolean robotIDChanged;
     private BooleanProperty timer;
     private BooleanProperty activePlayer;
+    private SimpleIntegerProperty score;
     private ObservableList<String> maps;
     private BooleanProperty readyToPlay;
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
     private ObservableList<String> myHandCards;
     private ClientPlayerList clientPlayerList;
+    private final Logger logger = LogManager.getLogger(ViewModelGameWindow.class);
 
 
     private Game game;
@@ -61,12 +73,24 @@ public class ModelGame {
         this.yChanged = false;
         this.movementYChanged = false;
         this.movementXChanged = false;
-        this.playerIDChanged = false;
+        this.robotIDChanged = false;
+        this.score = new SimpleIntegerProperty(0);
+        score.bind(client.scoreProperty());
         this.activePlayer = new SimpleBooleanProperty(false);
         this.activePlayer.bind(client.activePlayerProperty());
         this.robotProperty = new SimpleIntegerProperty();
         this.readyList = FXCollections.observableArrayList();
         this.readyToPlay = new SimpleBooleanProperty();
+        this.myHandCards = FXCollections.observableArrayList();
+        myHandCards = client.getMyCards();
+        myHandCards.addListener(new ListChangeListener<String>() {
+            @Override
+            public void onChanged(Change<? extends String> c) {
+                logger.debug("changed list");
+                notifyChangeSupport.updateProgrammingHandCards();
+            }
+        });
+        this.PLAYERMOVEMENTS = new LinkedBlockingQueue<>();
         readyToPlay.bind(client.gameStartedProperty());
         readyToPlay.addListener(new ChangeListener<Boolean>() {
             @Override
@@ -86,6 +110,21 @@ public class ModelGame {
         this.clientPlayerList = client.getPlayerList();
         this.errorMessage = new SimpleStringProperty();
         errorMessage.bind(client.errorMessageProperty());
+        this.movement = new SimpleObjectProperty<>();
+        movement.bind(client.movementProperty());
+        movement.addListener(new ChangeListener<Message>() {
+            @Override
+            public void changed(ObservableValue<? extends Message> observable, Message oldValue, Message newValue) {
+                try {
+                    PLAYERMOVEMENTS.put(client.getMovement());
+                    notifyChangeSupport.robotSetPosition();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        /*
         this.myHandCards = FXCollections.observableArrayList(client.getMyCards());
         this.x = new SimpleIntegerProperty();
         this.y = new SimpleIntegerProperty();
@@ -111,9 +150,32 @@ public class ModelGame {
         myHandCards.addListener(new ListChangeListener<String>() {
             @Override
             public void onChanged(Change<? extends String> c) {
-                notifyChangeSupport.updateProgrammingHandCards();
+                while(c.next()) {
+                    if(c.wasUpdated()) {
+                        System.out.println("wasUpdated");
+                        notifyChangeSupport.updateProgrammingHandCards();
+                    }
+                    if(c.wasAdded()) {
+                        System.out.println("wasAdded");
+                        notifyChangeSupport.updateProgrammingHandCards();
+                    }
+                    if(c.wasRemoved()) {
+                        System.out.println("wasRemoved");
+                        notifyChangeSupport.updateProgrammingHandCards();
+                    }
+                    if(c.wasPermutated()) {
+                        System.out.println("wasPermutated");
+                        notifyChangeSupport.updateProgrammingHandCards();
+                    }
+                    if(c.wasReplaced()) {
+                        System.out.println("wasReplaced");
+                        notifyChangeSupport.updateProgrammingHandCards();
+                    }
+                }
             }
         });
+
+         */
 
         this.timer = new SimpleBooleanProperty();
         timer.bind(client.timerProperty());
@@ -124,13 +186,23 @@ public class ModelGame {
             }
         });
 
+        this.robotAlignment = new SimpleStringProperty();
+        robotAlignment.bind(client.roboterAlignmentProperty());
+        robotAlignment.addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                notifyChangeSupport.setRobotAlignment();
+            }
+        });
+
+        /*
         this.movementX = new SimpleIntegerProperty();
         movementX.bind(client.movementXProperty());
         movementX.addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 movementXChanged = true;
-                check_X_Y_ID();
+                check_x_y_id();
             }
         });
 
@@ -140,19 +212,33 @@ public class ModelGame {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 movementYChanged = true;
-                check_X_Y_ID();
+                check_x_y_id();
             }
         });
 
-        this.playerID = new SimpleIntegerProperty();
-        playerID.addListener(new ChangeListener<Number>() {
+        this.robotID = new SimpleIntegerProperty();
+        robotID.bind(client.robotIDProperty());
+        robotID.addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                playerIDChanged = true;
-                check_X_Y_ID();
+                robotIDChanged = true;
+                check_x_y_id();
             }
         });
+
+         */
+
+        this.life = new SimpleIntegerProperty();
+        life.bind(client.lifeProperty());
+        life.addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                notifyChangeSupport.adjustLive();
+            }
+        });
+        //life.set(100);
     }
+
 
     public static ModelGame getInstance() {
         if (modelGame == null) {
@@ -199,6 +285,11 @@ public class ModelGame {
     public ObservableList<Integer> getReadyList() {
         return readyList;
     }
+
+    public LinkedBlockingQueue<Message> getPLAYERMOVEMENTS() {
+        return PLAYERMOVEMENTS;
+    }
+
     public int getX() {
         return x.get();
     }
@@ -232,11 +323,11 @@ public class ModelGame {
     }
 
     public int getPlayerID() {
-        return playerID.get();
+        return robotID.get();
     }
 
     public IntegerProperty playerIDProperty() {
-        return playerID;
+        return robotID;
     }
 
     public boolean isMovementXChanged() {
@@ -248,19 +339,31 @@ public class ModelGame {
     }
 
     public boolean isPlayerIDChanged() {
-        return playerIDChanged;
+        return robotIDChanged;
     }
 
     public BooleanProperty activePlayerProperty() {
         return activePlayer;
     }
 
-    public void check_X_Y_ID() {
-        if (movementXChanged && movementYChanged && playerIDChanged) {
-            notifyChangeSupport.robotSetPosition(movementX.get(), movementY.get(), playerID.get());
+    public int getLife() {
+        return life.get();
+    }
+
+    public IntegerProperty lifeProperty() {
+        return life;
+    }
+
+    public void setLife(int life) {
+        this.life.set(life);
+    }
+    /*
+    public void check_x_y_id() {
+        if (movementXChanged && movementYChanged && robotIDChanged) {
+            notifyChangeSupport.robotSetPosition(movementX.get(), movementY.get(), robotID.get());
             movementYChanged = false;
             movementXChanged = false;
-            playerIDChanged = false;
+            robotIDChanged = false;
         }
     }
 
@@ -271,6 +374,8 @@ public class ModelGame {
             yChanged = false;
         }
     }
+
+     */
 
     public void createMap(String jsonMap) throws JsonProcessingException {
         gameBoard.createBoard(jsonMap);
@@ -287,6 +392,14 @@ public class ModelGame {
 
     public void sendSelectedCard(String card, int register) {
         client.sendSelectCard(card, register);
+    }
+
+    public void sendRegisterChosen(int register) {
+        client.sendRegister(register);
+    }
+
+    public void sendReturnCards(String[] returnCards) {
+        client.sendReturnCards(returnCards);
     }
 
 }

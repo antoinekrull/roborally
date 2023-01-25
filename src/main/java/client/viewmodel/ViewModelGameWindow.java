@@ -7,22 +7,26 @@ import client.model.ModelUser;
 import client.ui.PlayerGameInfo;
 import client.ui.Tutorial;
 import communication.Message;
+import communication.MessageType;
 import game.board.Tile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -52,14 +56,15 @@ import org.apache.logging.log4j.Logger;
  * @version 0.1
  */
 public class ViewModelGameWindow {
-
+    public Pane programspacePane;
     @FXML
     private Pane gameboardRegion;
     @FXML
     private ColumnConstraints gameboardColumn;
-    public Pane programspacePane;
     @FXML
     private Button chatButton;
+    @FXML
+    private GridPane deckGrid;
     @FXML
     private TextField chatTextfield;
     @FXML
@@ -80,9 +85,10 @@ public class ViewModelGameWindow {
     private GridPane handGrid;
     @FXML
     private GridPane playerInfoGrid;
-
     @FXML
-    private Pane cardDeck;
+    private Pane upgradeDeck;
+    @FXML
+    private Pane damageDeck;
     @FXML
     private StackPane baseStackPane;
     @FXML
@@ -95,16 +101,12 @@ public class ViewModelGameWindow {
     private ModelChat modelChat;
     private ModelGame modelGame;
     private ModelUser modelUser;
-
-    private int height = 150;
     private int columnIndex;
     private PlayerGameInfo playerGameInfo;
-    private ObservableList<String> handCardsUI;
-
+    //private ObservableList<String> handCardsUI;
     private Tutorial tutorial;
-
     private double gameboardTileWidth;
-
+    private double programcardsWidth;
     private NotifyChangeSupport notifyChangeSupport;
     private final Logger logger = LogManager.getLogger(ViewModelGameWindow.class);
 
@@ -118,9 +120,14 @@ public class ViewModelGameWindow {
 
     public void initialize() {
         ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
+        ObservableList<Node> children = handGrid.getChildren();
+        for (Node child : children) {
+            logger.debug("Initialize handGrid: " + child);
+        }
+
         selectStarttile();
 
-        handCardsUI = FXCollections.observableArrayList(modelGame.getMyHandCards());
+        loadDecks();
 
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
@@ -132,9 +139,10 @@ public class ViewModelGameWindow {
         });
 
         gameboardRegion.widthProperty().addListener((obs, oldValue, newValue) -> {
-            double width = newValue.doubleValue() * 0.04;
-            this.gameboardTileWidth = width;
-            updateWidth(gameboardTileWidth);
+            double width = newValue.doubleValue();
+            this.gameboardTileWidth = width * 0.04;
+            this.programcardsWidth = width * 0.07;
+            updateWidth(width);
         });
 
         playerGameInfo = new PlayerGameInfo(playerInfoGrid, modelGame.getPlayerList());
@@ -192,15 +200,24 @@ public class ViewModelGameWindow {
          */
     }
 
-
-    private void updateWidth(double width) {
-        for(Node node: gameboard.getChildren()){
-            if(node instanceof ImageView){
-                ImageView img = (ImageView)node;
-                img.setFitWidth(width);
+    private void scaleImages(Parent parent, double width, double scaleFactor) {
+        for (Node node : parent.getChildrenUnmodifiable()) {
+            if (node instanceof ImageView) {
+                ImageView img = (ImageView) node;
+                img.setFitWidth(width * scaleFactor);
                 img.setPreserveRatio(true);
+            } else if (node instanceof Parent) {
+                scaleImages((Parent) node, width, scaleFactor);
             }
         }
+    }
+
+    private void updateWidth(double width) {
+        scaleImages(gameboard, width, 0.04);
+        scaleImages(handGrid, width, 0.07);
+        scaleImages(programmingGrid, width, 0.07);
+        scaleImages(playerInfoGrid, width, 0.05);
+        scaleImages(deckGrid, width, 0.07);
     }
 
     public void receivedMessage() {
@@ -210,98 +227,152 @@ public class ViewModelGameWindow {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         assert message != null;
         if (message.getMessageBody().isPrivate()) {
             String privateMessage = message.getMessageBody().getMessage();
-            privateMessageToChat(privateMessage);
+            privateMessageToChat(privateMessage, true);
         }
         else {
             String groupMessage = message.getMessageBody().getMessage();
-            groupMessageToChat(groupMessage);
+            groupMessageToChat(groupMessage, true);
         }
     }
+
+    public void receivedGameLogMessage() {
+        Message logmessage = null;
+        try {
+            logmessage = modelChat.getGAMELOGMESSAGES().take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assert logmessage != null;
+        logMessageToLogger(logmessage);
+
+    }
+
 
     public void chatButtonOnAction() {
-        /*String user = usersChoiceBox.getSelectionModel().getSelectedItem();
-        int userID = modelUser.getUserID();
+        /*
+        String user = usersChoiceBox.getSelectionModel().getSelectedItem().getUsername();
 
-        if(user.equals("All")) {
-            modelChat.sendGroupMessage(userID);
+        if(user.equals("Group")) {
+            modelChat.sendGroupMessage();
+            groupMessageToChat(chatTextfield.getText(), false);
         }
         else {
+            int userNumber = usersChoiceBox.getSelectionModel().getSelectedIndex();
+            int userID = modelGame.getPlayerList().getPlayerList().get(userNumber).getId();
             modelChat.sendPrivateMessage(userID);
+            privateMessageToChat(chatTextfield.getText(), false);
         }
+
          */
-
-        int userID = modelUser.userIDProperty().get();
-        modelChat.sendGroupMessage();
-        addToChat(chatTextfield.getText());
     }
 
-    public void addToChat(String message) {
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new Insets(5, 5, 5, 10));
 
-        Text text = new Text(message);
-        TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle(
-            "-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
-                "fx-background-radius: 40px; -fx-opacity: 100;");
-        textFlow.setPadding(new Insets(5, 10, 5, 10));
-        text.setFill(Color.color(0.934, 0.945, 0.996));
-
-        hBox.getChildren().add(textFlow);
-        chatVBox.getChildren().add(hBox);
-
-        chatTextfield.clear();
-        chatTextfield.requestFocus();
-    }
-
-    public void groupMessageToChat(String privateMessage) {
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new Insets(5, 5, 5, 10));
-
-        Text text = new Text(privateMessage);
-        TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle(
-            "-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
-                "fx-background-radius: 40px; -fx-opacity: 100;");
-        textFlow.setPadding(new Insets(5, 10, 5, 10));
-        text.setFill(Color.color(0.934, 0.945, 0.996));
-
-        hBox.getChildren().add(textFlow);
-
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                chatVBox.getChildren().add(hBox);
-            }
-        });
-    }
-
-    public void privateMessageToChat(String groupMessage) {
+    public void groupMessageToChat(String groupMessage, boolean received) {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setPadding(new Insets(5, 5, 5, 10));
 
         Text text = new Text(groupMessage);
         TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle(
-            "-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(208,167,15);" +
+        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
                 "fx-background-radius: 40px; -fx-opacity: 100;");
         textFlow.setPadding(new Insets(5, 10, 5, 10));
         text.setFill(Color.color(0.934, 0.945, 0.996));
 
         hBox.getChildren().add(textFlow);
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                chatVBox.getChildren().add(hBox);
+        if (!received) {
+            chatVBox.getChildren().add(hBox);
+
+            chatTextfield.clear();
+            chatTextfield.requestFocus();
+        }
+        else {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    chatVBox.getChildren().add(hBox);
+                }
+            });
+        }
+    }
+
+    public void privateMessageToChat(String privateMessage, boolean received) {
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        hBox.setPadding(new Insets(5, 5, 5, 10));
+
+        Text text = new Text(privateMessage);
+        TextFlow textFlow = new TextFlow(text);
+        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(213,170,16);" +
+                "fx-background-radius: 40px; -fx-opacity: 100;");
+        textFlow.setPadding(new Insets(5, 10, 5, 10));
+        text.setFill(Color.color(0.934, 0.945, 0.996));
+
+        hBox.getChildren().add(textFlow);
+        if (!received) {
+            chatVBox.getChildren().add(hBox);
+
+            chatTextfield.clear();
+            chatTextfield.requestFocus();
+        }
+        else {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    chatVBox.getChildren().add(hBox);
+                }
+            });
+        }
+    }
+
+    public void logMessageToLogger(Message logMessage) {
+        if (logMessage.getMessageType().equals(MessageType.SelectionFinished)) {
+            int clientID = logMessage.getMessageBody().getClientID();
+            //show selectionfinished for this client
+        }
+        if (logMessage.getMessageType().equals(MessageType.CardPlayed)) {
+            int clientID = logMessage.getMessageBody().getClientID();
+            String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
+            String card = logMessage.getMessageBody().getCard();
+            //Show something on log Screen
+        }
+        if (logMessage.getMessageType().equals(MessageType.TimerEnded)) {
+            for (int i = 0; i < logMessage.getMessageBody().getClientIDs().length; i++) {
+                int clientID = logMessage.getMessageBody().getClientIDs()[i];
+                //Show something on log Screen
             }
-        });
+        }
+        if (logMessage.getMessageType().equals(MessageType.DrawDamage)) {
+            //int[] damageCards = logmessage.getMessageBody().getCards();
+            //add all damage: int damage;
+            int clientID = logMessage.getMessageBody().getClientID();
+            for (int i = 0; i < modelGame.getPlayerList().getPlayerList().size(); i++) {
+                if (modelGame.getPlayerList().getPlayerList().get(i).getId() == clientID) {
+                    //TODO: Adjust damage
+                    modelGame.setLife(modelGame.getLife() - 1);
+                }
+
+            }
+        }
+        if (logMessage.getMessageType().equals(MessageType.GameFinished)) {
+            int clientID = logMessage.getMessageBody().getClientID();
+            String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
+            Label winnerLabel = new Label(username);
+            VBox winnerVBox = new VBox();
+            StackPane winnerStackPane = new StackPane();
+            Button winnerButton = new Button("Easy Win");
+            winnerVBox.getChildren().addAll(winnerLabel, winnerButton);
+            winnerStackPane.getChildren().add(winnerVBox);
+
+            //TODO: making button return scene and set StackPane over everything
+        }
+        if (logMessage.getMessageType().equals(MessageType.CheckPointReached)) {
+            int clientID = logMessage.getMessageBody().getClientID();
+            //add message to logger
+        }
     }
 
     public void exit() throws IOException {
@@ -331,27 +402,46 @@ public class ViewModelGameWindow {
                     //when starttile, insert img of robot and send coordinates
                     modelGame.sendStarttileCoordinates(colIndex, rowIndex);
                 } else {
-                    System.out.println("Is not a starttile");
+                    logger.debug("Is not a starttile");
                 }
             }
             else {
-                System.out.println("Not your turn");
+                logger.debug("Not your turn");
             }
         });
     }
 
-    public void robotSetPosition(int x, int y, int robot) {
+    public void robotSetPosition() {
         Platform.runLater(() ->{
-        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + robot + "_bunt.png");
+        Message robotMovement;
+        try {
+            robotMovement = modelGame.getPLAYERMOVEMENTS().take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        int x = robotMovement.getMessageBody().getX();
+        int y = robotMovement.getMessageBody().getY();
+        logger.debug("In viewModel - X: " + x + " | Y: " + y);
+        int clientID = robotMovement.getMessageBody().getClientID();
+        int figure;
+        if (modelUser.userIDProperty().get() == clientID) {
+            figure = modelGame.robotProperty().get();
+        }
+        else {
+            figure = modelGame.getPlayerList().getPlayer(clientID).getRobot().getFigure();
+        }
+
+            logger.debug("RobotID in viewModel: " + figure);
+        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + figure + "_bunt.png");
         Image im = new Image(input);
         ImageView img = new ImageView(im);
         img.setFitWidth(gameboardTileWidth);
         img.setPreserveRatio(true);
-        img.setId("Robot_" + robot);
+        img.setId("Robot_" + figure);
         //Current robot image gets searched and then removed
         for (Node node : gameboard.getChildren()) {
             if (node instanceof ImageView imageView) {
-                if (imageView.getId() != null && imageView.getId().equals("Robot_" + robot)) {
+                if (imageView.getId() != null && imageView.getId().equals("Robot_" + figure)) {
                     gameboard.getChildren().remove(imageView);
                     break;
                 }
@@ -376,12 +466,12 @@ public class ViewModelGameWindow {
                 ClipboardContent content = new ClipboardContent();
                 ImageView card = (ImageView) source.getChildren().get(0);
                 content.putImage(card.getImage());
+                content.putString(card.getId());
                 db.setContent(content);
                 event.consume();
                 columnIndex = handGrid.getChildren().indexOf(source);
                 source.getChildren().clear();
-                logger.debug(columnIndex);
-
+                logger.debug("Element from Column " + columnIndex);
             }
         });
     }
@@ -390,6 +480,8 @@ public class ViewModelGameWindow {
         target.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
+                //logger.debug("setOnDragOver");
+
                 //data is dragged over target
                 //accept it only if it is not dragged from the same node and if it hasImage
                 if (event.getGestureSource() != target && event.getDragboard().hasImage()) {
@@ -405,6 +497,7 @@ public class ViewModelGameWindow {
         target.setOnDragEntered(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
+                logger.debug("setOnDragEntered");
                 //drag-and-drop gesture entered target
                 //Show entering visually
                 if (event.getGestureSource() != target && event.getDragboard().hasImage()) {
@@ -419,6 +512,7 @@ public class ViewModelGameWindow {
         target.setOnDragExited(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
+                logger.debug("setOnDragExited");
                 //mouse moves out of enntered area
                 //remove visuals
                 target.setStyle("-fx-border-color: transparent;");
@@ -432,34 +526,30 @@ public class ViewModelGameWindow {
         target.setOnDragDropped(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
+                logger.debug("setOnDragDropped");
                 //data dropped
                 boolean success = false;
+                logger.debug("VM - target Children: " + target.getChildren());
                 if (target.getChildren().isEmpty()) {
                     Dragboard db = event.getDragboard();
                     if (db.hasImage()) {
+                        logger.debug("VM - ColumnIndex of Target: " + GridPane.getColumnIndex(target));
+                        String cardName = db.getString();
                         Image data = db.getImage();
                         ImageView card = new ImageView(data);
-                        card.setFitHeight(height);
+                        card.setFitWidth(programcardsWidth);
                         card.setPreserveRatio(true);
-                        //add image from dragboard to slots (Pane)
                         target.getChildren().add(card);
+                        int targetIndex = GridPane.getColumnIndex(target) + 1;
+                        logger.debug("VM - 1 Cardname: " + cardName);
                         success = true;
-                        Pane source = (Pane) handGrid.getChildren().get(columnIndex);
-                        source.getChildren().clear();
-                        //Send cardtype and register of played Card:
-                        String cardName = switch (data.getUrl()) {
-                            case "Move1.png" -> "MoveI";
-                            case "Move2.png" -> "MoveII";
-                            case "Move3.png" -> "MoveIII";
-                            case "leftTurn.png" -> "TurnLeft";
-                            case "rightTurn.png" -> "TurnRight";
-                            case "uTurn.png" -> "UTurn";
-                            case "moveBack.png" -> "BackUp";
-                            case "powerUp.png" -> "PowerUp";
-                            case "Again.png" -> "Again";
-                            default -> "";
-                        };
-                        int targetIndex = GridPane.getColumnIndex(target);
+                        logger.debug("VM - 3 target for message: " + targetIndex);
+                        logger.debug("VM - 4 SendSelectedCard sent: " + cardName);
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                         modelGame.sendSelectedCard(cardName, targetIndex);
                     }
                     event.setDropCompleted(success);
@@ -471,7 +561,7 @@ public class ViewModelGameWindow {
                         Image data = db.getImage();
                         Pane source = (Pane) handGrid.getChildren().get(columnIndex);
                         ImageView card = new ImageView(data);
-                        card.setFitHeight(height);
+                        card.setFitWidth(programcardsWidth);
                         card.setPreserveRatio(true);
                         source.getChildren().add(card);
                         logger.debug(columnIndex);
@@ -498,7 +588,7 @@ public class ViewModelGameWindow {
                         if (index != -1) {
                             Pane emptyPane = (Pane) handGrid.getChildren().get(index);
                             ImageView newCard = new ImageView(data);
-                            newCard.setFitHeight(height);
+                            newCard.setFitWidth(programcardsWidth);
                             newCard.setPreserveRatio(true);
                             emptyPane.getChildren().add(newCard);
                         }
@@ -510,10 +600,12 @@ public class ViewModelGameWindow {
 
     public int getFirstFreeSlot() {
         for (int i = 0; i < handGrid.getChildren().size(); i++) {
-            Pane child = (Pane) handGrid.getChildren().get(i);
-            if (child.getChildren().isEmpty()) {
-                logger.debug("Slot " + i + " is empty");
-                return i;
+            if(handGrid.getChildren().get(i) instanceof Pane) {
+                Pane child = (Pane) handGrid.getChildren().get(i);
+                if (child.getChildren().isEmpty()) {
+                    logger.debug("Slot " + i + " is empty");
+                    return i;
+                }
             }
         }
         return -1;
@@ -531,69 +623,172 @@ public class ViewModelGameWindow {
         transition.play();
     }
 
-    public void fillHandCards () {
-        for (int i = 0; i < handGrid.getChildren().size(); i++) {
-            Pane pane = (Pane) handGrid.getChildren().get(i);
-            switch (handCardsUI.get(i)) {
-                case "MoveI" -> {
-                    InputStream input = getClass().getResourceAsStream("/textures/cards/Move1.png");
-                    Image image = new Image(input);
-                    ImageView imageView = new ImageView(image);
-                    pane.getChildren().add(imageView);
-                }
-                case "MoveII" -> {
-                    InputStream input2 = getClass().getResourceAsStream("/textures/cards/Move2.png");
-                    Image image2 = new Image(input2);
-                    ImageView imageView2 = new ImageView(image2);
-                    pane.getChildren().add(imageView2);
-                }
-                case "MoveIII" -> {
-                    InputStream input3 = getClass().getResourceAsStream("/textures/cards/Move3.png");
-                    Image image3 = new Image(input3);
-                    ImageView imageView3 = new ImageView(image3);
-                    pane.getChildren().add(imageView3);
-                }
-                case "TurnLeft" -> {
-                    InputStream input4 = getClass().getResourceAsStream("/textures/cards/leftTurn.png");
-                    Image image4 = new Image(input4);
-                    ImageView imageView4 = new ImageView(image4);
-                    pane.getChildren().add(imageView4);
-                }
-                case "TurnRight" -> {
-                    InputStream input5 = getClass().getResourceAsStream("/textures/cards/rightTurn.png");
-                    Image image5 = new Image(input5);
-                    ImageView imageView5 = new ImageView(image5);
-                    pane.getChildren().add(imageView5);
-                }
-                case "UTurn" -> {
-                    InputStream input6 = getClass().getResourceAsStream("/textures/cards/uTurn.png");
-                    Image image6 = new Image(input6);
-                    ImageView imageView6 = new ImageView(image6);
-                    pane.getChildren().add(imageView6);
-                }
-                case "BackUp" -> {
-                    InputStream input7 = getClass().getResourceAsStream("/textures/cards/moveBack.png");
-                    Image image7 = new Image(input7);
-                    ImageView imageView7 = new ImageView(image7);
-                    pane.getChildren().add(imageView7);
-                }
-                case "PowerUp" -> {
-                    InputStream input8 = getClass().getResourceAsStream("/textures/cards/powerUp.png");
-                    Image image8 = new Image(input8);
-                    ImageView imageView8 = new ImageView(image8);
-                    pane.getChildren().add(imageView8);
-                }
-                case "Again" -> {
-                    InputStream input9 = getClass().getResourceAsStream("/textures/cards/Again.png");
-                    Image image9 = new Image(input9);
-                    ImageView imageView9 = new ImageView(image9);
-                    pane.getChildren().add(imageView9);
-                }
+    public void fillHandCards() {
+        ObservableList<Node> children = handGrid.getChildren();
+        logger.debug("fillHandCards Start:");
+        for (Node child : children) {
+            logger.debug(child);
+            if (child instanceof Pane) {
+                Pane pane = (Pane) child;
+                logger.debug("Pane contains: " + pane.getChildren());
             }
         }
+        logger.debug(" ");
+        logger.debug("Filling your cards");
+        ArrayList<String> handCards = new ArrayList<>(modelGame.getMyHandCards());
+        Platform.runLater(() -> {
+            logger.debug("handGrid children size: " + handGrid.getChildren().size());
+            for (int i = 0; i < 9; i++) {
+                if (handGrid.getChildren().get(i) instanceof Pane pane) {
+                    switch (handCards.get(i)) {
+                        case "MoveI" -> {
+                            InputStream input = getClass().getResourceAsStream(
+                                "/textures/cards/Move1.png");
+                            Image image = new Image(input);
+                            ImageView imageView = new ImageView(image);
+                            imageView.setId("MoveI");
+                            imageView.setFitWidth(programcardsWidth);
+                            imageView.setPreserveRatio(true);
+                            pane.getChildren().add(imageView);
+                        }
+                        case "MoveII" -> {
+                            InputStream input2 = getClass().getResourceAsStream(
+                                "/textures/cards/Move2.png");
+                            Image image2 = new Image(input2);
+                            ImageView imageView2 = new ImageView(image2);
+                            imageView2.setId("MoveII");
+                            imageView2.setFitWidth(programcardsWidth);
+                            imageView2.setPreserveRatio(true);
+                            pane.getChildren().add(imageView2);
+                        }
+                        case "MoveIII" -> {
+                            InputStream input3 = getClass().getResourceAsStream(
+                                "/textures/cards/Move3.png");
+                            Image image3 = new Image(input3);
+                            ImageView imageView3 = new ImageView(image3);
+                            imageView3.setId("MoveIII");
+                            imageView3.setFitWidth(programcardsWidth);
+                            imageView3.setPreserveRatio(true);
+                            pane.getChildren().add(imageView3);
+                        }
+                        case "TurnLeft" -> {
+                            InputStream input4 = getClass().getResourceAsStream(
+                                "/textures/cards/leftTurn.png");
+                            Image image4 = new Image(input4);
+                            ImageView imageView4 = new ImageView(image4);
+                            imageView4.setId("TurnLeft");
+                            imageView4.setFitWidth(programcardsWidth);
+                            imageView4.setPreserveRatio(true);
+                            pane.getChildren().add(imageView4);
+                        }
+                        case "TurnRight" -> {
+                            InputStream input5 = getClass().getResourceAsStream(
+                                "/textures/cards/rightTurn.png");
+                            Image image5 = new Image(input5);
+                            ImageView imageView5 = new ImageView(image5);
+                            imageView5.setId("TurnRight");
+                            imageView5.setFitWidth(programcardsWidth);
+                            imageView5.setPreserveRatio(true);
+                            pane.getChildren().add(imageView5);
+                        }
+                        case "UTurn" -> {
+                            InputStream input6 = getClass().getResourceAsStream(
+                                "/textures/cards/uTurn.png");
+                            Image image6 = new Image(input6);
+                            ImageView imageView6 = new ImageView(image6);
+                            imageView6.setId("UTurn");
+                            imageView6.setFitWidth(programcardsWidth);
+                            imageView6.setPreserveRatio(true);
+                            pane.getChildren().add(imageView6);
+                        }
+                        case "BackUp" -> {
+                            InputStream input7 = getClass().getResourceAsStream(
+                                "/textures/cards/moveBack.png");
+                            Image image7 = new Image(input7);
+                            ImageView imageView7 = new ImageView(image7);
+                            imageView7.setId("BackUp");
+                            imageView7.setFitWidth(programcardsWidth);
+                            imageView7.setPreserveRatio(true);
+                            pane.getChildren().add(imageView7);
+                        }
+                        case "PowerUp" -> {
+                            InputStream input8 = getClass().getResourceAsStream(
+                                "/textures/cards/powerUp.png");
+                            Image image8 = new Image(input8);
+                            ImageView imageView8 = new ImageView(image8);
+                            imageView8.setId("PowerUp");
+                            imageView8.setFitWidth(programcardsWidth);
+                            imageView8.setPreserveRatio(true);
+                            pane.getChildren().add(imageView8);
+                        }
+                        case "Again" -> {
+                            InputStream input9 = getClass().getResourceAsStream(
+                                "/textures/cards/Again.png");
+                            Image image9 = new Image(input9);
+                            ImageView imageView9 = new ImageView(image9);
+                            imageView9.setId("Again");
+                            imageView9.setFitWidth(programcardsWidth);
+                            imageView9.setPreserveRatio(true);
+                            pane.getChildren().add(imageView9);
+                        }
+                    }
+                } else {
+                    logger.debug("Element at index " + i + " is not a Pane");
+                }
+            }
+            logger.debug(" ");
+            logger.debug("fillYourHandCards End: ");
+            for (Node child : children) {
+                logger.debug(child);
+                if (child instanceof Pane) {
+                    Pane pane = (Pane) child;
+                    logger.debug("Pane contains: " + pane.getChildren());
+                }
+            }
+        });
+
+    }
+
+    private void loadDecks (){
+        InputStream upgradeImg = getClass().getResourceAsStream("/textures/cards/upgradeDeck.png");
+        Image imUpgrade = new Image(upgradeImg);
+        ImageView imgUpgrade = new ImageView(imUpgrade);
+        imgUpgrade.setFitWidth(programcardsWidth);
+        imgUpgrade.setPreserveRatio(true);
+        upgradeDeck.getChildren().add(imgUpgrade);
+
+        InputStream damageImg = getClass().getResourceAsStream("/textures/cards/damageDeck.png");
+        Image imDamage = new Image(damageImg);
+        ImageView imgDamage = new ImageView(imDamage);
+        imgDamage.setFitWidth(programcardsWidth);
+        imgDamage.setPreserveRatio(true);
+        damageDeck.getChildren().add(imgDamage);
     }
 
     public void startTimer() {
+        Timeline timeline = new Timeline();
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                int timer = 30;
+                //label.setText(timer);
+                timer--;
+                if (timer <= 0) {
+                    timeline.stop();
+                  //here we want to do something i hope
+                }
+            }
+        }));
+        timeline.setCycleCount(30);
+        timeline.play();
+    }
+
+    public void setRobotAlignment() {
+        //set Robot Alignment
+    }
+
+    public void adjustLive() {
+        //take damage
     }
 }
 

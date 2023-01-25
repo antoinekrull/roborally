@@ -9,7 +9,7 @@ public class MoveCard3 extends Card {
 
     public MoveCard3(){
         cardType = CardType.PROGRAMMING_CARD;
-        setCardName("Move 3");
+        setCard("MoveIII");
     }
 
     public int getVelocity() {
@@ -26,16 +26,17 @@ public class MoveCard3 extends Card {
             if(!CollisionCalculator.checkRobotCollision(player)){
                 Pair<Integer, Integer> tempPosition;
                 switch(player.getRobot().getDirection()){
-                    case NORTH -> tempPosition = newPosition.setAt0(newPosition.getValue0() + 1);
-                    case SOUTH -> tempPosition = newPosition.setAt0(newPosition.getValue0() - 1);
-                    case EAST -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
-                    case WEST -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
+                    case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
+                    case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
+                    case EAST -> tempPosition = newPosition.setAt0(newPosition.getValue0() + 1);
+                    case WEST -> tempPosition = newPosition.setAt0(newPosition.getValue0() - 1);
                     default -> tempPosition = newPosition;
                 }
+                System.out.println("okay ich habe den robo von "+ newPosition+" zu "+tempPosition+" bewegt");
                 newPosition = tempPosition;
+                player.getRobot().setCurrentPosition(newPosition);
             }
         }
-        player.getRobot().setCurrentPosition(newPosition);
-        //TODO: Add pit check
+        //player.getRobot().setCurrentPosition(newPosition);
     }
 }

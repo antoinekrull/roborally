@@ -1,10 +1,13 @@
 package game.player;
 
+import game.Game;
 import game.board.Direction;
 import game.card.ProgrammingDeck;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
 import server.connection.Server;
 
@@ -23,15 +26,18 @@ public class Robot {
     private Pair<Integer, Integer> currentPosition;
     private ProgrammingDeck deck = new ProgrammingDeck();
     private boolean isRebooted = false;
+    private int damageCount;
     private int activeRegister;
     private int id;
     private Server server;
+    private final Logger logger = LogManager.getLogger(Robot.class);
 
-    public Robot(int figure) {
+    public Robot(int figure, int id) {
         this.figure = figure;
-        //deck.createDeck();
+        deck.createDeck();
         energyCubes = 0;
         currentObjective = 1;
+        this.id = id;
     }
 
     public Pair<Integer, Integer> getCurrentPosition() {
@@ -39,13 +45,13 @@ public class Robot {
     }
     public void setCurrentPosition(Pair<Integer, Integer> currentPosition) {
         this.currentPosition = currentPosition;
-        if(currentPosition.getValue0() < 13) {
-            this.currentPosition = currentPosition.setAt0(13);
-        } else if(currentPosition.getValue0() > 0) {
+        if(currentPosition.getValue0() > 12) {
+            this.currentPosition = currentPosition.setAt0(12);
+        } else if(currentPosition.getValue0() < 0) {
             this.currentPosition = currentPosition.setAt0(0);
-        } else if(currentPosition.getValue1() < 10) {
-            this.currentPosition = currentPosition.setAt1(10);
-        } else if(currentPosition.getValue1() > 0) {
+        } else if(currentPosition.getValue1() > 9) {
+            this.currentPosition = currentPosition.setAt1(9);
+        } else if(currentPosition.getValue1() < 0) {
             this.currentPosition = currentPosition.setAt1(0);
         }
         server.sendMovement(this);
@@ -69,6 +75,53 @@ public class Robot {
     public void setDirection(Direction direction) {
         this.direction = direction;
     }
+    public void rotateRobot(Direction direction) {
+        try{
+            if(direction == Direction.RIGHT){
+                switch (this.getDirection()){
+                    case NORTH -> {
+                        this.setDirection(Direction.EAST);
+                        server.sendPlayerTurning(this, "clockwise");
+                    }
+                    case EAST -> {
+                        this.setDirection(Direction.SOUTH);
+                        server.sendPlayerTurning(this, "clockwise");
+                    }
+                    case SOUTH -> {
+                        this.setDirection(Direction.WEST);
+                        server.sendPlayerTurning(this, "clockwise");
+                    }
+                    case WEST -> {
+                        this.setDirection(Direction.NORTH);
+                        server.sendPlayerTurning(this, "clockwise");
+                    }
+                }
+            } else if(direction == Direction.LEFT){
+                switch (this.getDirection()){
+                    case NORTH -> {
+                        this.setDirection(Direction.WEST);
+                        server.sendPlayerTurning(this, "counterclockwise");
+                    }
+                    case WEST -> {
+                        this.setDirection(Direction.SOUTH);
+                        server.sendPlayerTurning(this, "counterclockwise");
+                    }
+                    case SOUTH -> {
+                        this.setDirection(Direction.EAST);
+                        server.sendPlayerTurning(this, "counterclockwise");
+                    }
+                    case EAST -> {
+                        this.setDirection(Direction.NORTH);
+                        server.sendPlayerTurning(this, "counterclockwise");
+                    }
+                }
+            } else {
+                logger.warn("Invalid location");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public Direction getDirection() {
         return direction;
     }
@@ -89,9 +142,17 @@ public class Robot {
     public void setDeck(ProgrammingDeck deck){
         this.deck = deck;
     }
-    //TODO: Implement this
     public boolean getRebootStatus() {return isRebooted;}
     public void setRebootStatus(boolean rebooted) {isRebooted = rebooted;}
+    public int getDamageCount() {
+        return damageCount;
+    }
+    public void setDamageCount(int damageCount) {
+        this.damageCount = damageCount;
+    }
+    public void increaseDamageCount() {
+        damageCount++;
+    }
     public int getActiveRegister() {return activeRegister;}
     public void setActiveRegister(int activeRegister) {this.activeRegister = activeRegister;}
 

@@ -1,7 +1,6 @@
 package communication;
 
-import org.javatuples.Pair;
-import server.connection.PlayerList;
+import game.card.Card;
 
 import java.util.ArrayList;
 
@@ -34,7 +33,8 @@ public class MessageBody {
     private int register;
     private boolean filled;
     private int[] clientIDs;
-    private ArrayList<Pair<Integer, String>> activeCards;
+    private String activeCards;
+
     private String newCard;
     private String rotation;
     private String type;
@@ -48,7 +48,9 @@ public class MessageBody {
     private boolean isBuying;
     private int checkpointID;
     private String[] cardsInHand;
+    private String[] cards;
     private int cardsAmountInHand;
+    private String[] availablePiles;
 
     public int getNumber() {
         return number;
@@ -226,12 +228,12 @@ public class MessageBody {
         this.clientIDs = clientIDs;
     }
 
-    public ArrayList<Pair<Integer, String>> getActiveCards() {
+    public String getActiveCards() {
         return activeCards;
     }
 
-    public void setActiveCards(ArrayList<Pair<Integer, String>> activeCards) {
-        this.activeCards = activeCards;
+    public void setActiveCards(String cardList) {
+            activeCards = cardList;
     }
 
     public String getNewCard() {
@@ -337,4 +339,14 @@ public class MessageBody {
     }
 
 
+    public void setCards(String[] cards) {
+        this.cards = cards;
+    }
+    public String[] getCards() {
+        return cards;
+    }
+
+    public void setAvailablePiles(String[] availablePiles) {
+        this.availablePiles = availablePiles;
+    }
 }

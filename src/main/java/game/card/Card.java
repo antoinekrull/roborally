@@ -12,26 +12,40 @@ import game.player.Player;
  */
 public abstract class Card {
 
-    private String cardName;
+    private int clientID;
+    private String card;
+
+    private int velocity;
     private boolean isActivated = false;
     protected boolean isDamageCard = false;
     private String cardEffect;
     protected CardType cardType;
-
+    public int getClientID() {
+        return clientID;
+    }
+    public void setClientID(int clientID) {
+        this.clientID = clientID;
+    }
     public CardType getCardType() {
         return cardType;
     }
-    public String getCardName() {
-        return cardName;
+    public String getCard() {
+        return card;
     }
-    public void setCardName(String newCardName) {
-        this.cardName = newCardName;
+    public void setCard(String newCardName) {
+        this.card = newCardName;
     }
     public String getCardEffect() {
         return cardEffect;
     }
     public void setCardEffect(String newCardEffect) {
         this.cardEffect = newCardEffect;
+    }
+    public int getVelocity() {
+        return velocity;
+    }
+    public void setVelocity(int velocity) {
+        this.velocity = velocity;
     }
     public boolean isActivated() {
         return isActivated;
@@ -45,7 +59,5 @@ public abstract class Card {
     public void setDamageCard(boolean damageCard) {
         isDamageCard = damageCard;
     }
-
     public void applyEffect(Player player) throws Exception {}
-
 }

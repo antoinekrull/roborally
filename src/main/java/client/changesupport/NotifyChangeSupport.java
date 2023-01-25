@@ -5,6 +5,9 @@ import client.viewmodel.ViewModelLobby;
 import client.viewmodel.ViewModelRobotSelection;
 
 import java.io.IOException;
+import javafx.application.Platform;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Notifier class. Actively notifies specific instances for changes.
@@ -22,6 +25,7 @@ public class NotifyChangeSupport {
     private boolean lobby;
     private boolean gamewindow;
     private boolean robotselection;
+    private final Logger logger = LogManager.getLogger(ViewModelGameWindow.class);
 
     private NotifyChangeSupport() {
 
@@ -61,7 +65,6 @@ public class NotifyChangeSupport {
         if (gamewindow) {
             viewModelGameWindow.receivedMessage();
         }
-
     }
 
     public void robotAccepted() {
@@ -77,19 +80,41 @@ public class NotifyChangeSupport {
 
     public void updateProgrammingHandCards() {
         if (gamewindow) {
+            logger.debug("programmingHandCards");
             viewModelGameWindow.fillHandCards();
         }
     }
 
-    public void robotSetPosition(int x, int y, int figure) {
-        if (gamewindow) {
-            viewModelGameWindow.robotSetPosition(x, y, figure);
-        }
+    public void robotSetPosition() {
+        Platform.runLater(() -> {
+            if (gamewindow) {
+                viewModelGameWindow.robotSetPosition();
+                logger.debug("RobotID in robotSetPosition: ");
+            }
+        });
     }
 
     public void startTimer() {
         if(gamewindow) {
             viewModelGameWindow.startTimer();
+        }
+    }
+
+    public void logMessageArrived() {
+        if (gamewindow) {
+            viewModelGameWindow.receivedGameLogMessage();
+        }
+    }
+
+    public void setRobotAlignment() {
+        if (gamewindow) {
+            viewModelGameWindow.setRobotAlignment();
+        }
+    }
+
+    public void adjustLive() {
+        if (gamewindow) {
+            viewModelGameWindow.adjustLive();
         }
     }
 }

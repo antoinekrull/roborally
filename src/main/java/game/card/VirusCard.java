@@ -8,7 +8,7 @@ public class VirusCard extends Card {
     //robots within a 6 space radius of your robot immediately take 1 spam, play the top card of your programming deck this register
     public VirusCard(){
         cardType = CardType.DAMAGE_CARD;
-        setCardName("Virus");
+        setCard("Virus");
     }
     //isInrange Checks if two robots are within 6 tiles of each other
     private boolean isInRange(Robot robot1, Robot robot2){

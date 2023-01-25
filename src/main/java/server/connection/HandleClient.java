@@ -4,12 +4,14 @@ import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
+import game.CollisionCalculator;
 import game.Game;
 import game.player.Player;
 import game.player.Robot;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.javatuples.Pair;
 
 import java.io.*;
 import java.net.Socket;
@@ -202,9 +204,11 @@ public class HandleClient implements Runnable{
                         InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream(fileName));
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
                         this.jsonMap = content.lines().collect(Collectors.joining());
+
                         game.setJsonMap(jsonMap);
+                        game.setCurrentMap(map);
                         game.createBoard(jsonMap);
-                        game.setStartDirectionForRobot(map);
+                        CollisionCalculator.createBoard(jsonMap);
                         server.messages.put(messageCreator.generateMapSelectedMessage(map));
                         //write(messageCreator.generateMapSelectedMessage(map));
 
@@ -217,17 +221,23 @@ public class HandleClient implements Runnable{
                                 getClientID()));
                     }
                     else if (incomingMessage.getMessageType() == MessageType.SelectedCard) {
+                        logger.debug(incomingMessage.getMessageBody().getCard());
                         Game.playerList.getPlayerFromList(getClientID()).playCard(incomingMessage.getMessageBody().getCard(),
-                                incomingMessage.getMessageBody().getRegister());
+                                incomingMessage.getMessageBody().getRegister() - 1);
                         if(incomingMessage.getMessageBody().getCard().equals("Null")) {
                             Message cardRemovedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
                                     incomingMessage.getMessageBody().getRegister(), false);
                             write(cardRemovedMessage);
                         } else {
+                            logger.debug("else-case HandleClient for selectedCard");
                             Message cardPlayedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
                                     incomingMessage.getMessageBody().getRegister(), true);
                             write(cardPlayedMessage);
                         }
+                    } else if (incomingMessage.getMessageType() == MessageType.SelectedDamage) {
+                        //Should be damage card
+                        game.drawChosenDamageCards(game.getPlayerFromPlayerListById(getClientID())
+                                , incomingMessage.getMessageBody().getCards());
                     } else if (incomingMessage.getMessageType() == MessageType.SetStartingPoint) {
                         if (clientID==game.getActivePlayer().getId()) {
                             int x = incomingMessage.getMessageBody().getX();
@@ -237,6 +247,7 @@ public class HandleClient implements Runnable{
                                 game.setStartPoint(x, y);
                                 server.messages.put(startingPointTakenMessage);
                                 game.setRobotSet(true);
+                                game.getPlayerFromPlayerListById(clientID).getRobot().setCurrentPosition(new Pair<>(x, y));
                             }
                             else {
                                 write(messageCreator.generateErrorMessage("Starting point is already taken"));
@@ -250,7 +261,7 @@ public class HandleClient implements Runnable{
                             Message robotAcceptedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
                             write(robotAcceptedMessage);
                             server.addPlayerToGame(new Player(getClientID(), incomingMessage.getMessageBody().getName()
-                                    , new Robot(incomingMessage.getMessageBody().getFigure())));
+                                    , new Robot(incomingMessage.getMessageBody().getFigure(), getClientID())));
                         }
                         else {
                             boolean taken = false;
@@ -267,7 +278,7 @@ public class HandleClient implements Runnable{
                                 write(robotAcceptedMessage);
 
                                 server.addPlayerToGame(new Player(getClientID(), incomingMessage.getMessageBody().getName()
-                                        , new Robot(incomingMessage.getMessageBody().getFigure())));
+                                        , new Robot(incomingMessage.getMessageBody().getFigure(), getClientID())));
                                 Message playerAddedMessage = messageCreator.generatePlayerAddedMessage(this.username, figure, getClientID());
                                 server.sendPlayerValuesToAll(getClientID(), playerAddedMessage);
 

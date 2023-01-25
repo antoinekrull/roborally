@@ -13,6 +13,8 @@ public class LaserTile extends Tile {
     private Direction los;
     private Boolean onWall;
 
+    private int laserCount = 1;
+
     public LaserTile(int xCoordinate, int yCoordinate, Direction LineOfSight, Boolean onWall) {
         super(xCoordinate, yCoordinate, "/textures/gameboard/laser.png", "LaserTile");
         if (!onWall){
@@ -36,7 +38,7 @@ public class LaserTile extends Tile {
     public void setLos(Direction los) {this.los = los;}
     @Override
     public void applyEffect(Player player) throws Exception {
-        player.addCard(game.Game.spamDeck.popCardFromDeck());
+        player.getRobot().increaseDamageCount();
     }
     @Override
     public void makeImage(GridPane tiles) {

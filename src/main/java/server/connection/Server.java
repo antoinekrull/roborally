@@ -6,6 +6,7 @@ import communication.MessageType;
 import game.Game;
 import game.board.Direction;
 import game.board.EnergySpaceTile;
+import game.card.Card;
 import game.card.PowerUpCard;
 import game.player.Player;
 import game.player.Robot;
@@ -214,16 +215,26 @@ public class Server {
     }
     public void sendActivePhase(int phase) {
         try {
+
+            String[] cardsInHand = new String[9];
+            String cards = "";
+            for(int i = 0; i < cardsInHand.length; i++) {
+                String temp = cards;
+                cards = cards + "" + cardsInHand[i];
+            }
+
             messages.put(messageCreator.generateActivePhaseMessage(phase));
         } catch (Exception e){
             e.printStackTrace();
         }
     }
 
+
+
     public void sendYourCards(Player player) {
         String[] cardsInHand = new String[player.getHand().size()];
         for(int i = 0; i < player.getHand().size(); i++) {
-            cardsInHand[i] = player.getHand().get(i).getCardName();
+            cardsInHand[i] = player.getHand().get(i).getCard();
         }
         try {
             CLIENTS.get(player.getId()).write(messageCreator.generateYourCardsMessage(cardsInHand));
@@ -285,9 +296,9 @@ public class Server {
         }
     }
 
-    public void sendCurrentCards(ArrayList<Pair<Integer, String>> input) {
+    public void sendCurrentCards(ArrayList<Card> cardArrayList) {
         try {
-            messages.put(messageCreator.generateCurrentCardsMessage(input));
+            messages.put(messageCreator.generateCurrentCardsMessage(cardArrayList));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -307,9 +318,25 @@ public class Server {
         }
     }
 
-    public void sendPlayerTurning(Robot robot) {
+    public void sendPlayerTurning(Robot robot, String direction) {
         try {
-            messages.put(messageCreator.generatePlayerTurningMessage(robot.getId(), robot.getDirection().toString()));
+            messages.put(messageCreator.generatePlayerTurningMessage(robot.getId(), direction));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendDrawDamage(Player player, String[] damageCards) {
+        try {
+            CLIENTS.get(player.getId()).write(messageCreator.generateDrawDamageMessage(player.getId(), damageCards));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendPickDamage(Player player, String[] availablePiles) {
+        try {
+            CLIENTS.get(player.getId()).write(messageCreator.generatePickDamage(player.getId(), availablePiles));
         } catch (Exception e) {
             e.printStackTrace();
         }
