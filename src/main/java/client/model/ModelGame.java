@@ -54,6 +54,7 @@ public class ModelGame {
     private boolean robotIDChanged;
     private BooleanProperty timer;
     private BooleanProperty activePlayer;
+    private SimpleIntegerProperty score;
     private ObservableList<String> maps;
     private BooleanProperty readyToPlay;
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
@@ -73,6 +74,8 @@ public class ModelGame {
         this.movementYChanged = false;
         this.movementXChanged = false;
         this.robotIDChanged = false;
+        this.score = new SimpleIntegerProperty(0);
+        score.bind(client.scoreProperty());
         this.activePlayer = new SimpleBooleanProperty(false);
         this.activePlayer.bind(client.activePlayerProperty());
         this.robotProperty = new SimpleIntegerProperty();
@@ -389,6 +392,10 @@ public class ModelGame {
 
     public void sendSelectedCard(String card, int register) {
         client.sendSelectCard(card, register);
+    }
+
+    public void sendRegisterChosen(int register) {
+        client.sendRegister(register);
     }
 
 }

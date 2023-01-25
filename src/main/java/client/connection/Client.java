@@ -66,6 +66,7 @@ public class Client {
     private StringProperty roboterAlignment;
     private boolean prioPlayer = false;
     private BooleanProperty activePlayer;
+    private IntegerProperty score;
 
     public static ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
     public ObservableList<String> myCards;
@@ -105,6 +106,7 @@ public class Client {
         this.roboterAlignment = new SimpleStringProperty();
         this.life = new SimpleIntegerProperty();
         this.gameLogMessage = new SimpleObjectProperty<>();
+        this.score = new SimpleIntegerProperty(0);
     }
 
     public static Client getInstance() {
@@ -182,6 +184,18 @@ public class Client {
 
     public int getLife() {
         return life.get();
+    }
+
+    public int getScore() {
+        return score.get();
+    }
+
+    public IntegerProperty scoreProperty() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score.set(score);
     }
 
     public IntegerProperty lifeProperty() {
@@ -532,6 +546,16 @@ public class Client {
                         }
                         if (message.getMessageType().equals(MessageType.RegisterChosen)) {
 
+                        }
+                        if (message.getMessageType().equals(MessageType.CheckPointReached)) {
+                            int clientID = message.getMessageBody().getClientID();
+                            if (Client.this.userIDProperty().get() == clientID) {
+                                Client.this.setScore(message.getMessageBody().getNumber());
+                            }
+                            else {
+                                clientPlayerList.getPlayer(clientID).setScore(message.getMessageBody().getNumber());
+                                Client.this.setGameLogMessage(message);
+                            }
                         }
                     }
                 }

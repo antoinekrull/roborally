@@ -369,6 +369,10 @@ public class ViewModelGameWindow {
 
             //TODO: making button return scene and set StackPane over everything
         }
+        if (logMessage.getMessageType().equals(MessageType.CheckPointReached)) {
+            int clientID = logMessage.getMessageBody().getClientID();
+            //add message to logger
+        }
     }
 
     public void exit() throws IOException {
