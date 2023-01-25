@@ -20,10 +20,10 @@ public class BackUpCard extends Card {
             if(!CollisionCalculator.checkReverseRobotCollision(player)){
                 Pair<Integer, Integer> tempPosition;
                 switch(player.getRobot().getDirection()){
-                    case NORTH -> tempPosition = newPosition.setAt0(newPosition.getValue0() - 1);
-                    case SOUTH -> tempPosition = newPosition.setAt0(newPosition.getValue0() + 1);
-                    case EAST -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
-                    case WEST -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
+                    case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue0() - 1);
+                    case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue0() + 1);
+                    case EAST -> tempPosition = newPosition.setAt0(newPosition.getValue1() - 1);
+                    case WEST -> tempPosition = newPosition.setAt0(newPosition.getValue1() + 1);
                     default -> tempPosition = newPosition;
                 }
                 newPosition = tempPosition;
