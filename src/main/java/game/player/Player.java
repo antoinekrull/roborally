@@ -7,7 +7,6 @@ import game.card.CardType;
 import game.card.ProgrammingDeck;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.LogManager;
@@ -148,7 +147,7 @@ public class Player {
         robot.getDeck().shuffleDeck();
         server.sendShuffleCoding(this);
     }
-    public void addCard(Card drawnCard) {
+    public void addCardToHand(Card drawnCard) {
         hand.add(drawnCard);
     }
     public void drawCard() {
@@ -235,19 +234,19 @@ public class Player {
 
     public void emptyAllCardRegisters() {
         for(int i = 0; i < cardRegister.length; i++) {
-            if(cardRegister[i].isDamageCard()) {
-                switch (cardRegister[i].getCard()) {
-                    case "Trojan" -> Game.trojanDeck.addCard(cardRegister[i]);
-                    case "Worm" -> Game.wormDeck.addCard(cardRegister[i]);
-                    case "Spam" -> Game.spamDeck.addCard(cardRegister[i]);
-                    case "Virus" -> Game.virusDeck.addCard(cardRegister[i]);
+            if(cardRegister[i] == null) {
+                if(cardRegister[i].isDamageCard()) {
+                    switch (cardRegister[i].getCard()) {
+                        case "Trojan" -> Game.trojanDeck.addCard(cardRegister[i]);
+                        case "Worm" -> Game.wormDeck.addCard(cardRegister[i]);
+                        case "Spam" -> Game.spamDeck.addCard(cardRegister[i]);
+                        case "Virus" -> Game.virusDeck.addCard(cardRegister[i]);
+                    }
+                } else {
+                    personalDiscardPile.addCard(cardRegister[i]);
+                    cardRegister[i] = null;
                 }
-            } else {
-                personalDiscardPile.addCard(cardRegister[i]);
-                cardRegister[i] = null;
             }
-            setCardRegister(null, i);
-            //setStatusRegister(false, i);
         }
     }
     @Override

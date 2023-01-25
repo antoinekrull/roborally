@@ -22,14 +22,9 @@ public class WallTile extends Tile {
         isDanger = false;
         isBlocking = false;
         this.blockedDirections = blockedDirections;
+        setBlockedDirections(blockedDirections);
     }
 
-    public ArrayList<Direction> getBlockedDirections() {
-        return blockedDirections;
-    }
-    public void setBlockedDirections(ArrayList<Direction> blockedDirections) {
-        this.blockedDirections = blockedDirections;
-    }
     @Override
     public void applyEffect(Player player) throws Exception {
         //has no effect, the robot movement is what detects collisions
