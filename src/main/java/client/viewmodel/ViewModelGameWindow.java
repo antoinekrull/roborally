@@ -104,6 +104,8 @@ public class ViewModelGameWindow {
     private double gameboardTileWidth;
     private double programcardsWidth;
     private int columnIndex;
+    private boolean isClickable;
+    private boolean isDroppedSuccessfully = false;
 
     public ViewModelGameWindow() {
         this.modelChat = ModelChat.getInstance();
@@ -187,6 +189,16 @@ public class ViewModelGameWindow {
         onRightClickRemoveProgrammingCard(programmingPane3);
         onRightClickRemoveProgrammingCard(programmingPane4);
         onRightClickRemoveProgrammingCard(programmingPane5);
+
+        setOnDragDone(programCard1);
+        setOnDragDone(programCard2);
+        setOnDragDone(programCard3);
+        setOnDragDone(programCard4);
+        setOnDragDone(programCard5);
+        setOnDragDone(programCard6);
+        setOnDragDone(programCard7);
+        setOnDragDone(programCard8);
+        setOnDragDone(programCard9);
 
         placeTiles(map);
 
@@ -382,7 +394,10 @@ public class ViewModelGameWindow {
 
     private void handleGameEvent(Message gamemessage) {
         if (gamemessage.getMessageType().equals(MessageType.SelectionFinished)) {
-
+            int clientID = gamemessage.getMessageBody().getClientID();
+            if (clientID == modelUser.userIDProperty().get()){
+                setProgramcardsUnmovable();
+            }
         }
         if (gamemessage.getMessageType().equals(MessageType.CurrentCards)) {
 
@@ -492,6 +507,14 @@ public class ViewModelGameWindow {
     }
 
     public void fillHandCards() {
+        //clear the handcards
+        for (Node child : programmingGrid.getChildren()) {
+            if (child instanceof Pane) {
+                Pane pane = (Pane) child;
+                pane.getChildren().clear();
+            }
+        }
+        this.isClickable = true;
         ObservableList<Node> children = handGrid.getChildren();
         logger.debug("VM - fillHandCards Start:");
         for (Node child : children) {
@@ -747,6 +770,7 @@ public class ViewModelGameWindow {
             public void handle(DragEvent event) {
                 logger.debug("setOnDragDropped");
                 //data dropped
+                isDroppedSuccessfully = true;
                 boolean success = false;
                 logger.debug("VM - target Children: " + target.getChildren());
                 if (target.getChildren().isEmpty()) {
@@ -762,7 +786,6 @@ public class ViewModelGameWindow {
                         target.getChildren().add(card);
                         int targetIndex = GridPane.getColumnIndex(target) + 1;
                         logger.debug("VM - 1 Cardname: " + cardName);
-                        success = true;
                         logger.debug("VM - 3 target for message: " + targetIndex);
                         logger.debug("VM - 4 SendSelectedCard sent: " + cardName);
                         try {
@@ -771,9 +794,9 @@ public class ViewModelGameWindow {
                             throw new RuntimeException(e);
                         }
                         modelGame.sendSelectedCard(cardName, targetIndex);
+                        success = true;
                     }
-                    event.setDropCompleted(success);
-                    event.consume();
+
                 }
                 else {
                     Dragboard db = event.getDragboard();
@@ -784,12 +807,44 @@ public class ViewModelGameWindow {
                         card.setFitWidth(programcardsWidth);
                         card.setPreserveRatio(true);
                         source.getChildren().add(card);
-                        logger.debug(columnIndex);
+                        logger.debug("VM - Card returned to Column: " + columnIndex);
+                        success = true;
                     }
                 }
+                event.setDropCompleted(success);
+                event.consume();
+            }
+
+        });
+
+    }
+
+    public void setOnDragDone(Pane source) {
+        source.setOnDragDone(new EventHandler<DragEvent>() {
+            @Override
+            public void handle(DragEvent event) {
+                logger.debug("Drag done - completed: " + event.isDropCompleted());
+                logger.debug("Drag done - completed in variable: " + event.isDropCompleted());
+                if (!isDroppedSuccessfully) {
+                    // drag and drop failed, add the card back to the source pane
+                    Dragboard db = event.getDragboard();
+                    if (db.hasImage()) {
+                        Image data = db.getImage();
+                        String cardName = db.getString();
+                        ImageView card = new ImageView(data);
+                        card.setId(cardName);
+                        card.setFitWidth(programcardsWidth);
+                        card.setPreserveRatio(true);
+                        source.getChildren().add(card);
+                    }
+                }
+                event.consume();
+                logger.debug("Changing isDroppedSuccessfully to false");
+                isDroppedSuccessfully = false;
             }
         });
     }
+
 
     public void onRightClickRemoveProgrammingCard(Pane target) {
         target.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -797,23 +852,28 @@ public class ViewModelGameWindow {
             public void handle(MouseEvent event) {
                 if (event.getButton() == MouseButton.SECONDARY) {
                     Object targetNode = event.getTarget();
-                    if (targetNode instanceof ImageView) {
-                        ImageView card = (ImageView) targetNode;
-                        String cardName = card.getId();
-                        Image data = card.getImage();
-                        target.getChildren().remove(card);
-                        //Resets register when card is taken out:
-                        int targetIndex = GridPane.getColumnIndex(target);
-                        modelGame.sendSelectedCard(null, targetIndex);
-                        int index = getFirstFreeSlot();
-                        if (index != -1) {
-                            Pane emptyPane = (Pane) handGrid.getChildren().get(index);
-                            ImageView newCard = new ImageView(data);
-                            newCard.setFitWidth(programcardsWidth);
-                            newCard.setPreserveRatio(true);
-                            newCard.setId(cardName);
-                            emptyPane.getChildren().add(newCard);
+                    if (isClickable){
+                        if (targetNode instanceof ImageView) {
+                            ImageView card = (ImageView) targetNode;
+                            String cardName = card.getId();
+                            Image data = card.getImage();
+                            target.getChildren().remove(card);
+                            //Resets register when card is taken out:
+                            int targetIndex = GridPane.getColumnIndex(target);
+                            modelGame.sendSelectedCard(null, targetIndex);
+                            int index = getFirstFreeSlot();
+                            if (index != -1) {
+                                Pane emptyPane = (Pane) handGrid.getChildren().get(index);
+                                ImageView newCard = new ImageView(data);
+                                newCard.setFitWidth(programcardsWidth);
+                                newCard.setPreserveRatio(true);
+                                newCard.setId(cardName);
+                                emptyPane.getChildren().add(newCard);
+                            }
                         }
+                    }
+                    else {
+                        logger.debug("VM - Rightclick not possible in current phase");
                     }
                 }
             }
@@ -843,6 +903,10 @@ public class ViewModelGameWindow {
 
     public void setRobotAlignment() {
         //set Robot Alignment
+    }
+
+    public void setProgramcardsUnmovable () {
+        this.isClickable = false;
     }
 
     public void exit() throws IOException {
