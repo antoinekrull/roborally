@@ -318,9 +318,25 @@ public class Server {
         }
     }
 
-    public void sendPlayerTurning(Robot robot, Direction direction) {
+    public void sendPlayerTurning(Robot robot, String direction) {
         try {
-            messages.put(messageCreator.generatePlayerTurningMessage(robot.getId(), direction.toString()));
+            messages.put(messageCreator.generatePlayerTurningMessage(robot.getId(), direction));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendDrawDamage(Player player, String[] damageCards) {
+        try {
+            CLIENTS.get(player.getId()).write(messageCreator.generateDrawDamageMessage(player.getId(), damageCards));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendPickDamage(Player player, String[] availablePiles) {
+        try {
+            CLIENTS.get(player.getId()).write(messageCreator.generatePickDamage(player.getId(), availablePiles));
         } catch (Exception e) {
             e.printStackTrace();
         }

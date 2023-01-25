@@ -1,5 +1,6 @@
 package game;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.Board;
 import game.board.PushPanelTile;
 import game.board.Direction;
@@ -17,16 +18,16 @@ public class CollisionCalculator {
         Pair<Integer, Integer> nextPosition = player.getRobot().getCurrentPosition();
         switch(player.getRobot().getDirection()){
             case NORTH -> {
-                nextPosition.setAt0(nextPosition.getValue0() + 1);
+                nextPosition.setAt1(nextPosition.getValue1() - 1);
             }
             case SOUTH -> {
-                nextPosition.setAt0(nextPosition.getValue0() - 1);
-            }
-            case EAST -> {
                 nextPosition.setAt1(nextPosition.getValue1() + 1);
             }
+            case EAST -> {
+                nextPosition.setAt0(nextPosition.getValue0() + 1);
+            }
             case WEST -> {
-                nextPosition.setAt1(nextPosition.getValue1() - 1);
+                nextPosition.setAt0(nextPosition.getValue0() - 1);
             }
         }
         if(tileIsBlocking(board.getTile(nextPosition))) {
@@ -40,16 +41,16 @@ public class CollisionCalculator {
         Pair<Integer, Integer> nextPosition = player.getRobot().getCurrentPosition();
         switch(player.getRobot().getDirection()){
             case NORTH -> {
-                nextPosition.setAt0(nextPosition.getValue0() - 1);
+                nextPosition.setAt1(nextPosition.getValue1() + 1);
             }
             case SOUTH -> {
-                nextPosition.setAt0(nextPosition.getValue0() + 1);
-            }
-            case EAST -> {
                 nextPosition.setAt1(nextPosition.getValue1() - 1);
             }
+            case EAST -> {
+                nextPosition.setAt0(nextPosition.getValue0() - 1);
+            }
             case WEST -> {
-                nextPosition.setAt1(nextPosition.getValue1() + 1);
+                nextPosition.setAt0(nextPosition.getValue0() + 1);
             }
         }
         if(tileIsBlocking(board.getTile(nextPosition))) {
@@ -153,4 +154,7 @@ public class CollisionCalculator {
         board = newBoard;
     }
 
+    public static void createBoard(String jsonMap) throws JsonProcessingException {
+        board.createBoard(jsonMap);
+    }
 }

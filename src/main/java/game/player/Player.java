@@ -27,7 +27,7 @@ public class Player {
     private boolean isReady;
     private ArrayList<Card> hand;
     private Card[] cardRegister = new Card[5];
-    private boolean[] statusRegister = new boolean[5];
+    //private boolean[] statusRegister = new boolean[5];
     private ProgrammingDeck personalDiscardPile;
     private Robot robot;
     private final Logger logger = LogManager.getLogger(Player.class);
@@ -83,6 +83,8 @@ public class Player {
     public Card[] getCardRegister() {
         return cardRegister;
     }
+
+    //TODO: Fix crash if reboot happened
     public Card getCardFromRegister(int index){
         return cardRegister[index];
     }
@@ -93,20 +95,20 @@ public class Player {
     public void setCardRegister(Card card, int index) {
         cardRegister[index] = card;
     }
-    public boolean[] getStatusRegister() {
-        return statusRegister;
-    }
-    public void setStatusRegister(boolean setter, int index) {
-        statusRegister[index] = setter;
-    }
+//    public boolean[] getStatusRegister() {
+//        return statusRegister;
+//    }
+//    public void setStatusRegister(boolean setter, int index) {
+//        statusRegister[index] = setter;
+//    }
     public ProgrammingDeck getPersonalDiscardPile() {
         return personalDiscardPile;
     }
-    public void setStatusRegister(boolean setAll) {
-        for(boolean status: statusRegister ){
-            status = setAll;
-        }
-    }
+//    public void setStatusRegister(boolean setAll) {
+//        for(boolean status: statusRegister ){
+//            status = setAll;
+//        }
+//    }
     public void setServerForPlayerAndRobot(Server server) {
         this.server = server;
         robot.setServer(server);
@@ -138,7 +140,7 @@ public class Player {
     }
     public void discardEntireHand() {
         for(int i = hand.size()-1; i > 0; i--) {
-            hand.remove(i);
+            discard(i);
         }
     }
     public void refillDeck(){
@@ -175,7 +177,7 @@ public class Player {
         }
         if(index == 0 && card instanceof AgainCard) {
             System.out.println("You cant play this card in the first register, please try again!");
-        } else if(index > 0 || index < cardRegister.length){
+        } else if(index < 0 || index > cardRegister.length){
             System.out.println("The register has not been addressed properly, please try again!");
         } else {
             cardRegister[index] = card;
@@ -186,6 +188,7 @@ public class Player {
         }
     }
 
+    /*
     public boolean allRegistersActivated() {
         boolean result = false;
         int registerCount = 0;
@@ -199,6 +202,7 @@ public class Player {
         }
         return result;
     }
+    */
 
     //if timer runs out all unfilled registers of player get filled with random cards
     //TODO: Fix this
@@ -233,15 +237,17 @@ public class Player {
         for(int i = 0; i < cardRegister.length; i++) {
             if(cardRegister[i].isDamageCard()) {
                 switch (cardRegister[i].getCard()) {
-                    case "Trojan Horse" -> Game.trojanDeck.addCard(cardRegister[i]);
+                    case "Trojan" -> Game.trojanDeck.addCard(cardRegister[i]);
                     case "Worm" -> Game.wormDeck.addCard(cardRegister[i]);
                     case "Spam" -> Game.spamDeck.addCard(cardRegister[i]);
                     case "Virus" -> Game.virusDeck.addCard(cardRegister[i]);
                 }
             } else {
                 personalDiscardPile.addCard(cardRegister[i]);
+                cardRegister[i] = null;
             }
             setCardRegister(null, i);
+            //setStatusRegister(false, i);
         }
     }
     @Override

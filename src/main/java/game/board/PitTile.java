@@ -19,6 +19,7 @@ public class PitTile extends Tile {
 
     @Override
     public void applyEffect(Player player) throws Exception {
+        //applied in Game
         //player.getRobot().reboot();
     }
 }

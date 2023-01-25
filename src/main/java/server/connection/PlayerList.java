@@ -129,20 +129,29 @@ public class PlayerList extends ArrayList implements Iterator<Player> {
         return playerList.get(index);
     }
 
-    public boolean allPlayerRegistersActivated() {
-        boolean result = false;
-        int count = 0;
-        for(int i = 0; i < playerList.size(); i++) {
-            if(playerList.get(i).allRegistersActivated()) {
-                count++;
+//    public boolean allPlayerRegistersActivated() {
+//        boolean result = false;
+//        int count = 0;
+//        for(int i = 0; i < playerList.size(); i++) {
+//            if(playerList.get(i).allRegistersActivated()) {
+//                count++;
+//            }
+//        }
+//        if(count == playerList.size()) {
+//            result = true;
+//        }
+//        return result;
+//    }
+
+    public ArrayList<Player> getDamagedPlayers() {
+        ArrayList<Player> damagedPlayers = new ArrayList<>();
+        for(Player player: playerList) {
+            if(player.getRobot().getDamageCount() != 0) {
+                damagedPlayers.add(player);
             }
         }
-        if(count == playerList.size()) {
-            result = true;
-        }
-        return result;
+        return damagedPlayers;
     }
-
     public PlayerList getUnreadyPlayers() {
         PlayerList unreadyPlayers = new PlayerList();
         for(int i = 0; i < playerList.size(); i++) {

@@ -4,6 +4,7 @@ import communication.JsonSerializer;
 import communication.Message;
 import communication.MessageCreator;
 import communication.MessageType;
+import game.CollisionCalculator;
 import game.Game;
 import game.player.Player;
 import game.player.Robot;
@@ -203,9 +204,11 @@ public class HandleClient implements Runnable{
                         InputStream file = Objects.requireNonNull(HandleClient.class.getResourceAsStream(fileName));
                         BufferedReader content = new BufferedReader(new InputStreamReader(file));
                         this.jsonMap = content.lines().collect(Collectors.joining());
+
                         game.setJsonMap(jsonMap);
+                        game.setCurrentMap(map);
                         game.createBoard(jsonMap);
-                        game.setStartDirectionForRobot(map);
+                        CollisionCalculator.createBoard(jsonMap);
                         server.messages.put(messageCreator.generateMapSelectedMessage(map));
                         //write(messageCreator.generateMapSelectedMessage(map));
 
@@ -220,7 +223,7 @@ public class HandleClient implements Runnable{
                     else if (incomingMessage.getMessageType() == MessageType.SelectedCard) {
                         logger.debug(incomingMessage.getMessageBody().getCard());
                         Game.playerList.getPlayerFromList(getClientID()).playCard(incomingMessage.getMessageBody().getCard(),
-                                incomingMessage.getMessageBody().getRegister());
+                                incomingMessage.getMessageBody().getRegister() - 1);
                         if(incomingMessage.getMessageBody().getCard().equals("Null")) {
                             Message cardRemovedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
                                     incomingMessage.getMessageBody().getRegister(), false);
@@ -231,6 +234,10 @@ public class HandleClient implements Runnable{
                                     incomingMessage.getMessageBody().getRegister(), true);
                             write(cardPlayedMessage);
                         }
+                    } else if (incomingMessage.getMessageType() == MessageType.SelectedDamage) {
+                        //Should be damage card
+                        game.drawChosenDamageCards(game.getPlayerFromPlayerListById(getClientID())
+                                , incomingMessage.getMessageBody().getCards());
                     } else if (incomingMessage.getMessageType() == MessageType.SetStartingPoint) {
                         if (clientID==game.getActivePlayer().getId()) {
                             int x = incomingMessage.getMessageBody().getX();
