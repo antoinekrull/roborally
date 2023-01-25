@@ -470,11 +470,11 @@ public class Game implements Runnable {
 
     private void runTimer() {
         timerIsRunning=true;
-        System.out.println("Timer is running");
         server.sendTimerStarted();
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
+                System.out.println("Timer is running");
                 PlayerList unreadyPlayers = playerList.getUnreadyPlayers();
                 for (int i = 0; i < unreadyPlayers.size(); i++) {
                     String[] placedCards = unreadyPlayers.get(i).fillRegisterWithRandomCards();
@@ -484,9 +484,9 @@ public class Game implements Runnable {
                     // for testing purposes
                     unreadyPlayers.get(i).printRegisters();
                     logger.info("Time ran through");
-                    server.sendTimerEnded(playerList.getUnreadyPlayers());
-                    playerList.setPlayerReadiness(true);
+                    playerList.setPlayerReadiness(false);
                 }
+                server.sendTimerEnded(playerList.getUnreadyPlayers());
             }
         };
         //TODO: MAKE THIS 30000 AGAIN!!!!
@@ -565,7 +565,7 @@ public class Game implements Runnable {
         playerList.setPlayersPlaying(true);
         while(!playerList.playersAreReady()) {
             Thread.sleep(3000);
-            if (playerList.getAmountOfReadyPlayers() <= 1) {
+            if (playerList.getAmountOfReadyPlayers() >= 1) {
                 if(!timerIsRunning) {
                     runTimer();
                 }
