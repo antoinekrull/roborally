@@ -121,9 +121,6 @@ public class ViewModelGameWindow {
     public void initialize() {
         ArrayList<ArrayList<ArrayList<Tile>>> map = modelGame.getGameMap();
         ObservableList<Node> children = handGrid.getChildren();
-        for (Node child : children) {
-            logger.debug("Initialize handGrid: " + child);
-        }
 
         selectStarttile();
 
@@ -533,6 +530,7 @@ public class ViewModelGameWindow {
                         String cardName = db.getString();
                         Image data = db.getImage();
                         ImageView card = new ImageView(data);
+                        card.setId(cardName);
                         card.setFitWidth(programcardsWidth);
                         card.setPreserveRatio(true);
                         target.getChildren().add(card);
@@ -575,6 +573,7 @@ public class ViewModelGameWindow {
                     Object targetNode = event.getTarget();
                     if (targetNode instanceof ImageView) {
                         ImageView card = (ImageView) targetNode;
+                        String cardName = card.getId();
                         Image data = card.getImage();
                         target.getChildren().remove(card);
                         //Resets register when card is taken out:
@@ -586,6 +585,7 @@ public class ViewModelGameWindow {
                             ImageView newCard = new ImageView(data);
                             newCard.setFitWidth(programcardsWidth);
                             newCard.setPreserveRatio(true);
+                            newCard.setId(cardName);
                             emptyPane.getChildren().add(newCard);
                         }
                     }
@@ -621,7 +621,7 @@ public class ViewModelGameWindow {
 
     public void fillHandCards() {
         ObservableList<Node> children = handGrid.getChildren();
-        logger.debug("fillHandCards Start:");
+        logger.debug("VM - fillHandCards Start:");
         for (Node child : children) {
             logger.debug(child);
             if (child instanceof Pane) {
@@ -629,11 +629,9 @@ public class ViewModelGameWindow {
                 logger.debug("Pane contains: " + pane.getChildren());
             }
         }
-        logger.debug(" ");
-        logger.debug("Filling your cards");
         ArrayList<String> handCards = new ArrayList<>(modelGame.getMyHandCards());
         Platform.runLater(() -> {
-            logger.debug("handGrid children size: " + handGrid.getChildren().size());
+            logger.debug("VM - handGrid children size: " + handGrid.getChildren().size());
             for (int i = 0; i < 9; i++) {
                 if (handGrid.getChildren().get(i) instanceof Pane pane) {
                     switch (handCards.get(i)) {
@@ -727,18 +725,57 @@ public class ViewModelGameWindow {
                             imageView9.setPreserveRatio(true);
                             pane.getChildren().add(imageView9);
                         }
+                        case "Spam" -> {
+                            InputStream input10 = getClass().getResourceAsStream(
+                                "/textures/cards/SPAM.png");
+                            Image image10 = new Image(input10);
+                            ImageView imageView10 = new ImageView(image10);
+                            imageView10.setId("Spam");
+                            imageView10.setFitWidth(programcardsWidth);
+                            imageView10.setPreserveRatio(true);
+                            pane.getChildren().add(imageView10);
+                        }
+                        case "Worm" -> {
+                            InputStream input11 = getClass().getResourceAsStream(
+                                "/textures/cards/WORM.png");
+                            Image image11 = new Image(input11);
+                            ImageView imageView11 = new ImageView(image11);
+                            imageView11.setId("Worm");
+                            imageView11.setFitWidth(programcardsWidth);
+                            imageView11.setPreserveRatio(true);
+                            pane.getChildren().add(imageView11);
+                        }
+                        case "Virus" -> {
+                            InputStream input12 = getClass().getResourceAsStream(
+                                "/textures/cards/VIRUS.png");
+                            Image image12 = new Image(input12);
+                            ImageView imageView12 = new ImageView(image12);
+                            imageView12.setId("Virus");
+                            imageView12.setFitWidth(programcardsWidth);
+                            imageView12.setPreserveRatio(true);
+                            pane.getChildren().add(imageView12);
+                        }
+                        case "Trojan" -> {
+                            InputStream input13 = getClass().getResourceAsStream(
+                                "/textures/cards/TROJAN_HORSE.png");
+                            Image image13 = new Image(input13);
+                            ImageView imageView13 = new ImageView(image13);
+                            imageView13.setId("Trojan");
+                            imageView13.setFitWidth(programcardsWidth);
+                            imageView13.setPreserveRatio(true);
+                            pane.getChildren().add(imageView13);
+                        }
                     }
                 } else {
                     logger.debug("Element at index " + i + " is not a Pane");
                 }
             }
             logger.debug(" ");
-            logger.debug("fillYourHandCards End: ");
             for (Node child : children) {
                 logger.debug(child);
                 if (child instanceof Pane) {
                     Pane pane = (Pane) child;
-                    logger.debug("Pane contains: " + pane.getChildren());
+                    logger.debug("VM - handpane now contains: " + pane.getChildren());
                 }
             }
         });
