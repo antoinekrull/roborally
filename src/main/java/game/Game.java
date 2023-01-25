@@ -84,9 +84,6 @@ public class Game implements Runnable {
         return activePlayer;
     }
 
-    /*
-
-                     */
     private void applyAllTileEffects() throws Exception {
         try {
             logger.debug("Applying conveyor belt 2 effects");
@@ -478,6 +475,7 @@ public class Game implements Runnable {
         while(currentRegister < 5) {
             //TODO: Player cant activate cards while playing
             for(int i = 0; i < playerList.size(); i++) {
+                Thread.sleep(1000);
                 playerList.get(i).getCardFromRegister(currentRegister).setClientID(playerList.get(i).getId());
                 cardList.add(playerList.get(i).getCardFromRegister(currentRegister));
                 activateRegister(playerList.get(i));
@@ -494,9 +492,10 @@ public class Game implements Runnable {
             if(playerList.robotNeedsReboot()) {
                 for(int i = 0; i < playerList.numberOfNeededReboots(); i++) {
                     reboot(playerList.get(i));
+                    Thread.sleep(1000);
                 }
             }
-            Thread.sleep(1000);
+
             determinePriority();
             //checks if all registers have been activated
             if(currentRegister == 4) {
