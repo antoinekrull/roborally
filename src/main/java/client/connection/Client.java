@@ -95,6 +95,7 @@ public class Client {
         this.movement = new SimpleObjectProperty<>();
         this.roboterAlignment = new SimpleStringProperty();
         this.gameLogMessage = new SimpleObjectProperty<>();
+        this.gameEventMessage = new SimpleObjectProperty<>();
         this.score = new SimpleIntegerProperty(0);
     }
 
