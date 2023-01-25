@@ -62,6 +62,7 @@ public class Client {
     private IntegerProperty movementX;
     private IntegerProperty movementY;
     private IntegerProperty robotID;
+    private IntegerProperty life;
     private StringProperty roboterAlignment;
     private boolean prioPlayer = false;
     private BooleanProperty activePlayer;
@@ -77,11 +78,6 @@ public class Client {
     private ObservableList<String> maps;
     private BooleanProperty timer;
     private final Logger logger = LogManager.getLogger(Client.class);
-
-    public Board getBoard() {
-        return board;
-    }
-
     private Board board = new Board();
 
 
@@ -113,6 +109,10 @@ public class Client {
             client = new Client();
         }
         return client;
+    }
+
+    public Board getBoard() {
+        return board;
     }
 
     public ObjectProperty<Message> messageProperty() {
@@ -175,6 +175,18 @@ public class Client {
 
     public ObservableList<String> getMyCards() {
         return myCards;
+    }
+
+    public int getLife() {
+        return life.get();
+    }
+
+    public IntegerProperty lifeProperty() {
+        return life;
+    }
+
+    public void setLife(int damage) {
+        this.life.set(getLife() - damage);
     }
 
     public void setMyCards(ObservableList<String> myCards) {
@@ -484,15 +496,32 @@ public class Client {
                             Client.this.setRoboterAlignment(message.getMessageBody().getRotation());
                         }
                         if (message.getMessageType().equals(MessageType.DrawDamage)) {
+                            int clientID = message.getMessageBody().getClientID();
+                            if (userIDProperty().get() == clientID) {
+                                //String[] damageCards = message.getMessageBody().getCard
+                                //int damage = ;
+                                Client.this.setLife(1);
+                            }
+                            else {
+                                Client.this.setGameLogMessage(message);
+                            }
 
                         }
                         if (message.getMessageType().equals(MessageType.PickDamage)) {
 
                         }
                         if (message.getMessageType().equals(MessageType.Energy)) {
+                            int clientID = message.getMessageBody().getClientID();
+                            int count = message.getMessageBody().getCount();
+                            if (userIDProperty().get() == clientID) {
+                                Client.this.addEnergy(count);
+                            }
+                            else {
 
+                            }
                         }
                         if (message.getMessageType().equals(MessageType.GameFinished)) {
+                            Client.this.setGameLogMessage(message);
 
                         }
                         if (message.getMessageType().equals(MessageType.CheckpointMoved)) {
@@ -507,6 +536,10 @@ public class Client {
                 logger.warn("Lost connection to server " + e);
             }
         }
+    }
+
+    private void addEnergy(int count) {
+
     }
 
     //maybe are these methods redundant, but they are kept until everything is implemented for them to be there

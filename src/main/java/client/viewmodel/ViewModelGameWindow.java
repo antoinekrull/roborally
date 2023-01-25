@@ -27,10 +27,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -345,6 +342,30 @@ public class ViewModelGameWindow {
                 int clientID = logMessage.getMessageBody().getClientIDs()[i];
                 //Show something on log Screen
             }
+        }
+        if (logMessage.getMessageType().equals(MessageType.DrawDamage)) {
+            //int[] damageCards = logmessage.getMessageBody().getCards();
+            //add all damage: int damage;
+            int clientID = logMessage.getMessageBody().getClientID();
+            for (int i = 0; i < modelGame.getPlayerList().getPlayerList().size(); i++) {
+                if (modelGame.getPlayerList().getPlayerList().get(i).getId() == clientID) {
+                    //TODO: Adjust damage
+                    modelGame.setLife(modelGame.getLife() - 1);
+                }
+
+            }
+        }
+        if (logMessage.getMessageType().equals(MessageType.GameFinished)) {
+            int clientID = logMessage.getMessageBody().getClientID();
+            String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
+            Label winnerLabel = new Label(username);
+            VBox winnerVBox = new VBox();
+            StackPane winnerStackPane = new StackPane();
+            Button winnerButton = new Button("Easy Win");
+            winnerVBox.getChildren().addAll(winnerLabel, winnerButton);
+            winnerStackPane.getChildren().add(winnerVBox);
+
+            //TODO: making button return scene and set StackPane over everything
         }
     }
 
@@ -753,6 +774,10 @@ public class ViewModelGameWindow {
 
     public void setRobotAlignment() {
         //set Robot Alignment
+    }
+
+    public void adjustLive() {
+        //take damage
     }
 }
 

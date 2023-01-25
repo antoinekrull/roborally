@@ -111,4 +111,10 @@ public class NotifyChangeSupport {
             viewModelGameWindow.setRobotAlignment();
         }
     }
+
+    public void adjustLive() {
+        if (gamewindow) {
+            viewModelGameWindow.adjustLive();
+        }
+    }
 }

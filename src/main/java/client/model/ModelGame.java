@@ -39,6 +39,7 @@ public class ModelGame {
     private SimpleStringProperty errorMessage;
     private ObservableList<Integer> readyList;
     private SimpleStringProperty robotAlignment;
+    private IntegerProperty life;
     private SimpleIntegerProperty x;
     private SimpleIntegerProperty y;
     private boolean yChanged;
@@ -223,6 +224,16 @@ public class ModelGame {
         });
 
          */
+
+        this.life = new SimpleIntegerProperty();
+        life.bind(client.lifeProperty());
+        life.addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                notifyChangeSupport.adjustLive();
+            }
+        });
+        //life.set(100);
     }
 
 
@@ -332,6 +343,17 @@ public class ModelGame {
         return activePlayer;
     }
 
+    public int getLife() {
+        return life.get();
+    }
+
+    public IntegerProperty lifeProperty() {
+        return life;
+    }
+
+    public void setLife(int life) {
+        this.life.set(life);
+    }
     /*
     public void check_x_y_id() {
         if (movementXChanged && movementYChanged && robotIDChanged) {
