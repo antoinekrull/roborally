@@ -555,12 +555,20 @@ public class ViewModelGameWindow {
             }
         }
         if (gamemessage.getMessageType().equals(MessageType.ReplaceCard)) {
-
+//            int clientID = gamemessage.getMessageBody().getClientID();
+//            if(clientID == gamemessage.getMessageBody().getClientID()) {
+//                int register = gamemessage.getMessageBody().getRegister();
+            //TODO: SwitchCase - Idee: Alles was mit Karten zu tun hat auslagern?
+//            }
         }
         if (gamemessage.getMessageType().equals(MessageType.DrawDamage)) {
-
+            drawDamage(gamemessage.getMessageBody().getCards());
         }
         if (gamemessage.getMessageType().equals(MessageType.PickDamage)) {
+            //TODO: Pile Array?
+            //ArrayList<String> damagePiles = gamemessage.getMessageBody().getPiles[];
+            //int counter = gamemessage.getMessageBody().getCounter();
+            //cardSelection.overlayDamagecards(damagePiles, counter);
 
         }
     }
@@ -658,7 +666,6 @@ public class ViewModelGameWindow {
             }
         }
         this.isClickable = true;
-        ObservableList<Node> children = handGrid.getChildren();
         logger.debug("VM - fillHandCards Start:");
         ArrayList<String> handCards = new ArrayList<>(modelGame.getMyHandCards());
         Platform.runLater(() -> {
@@ -802,6 +809,7 @@ public class ViewModelGameWindow {
                 }
             }
             logger.debug(" ");
+            ObservableList<Node> children = handGrid.getChildren();
             for (Node child : children) {
                 logger.debug(child);
                 if (child instanceof Pane) {
@@ -1063,6 +1071,56 @@ public class ViewModelGameWindow {
         }
     }
 
+    public void drawDamage(String[] damageCards) {
+        int index = getFirstFreeSlot();
+        if (index != -1) {
+            Pane pane = (Pane) handGrid.getChildren().get(index);
+            for (String card : damageCards) {
+                switch (card) {
+                    case "Spam" -> {
+                        InputStream input10 = getClass().getResourceAsStream(
+                            "/textures/cards/SPAM.png");
+                        Image image10 = new Image(input10);
+                        ImageView imageView10 = new ImageView(image10);
+                        imageView10.setId("Spam");
+                        imageView10.setFitWidth(programcardsWidth);
+                        imageView10.setPreserveRatio(true);
+                        pane.getChildren().add(imageView10);
+                    }
+                    case "Worm" -> {
+                        InputStream input11 = getClass().getResourceAsStream(
+                            "/textures/cards/WORM.png");
+                        Image image11 = new Image(input11);
+                        ImageView imageView11 = new ImageView(image11);
+                        imageView11.setId("Worm");
+                        imageView11.setFitWidth(programcardsWidth);
+                        imageView11.setPreserveRatio(true);
+                        pane.getChildren().add(imageView11);
+                    }
+                    case "Virus" -> {
+                        InputStream input12 = getClass().getResourceAsStream(
+                            "/textures/cards/VIRUS.png");
+                        Image image12 = new Image(input12);
+                        ImageView imageView12 = new ImageView(image12);
+                        imageView12.setId("Virus");
+                        imageView12.setFitWidth(programcardsWidth);
+                        imageView12.setPreserveRatio(true);
+                        pane.getChildren().add(imageView12);
+                    }
+                    case "Trojan" -> {
+                        InputStream input13 = getClass().getResourceAsStream(
+                            "/textures/cards/TROJAN_HORSE.png");
+                        Image image13 = new Image(input13);
+                        ImageView imageView13 = new ImageView(image13);
+                        imageView13.setId("Trojan");
+                        imageView13.setFitWidth(programcardsWidth);
+                        imageView13.setPreserveRatio(true);
+                        pane.getChildren().add(imageView13);
+                    }
+                }
+            }
+        }
+    }
 
     public void exit() throws IOException {
         //send disconnect notification to server
