@@ -13,6 +13,7 @@ import game.board.Tile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 import javafx.animation.KeyFrame;
@@ -362,26 +363,29 @@ public class ViewModelGameWindow {
         if (logMessage.getMessageType().equals(MessageType.SelectionFinished)) {
             int clientID = logMessage.getMessageBody().getClientID();
             String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
-            //show selectionfinished for this client
 
-            TextFlow logTextFlow = new TextFlow();
-            Text timeText = new Text();
-            Text logText = new Text();
-            timeText.setText(String.valueOf(System.currentTimeMillis() + "  "));
-            logText.setText(username + " finished his selection.");
-            logTextFlow.getChildren().addAll(timeText, logText);
+            logMessageStyling(MessageType.SelectionFinished, username, null, null, null);
         }
         if (logMessage.getMessageType().equals(MessageType.CardPlayed)) {
             int clientID = logMessage.getMessageBody().getClientID();
             String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
             String card = logMessage.getMessageBody().getCard();
-            //Show something on log Screen
+
+            logMessageStyling(MessageType.CardPlayed, username, card, null, null);
         }
         if (logMessage.getMessageType().equals(MessageType.TimerEnded)) {
-            for (int i = 0; i < logMessage.getMessageBody().getClientIDs().length; i++) {
-                int clientID = logMessage.getMessageBody().getClientIDs()[i];
-                //Show something on log Screen
+            int[] clientIDs = Arrays.copyOf(logMessage.getMessageBody().getClientIDs(),logMessage.getMessageBody().getClientIDs().length);
+            String[] players = new String[clientIDs.length];
+            for (int i = 0; i < clientIDs.length; i++) {
+                for (int j = 0; j < modelGame.getPlayerList().getPlayerList().size(); j++) {
+                    if (clientIDs[i] == modelGame.getPlayerList().getPlayerList().get(j).getId()) {
+                        String username = modelGame.getPlayerList().getPlayer(clientIDs[i]).getUsername();
+                        players[i] = username;
+                    }
+                }
             }
+
+            logMessageStyling(MessageType.TimerEnded, null, null, null, players);
         }
         if (logMessage.getMessageType().equals(MessageType.DrawDamage)) {
             //int[] damageCards = logmessage.getMessageBody().getCards();
@@ -431,6 +435,69 @@ public class ViewModelGameWindow {
         }
     }
 
+    public void logMessageStyling(MessageType messageType, String username, String card,
+                                  String[] cards, String[] players) {
+
+        TextFlow logTextFlow = new TextFlow();
+        Text timeText = new Text();
+        Text typeLogText = new Text();
+        Text usernameText = new Text();
+        Text logText = new Text();
+
+        timeText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+        timeText.setText('(' + System.currentTimeMillis() + ')' + "  ");
+
+        usernameText.setStyle("-fx-font-weight: bold;" + "-fx-text-fill: gray;");
+        usernameText.setText(username);
+
+        if (messageType.equals(MessageType.SelectionFinished)) {
+            typeLogText.setText("[SelectionFinished] ");
+            typeLogText.setStyle("-fx-text-fill: purple;" + "-fx-font-size: 8pt;");
+
+            logText.setText(" finished his selection.");
+            logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+        }
+        else if (messageType.equals(MessageType.CardPlayed)) {
+            typeLogText.setText("[CardPlayed] ");
+            typeLogText.setStyle("-fx-text-fill: orange;" + "-fx-font-size: 8pt;");
+
+            logText.setText(" played following card: " + card);
+            logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+        }
+        else if (messageType.equals(MessageType.TimerEnded)) {
+            if (players.length == 0) {
+                typeLogText.setText("[TimerEnded] ");
+                typeLogText.setStyle("-fx-text-fill: blue;" + "-fx-font-size: 8pt;");
+
+                logText.setText("Nobody was too slow.");
+                logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+            }
+            else {
+                typeLogText.setText("[TimerEnded] ");
+                typeLogText.setStyle("-fx-text-fill: blue;" + "-fx-font-size: 8pt;");
+
+                logText.setText(Arrays.toString(players) + " missed timing.");
+                logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+            }
+        }
+        else if (messageType.equals(MessageType.DrawDamage)) {
+            typeLogText.setText("[SelectionFinished] ");
+            typeLogText.setStyle("-fx-text-fill: purple;" + "-fx-font-size: 8pt;");
+
+            logText.setText(" finished his selection.");
+            logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+        }
+
+        logTextFlow.getChildren().addAll(timeText, typeLogText, usernameText, logText);
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                logVBox.getChildren().add(logTextFlow);
+            }
+        });
+
+    }
     public void reveivedGameEventMessage() {
         Message gamemessage = null;
         try {
