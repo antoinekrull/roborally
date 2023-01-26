@@ -393,6 +393,13 @@ public class Server {
         }
     }
 
+    public void sendUpgradeBought(Player player, String card){
+        try{
+            messages.put(messageCreator.generateUpgradeBoughtMessage(player.getId(), card));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     public synchronized int getUniqueID() {
         return uniqueID++;
