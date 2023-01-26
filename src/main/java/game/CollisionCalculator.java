@@ -22,7 +22,7 @@ public class CollisionCalculator {
     public boolean moveRobot(Robot robot1, Pair<Integer, Integer> target) {
         boolean canMove = false;
         Pair<Integer, Integer> currentPosition = robot1.getCurrentPosition();
-        Pair<Integer, Integer> movement = new Pair(target.getValue0()-currentPosition.getValue0(),target.getValue1()-currentPosition.getValue1());
+        Pair<Integer, Integer> movement = new Pair<>(target.getValue0()-currentPosition.getValue0(),target.getValue1()-currentPosition.getValue1());
         int xMove = movement.getValue0();
         int yMove = movement.getValue1();
         Robot robot2 = checkForRobot(target);
@@ -32,7 +32,7 @@ public class CollisionCalculator {
             canMove=true;
             if(robot2!=null){
                 canMove=false;
-                Pair<Integer, Integer> pushedPos = new Pair(robot2.getCurrentPosition().getValue0()+xMove, robot2.getCurrentPosition().getValue1()+yMove);
+                Pair<Integer, Integer> pushedPos = new Pair<>(robot2.getCurrentPosition().getValue0()+xMove, robot2.getCurrentPosition().getValue1()+yMove);
                 if(!checkWallCollision(robot2, pushedPos)) {
                     if(moveRobot(robot2, pushedPos));
                         canMove=true;
@@ -42,7 +42,6 @@ public class CollisionCalculator {
 
         if (canMove&&checkFallFromMap(target)){
             game.reboot(playerList.getPlayerFromList(robot1));
-
         }else if (canMove){
             robot1.setCurrentPosition(target);
         }
@@ -121,12 +120,105 @@ public class CollisionCalculator {
         }
         return result;
     }
+    public boolean moveConveyorBelt(Robot robot){
+        boolean result = false;
+        boolean conveyorBelt = false;
+        boolean pit = false;
+        int xMove = 0;
+        int yMove = 0;
+        Direction outCurrent = null;
+        Direction outTarget = null;
+
+        Pair<Integer, Integer> currentPosition = robot.getCurrentPosition();
+        ArrayList<Tile> currentTile = board.getTile(currentPosition);
+
+        for(int i = 0; i < currentTile.size(); i++){
+            if (currentTile.get(i).getType().equals("ConveyorBelt")){
+                outCurrent=currentTile.get(i).getDirectionOut();
+                switch (outCurrent) {
+                    case NORTH -> {
+                        xMove = 0;
+                        yMove = -1;
+                    }
+                    case EAST -> {
+                        xMove = 1;
+                        yMove = 0;
+                    }
+                    case SOUTH -> {
+                        xMove = 0;
+                        yMove = 1;
+                    }
+                    case WEST -> {
+                        xMove = -1;
+                        yMove = 0;
+                    }
+                }
+            }
+        }
+
+        Pair<Integer, Integer> target = new Pair<>(currentPosition.getValue0()+xMove,currentPosition.getValue1()+yMove);
+        ArrayList<Tile> targetTile = board.getTile(target);
+        for (Tile tile : targetTile) {
+            if (tile.getType().equals("ConveyorBelt")) {
+                conveyorBelt = true;
+                outTarget = tile.getDirectionOut();
+            } else if (tile.getType().equals("Pit")) {
+                pit = true;
+            }
+        }
+
+
+        if(conveyorBelt){
+            if(outTarget!=outCurrent){
+                if(outTarget == Direction.NORTH){
+                    if (outCurrent == Direction.WEST){
+                        robot.rotateRobot(Direction.RIGHT);
+                    }else{
+                        robot.rotateRobot(Direction.LEFT);
+                    }
+                } else if (outTarget == Direction.EAST) {
+                    if (outCurrent == Direction.NORTH) {
+                        robot.rotateRobot(Direction.RIGHT);
+                    }else{
+                        robot.rotateRobot(Direction.LEFT);
+                    }
+                } else if (outTarget == Direction.SOUTH) {
+                    if (outCurrent == Direction.EAST) {
+                        robot.rotateRobot(Direction.RIGHT);
+                    } else {
+                        robot.rotateRobot(Direction.LEFT);
+                    }
+                } else {
+                    if (outCurrent == Direction.NORTH) {
+                        robot.rotateRobot(Direction.RIGHT);
+                    } else {
+                        robot.rotateRobot(Direction.LEFT);
+                    }
+                }
+            }
+            moveRobot(robot, target);
+            result = true;
+        } else if (checkFallFromMap(target)){
+            game.reboot(playerList.getPlayerFromList(robot));
+        }
+        else{
+            if(checkForRobot(target) == null){
+                result = true;
+                moveRobot(robot, target);
+            }
+        }
+        return result;
+    }
     private boolean checkFallFromMap(Pair<Integer, Integer> target){
         boolean result = false;
         Pair<Integer,Integer> boardSize = board.getDimension();
+        System.out.println("target = " + target);
+        System.out.println("boardsize = " + boardSize);
         if(target.getValue0()<0 || target.getValue0() > boardSize.getValue0()){
             result = true;
         }else if (target.getValue1()<0 || target.getValue1() > boardSize.getValue1()){
+            result = true;
+        } else if (board.getTile(target).get(0).getType().equals("Pit")) {
             result = true;
         }
         return result;
