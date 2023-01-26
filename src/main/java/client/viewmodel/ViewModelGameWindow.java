@@ -635,13 +635,6 @@ public class ViewModelGameWindow {
         this.isClickable = true;
         ObservableList<Node> children = handGrid.getChildren();
         logger.debug("VM - fillHandCards Start:");
-        for (Node child : children) {
-            logger.debug(child);
-            if (child instanceof Pane) {
-                Pane pane = (Pane) child;
-                logger.debug("Pane contains: " + pane.getChildren());
-            }
-        }
         ArrayList<String> handCards = new ArrayList<>(modelGame.getMyHandCards());
         Platform.runLater(() -> {
             logger.debug("VM - handGrid children size: " + handGrid.getChildren().size());
@@ -957,7 +950,6 @@ public class ViewModelGameWindow {
                     }
                 }
                 event.consume();
-                logger.debug("Changing isDroppedSuccessfully to false");
                 isDroppedSuccessfully = false;
             }
         });
