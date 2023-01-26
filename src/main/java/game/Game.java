@@ -800,7 +800,7 @@ public class Game implements Runnable {
     public void createBoard(String map) {
         try {
             board.createBoard(map);
-            this.collisionCalculator = new CollisionCalculator(board, playerList);
+            this.collisionCalculator = new CollisionCalculator(board, playerList, this);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -835,12 +835,13 @@ public class Game implements Runnable {
         player.discardEntireHand();
         player.emptyAllCardRegisters();
         player.getRobot().setCurrentPosition(board.getRebootTile().getPosition());
-        server.sendReboot(player);
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        server.sendReboot(player);
+
         //TODO: Implement additional robo check
     }
 

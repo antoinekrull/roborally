@@ -12,9 +12,11 @@ import java.util.ArrayList;
 public class CollisionCalculator {
     private Board board;
     private PlayerList playerList;
-    public CollisionCalculator(Board board, PlayerList playerList) {
+    private Game game;
+    public CollisionCalculator(Board board, PlayerList playerList, Game game) {
         this.board = board;
         this.playerList = playerList;
+        this.game = game;
     }
 
     public boolean moveRobot(Robot robot1, Pair<Integer, Integer> target) {
@@ -38,9 +40,13 @@ public class CollisionCalculator {
                 }
             }
 
-        if (canMove){
+        if (canMove&&checkFallFromMap(target)){
+            game.reboot(playerList.getPlayerFromList(robot1));
+
+        }else if (canMove){
             robot1.setCurrentPosition(target);
         }
+
         return canMove;
     }
 
@@ -53,63 +59,75 @@ public class CollisionCalculator {
         Pair<Integer, Integer> currentPosition = robot.getCurrentPosition();
         ArrayList<Tile> currentTile = board.getTile(currentPosition);
         ArrayList<Tile> targetTile = board.getTile(target);
+        if(targetTile != null) {
 
-        //checks if robot is currently on a tile, if so onWall is true
-        for(int i = 0; i < currentTile.size();i++){
-            if(currentTile.get(i).getType().equals("Wall")){
-                onWall=true;
-                onBlocked = getBlockingDirections(currentTile);
+            //checks if robot is currently on a tile, if so onWall is true
+            for (int i = 0; i < currentTile.size(); i++) {
+                if (currentTile.get(i).getType().equals("Wall")) {
+                    onWall = true;
+                    onBlocked = getBlockingDirections(currentTile);
+                }
             }
-        }
-        for(int i=0; i<targetTile.size();i++){
-            if(targetTile.get(i).getType().equals("Wall")){
-                toWall=true;
-                toBlocked = getBlockingDirections(targetTile);
+            for (int i = 0; i < targetTile.size(); i++) {
+                if (targetTile.get(i).getType().equals("Wall")) {
+                    toWall = true;
+                    toBlocked = getBlockingDirections(targetTile);
+                }
             }
-        }
 
-        if(targetTile.get(0).getType().equals("Antenna")){
-           result = true;
-        }
+            if (targetTile.get(0).getType().equals("Antenna")) {
+                result = true;
+            }
 
-        //if onWall true it checks which direction is blocked
-        if(onWall){
-            if(target.getValue0()<currentPosition.getValue0()){
-                if(onBlocked.contains(Direction.WEST)){
-                    result = true;
+            //if onWall true it checks which direction is blocked
+            if (onWall) {
+                if (target.getValue0() < currentPosition.getValue0()) {
+                    if (onBlocked.contains(Direction.WEST)) {
+                        result = true;
+                    }
+                } else if (target.getValue0() > currentPosition.getValue0()) {
+                    if (onBlocked.contains(Direction.EAST)) {
+                        result = true;
+                    }
+                } else if (target.getValue1() < currentPosition.getValue1()) {
+                    if (onBlocked.contains(Direction.NORTH)) {
+                        result = true;
+                    }
+                } else if (target.getValue1() > currentPosition.getValue1()) {
+                    if (onBlocked.contains(Direction.SOUTH)) {
+                        result = true;
+                    }
                 }
-            }else if(target.getValue0()>currentPosition.getValue0()){
-                if(onBlocked.contains(Direction.EAST)){
-                    result = true;
-                }
-            }else if(target.getValue1()<currentPosition.getValue1()){
-                if(onBlocked.contains(Direction.NORTH)){
-                    result = true;
-                }
-            }else if(target.getValue1()>currentPosition.getValue1()){
-                if(onBlocked.contains(Direction.SOUTH)){
-                    result = true;
+            }
+            if (toWall) {
+                if (target.getValue0() < currentPosition.getValue0()) {
+                    if (toBlocked.contains(Direction.EAST)) {
+                        result = true;
+                    }
+                } else if (target.getValue0() > currentPosition.getValue0()) {
+                    if (toBlocked.contains(Direction.WEST)) {
+                        result = true;
+                    }
+                } else if (target.getValue1() < currentPosition.getValue1()) {
+                    if (toBlocked.contains(Direction.SOUTH)) {
+                        result = true;
+                    }
+                } else if (target.getValue1() > currentPosition.getValue1()) {
+                    if (toBlocked.contains(Direction.NORTH)) {
+                        result = true;
+                    }
                 }
             }
         }
-        if(toWall){
-            if (target.getValue0()<currentPosition.getValue0()){
-                if(toBlocked.contains(Direction.EAST)){
-                    result = true;
-                }
-            }else if(target.getValue0()>currentPosition.getValue0()){
-                if(toBlocked.contains(Direction.WEST)){
-                    result = true;
-                }
-            }else if(target.getValue1()<currentPosition.getValue1()){
-                if(toBlocked.contains(Direction.SOUTH)){
-                    result = true;
-                }
-            }else if(target.getValue1()>currentPosition.getValue1()){
-                if(toBlocked.contains(Direction.NORTH)){
-                    result = true;
-                }
-            }
+        return result;
+    }
+    private boolean checkFallFromMap(Pair<Integer, Integer> target){
+        boolean result = false;
+        Pair<Integer,Integer> boardSize = board.getDimension();
+        if(target.getValue0()<0 || target.getValue0() > boardSize.getValue0()){
+            result = true;
+        }else if (target.getValue1()<0 || target.getValue1() > boardSize.getValue1()){
+            result = true;
         }
         return result;
     }
