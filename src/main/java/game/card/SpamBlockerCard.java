@@ -5,7 +5,7 @@ import game.player.Player;
 public class SpamBlockerCard extends Card{
     public SpamBlockerCard(){
         cardType = CardType.UPGRADE_CARD;
-        setCardName("Spam Blocker");
+        setCard("Spam Blocker");
         setCost(3);
     }
 

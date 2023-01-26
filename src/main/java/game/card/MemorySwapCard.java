@@ -5,7 +5,7 @@ import game.player.Player;
 public class MemorySwapCard extends Card{
     public MemorySwapCard(){
         cardType = CardType.UPGRADE_CARD;
-        setCardName("Memory Swap");
+        setCard("Memory Swap");
         setCost(1);
     }
 
