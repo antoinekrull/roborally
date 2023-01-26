@@ -94,12 +94,6 @@ public class Player {
     public void setCardRegister(Card card, int index) {
         cardRegister[index] = card;
     }
-//    public boolean[] getStatusRegister() {
-//        return statusRegister;
-//    }
-//    public void setStatusRegister(boolean setter, int index) {
-//        statusRegister[index] = setter;
-//    }
     public ProgrammingDeck getPersonalDiscardPile() {
         return personalDiscardPile;
     }
@@ -187,21 +181,6 @@ public class Player {
         }
     }
 
-    /*
-    public boolean allRegistersActivated() {
-        boolean result = false;
-        int registerCount = 0;
-        for(int i = 0; i < statusRegister.length; i++) {
-            if(statusRegister[i] == true) {
-                registerCount++;
-            }
-            if(registerCount == statusRegister.length) {
-                result = true;
-            }
-        }
-        return result;
-    }
-    */
 
     //if timer runs out all unfilled registers of player get filled with random cards
     //TODO: Fix this
