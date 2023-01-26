@@ -339,6 +339,7 @@
                                     <Label fx:id="timerLabel" text="" />
                                     <Label fx:id="currentActivePlayerLabel" text="" />
                                     <Label fx:id="currentPhaseLabel" text="" />
+                                    <Label fx:id="scoreLabel" />
                                  </children>
                                  <HBox.margin>
                                     <Insets right="30.0" />
@@ -349,7 +350,7 @@
                                     <Insets left="20.0" />
                                  </HBox.margin>
                                  <children>
-                                    <ProgressBar fx:id="myEnergyBar" prefWidth="100.0" progress="0.0" />
+                                    <ProgressBar fx:id="myEnergyBar" prefWidth="150.0" progress="0.0" />
                                     <Label fx:id="myEnergyLabel" />
                                  </children>
                               </StackPane>

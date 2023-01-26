@@ -383,7 +383,7 @@ public class Client {
                             //TODO: after timer ended and register are not filled probably
                         }
                         if (message.getMessageType().equals(MessageType.RegisterChosen)) {
-
+                            Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
                             Client.this.setMovement(message);
@@ -423,7 +423,7 @@ public class Client {
                             Client.this.setGameEventMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.PickDamage)) {
-                            //TODO: think about how it should be implemented
+                            Client.this.setGameEventMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.SelectedDamage)) {
                             //TODO: Set DamageCards to something
@@ -491,12 +491,8 @@ public class Client {
         logger.debug("Selected card: " + card + " and register: " + register);
         sendMessageToServer(messageCreator.generateSelectedCardMessage(card, register));
     }
-    //TODO: add method in messageCreator
-    public void sendSelectedDamageCards() {
-
-    }
-    public void sendSelectionFinished(int clientID) {
-        sendMessageToServer(messageCreator.generateSelectionFinishedMessage(clientID));
+    public void sendSelectedDamageCards(String card, int register) {
+        sendMessageToServer(messageCreator.generateSelectedCardMessage(card, register));
     }
     public void sendRebootDirection(String direction) {
         sendMessageToServer(messageCreator.generateRebootDirectionMessage(direction));
@@ -505,7 +501,7 @@ public class Client {
         //TODO: Add discardSome to message
         //sendMessageToServer(messageCreator.generateDiscardSome)
     }
-    public void sendRegister(int register) {
+    public void sendChooseRegister(int register) {
         sendMessageToServer(messageCreator.generateChooseRegisterMessage(register));
     }
 

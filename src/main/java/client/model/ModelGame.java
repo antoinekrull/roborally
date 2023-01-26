@@ -176,6 +176,10 @@ public class ModelGame {
         this.robotProperty.set(robotProperty);
     }
 
+    public SimpleIntegerProperty scoreProperty() {
+        return score;
+    }
+
     public ObservableList<Integer> getReadyList() {
         return readyList;
     }
@@ -231,8 +235,8 @@ public class ModelGame {
         client.sendSelectedCard(card, register);
     }
 
-    public void sendRegister(int register) {
-        client.sendRegister(register);
+    public void sendSelectedDamageCards(String card, int register) {
+        client.sendSelectedDamageCards(card, register);
     }
 
     public void sendReturnCards(String[] returnCards) {
@@ -241,6 +245,10 @@ public class ModelGame {
 
     public void sendDiscardSomeCards(String[] discardSome) {
         client.sendDiscardSome(discardSome);
+    }
+
+    public void sendChooseRegister(int register) {
+        client.sendChooseRegister(register);
     }
 
     public void sendRebootDirection(String direction) {

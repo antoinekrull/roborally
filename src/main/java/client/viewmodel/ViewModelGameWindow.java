@@ -5,6 +5,7 @@ import client.changesupport.NotifyChangeSupport;
 import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
+import client.ui.CardSelection;
 import client.ui.PlayerGameInfo;
 import client.ui.Tutorial;
 import communication.Message;
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -87,7 +90,7 @@ public class ViewModelGameWindow {
     @FXML
     private Pane upgradeDeck, damageDeck;
     @FXML
-    private Label timerLabel, currentPhaseLabel, currentActivePlayerLabeL, myEnergyLabel;
+    private Label timerLabel, currentPhaseLabel, currentActivePlayerLabeL, myEnergyLabel, scoreLabel;
     @FXML
     private HBox myPlayerInfoHBox;
     @FXML
@@ -111,12 +114,15 @@ public class ViewModelGameWindow {
     private PlayerGameInfo playerGameInfo;
     //private ObservableList<String> handCardsUI;
     private Tutorial tutorial;
+    private CardSelection cardSelection;
+    private Timeline timeline;
     private double gameboardTileWidth;
     private double programcardsWidth;
     private int columnIndex;
     private boolean isClickable;
     private boolean isDroppedSuccessfully = false;
     private int registerCounter = 0;
+    private int timer = 30;
 
     public ViewModelGameWindow() {
         this.modelChat = ModelChat.getInstance();
@@ -165,6 +171,8 @@ public class ViewModelGameWindow {
         //TODO: setActivePlayer
         //currentActivePlayerLabeL.textProperty().bind("");
 
+        scoreLabel.textProperty().bind(modelGame.scoreProperty().asString());
+
         myEnergyBar.progressProperty().bind(modelGame.energyProperty());
         myEnergyLabel.textProperty().bind(myEnergyBar.progressProperty().asString());
         myEnergyLabel.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;");
@@ -173,6 +181,8 @@ public class ViewModelGameWindow {
 
         playerGameInfo = new PlayerGameInfo(playerInfoGrid, modelGame.getPlayerList());
         playerGameInfo.loadPlayerInfo();
+
+        cardSelection = new CardSelection();
 
         setOnDragDetected(programCard1);
         setOnDragDetected(programCard2);
@@ -268,7 +278,6 @@ public class ViewModelGameWindow {
             modelChat.sendPrivateMessage(userID);
             privateMessageToChat(chatTextfield.getText(), false);
         }
-
          */
     }
 
@@ -364,14 +373,14 @@ public class ViewModelGameWindow {
             int clientID = logMessage.getMessageBody().getClientID();
             String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
 
-            logMessageStyling(MessageType.SelectionFinished, username, null, null, null);
+            logMessageStyling(MessageType.SelectionFinished, username, null, null, null, -1);
         }
         if (logMessage.getMessageType().equals(MessageType.CardPlayed)) {
             int clientID = logMessage.getMessageBody().getClientID();
             String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
             String card = logMessage.getMessageBody().getCard();
 
-            logMessageStyling(MessageType.CardPlayed, username, card, null, null);
+            logMessageStyling(MessageType.CardPlayed, username, card, null, null, -1);
         }
         if (logMessage.getMessageType().equals(MessageType.TimerEnded)) {
             int[] clientIDs = Arrays.copyOf(logMessage.getMessageBody().getClientIDs(),logMessage.getMessageBody().getClientIDs().length);
@@ -385,7 +394,7 @@ public class ViewModelGameWindow {
                 }
             }
 
-            logMessageStyling(MessageType.TimerEnded, null, null, null, players);
+            logMessageStyling(MessageType.TimerEnded, null, null, null, players, -1);
         }
         if (logMessage.getMessageType().equals(MessageType.DrawDamage)) {
             String[] damageCards = Arrays.copyOf(logMessage.getMessageBody().getCards(), logMessage.getMessageBody().getCards().length);
@@ -397,7 +406,13 @@ public class ViewModelGameWindow {
                 }
             }
 
-            logMessageStyling(MessageType.DrawDamage, username, null, damageCards, null);
+            logMessageStyling(MessageType.DrawDamage, username, null, damageCards, null, -1);
+        }
+        if (logMessage.getMessageType().equals(MessageType.RegisterChosen)) {
+            int clientID = logMessage.getMessageBody().getClientID();
+            String username = logMessage.getMessageBody().getName();
+            int register = logMessage.getMessageBody().getRegister();
+            logMessageStyling(MessageType.RegisterChosen, username, null, null, null, register);
         }
         if (logMessage.getMessageType().equals(MessageType.GameFinished)) {
             int clientID = logMessage.getMessageBody().getClientID();
@@ -441,7 +456,7 @@ public class ViewModelGameWindow {
     }
 
     public void logMessageStyling(MessageType messageType, String username, String card,
-                                  String[] cards, String[] players) {
+                                  String[] cards, String[] players, int register) {
 
         TextFlow logTextFlow = new TextFlow();
         Text timeText = new Text();
@@ -492,6 +507,13 @@ public class ViewModelGameWindow {
             logText.setText(Arrays.toString(cards));
             logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
         }
+        else if (messageType.equals(MessageType.RegisterChosen)) {
+            typeLogText.setText("[RegisterChosen] ");
+            typeLogText.setStyle("-fx-text-fill: yellow;" + "-fx-font-size: 8pt;");
+
+            logText.setText(" chose register " + register);
+            logText.setStyle("-fx-text-fill: yellow;" + "-fx-font-size: 8pt;");
+        }
 
         logTextFlow.getChildren().addAll(timeText, typeLogText, usernameText, logText);
 
@@ -536,6 +558,9 @@ public class ViewModelGameWindow {
 
         }
         if (gamemessage.getMessageType().equals(MessageType.DrawDamage)) {
+
+        }
+        if (gamemessage.getMessageType().equals(MessageType.PickDamage)) {
 
         }
     }
@@ -999,26 +1024,23 @@ public class ViewModelGameWindow {
     }
 
     public void startTimer() {
-        Timeline timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new EventHandler<>() {
-            int timer = 30;
-            @Override
-            public void handle(ActionEvent event) {
-                timerLabel.setText(String.valueOf(timer));
-                if (timer <= 10) {
-                    timerLabel.setStyle("-fx-text-fill: red;");
-                }
-                timer--;
-                if (timer <= 0) {
-                    timeline.stop();
-                    //TODO: something could happen after timer ended
-                }
+        timerLabel.setText(String.format("%02d:%02d", timer / 60, timer % 60));
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            timer--;
+            timerLabel.setText(String.format("%02d:%02d", timer / 60, timer % 60));
+            if (timer <= 10) {
+                timerLabel.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;" + "-fx-font-size: 16pt;");
+            }
+            if (timer <= 0) {
+                timeline.stop();
+                timerLabel.setVisible(false);
             }
         }));
-        timeline.setCycleCount(30);
+        
+        timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
+        timerLabel.setVisible(true);
     }
-
     public void setRobotAlignment() {
         //set Robot Alignment
     }
