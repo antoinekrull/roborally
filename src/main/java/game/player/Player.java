@@ -29,6 +29,7 @@ public class Player {
     private int id;
     private boolean isPlaying;
     private boolean isReady;
+    private boolean isBuying;
     private boolean[][] isUsingUpgrade = {{false, false, false},{false, false, false}};
     private ArrayList<Card> hand;
     private Card[] cardRegister = new Card[5];
@@ -98,6 +99,8 @@ public class Player {
     public Card[] getCardRegister() {
         return cardRegister;
     }
+    public boolean isBuying() {return isBuying;}
+    public void setBuying(boolean buying) {isBuying = buying;}
 
     //TODO: Fix crash if reboot happened
     public Card getCardFromRegister(int index){
