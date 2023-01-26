@@ -197,6 +197,7 @@ public class Game implements Runnable {
             for (PushPanelTile pushPanelTile : board.getPushPanelList()) {
                 //checks if any robos on pushPanel
                 if (pushPanelTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
+                    //TODO: Bug is hiding here
                     //checks if pushpanel would be active in current register
                     if (pushPanelTile.getActiveRegisterList().contains(currentRegister + 1)) {
                         //activates effect of pushpanel
@@ -498,8 +499,7 @@ public class Game implements Runnable {
                 server.sendTimerEnded(playerList.getUnreadyPlayers());
             }
         };
-        //TODO: MAKE THIS 30000 AGAIN!!!!
-        timer.schedule(timerTask, 3000);
+        timer.schedule(timerTask, 30000);
     }
 
     public GamePhase getCurrentGamePhase() {
@@ -582,6 +582,13 @@ public class Game implements Runnable {
                 }
             }
         }
+        if (timerIsRunning) {
+            //a new instance of timer might be needed every time it runs
+            //timer.cancel()
+            timer.purge();
+        }
+        timer.purge();
+        server.sendTimerEnded(new PlayerList());
         timerIsRunning=false;
         playerList.setPlayerReadiness(false);
     }
