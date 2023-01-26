@@ -100,42 +100,39 @@ public class Game implements Runnable {
     private void applyAllTileEffects() throws Exception {
         try {
 
-            for (int x = 0; x < board.getConveyorBelt2List().size(); x++) {
-                for (int y = 0; y < playerList.size(); y++) {
-                    for (int i = 0; i < board.getConveyorBelt2List().get(x).getVelocity(); i++) {
-                        if (playerList.get(y).getRobot().getCurrentPosition().equals(board.getConveyorBelt2List().get(x).getPosition())) {
-                            logger.debug("Applying conveyor belt 2 ");
-                            board.getConveyorBelt2List().get(x).applyEffect(playerList.get(y));
-                            if (board.getTile(playerList.get(i).getRobot().getCurrentPosition()).get(0) instanceof PitTile) {
-                                reboot(playerList.get(i));
-                            }
+                for (int y = 0; y < board.getConveyorBelt2List().size(); y++) {
+                    for (int x = 0; x < playerList.size(); x++) {
+                        for (int i = 0; i < 2; i++) {
+                            Pair position = playerList.get(x).getRobot().getCurrentPosition();
+                            if (board.getConveyorBelt2List().get(y).getPosition().equals(position)) {
+                                logger.debug("Applying conveyor belt 2 ");
+                                collisionCalculator.moveConveyorBelt(playerList.get(x).getRobot());
                         }
                     }
                 }
             }
             Thread.sleep(500);
-            for (int x = 0; x < board.getConveyorBelt1List().size(); x++) {
-                for (int y = 0; y < playerList.size(); y++) {
-                    if (playerList.get(y).getRobot().getCurrentPosition().equals(board.getConveyorBelt1List().get(x).getPosition())) {
+            for (int y = 0; y < board.getConveyorBelt1List().size(); y++) {
+                for (int x = 0; x < playerList.size(); x++) {
+                    Pair position = playerList.get(x).getRobot().getCurrentPosition();
+                    if (board.getConveyorBelt1List().get(y).getPosition().equals(position)) {
                         logger.debug("Applying conveyor belt 1");
-                        board.getConveyorBelt1List().get(x).applyEffect(playerList.get(y));
-                        for (PitTile pitTile : board.getPitList()) {
-                            if (pitTile.getPosition().equals(playerList.get(y).getRobot().getCurrentPosition())) {
-                                reboot(playerList.get(y));
-                            }
-                        }
+                        collisionCalculator.moveConveyorBelt(playerList.get(x).getRobot());
                     }
                 }
             }
+
             Thread.sleep(500);
             applyPushPanelEffects();
-            for (PitTile pitTile : board.getPitList()) {
-                for (int y = 0; y < playerList.size(); y++) {
-                    if (pitTile.getPosition().equals(playerList.get(y).getRobot().getCurrentPosition())) {
-                        reboot(playerList.get(y));
-                    }
-                }
-            }
+
+            // Sollte nicht nötig sein, da im collision calculator nach pit gecheckt wird
+//            for (PitTile pitTile : board.getPitList()) {
+//                for (int y = 0; y < playerList.size(); y++) {
+//                    if (pitTile.getPosition().equals(playerList.get(y).getRobot().getCurrentPosition())) {
+//                        reboot(playerList.get(y));
+//                    }
+//                }
+//            }
             for (int x = 0; x < board.getGearTileList().size(); x++) {
                 for (int y = 0; y < playerList.size(); y++) {
                     if (playerList.get(y).getRobot().getCurrentPosition().equals(board.getGearTileList().get(x).getPosition())) {

@@ -51,6 +51,26 @@ public class Tile {
         this.blockedDirections = blockedDirections;
     }
 
+    public void setDirectionIn(ArrayList<Direction> directionIn) {
+        this.directionIn = directionIn;
+    }
+
+    public void setDirectionOut(Direction directionOut) {
+        this.directionOut = directionOut;
+    }
+
+    private ArrayList<Direction> directionIn;
+
+    public ArrayList<Direction> getDirectionIn() {
+        return directionIn;
+    }
+
+    public Direction getDirectionOut() {
+        return directionOut;
+    }
+
+    private Direction directionOut;
+
     public String getType() {
         return type;
     }
