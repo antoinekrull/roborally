@@ -19,7 +19,6 @@ public class CollisionCalculator {
 
     public boolean moveRobot(Robot robot1, Pair<Integer, Integer> target) {
         boolean canMove = false;
-        System.out.println("Ich versuche jetzt den Roboter "+ robot1 + " nach "+target+" zu bewegen");
         Pair<Integer, Integer> currentPosition = robot1.getCurrentPosition();
         Pair<Integer, Integer> movement = new Pair(target.getValue0()-currentPosition.getValue0(),target.getValue1()-currentPosition.getValue1());
         int xMove = movement.getValue0();
@@ -27,16 +26,12 @@ public class CollisionCalculator {
         Robot robot2 = checkForRobot(target);
 
 
-        ArrayList<Robot> robots = playerList.getAllRobots();
-
         if(!checkWallCollision(robot1,target)){
             canMove=true;
             if(robot2!=null){
-                System.out.println("okay auf Feld "+target+" befindet sich "+robot2);
                 canMove=false;
                 Pair<Integer, Integer> pushedPos = new Pair(robot2.getCurrentPosition().getValue0()+xMove, robot2.getCurrentPosition().getValue1()+yMove);
                 if(!checkWallCollision(robot2, pushedPos)) {
-                    System.out.println("ich versuche jetzt "+robot2+" zu bewegen");
                     if(moveRobot(robot2, pushedPos));
                         canMove=true;
                     }
@@ -45,9 +40,7 @@ public class CollisionCalculator {
 
         if (canMove){
             robot1.setCurrentPosition(target);
-            System.out.println("okay ich habe "+robot1+" von " + currentPosition + " zu " + target + " bewegt");
         }
-        System.out.println(robot1+ " konnte bewegt werden: ");
         return canMove;
     }
 
