@@ -6,6 +6,7 @@ import communication.MessageCreator;
 import communication.MessageType;
 import game.CollisionCalculator;
 import game.Game;
+import game.GamePhase;
 import game.player.Player;
 import game.player.Robot;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -220,16 +221,21 @@ public class HandleClient implements Runnable{
                                 getClientID()));
                     }
                     else if (incomingMessage.getMessageType() == MessageType.SelectedCard) {
-                        Game.playerList.getPlayerFromList(getClientID()).playCard(incomingMessage.getMessageBody().getCard(),
-                                incomingMessage.getMessageBody().getRegister() - 1);
-                        if(incomingMessage.getMessageBody().getCard().equals("Null")) {
-                            Message cardRemovedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
-                                    incomingMessage.getMessageBody().getRegister(), false);
-                            server.messages.put(cardRemovedMessage);
+                        if (game.getCurrentGamePhase() == GamePhase.PROGRAMMING_PHASE) {
+                            Game.playerList.getPlayerFromList(getClientID()).playCard(incomingMessage.getMessageBody().getCard(),
+                                    incomingMessage.getMessageBody().getRegister() - 1);
+                            if (incomingMessage.getMessageBody().getCard().equals("Null")) {
+                                Message cardRemovedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
+                                        incomingMessage.getMessageBody().getRegister(), false);
+                                server.messages.put(cardRemovedMessage);
+                            } else {
+                                Message cardPlayedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
+                                        incomingMessage.getMessageBody().getRegister(), true);
+                                server.messages.put(cardPlayedMessage);
+                                logger.debug(incomingMessage.getMessageBody().getCard());
+                            }
                         } else {
-                            Message cardPlayedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
-                                    incomingMessage.getMessageBody().getRegister(), true);
-                            server.messages.put(cardPlayedMessage);
+                            logger.warn("Card was changed during the" + game.getCurrentGamePhase() + "so it wasnt applied");
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.SelectedDamage) {
                         //Should be damage card

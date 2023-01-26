@@ -528,6 +528,7 @@ public class Game implements Runnable {
     private void runSetupPhase() {
         server.sendActivePhase(0);
         setServerForPlayers();
+        setCurrentGamePhase(GamePhase.SETUP_PHASE);
         try {
             Thread.sleep(100);
             for (int i = 0; i < readyList.size(); i++) {
@@ -550,6 +551,7 @@ public class Game implements Runnable {
     private void runUpgradePhase(){
         logger.debug("This game is running the Upgrade Phase now");
         server.sendActivePhase(1);
+        setCurrentGamePhase(GamePhase.UPGRADE_PHASE);
         determinePriority();
         try {
             Thread.sleep(100);
@@ -561,6 +563,7 @@ public class Game implements Runnable {
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
         server.sendActivePhase(2);
         timerIsRunning = false;
+        setCurrentGamePhase(GamePhase.PROGRAMMING_PHASE);
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -586,6 +589,7 @@ public class Game implements Runnable {
     private void runActivationPhase() throws Exception {
         logger.debug("This game is running the Activation Phase now");
         server.sendActivePhase(3);
+        setCurrentGamePhase(GamePhase.ACTIVATION_PHASE);
         try {
             Thread.sleep(100);
         ArrayList<Card> cardList = new ArrayList<>();
