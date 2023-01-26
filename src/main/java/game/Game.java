@@ -569,9 +569,6 @@ public class Game implements Runnable {
             e.printStackTrace();
         }
         for(int i = 0; i < playerList.size(); i++) {
-            playerList.get(i).addCardToHand(trojanDeck.popCardFromDeck());
-            playerList.get(i).addCardToHand(trojanDeck.popCardFromDeck());
-            playerList.get(i).addCardToHand(trojanDeck.popCardFromDeck());
             playerList.get(i).drawFullHand();
             Thread.sleep(100);
             server.sendYourCards(playerList.get(i));
