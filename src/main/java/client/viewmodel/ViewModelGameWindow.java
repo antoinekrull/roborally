@@ -938,10 +938,12 @@ public class ViewModelGameWindow {
                     Dragboard db = event.getDragboard();
                     if (db.hasImage()) {
                         Image data = db.getImage();
+                        String cardName = db.getString();
                         Pane source = (Pane) handGrid.getChildren().get(columnIndex);
                         ImageView card = new ImageView(data);
                         card.setFitWidth(programcardsWidth);
                         card.setPreserveRatio(true);
+                        card.setId(cardName);
                         source.getChildren().add(card);
                         logger.debug("VM - Card returned to Column: " + columnIndex);
                         success = true;
