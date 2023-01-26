@@ -176,20 +176,25 @@ public class Player {
     }
 
     public void purchaseUpgrade(int index){
-        if(this.getRobot().getEnergyCubes() >= upgradeShop.get(index).getCost()){
-            this.getRobot().setEnergyCubes(this.getRobot().getEnergyCubes() - upgradeShop.get(index).getCost());
-            if(upgradeShop.get(index).isPermanent()){
-                this.PermanentUpgradeSlots.add(upgradeShop.get(index));
-                upgradeShop.remove(index);
-            }
-            else{
-                this.TemporaryUpgradeSlots.add(upgradeShop.get(index));
-                upgradeShop.remove(index);
-            }
+        if(upgradeShop.get(index).equals(null)){
+            logger.log(Level.ERROR, "No card available at the selected index");
         }
-        else
-        {
-            logger.log(Level.INFO, "Player does not have enough energy cubes to purchase upgrade");
+        else {
+            if(this.getRobot().getEnergyCubes() >= upgradeShop.get(index).getCost()){
+                this.getRobot().setEnergyCubes(this.getRobot().getEnergyCubes() - upgradeShop.get(index).getCost());
+                if(upgradeShop.get(index).isPermanent()){
+                    this.PermanentUpgradeSlots.add(upgradeShop.get(index));
+                    upgradeShop.remove(index);
+                }
+                else{
+                    this.TemporaryUpgradeSlots.add(upgradeShop.get(index));
+                    upgradeShop.remove(index);
+                }
+            }
+            else
+            {
+                logger.log(Level.INFO, "Player does not have enough energy cubes to purchase upgrade");
+            }
         }
     }
 

@@ -237,9 +237,17 @@ public class Game implements Runnable {
     }
 
     private void refreshUpgradeShop(){
-        upgradeShop.clear();
-        for(int i = 0; i < playerList.size(); i++){
-            upgradeShop.add(upgradeDeck.popCardFromDeck());
+        int leftoverCards;
+        if(upgradeShop.size() == playerList.size()){
+            upgradeShop.clear();
+            for(int i = 0; i < playerList.size(); i++){
+                upgradeShop.add(upgradeDeck.popCardFromDeck());
+            }
+        } else {
+            leftoverCards = playerList.size() - upgradeShop.size();
+            for(int i = 0; i < leftoverCards; i++){
+                upgradeShop.add(upgradeDeck.popCardFromDeck());
+            }
         }
     }
 
@@ -563,6 +571,7 @@ public class Game implements Runnable {
             e.printStackTrace();
         }
         refreshUpgradeShop();
+
 
 
     }
