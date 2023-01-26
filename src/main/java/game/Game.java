@@ -316,6 +316,8 @@ public class Game implements Runnable {
     }
 
     private void runUpgradePhase(){
+        refreshUpgradeShop();
+
 
     }
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
