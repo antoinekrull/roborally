@@ -378,6 +378,21 @@ public class Server {
         }
     }
 
+    public void sendRefillShop(Player player){
+        try{
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void sendExchangeShop(Player player){
+        try{
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public synchronized int getUniqueID() {
         return uniqueID++;
