@@ -246,14 +246,6 @@ public class Game implements Runnable {
         }
     }
 
-    private ArrayList<Player> determinePriority() {
-        Pair<Integer, Integer> antennaPosition = Board.antenna.getPosition();
-        ArrayList<Player> priorityList = new ArrayList<>();
-        for (PlayerList it = playerList; it.hasNext(); ) {
-            Player player = it.next();
-            priorityList.add(player);
-        }
-        priorityList.sort((p1, p2) -> {
     private void determinePriority() {
         Pair<Integer, Integer> antennaPosition = board.getAntenna().getPosition();
         playerList.getPlayerList().sort((p1, p2) -> {
@@ -407,50 +399,45 @@ public class Game implements Runnable {
                         player.getRobot().getCurrentPosition().getValue1());
                 for (int i = 0; i < card.getVelocity(); i++) {
 
-                        Pair<Integer, Integer> tempPosition;
-                        switch (player.getRobot().getDirection()) {
-                            case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
-                            case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
-                            case EAST -> tempPosition = newPosition.setAt0(newPosition.getValue0() - 1);
-                            case WEST -> tempPosition = newPosition.setAt0(newPosition.getValue0() + 1);
-                            default -> tempPosition = newPosition;
-                        }
-                        newPosition = tempPosition;
-                        boolean isBlocked = collisionCalculator.checkRobotCollision(player,newPosition);
-                        if(!isBlocked) {
-                            player.getRobot().setCurrentPosition(newPosition);
-                            System.out.println("okay ich habe den robo von " + newPosition + " zu " + tempPosition + " bewegt");
-                        }
+                    Pair<Integer, Integer> tempPosition;
+                    switch (player.getRobot().getDirection()) {
+                        case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
+                        case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
+                        case EAST -> tempPosition = newPosition.setAt0(newPosition.getValue0() - 1);
+                        case WEST -> tempPosition = newPosition.setAt0(newPosition.getValue0() + 1);
+                        default -> tempPosition = newPosition;
+                    }
+                    newPosition = tempPosition;
+                    collisionCalculator.moveRobot(player.getRobot(), newPosition);
+
                 }
             }
             case "MoveI", "MoveII", "MoveIII" -> {
                 Pair<Integer, Integer> newPosition = new Pair<>(player.getRobot().getCurrentPosition().getValue0(),
                         player.getRobot().getCurrentPosition().getValue1());
                 for (int i = 0; i < card.getVelocity(); i++) {
-                        Pair<Integer, Integer> tempPosition;
-                        switch (player.getRobot().getDirection()) {
-                            case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
-                            case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
-                            case EAST -> tempPosition = newPosition.setAt0(newPosition.getValue0() + 1);
-                            case WEST -> tempPosition = newPosition.setAt0(newPosition.getValue0() - 1);
-                            default -> tempPosition = newPosition;
-                        }
+                    Pair<Integer, Integer> tempPosition;
+                    switch (player.getRobot().getDirection()) {
+                        case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
+                        case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
+                        case EAST -> tempPosition = newPosition.setAt0(newPosition.getValue0() + 1);
+                        case WEST -> tempPosition = newPosition.setAt0(newPosition.getValue0() - 1);
+                        default -> tempPosition = newPosition;
+                    }
 
-                        newPosition = tempPosition;
-                        if(!collisionCalculator.checkRobotCollision(player,newPosition)) {
-                            player.getRobot().setCurrentPosition(newPosition);
-                            System.out.println("okay ich habe den robo von " + newPosition + " zu " + tempPosition + " bewegt");
-                            for (PitTile pitTile : board.getPitList()) {
-                                if (pitTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
-                                    try {
-                                        Thread.sleep(1000);
-                                    } catch (InterruptedException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                    reboot(playerList.get(i));
-                                }
+                    newPosition = tempPosition;
+
+                    collisionCalculator.moveRobot(player.getRobot(), newPosition);
+                    for (PitTile pitTile : board.getPitList()) {
+                        if (pitTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
                             }
+                            reboot(playerList.get(i));
                         }
+                    }
                 }
             }
             case "PowerUp" -> player.getRobot().increaseEnergyCubes();
@@ -488,7 +475,7 @@ public class Game implements Runnable {
     }
 
         //Helper method for virus card
-    private boolean isInRangeOfVirus(Robot robot1, Robot robot2){
+    private boolean isInRangeOfVirus(Rov robot1, Robot robot2){
         if(robot1.getCurrentPosition().equals(robot2.getCurrentPosition())){ //if the condition is true then robot1 == robot2
             return false;
         } else {
