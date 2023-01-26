@@ -47,7 +47,7 @@ public class Player {
         this.username = username;
         this.robot = robot;
         robot.setId(id);
-        robot.setDirection(Direction.NORTH);
+        //robot.setDirection(Direction.NORTH);
         this.hand = new ArrayList<Card>();
         this.score = 0;
         this.personalDiscardPile = new ProgrammingDeck();

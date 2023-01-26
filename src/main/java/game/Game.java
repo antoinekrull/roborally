@@ -3,7 +3,6 @@ package game;
 import game.board.*;
 import game.card.*;
 import game.player.Player;
-import game.player.Robot;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
@@ -20,7 +19,7 @@ public class Game implements Runnable {
     private GamePhase currentGamePhase;
     private final Timer timer = new Timer();
     private String mapName;
-    public static PlayerList playerList;
+    public static PlayerList playerList = new PlayerList();
     public Board board = new Board();
     private Player activePlayer;
     public static SpamDeck spamDeck = new SpamDeck();
@@ -33,12 +32,12 @@ public class Game implements Runnable {
     private LinkedList<Integer> readyList = new LinkedList<>();
     private final String[] maps = {"DizzyHighway", "ExtraCrispy", "DeathTrap", "LostBearings", "Twister"};
     private static Game INSTANCE;
+    private boolean robotSet = false;
     private ArrayList<CheckpointTile> checkpointTileArrayList = null;
     private ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
     private Server server;
     private final Logger logger = LogManager.getLogger(Game.class);
     private String jsonMap;
-    private int firstReady;
     private boolean gameIsRunning = true;
 
     //TODO: discuss ShuffleCoding functionality
@@ -60,12 +59,18 @@ public class Game implements Runnable {
             playerList.get(i).setServerForPlayerAndRobot(server);
         }
     }
+    public void setRobotSet(boolean robotSet) {
+        this.robotSet = robotSet;
+    }
     public Board getBoard() {
         return board;
     }
 
     public void setBoard(Board board) {
         this.board = board;
+    }
+    public void addPlayer(Player player) {
+        playerList.add(player);
     }
     public void setPlayerList(PlayerList playerList) {
         Game.playerList = playerList;
@@ -268,7 +273,7 @@ public class Game implements Runnable {
         return result;
     }
 
-    public void runTimer() {
+    private void runTimer() {
         server.sendTimerStarted();
         TimerTask timerTask = new TimerTask() {
             @Override
@@ -297,14 +302,13 @@ public class Game implements Runnable {
         this.currentGamePhase = currentGamePhase;
     }
 
-    //TODO: finish this once client server connection allows for it
-    public void pickStartLocationForRobot(Player player, int x, int y) {
+    private void pickStartLocationForRobot(Player player, int x, int y) {
         Pair<Integer, Integer> input = new Pair<>(x, y);
         player.getRobot().setCurrentPosition(input);
         player.setReady(true);
     }
 
-    public void setStartDirectionForRobot(String input) {
+    private void setStartDirectionForRobot(String input) {
         switch(input) {
             case "Deathtrap" -> {
                 for(int i = 0; i < playerList.size(); i++) {
@@ -322,6 +326,14 @@ public class Game implements Runnable {
     private void runSetupPhase() {
         server.sendActivePhase(0);
         logger.debug("Running Setup Phase now");
+        for (int i =0; i < readyList.size(); i++) {
+            activePlayer = playerList.getPlayerFromList(readyList.get(i));
+            server.sendCurrentPlayer(readyList.get(i));
+            while(!robotSet){}
+            this.robotSet=false;
+            server.sendStartPointTaken(activePlayer.getId(),activePlayer.getRobot().getCurrentPosition());
+
+        }
         logger.debug(maps[0]);
         playerList.setPlayerReadiness(false);
         while(!playerList.playersAreReady()) {
@@ -381,7 +393,7 @@ public class Game implements Runnable {
             logger.debug("Applying tile effects");
             applyAllTileEffects();
             if(checkIfPlayerWon(playerList)){
-                Player winner = determineWichPlayerWon(playerList);
+                Player winner = determineWhichPlayerWon(playerList);
                 logger.debug("The winning player is: " + winner);
                 //sends a message to all clients
                 server.sendGameFinished(winner);
@@ -404,7 +416,6 @@ public class Game implements Runnable {
     public String[] getMaps(){return this.maps;}
     public void addReady(int clientID) {
         readyList.add(clientID);
-        logger.debug(readyList.size());
         if(clientID == getFirstReadyID()){
             server.sendSelectMap(maps);
         }
@@ -457,7 +468,7 @@ public class Game implements Runnable {
      * @param playerList The list of players who are playing the game at the moment
      * @return returns the Player that has won the game
      */
-    public Player determineWichPlayerWon(PlayerList playerList){
+    private Player determineWhichPlayerWon(PlayerList playerList){
         int checkpointsInGame = board.getCheckPointCount();
         for(int i = 0; i < playerList.size(); i++){
             if(playerList.get(i).getRobot().getCurrentObjective() == checkpointsInGame){
@@ -498,7 +509,8 @@ public class Game implements Runnable {
                 try {
                     //thread needs to sleep to check the if statement probably
                     Thread.sleep(100);
-                    if (readyList.size() >= 2 && this.jsonMap != null) {
+                    //if condition checks if at least two players are ready and a map was selected and if every joined player is ready
+                    if (readyList.size() >= 2 && this.jsonMap != null && readyList.size()==playerList.size()) {
                         server.sendGameStarted(jsonMap);
                         Thread.sleep(100);
                         readyToStart = true;
@@ -508,7 +520,7 @@ public class Game implements Runnable {
                     throw new RuntimeException(e);
                 }
             }
-            //runSetupPhase();
+            runSetupPhase();
             logger.debug("This game is running the Upgrade Phase now");
             runUpgradePhase();
             try {
