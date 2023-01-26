@@ -388,13 +388,16 @@ public class ViewModelGameWindow {
             logMessageStyling(MessageType.TimerEnded, null, null, null, players);
         }
         if (logMessage.getMessageType().equals(MessageType.DrawDamage)) {
-            //int[] damageCards = logmessage.getMessageBody().getCards();
-            //add all damage: int damage;
+            String[] damageCards = Arrays.copyOf(logMessage.getMessageBody().getCards(), logMessage.getMessageBody().getCards().length);
             int clientID = logMessage.getMessageBody().getClientID();
+            String username = "";
             for (int i = 0; i < modelGame.getPlayerList().getPlayerList().size(); i++) {
-                if (modelGame.getPlayerList().getPlayerList().get(i).getId() == clientID) {
+                if (modelGame.getPlayerList().getPlayer(clientID).getId() == clientID) {
+                    username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
                 }
             }
+
+            logMessageStyling(MessageType.DrawDamage, username, null, damageCards, null);
         }
         if (logMessage.getMessageType().equals(MessageType.GameFinished)) {
             int clientID = logMessage.getMessageBody().getClientID();
@@ -406,7 +409,9 @@ public class ViewModelGameWindow {
                 username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
             }
             Label win = new Label("WINNER");
+            win.setStyle("-fx-text-fill: gold;");
             Label winnerLabel = new Label(username);
+            winnerLabel.setStyle("-fx-text-fill: red;");
             VBox winnerVBox = new VBox();
             winnerVBox.setSpacing(20);
             StackPane winnerStackPane = new StackPane();
@@ -481,10 +486,10 @@ public class ViewModelGameWindow {
             }
         }
         else if (messageType.equals(MessageType.DrawDamage)) {
-            typeLogText.setText("[SelectionFinished] ");
-            typeLogText.setStyle("-fx-text-fill: purple;" + "-fx-font-size: 8pt;");
+            typeLogText.setText("[DrawDamage] ");
+            typeLogText.setStyle("-fx-text-fill: black;" + "-fx-font-size: 8pt;");
 
-            logText.setText(" finished his selection.");
+            logText.setText(Arrays.toString(cards));
             logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
         }
 
