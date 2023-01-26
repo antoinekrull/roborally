@@ -4,7 +4,7 @@ public class TrojanDeck extends Deck {
 
     public TrojanDeck() {
         for(int i = 0; i < 12; i++){
-            addCard(new WormCard());
+            addCard(new TrojanCard());
         }
     }
     @Override

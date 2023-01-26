@@ -304,9 +304,13 @@ public class Server {
         }
     }
 
-    //TODO: Implement this
-    public void sendReplaceCards() {
-
+    public void sendReplaceCard(Player player) {
+        try {
+            messages.put(messageCreator.generateReplaceCardMessage(game.getCurrentRegister(),
+                    player.getCardFromRegister(game.getCurrentRegister()).getCard(), player.getId()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void sendMovement(Robot robot) {
