@@ -199,25 +199,24 @@ public class Game implements Runnable {
         }
     }
 
-    private void applyPushPanelEffects() throws Exception {
+    private void applyPushPanelEffects() {
         for (int i = 0; i < playerList.size(); i++) {
             for (PushPanelTile pushPanelTile : board.getPushPanelList()) {
                 //checks if any robos on pushPanel
                 if (pushPanelTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
-                    //TODO: Bug is hiding here
                     //checks if pushpanel would be active in current register
-                    if (pushPanelTile.getActiveRegisterList().contains(currentRegister + 1)) {
-                        //activates effect of pushpanel
-                        //weird thing
-                        //applyTileEffects(board.getTile(playerList.get(i).getRobot().getCurrentPosition()), playerList.get(i));
+                    if (pushPanelTile.getRegisters().contains(currentRegister + 1)) {
                         logger.debug("Applying pushpanel effects");
-                        pushPanelTile.applyEffect(playerList.get(i));
-                    }
-                }
-                //pit check
-                for (PitTile pitTile : board.getPitList()) {
-                    if (pitTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
-                        reboot(playerList.get(i));
+                        Pair<Integer, Integer> temp = new Pair<>(0 ,0);
+                        Pair<Integer, Integer> newPosition = new Pair<>(playerList.get(i).getRobot().getCurrentPosition().getValue0(),
+                                playerList.get(i).getRobot().getCurrentPosition().getValue1());
+                        switch(pushPanelTile.getPushDirection()) {
+                            case NORTH -> temp = newPosition.setAt1(newPosition.getValue1() - 1);
+                            case SOUTH -> temp = newPosition.setAt1(newPosition.getValue1() + 1);
+                            case EAST -> temp = newPosition.setAt0(newPosition.getValue0() + 1);
+                            case WEST -> temp = newPosition.setAt0(newPosition.getValue0() - 1);
+                        }
+                        collisionCalculator.moveRobot(playerList.get(i).getRobot(), temp);
                     }
                 }
             }
@@ -698,9 +697,8 @@ public class Game implements Runnable {
         return playersThatReachedCheckpointsList;
     }
 
-    private void activateRegister(Player player) throws Exception {
+    private void activateRegister(Player player) {
         try{
-
             if(player.getCardFromRegister(currentRegister) == null) {
                 logger.debug("No card in register" + currentRegister);
             } else {
@@ -710,7 +708,6 @@ public class Game implements Runnable {
                 server.sendEnergy(player, player.getCardFromRegister(currentRegister));
                     Thread.sleep(100);
             }
-
         } catch (IndexOutOfBoundsException | InterruptedException e) {
             logger.warn("This register was not activated because you're Robot can not move past this point" + e);
         }
