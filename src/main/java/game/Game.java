@@ -197,6 +197,7 @@ public class Game implements Runnable {
             for (PushPanelTile pushPanelTile : board.getPushPanelList()) {
                 //checks if any robos on pushPanel
                 if (pushPanelTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
+                    //TODO: Bug is hiding here
                     //checks if pushpanel would be active in current register
                     if (pushPanelTile.getActiveRegisterList().contains(currentRegister + 1)) {
                         //activates effect of pushpanel
@@ -386,18 +387,21 @@ public class Game implements Runnable {
                             default -> tempPosition = newPosition;
                         }
                         newPosition = tempPosition;
-                        boolean isBlocked = collisionCalculator.checkRobotCollision(player,newPosition);
-                        if(!isBlocked) {
-                            player.getRobot().setCurrentPosition(newPosition);
-                            System.out.println("okay ich habe den robo von " + newPosition + " zu " + tempPosition + " bewegt");
-                        }
+                        collisionCalculator.moveRobot(player.getRobot(), newPosition);
+
                 }
             }
             case "MoveI", "MoveII", "MoveIII" -> {
-                Pair<Integer, Integer> newPosition = new Pair<>(player.getRobot().getCurrentPosition().getValue0(),
-                        player.getRobot().getCurrentPosition().getValue1());
+
                 for (int i = 0; i < card.getVelocity(); i++) {
-                        Pair<Integer, Integer> tempPosition;
+                    Pair<Integer, Integer> newPosition = new Pair<>(player.getRobot().getCurrentPosition().getValue0(),
+                            player.getRobot().getCurrentPosition().getValue1());
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Pair<Integer, Integer> tempPosition;
                         switch (player.getRobot().getDirection()) {
                             case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
                             case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
@@ -407,18 +411,16 @@ public class Game implements Runnable {
                         }
 
                         newPosition = tempPosition;
-                        if(!collisionCalculator.checkRobotCollision(player,newPosition)) {
-                            player.getRobot().setCurrentPosition(newPosition);
-                            System.out.println("okay ich habe den robo von " + newPosition + " zu " + tempPosition + " bewegt");
-                            for (PitTile pitTile : board.getPitList()) {
-                                if (pitTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
-                                    try {
-                                        Thread.sleep(1000);
-                                    } catch (InterruptedException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                    reboot(playerList.get(i));
+
+                        collisionCalculator.moveRobot(player.getRobot(), newPosition);
+                        for (PitTile pitTile : board.getPitList()) {
+                            if (pitTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
                                 }
+                                reboot(playerList.get(i));
                             }
                         }
                 }
@@ -498,8 +500,7 @@ public class Game implements Runnable {
                 server.sendTimerEnded(playerList.getUnreadyPlayers());
             }
         };
-        //TODO: MAKE THIS 30000 AGAIN!!!!
-        timer.schedule(timerTask, 3000);
+        timer.schedule(timerTask, 30000);
     }
 
     public GamePhase getCurrentGamePhase() {
@@ -577,12 +578,19 @@ public class Game implements Runnable {
         while(!playerList.playersAreReady()) {
             Thread.sleep(3000);
             if (playerList.getAmountOfReadyPlayers() >= 1) {
-                if(!timerIsRunning) {
-                    runTimer();
-                }
+//                if(!timerIsRunning) {
+//                    runTimer();
+//                }
             }
         }
-        timerIsRunning=false;
+//        if (timerIsRunning) {
+//            //a new instance of timer might be needed every time it runs
+//            //timer.cancel()
+//            timer.purge();
+//        }
+//        timer.purge();
+//        server.sendTimerEnded(new PlayerList());
+//        timerIsRunning=false;
         playerList.setPlayerReadiness(false);
     }
     private void runActivationPhase() throws Exception {
@@ -792,7 +800,7 @@ public class Game implements Runnable {
     public void createBoard(String map) {
         try {
             board.createBoard(map);
-            this.collisionCalculator = new CollisionCalculator(board);
+            this.collisionCalculator = new CollisionCalculator(board, playerList, this);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -827,12 +835,13 @@ public class Game implements Runnable {
         player.discardEntireHand();
         player.emptyAllCardRegisters();
         player.getRobot().setCurrentPosition(board.getRebootTile().getPosition());
-        server.sendReboot(player);
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        server.sendReboot(player);
+
         //TODO: Implement additional robo check
     }
 
