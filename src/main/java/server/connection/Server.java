@@ -378,16 +378,16 @@ public class Server {
         }
     }
 
-    public void sendRefillShop(Player player){
+    public void sendRefillShop(String[] cards){
         try{
-
+            messages.put(messageCreator.generateRefillShopMessage(cards));
         } catch (Exception e){
             e.printStackTrace();
         }
     }
-    public void sendExchangeShop(Player player){
+    public void sendExchangeShop(String[] cards){
         try{
-
+            messages.put(messageCreator.generateExchangeShopMessage(cards));
         } catch (Exception e) {
             e.printStackTrace();
         }
