@@ -12,7 +12,8 @@ import game.board.Tile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-
+import java.util.Timer;
+import java.util.TimerTask;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
@@ -27,7 +28,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -106,6 +113,7 @@ public class ViewModelGameWindow {
     private int columnIndex;
     private boolean isClickable;
     private boolean isDroppedSuccessfully = false;
+    private int registerCounter = 0;
 
     public ViewModelGameWindow() {
         this.modelChat = ModelChat.getInstance();
@@ -400,7 +408,15 @@ public class ViewModelGameWindow {
             }
         }
         if (gamemessage.getMessageType().equals(MessageType.CurrentCards)) {
-
+            int clientID = gamemessage.getMessageBody().getClientID();
+            if(clientID == gamemessage.getMessageBody().getClientID()){
+                registerCounter++;
+                if (registerCounter > 5) {
+                    registerCounter = 1;
+                }
+                logger.debug("Current register: " + registerCounter);
+                setShadowOnImage(registerCounter - 1);
+            }
         }
         if (gamemessage.getMessageType().equals(MessageType.ReplaceCard)) {
 
@@ -908,6 +924,27 @@ public class ViewModelGameWindow {
     public void setProgramcardsUnmovable () {
         this.isClickable = false;
     }
+
+    private void setShadowOnImage(int currentRegister) {
+        Pane targetPane = (Pane) programmingGrid.getChildren().get(currentRegister);
+        //Going through the children of the pane for selecting the ImageView
+        for (Node node : targetPane.getChildren()) {
+            if (node instanceof ImageView) {
+                ImageView image = (ImageView) node;
+                image.setEffect(new DropShadow(20, Color.WHITE));
+                Timer timer = new Timer();
+                //effect will be deleted after 3 sek
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        Platform.runLater(() -> image.setEffect(null));
+                    }
+                }, 3000);
+                break;
+            }
+        }
+    }
+
 
     public void exit() throws IOException {
         //send disconnect notification to server
