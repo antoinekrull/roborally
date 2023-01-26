@@ -3,26 +3,57 @@ package game;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.*;
 import game.player.Player;
+import game.player.Robot;
 import javafx.geometry.Orientation;
 import org.javatuples.Pair;
+import server.connection.PlayerList;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class CollisionCalculator {
     private Board board;
-    public CollisionCalculator(Board board) {
+    private PlayerList playerList;
+    public CollisionCalculator(Board board, PlayerList playerList) {
         this.board = board;
-
+        this.playerList = playerList;
     }
 
-    public boolean checkRobotCollision(Player player, Pair<Integer,Integer> target){
+    public void moveRobot(Robot robot1, Pair<Integer, Integer> target) {
+        Pair<Integer, Integer> currentPosition = robot1.getCurrentPosition();
+        Pair<Integer, Integer> movement = new Pair(target.getValue0()-currentPosition.getValue0(),target.getValue1()-currentPosition.getValue1());
+        int xMove = movement.getValue0();
+        int yMove = movement.getValue1();
+        boolean canMove = false;
+
+        ArrayList<Robot> robots = playerList.getAllRobots();
+
+        if(!checkRobotCollision(robot1,target)){
+            canMove=true;
+            for (Robot robot2: robots){
+                if(robot2.getCurrentPosition() == target){
+                    canMove=false;
+                    Pair<Integer, Integer> pushedPos = new Pair(robot2.getCurrentPosition().getValue0()+xMove, robot2.getCurrentPosition().getValue1()+yMove);
+                    if(!checkRobotCollision(robot2, pushedPos)) {
+                        moveRobot(robot2, pushedPos);
+                        canMove=true;
+                    }
+                }
+            }
+        }
+        if (canMove){
+            robot1.setCurrentPosition(target);
+            System.out.println("okay ich habe den robo von " + currentPosition + " zu " + target + " bewegt");
+        }
+    }
+
+    public boolean checkRobotCollision(Robot robot, Pair<Integer,Integer> target){
         boolean result = false;
         boolean onWall = false;
         boolean toWall = false;
         ArrayList<Direction> onBlocked = new ArrayList<>();
         ArrayList<Direction> toBlocked = new ArrayList<>();
-        Pair<Integer, Integer> currentPosition = player.getRobot().getCurrentPosition();
+        Pair<Integer, Integer> currentPosition = robot.getCurrentPosition();
         ArrayList<Tile> currentTile = board.getTile(currentPosition);
         ArrayList<Tile> targetTile = board.getTile(target);
 
@@ -93,28 +124,7 @@ public class CollisionCalculator {
         return result;
     }
 
-    public boolean checkReverseRobotCollision(Player player){
-        boolean result = false;
-        Pair<Integer, Integer> nextPosition = player.getRobot().getCurrentPosition();
-        switch(player.getRobot().getDirection()){
-            case NORTH -> {
-                nextPosition.setAt1(nextPosition.getValue1() + 1);
-            }
-            case SOUTH -> {
-                nextPosition.setAt1(nextPosition.getValue1() - 1);
-            }
-            case EAST -> {
-                nextPosition.setAt0(nextPosition.getValue0() - 1);
-            }
-            case WEST -> {
-                nextPosition.setAt0(nextPosition.getValue0() + 1);
-            }
-        }
-        if(tileIsBlocking(board.getTile(nextPosition))) {
-            result = true;
-        }
-        return result;
-    }
+
 
     public boolean checkLaserCollision(Player player){
         Pair<Integer, Integer> playerPosition = player.getRobot().getCurrentPosition();
