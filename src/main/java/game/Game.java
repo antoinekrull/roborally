@@ -392,10 +392,16 @@ public class Game implements Runnable {
                 }
             }
             case "MoveI", "MoveII", "MoveIII" -> {
-                Pair<Integer, Integer> newPosition = new Pair<>(player.getRobot().getCurrentPosition().getValue0(),
-                        player.getRobot().getCurrentPosition().getValue1());
+
                 for (int i = 0; i < card.getVelocity(); i++) {
-                        Pair<Integer, Integer> tempPosition;
+                    Pair<Integer, Integer> newPosition = new Pair<>(player.getRobot().getCurrentPosition().getValue0(),
+                            player.getRobot().getCurrentPosition().getValue1());
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Pair<Integer, Integer> tempPosition;
                         switch (player.getRobot().getDirection()) {
                             case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
                             case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
@@ -572,19 +578,19 @@ public class Game implements Runnable {
         while(!playerList.playersAreReady()) {
             Thread.sleep(3000);
             if (playerList.getAmountOfReadyPlayers() >= 1) {
-                if(!timerIsRunning) {
-                    runTimer();
-                }
+//                if(!timerIsRunning) {
+//                    runTimer();
+//                }
             }
         }
-        if (timerIsRunning) {
-            //a new instance of timer might be needed every time it runs
-            //timer.cancel()
-            timer.purge();
-        }
-        timer.purge();
-        server.sendTimerEnded(new PlayerList());
-        timerIsRunning=false;
+//        if (timerIsRunning) {
+//            //a new instance of timer might be needed every time it runs
+//            //timer.cancel()
+//            timer.purge();
+//        }
+//        timer.purge();
+//        server.sendTimerEnded(new PlayerList());
+//        timerIsRunning=false;
         playerList.setPlayerReadiness(false);
     }
     private void runActivationPhase() throws Exception {
