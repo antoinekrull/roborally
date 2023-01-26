@@ -148,12 +148,16 @@ public class ViewModelGameWindow {
             updateWidth(width);
         });
 
-        //TODO: setActivePlayer Text to bind
+        //TODO: set phase
+        //currentPhaseLabel.textProperty().bind("");
+
+        //TODO: setActivePlayer
         //currentActivePlayerLabeL.textProperty().bind("");
 
         myEnergyBar.progressProperty().bind(modelGame.energyProperty());
-        myEnergyLabel.textProperty().bind(modelGame.energyProperty().asString());
-        myEnergyLabel.setStyle("-flex: red;");
+        myEnergyLabel.textProperty().bind(myEnergyBar.progressProperty().asString());
+        myEnergyLabel.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;");
+        StackPane.setAlignment(myEnergyBar, Pos.CENTER);
         StackPane.setAlignment(myEnergyLabel, Pos.CENTER);
 
         playerGameInfo = new PlayerGameInfo(playerInfoGrid, modelGame.getPlayerList());

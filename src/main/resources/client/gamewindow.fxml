@@ -287,7 +287,7 @@
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-              <StackPane fx:id="handStackPane" GridPane.columnIndex="1">
+              <StackPane fx:id="handStackPane" prefHeight="131.0" prefWidth="1076.0" GridPane.columnIndex="1">
               <children>
                 <GridPane fx:id="handGrid" alignment="CENTER" maxHeight="140.0" maxWidth="850.0" nodeOrientation="RIGHT_TO_LEFT" HBox.hgrow="ALWAYS">
                   <columnConstraints>
@@ -349,8 +349,8 @@
                                     <Insets left="20.0" />
                                  </HBox.margin>
                                  <children>
-                                    <Label fx:id="myEnergyLabel" />
                                     <ProgressBar fx:id="myEnergyBar" prefWidth="100.0" progress="0.0" />
+                                    <Label fx:id="myEnergyLabel" />
                                  </children>
                               </StackPane>
                            </children>
@@ -477,23 +477,6 @@
                   <rowConstraints>
                     <RowConstraints minHeight="10.0" valignment="BOTTOM" vgrow="SOMETIMES" />
                   </rowConstraints>
-                  <children>
-                    <ImageView fx:id="enemyCards" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                      <image>
-                        <Image url="@../textures/cards/kartendeckGegner.png" />
-                      </image>
-                    </ImageView>
-                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
-                      <image>
-                        <Image url="@../textures/cards/kartendeckGegner.png" />
-                      </image>
-                    </ImageView>
-                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
-                      <image>
-                        <Image url="@../textures/cards/kartendeckGegner.png" />
-                      </image>
-                    </ImageView>
-                  </children>
                 </GridPane>
               </children>
             </GridPane>

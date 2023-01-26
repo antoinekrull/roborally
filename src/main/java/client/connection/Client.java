@@ -502,6 +502,7 @@ public class Client {
         sendMessageToServer(messageCreator.generateRebootDirectionMessage(direction));
     }
     public void sendDiscardSome(String[] discardSome) {
+        //TODO: Add discardSome to message
         //sendMessageToServer(messageCreator.generateDiscardSome)
     }
     public void sendRegister(int register) {
