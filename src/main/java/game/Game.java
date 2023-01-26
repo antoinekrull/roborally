@@ -19,7 +19,6 @@ import java.util.TimerTask;
 
 public class Game implements Runnable {
     private GamePhase currentGamePhase;
-    private final Timer timer = new Timer();
     public static PlayerList playerList = new PlayerList();
     public Board board = new Board();
     private Player activePlayer;
@@ -89,6 +88,12 @@ public class Game implements Runnable {
     }
     public Player getActivePlayer() {
         return activePlayer;
+    }
+    public boolean isTimerIsRunning() {
+        return timerIsRunning;
+    }
+    public void setTimerIsRunning(boolean timerIsRunning) {
+        this.timerIsRunning = timerIsRunning;
     }
 
 
@@ -218,14 +223,6 @@ public class Game implements Runnable {
             }
         }
     }
-
-    /*
-    private void applyTileEffects(ArrayList<Tile> tileList, Player player) throws Exception {
-        for (Tile tile : tileList) {
-            tile.applyEffect(player);
-        }
-    }
-    */
 
     private void determinePriority() {
         Pair<Integer, Integer> antennaPosition = board.getAntenna().getPosition();
@@ -445,6 +442,7 @@ public class Game implements Runnable {
             case "PowerUp" -> player.getRobot().increaseEnergyCubes();
             case "Spam" -> {
                 Card topProgrammingCard = player.getRobot().getDeck().popCardFromDeck();
+                spamDeck.addCard(new SpamCard());
                 player.setCardRegister(topProgrammingCard, currentRegister);
                 server.sendReplaceCard(player);
                 player.getCardFromRegister(currentRegister);
@@ -494,30 +492,6 @@ public class Game implements Runnable {
             }
         }
         return result;
-    }
-
-    private void runTimer() {
-        timerIsRunning=true;
-        server.sendTimerStarted();
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                System.out.println("Timer is running");
-                PlayerList unreadyPlayers = playerList.getUnreadyPlayers();
-                for (int i = 0; i < unreadyPlayers.size(); i++) {
-                    String[] placedCards = unreadyPlayers.get(i).fillRegisterWithRandomCards();
-                    server.sendCardsYouGotNow(unreadyPlayers.get(i), placedCards);
-                    unreadyPlayers.get(i).fillRegisterWithRandomCards();
-
-                    // for testing purposes
-                    unreadyPlayers.get(i).printRegisters();
-                    logger.info("Time ran through");
-                    playerList.setPlayerReadiness(false);
-                }
-                server.sendTimerEnded(playerList.getUnreadyPlayers());
-            }
-        };
-        timer.schedule(timerTask, 30000);
     }
 
     public GamePhase getCurrentGamePhase() {
@@ -586,10 +560,8 @@ public class Game implements Runnable {
         timerIsRunning = false;
         setCurrentGamePhase(GamePhase.PROGRAMMING_PHASE);
         try {
+            CustomTimer customTimer = new CustomTimer(server);
             Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         for(int i = 0; i < playerList.size(); i++) {
             playerList.get(i).drawFullHand();
             Thread.sleep(100);
@@ -599,19 +571,18 @@ public class Game implements Runnable {
         while(!playerList.playersAreReady()) {
             Thread.sleep(3000);
             if (playerList.getAmountOfReadyPlayers() >= 1) {
-//                if(!timerIsRunning) {
-//                    runTimer();
-//                }
+                if(!timerIsRunning) {
+                    customTimer.runTimer();
+                }
             }
         }
-//        if (timerIsRunning) {
-//            //a new instance of timer might be needed every time it runs
-//            //timer.cancel()
-//            timer.purge();
-//        }
-//        timer.purge();
-//        server.sendTimerEnded(new PlayerList());
-//        timerIsRunning=false;
+        if (timerIsRunning) {
+            customTimer.cancel();
+        }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        timerIsRunning=false;
         playerList.setPlayerReadiness(false);
     }
     private void runActivationPhase() throws Exception {
@@ -624,7 +595,7 @@ public class Game implements Runnable {
         while(currentRegister < 5) {
             for(int i = 0; i < playerList.size(); i++) {
                 Thread.sleep(1000);
-                playerList.get(i).getCardFromRegister(currentRegister).setClientID(playerList.get(i).getId());
+                //playerList.get(i).getCardFromRegister(currentRegister).setClientID(playerList.get(i).getId());
                 cardList.add(playerList.get(i).getCardFromRegister(currentRegister));
                 activateRegister(playerList.get(i));
                 if(board.getTile(playerList.get(i).getRobot().getCurrentPosition()).get(0) instanceof PitTile) {
@@ -643,8 +614,8 @@ public class Game implements Runnable {
                     Thread.sleep(1000);
                 }
             }
-
             determinePriority();
+
             //checks if all registers have been activated
             if(currentRegister == 4) {
                 for(int i = 0; i < playerList.size(); i++) {

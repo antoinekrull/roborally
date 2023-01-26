@@ -101,7 +101,11 @@ public class Player {
 
     //TODO: Fix crash if reboot happened
     public Card getCardFromRegister(int index){
-        return cardRegister[index];
+        if(cardRegister[index] == null) {
+            return null;
+        } else {
+            return cardRegister[index];
+        }
     }
     public int getCurrentRegister(Card currentCard){
         return ArrayUtils.indexOf(cardRegister, currentCard);
@@ -257,7 +261,7 @@ public class Player {
 
     public void emptyAllCardRegisters() {
         for(int i = 0; i < cardRegister.length; i++) {
-            if(cardRegister[i] == null) {
+            if(cardRegister[i] != null) {
                 if(cardRegister[i].isDamageCard()) {
                     switch (cardRegister[i].getCard()) {
                         case "Trojan" -> Game.trojanDeck.addCard(cardRegister[i]);
