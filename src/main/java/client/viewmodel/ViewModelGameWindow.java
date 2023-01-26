@@ -1,5 +1,6 @@
 package client.viewmodel;
 
+import client.RoboRallyStart;
 import client.changesupport.NotifyChangeSupport;
 import client.model.ModelChat;
 import client.model.ModelGame;
@@ -69,9 +70,9 @@ public class ViewModelGameWindow {
     @FXML
     private TextField chatTextfield;
     @FXML
-    private VBox chatVBox;
+    private VBox chatVBox, logVBox;
     @FXML
-    private ScrollPane chatScrollPane;
+    private ScrollPane chatScrollPane, logScrollPane;
     @FXML
     private GridPane deckGrid, gameboard, programmingGrid;
     @FXML
@@ -135,10 +136,19 @@ public class ViewModelGameWindow {
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
 
-        chatVBox.heightProperty().addListener(new ChangeListener<Number>() {@Override
+        chatVBox.heightProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
             chatScrollPane.setVvalue((Double) newValue);
         }
+        });
+
+        logVBox.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                logScrollPane.setVvalue((Double) newValue);
+            }
         });
 
         gameboardRegion.widthProperty().addListener((obs, oldValue, newValue) -> {
@@ -351,7 +361,15 @@ public class ViewModelGameWindow {
     public void logMessageToLogger(Message logMessage) {
         if (logMessage.getMessageType().equals(MessageType.SelectionFinished)) {
             int clientID = logMessage.getMessageBody().getClientID();
+            String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
             //show selectionfinished for this client
+
+            TextFlow logTextFlow = new TextFlow();
+            Text timeText = new Text();
+            Text logText = new Text();
+            timeText.setText(String.valueOf(System.currentTimeMillis() + "  "));
+            logText.setText(username + " finished his selection.");
+            logTextFlow.getChildren().addAll(timeText, logText);
         }
         if (logMessage.getMessageType().equals(MessageType.CardPlayed)) {
             int clientID = logMessage.getMessageBody().getClientID();
@@ -376,15 +394,36 @@ public class ViewModelGameWindow {
         }
         if (logMessage.getMessageType().equals(MessageType.GameFinished)) {
             int clientID = logMessage.getMessageBody().getClientID();
-            String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
+            String username = "";
+            if (modelUser.userIDProperty().get() == clientID) {
+                username = modelUser.getUsername();
+            }
+            else {
+                username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
+            }
+            Label win = new Label("WINNER");
             Label winnerLabel = new Label(username);
             VBox winnerVBox = new VBox();
+            winnerVBox.setSpacing(20);
             StackPane winnerStackPane = new StackPane();
+            winnerStackPane.setStyle("-fx-opacity: 0.84;");
+            winnerStackPane.setAlignment(Pos.CENTER);
             Button winnerButton = new Button("Easy Win");
-            winnerVBox.getChildren().addAll(winnerLabel, winnerButton);
+            winnerButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    try {
+                        RoboRallyStart.switchScene("lobby.fxml");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            winnerVBox.getChildren().addAll(win, winnerLabel, winnerButton);
             winnerStackPane.getChildren().add(winnerVBox);
 
-            //TODO: making button return scene and set StackPane over everything
+            baseStackPane.getChildren().add(winnerStackPane);
         }
         if (logMessage.getMessageType().equals(MessageType.CheckPointReached)) {
             int clientID = logMessage.getMessageBody().getClientID();
