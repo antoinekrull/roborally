@@ -37,18 +37,18 @@ public class ViewModelRobotSelection {
     @FXML
     private Label robot1, robot2, robot3, robot4, robot5, robot6;
     @FXML
-    private Button exitButton;
-    @FXML
     private Label errorLabelRobotSelection;
     @FXML
     ImageView selectedRobot;
-
-    private List<Node> robots;
-    private ClientPlayerList clientPlayerList;
+    @FXML
+    private Button exitButton;
 
     private ModelUser modelUser;
     private ModelGame modelGame;
     private NotifyChangeSupport notifyChangeSupport;
+
+    private List<Node> robots;
+    private ClientPlayerList clientPlayerList;
 
     public ViewModelRobotSelection() {
         this.modelUser = ModelUser.getInstance();
@@ -120,7 +120,7 @@ public class ViewModelRobotSelection {
         int robot = modelGame.robotProperty().get();
         String username = modelUser.usernameProperty().get();
         if (robot != 0 && !username.isEmpty()) {
-            modelGame.sendPlayerInformation(username);
+            modelGame.sendPlayerValues(username);
         }
     }
 

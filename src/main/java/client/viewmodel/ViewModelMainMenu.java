@@ -22,11 +22,7 @@ import javafx.util.Duration;
 public class ViewModelMainMenu {
 
     @FXML
-    private Button joinButton;
-    @FXML
-    private Button helpButton;
-    @FXML
-    private Button exitButton;
+    private Button joinButton, helpButton, exitButton;
     @FXML
     private Label statusLabel;
     @FXML
