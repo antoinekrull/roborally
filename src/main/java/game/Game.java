@@ -199,6 +199,7 @@ public class Game implements Runnable {
             for (PushPanelTile pushPanelTile : board.getPushPanelList()) {
                 //checks if any robos on pushPanel
                 if (pushPanelTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
+                    //TODO: Bug is hiding here
                     //checks if pushpanel would be active in current register
                     if (pushPanelTile.getActiveRegisterList().contains(currentRegister + 1)) {
                         //activates effect of pushpanel
@@ -226,26 +227,6 @@ public class Game implements Runnable {
     }
     */
 
-    private Pair<Boolean, Integer> pushPanelInTile(ArrayList<Tile> tileList) {
-        boolean result = false;
-        int index= -1;
-        if(tileList.size() == 1) {
-            result = tileList.get(0) instanceof PushPanelTile;
-            if(result){index =0;}
-        } else {
-            result = tileList.get(0) instanceof PushPanelTile || tileList.get(1) instanceof PushPanelTile;
-            if(tileList.get(0) instanceof PushPanelTile){index = 0;}
-            else if(tileList.get(1) instanceof PushPanelTile){index = 1;}
-        }
-        return new Pair<>(result, index);
-    }
-    private void refreshUpgradeShop(){
-        upgradeShop.clear();
-        for(int i = 0; i < playerList.size(); i++){
-            upgradeShop.add(upgradeDeck.popCardFromDeck());
-        }
-    }
-
     private void determinePriority() {
         Pair<Integer, Integer> antennaPosition = board.getAntenna().getPosition();
         playerList.getPlayerList().sort((p1, p2) -> {
@@ -253,6 +234,13 @@ public class Game implements Runnable {
             double dist2 = Math.sqrt(Math.pow(p2.getRobot().getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(p2.getRobot().getCurrentPosition().getValue1(), 2));
             return Double.compare(dist1, dist2);
         });
+    }
+
+    private void refreshUpgradeShop(){
+        upgradeShop.clear();
+        for(int i = 0; i < playerList.size(); i++){
+            upgradeShop.add(upgradeDeck.popCardFromDeck());
+        }
     }
 
     private void computeRobotLaserPositions(){
@@ -399,16 +387,16 @@ public class Game implements Runnable {
                         player.getRobot().getCurrentPosition().getValue1());
                 for (int i = 0; i < card.getVelocity(); i++) {
 
-                    Pair<Integer, Integer> tempPosition;
-                    switch (player.getRobot().getDirection()) {
-                        case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
-                        case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
-                        case EAST -> tempPosition = newPosition.setAt0(newPosition.getValue0() - 1);
-                        case WEST -> tempPosition = newPosition.setAt0(newPosition.getValue0() + 1);
-                        default -> tempPosition = newPosition;
-                    }
-                    newPosition = tempPosition;
-                    collisionCalculator.moveRobot(player.getRobot(), newPosition);
+                        Pair<Integer, Integer> tempPosition;
+                        switch (player.getRobot().getDirection()) {
+                            case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
+                            case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
+                            case EAST -> tempPosition = newPosition.setAt0(newPosition.getValue0() - 1);
+                            case WEST -> tempPosition = newPosition.setAt0(newPosition.getValue0() + 1);
+                            default -> tempPosition = newPosition;
+                        }
+                        newPosition = tempPosition;
+                        collisionCalculator.moveRobot(player.getRobot(), newPosition);
 
                 }
             }
@@ -416,28 +404,28 @@ public class Game implements Runnable {
                 Pair<Integer, Integer> newPosition = new Pair<>(player.getRobot().getCurrentPosition().getValue0(),
                         player.getRobot().getCurrentPosition().getValue1());
                 for (int i = 0; i < card.getVelocity(); i++) {
-                    Pair<Integer, Integer> tempPosition;
-                    switch (player.getRobot().getDirection()) {
-                        case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
-                        case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
-                        case EAST -> tempPosition = newPosition.setAt0(newPosition.getValue0() + 1);
-                        case WEST -> tempPosition = newPosition.setAt0(newPosition.getValue0() - 1);
-                        default -> tempPosition = newPosition;
-                    }
-
-                    newPosition = tempPosition;
-
-                    collisionCalculator.moveRobot(player.getRobot(), newPosition);
-                    for (PitTile pitTile : board.getPitList()) {
-                        if (pitTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                            reboot(playerList.get(i));
+                        Pair<Integer, Integer> tempPosition;
+                        switch (player.getRobot().getDirection()) {
+                            case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
+                            case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
+                            case EAST -> tempPosition = newPosition.setAt0(newPosition.getValue0() + 1);
+                            case WEST -> tempPosition = newPosition.setAt0(newPosition.getValue0() - 1);
+                            default -> tempPosition = newPosition;
                         }
-                    }
+
+                        newPosition = tempPosition;
+
+                        collisionCalculator.moveRobot(player.getRobot(), newPosition);
+                        for (PitTile pitTile : board.getPitList()) {
+                            if (pitTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                reboot(playerList.get(i));
+                            }
+                        }
                 }
             }
             case "PowerUp" -> player.getRobot().increaseEnergyCubes();
@@ -475,7 +463,7 @@ public class Game implements Runnable {
     }
 
         //Helper method for virus card
-    private boolean isInRangeOfVirus(Rov robot1, Robot robot2){
+    private boolean isInRangeOfVirus(Robot robot1, Robot robot2){
         if(robot1.getCurrentPosition().equals(robot2.getCurrentPosition())){ //if the condition is true then robot1 == robot2
             return false;
         } else {
@@ -515,8 +503,7 @@ public class Game implements Runnable {
                 server.sendTimerEnded(playerList.getUnreadyPlayers());
             }
         };
-        //TODO: MAKE THIS 30000 AGAIN!!!!
-        timer.schedule(timerTask, 3000);
+        timer.schedule(timerTask, 30000);
     }
 
     public GamePhase getCurrentGamePhase() {
@@ -602,6 +589,13 @@ public class Game implements Runnable {
                 }
             }
         }
+        if (timerIsRunning) {
+            //a new instance of timer might be needed every time it runs
+            //timer.cancel()
+            timer.purge();
+        }
+        timer.purge();
+        server.sendTimerEnded(new PlayerList());
         timerIsRunning=false;
         playerList.setPlayerReadiness(false);
     }
@@ -812,7 +806,7 @@ public class Game implements Runnable {
     public void createBoard(String map) {
         try {
             board.createBoard(map);
-            this.collisionCalculator = new CollisionCalculator(board);
+            this.collisionCalculator = new CollisionCalculator(board, playerList);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }

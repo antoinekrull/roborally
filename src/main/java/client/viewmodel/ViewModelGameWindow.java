@@ -16,7 +16,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -97,8 +96,10 @@ public class ViewModelGameWindow {
     private ProgressBar myEnergyBar;
     @FXML
     private MenuItem exitMenuItem;
-
+    @FXML
     public Pane programspacePane;
+    @FXML
+    private Pane toprightRow;
 
     private ModelChat modelChat;
     private ModelGame modelGame;
@@ -209,8 +210,6 @@ public class ViewModelGameWindow {
         setOnDragDone(programCard9);
 
         placeTiles(map);
-
-        //StartupDispenseCards("/textures/cards/kartendeckStapel.png", cardDeck, programCard1);
 
 
         /*
@@ -508,18 +507,6 @@ public class ViewModelGameWindow {
             }
         }
         return -1;
-    }
-
-    private void StartupDispenseCards(String imagePath, Pane fromPane, Pane toPane) {
-        InputStream inputPath = getClass().getResourceAsStream(imagePath);
-        ImageView imageView = new ImageView(new Image(inputPath));
-        fromPane.getChildren().add(imageView);
-        TranslateTransition transition = new TranslateTransition();
-        transition.setDuration(Duration.seconds(10));
-        transition.setNode(imageView);
-        transition.setToX(toPane.getLayoutX());
-        transition.setToY(toPane.getLayoutY());
-        transition.play();
     }
 
     public void fillHandCards() {
