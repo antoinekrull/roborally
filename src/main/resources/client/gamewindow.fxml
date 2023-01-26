@@ -279,9 +279,9 @@
             </GridPane>
                   <GridPane GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
                      <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="55.0" />
+                        <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="SOMETIMES" percentWidth="20.0" />
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
@@ -289,7 +289,7 @@
                      <children>
               <StackPane fx:id="handStackPane" GridPane.columnIndex="1">
               <children>
-                <GridPane fx:id="handGrid" alignment="CENTER" gridLinesVisible="true" maxHeight="140.0" maxWidth="800.0" nodeOrientation="RIGHT_TO_LEFT" prefWidth="700.0" HBox.hgrow="ALWAYS">
+                <GridPane fx:id="handGrid" alignment="CENTER" maxHeight="140.0" maxWidth="850.0" nodeOrientation="RIGHT_TO_LEFT" HBox.hgrow="ALWAYS">
                   <columnConstraints>
                     <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
                     <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
@@ -315,8 +315,14 @@
                               <Pane fx:id="programCard8" GridPane.columnIndex="7" />
                               <Pane fx:id="programCard9" GridPane.columnIndex="8" />
                   </children>
+                                 <padding>
+                                    <Insets right="20.0" />
+                                 </padding>
                 </GridPane>
               </children>
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
               </StackPane>
                         <GridPane>
                            <columnConstraints>
@@ -326,7 +332,7 @@
                               <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                         </GridPane>
-                        <HBox fx:id="myPlayerInfoHBox" alignment="CENTER" GridPane.columnIndex="2" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
+                        <HBox fx:id="myPlayerInfoHBox" alignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                            <children>
                               <VBox fx:id="myPlayerInfoVBox" alignment="CENTER_LEFT" fillWidth="false" spacing="12.0">
                                  <children>
@@ -349,11 +355,11 @@
                               </StackPane>
                            </children>
                         </HBox>
-                        <Pane>
+                        <Pane fx:id="logPane">
                            <children>
-                              <ScrollPane fx:id="logScrollPane" fitToHeight="true" fitToWidth="true" minHeight="80.0" minWidth="400.0">
+                              <ScrollPane fx:id="logScrollPane" fitToHeight="true" fitToWidth="true" prefHeight="${logPane.height}" prefWidth="${logPane.width}">
                                  <content>
-                                    <VBox fx:id="logVBox" />
+                                    <VBox fx:id="logVBox" fillWidth="false" prefHeight="${logPane.height}" prefWidth="${logPane.width}" />
                                  </content>
                                  <padding>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -396,15 +402,21 @@
                 <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints />
-                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                <RowConstraints vgrow="SOMETIMES" />
               </rowConstraints>
               <children>
-                <HBox spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                  <children>
+                        <GridPane GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                           <columnConstraints>
+                              <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" percentWidth="100.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints percentHeight="80.0" vgrow="SOMETIMES" />
+                              <RowConstraints percentHeight="20.0" valignment="TOP" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                           <children>
                     <Pane fx:id="toprightRow">
                       <children>
-                        <ScrollPane fx:id="chatScrollPane" fitToHeight="true" fitToWidth="true" minHeight="80.0" minWidth="400.0">
+                        <ScrollPane fx:id="chatScrollPane" prefHeight="${toprightRow.height}" prefWidth="${toprightRow.width}">
                           <content>
                             <VBox fx:id="chatVBox" />
                           </content>
@@ -412,39 +424,49 @@
                             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                           </padding>
                         </ScrollPane>
-                        <HBox layoutY="80.0">
-                          <children>
-                            <TextField fx:id="chatTextfield" focusTraversable="false" prefHeight="30.0" prefWidth="388.0" promptText="Type here...">
+                      </children>
+                    </Pane>
+                              <GridPane GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+                                 <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="80.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                      <Button fx:id="chatButton" mnemonicParsing="false" onAction="#chatButtonOnAction" text="Send" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                        <opaqueInsets>
+                          <Insets />
+                        </opaqueInsets>
+                        <graphic>
+                          <Label fx:id="sendLabel">
+                            <font>
+                              <Font name="Hiragino Sans W2" size="11.0" />
+                            </font>
+                          </Label>
+                        </graphic>
+                                       <GridPane.margin>
+                                          <Insets left="10.0" />
+                                       </GridPane.margin>
+                      </Button>
+                                    <Pane fx:id="textFieldPane">
+                                       <children>
+                            <TextField fx:id="chatTextfield" focusTraversable="false" prefWidth="${textFieldPane.width}" promptText="Type here...">
                               <font>
                                 <Font name="Hiragino Sans W2" size="13.0" />
                               </font>
                             </TextField>
-                            <Button fx:id="chatButton" mnemonicParsing="false" onAction="#chatButtonOnAction" prefHeight="26.0" prefWidth="55.0">
-                              <opaqueInsets>
-                                <Insets />
-                              </opaqueInsets>
-                              <graphic>
-                                <Label fx:id="sendLabel">
-                                  <font>
-                                    <Font name="Hiragino Sans W2" size="11.0" />
-                                  </font>
-                                  <graphic>
-                                    <ImageView fitHeight="18.0" fitWidth="24.0">
-                                      <image>
-                                        <Image url="@Send_Image.png" />
-                                      </image>
-                                    </ImageView>
-                                  </graphic>
-                                </Label>
-                              </graphic>
-                            </Button>
-                          </children>
-                        </HBox>
-                      </children>
-                    </Pane>
-                  </children>
-                </HBox>
-                <GridPane fx:id="playerInfoGrid" GridPane.rowIndex="1">
+                                       </children>
+                                    </Pane>
+                                 </children>
+                              </GridPane>
+                           </children>
+                           <GridPane.margin>
+                              <Insets right="10.0" />
+                           </GridPane.margin>
+                        </GridPane>
+                <GridPane fx:id="playerInfoGrid">
                   <columnConstraints>
                     <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" />
                     <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" />
