@@ -387,11 +387,8 @@ public class Game implements Runnable {
                             default -> tempPosition = newPosition;
                         }
                         newPosition = tempPosition;
-                        boolean isBlocked = collisionCalculator.checkRobotCollision(player,newPosition);
-                        if(!isBlocked) {
-                            player.getRobot().setCurrentPosition(newPosition);
-                            System.out.println("okay ich habe den robo von " + newPosition + " zu " + tempPosition + " bewegt");
-                        }
+                        collisionCalculator.moveRobot(player.getRobot(), newPosition);
+
                 }
             }
             case "MoveI", "MoveII", "MoveIII" -> {
@@ -408,18 +405,16 @@ public class Game implements Runnable {
                         }
 
                         newPosition = tempPosition;
-                        if(!collisionCalculator.checkRobotCollision(player,newPosition)) {
-                            player.getRobot().setCurrentPosition(newPosition);
-                            System.out.println("okay ich habe den robo von " + newPosition + " zu " + tempPosition + " bewegt");
-                            for (PitTile pitTile : board.getPitList()) {
-                                if (pitTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
-                                    try {
-                                        Thread.sleep(1000);
-                                    } catch (InterruptedException e) {
-                                        throw new RuntimeException(e);
-                                    }
-                                    reboot(playerList.get(i));
+
+                        collisionCalculator.moveRobot(player.getRobot(), newPosition);
+                        for (PitTile pitTile : board.getPitList()) {
+                            if (pitTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
                                 }
+                                reboot(playerList.get(i));
                             }
                         }
                 }
@@ -799,7 +794,7 @@ public class Game implements Runnable {
     public void createBoard(String map) {
         try {
             board.createBoard(map);
-            this.collisionCalculator = new CollisionCalculator(board);
+            this.collisionCalculator = new CollisionCalculator(board, playerList);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
