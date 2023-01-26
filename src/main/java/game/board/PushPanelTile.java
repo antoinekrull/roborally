@@ -23,8 +23,7 @@ public class PushPanelTile extends Tile {
             this.imageFXid = "PushPanelRegister2";
         }
         else {
-            //TODO: change picture with new push panel with registers
-            this.path = getClass().getResource("/textures/gameboard/pushPanel.png").toString();
+            this.path = getClass().getResource("/textures/gameboard/pushPanel_1_3_5.png").toString();
             this.imageFXid = "PushPanel";
         }
 

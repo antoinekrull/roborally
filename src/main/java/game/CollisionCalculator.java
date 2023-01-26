@@ -4,50 +4,53 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.*;
 import game.player.Player;
 import game.player.Robot;
-import javafx.geometry.Orientation;
 import org.javatuples.Pair;
 import server.connection.PlayerList;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class CollisionCalculator {
     private Board board;
     private PlayerList playerList;
-    public CollisionCalculator(Board board, PlayerList playerList) {
+    private Game game;
+    public CollisionCalculator(Board board, PlayerList playerList, Game game) {
         this.board = board;
         this.playerList = playerList;
+        this.game = game;
     }
 
-    public void moveRobot(Robot robot1, Pair<Integer, Integer> target) {
+    public boolean moveRobot(Robot robot1, Pair<Integer, Integer> target) {
+        boolean canMove = false;
         Pair<Integer, Integer> currentPosition = robot1.getCurrentPosition();
         Pair<Integer, Integer> movement = new Pair(target.getValue0()-currentPosition.getValue0(),target.getValue1()-currentPosition.getValue1());
         int xMove = movement.getValue0();
         int yMove = movement.getValue1();
-        boolean canMove = false;
+        Robot robot2 = checkForRobot(target);
 
-        ArrayList<Robot> robots = playerList.getAllRobots();
 
-        if(!checkRobotCollision(robot1,target)){
+        if(!checkWallCollision(robot1,target)){
             canMove=true;
-            for (Robot robot2: robots){
-                if(robot2.getCurrentPosition() == target){
-                    canMove=false;
-                    Pair<Integer, Integer> pushedPos = new Pair(robot2.getCurrentPosition().getValue0()+xMove, robot2.getCurrentPosition().getValue1()+yMove);
-                    if(!checkRobotCollision(robot2, pushedPos)) {
-                        moveRobot(robot2, pushedPos);
+            if(robot2!=null){
+                canMove=false;
+                Pair<Integer, Integer> pushedPos = new Pair(robot2.getCurrentPosition().getValue0()+xMove, robot2.getCurrentPosition().getValue1()+yMove);
+                if(!checkWallCollision(robot2, pushedPos)) {
+                    if(moveRobot(robot2, pushedPos));
                         canMove=true;
                     }
                 }
             }
-        }
-        if (canMove){
+
+        if (canMove&&checkFallFromMap(target)){
+            game.reboot(playerList.getPlayerFromList(robot1));
+
+        }else if (canMove){
             robot1.setCurrentPosition(target);
-            System.out.println("okay ich habe den robo von " + currentPosition + " zu " + target + " bewegt");
         }
+
+        return canMove;
     }
 
-    public boolean checkRobotCollision(Robot robot, Pair<Integer,Integer> target){
+    private boolean checkWallCollision(Robot robot, Pair<Integer,Integer> target){
         boolean result = false;
         boolean onWall = false;
         boolean toWall = false;
@@ -56,72 +59,86 @@ public class CollisionCalculator {
         Pair<Integer, Integer> currentPosition = robot.getCurrentPosition();
         ArrayList<Tile> currentTile = board.getTile(currentPosition);
         ArrayList<Tile> targetTile = board.getTile(target);
+        if(targetTile != null) {
 
-        //checks if robot is currently on a tile, if so onWall is true
-        for(int i = 0; i < currentTile.size();i++){
-            if(currentTile.get(i).getType().equals("Wall")){
-                onWall=true;
-                onBlocked = getBlockingDirections(currentTile);
-            }
-        }
-        for(int i=0; i<targetTile.size();i++){
-            if(targetTile.get(i).getType().equals("Wall")){
-                toWall=true;
-                toBlocked = getBlockingDirections(targetTile);
-            }
-        }
-
-        if(targetTile.get(0).getType().equals("Antenna")){
-           result = true;
-        }
-
-//        for (int i = 0; i < currentTile.size(); i++){
-//            if(currentTile.get(i).getType().equals("Wall")){
-//                onWall=true;
-//                blockedDirections= currentTile.get(i).getOrientations();
-//            }
-//        }
-
-        //if onWall true it checks which direction is blocked
-        if(onWall){
-            if(target.getValue0()<currentPosition.getValue0()){
-                if(onBlocked.contains(Direction.WEST)){
-                    result = true;
-                }
-            }else if(target.getValue0()>currentPosition.getValue0()){
-                if(onBlocked.contains(Direction.EAST)){
-                    result = true;
-                }
-            }else if(target.getValue1()<currentPosition.getValue1()){
-                if(onBlocked.contains(Direction.NORTH)){
-                    result = true;
-                }
-            }else if(target.getValue1()>currentPosition.getValue1()){
-                if(onBlocked.contains(Direction.SOUTH)){
-                    result = true;
+            //checks if robot is currently on a tile, if so onWall is true
+            for (int i = 0; i < currentTile.size(); i++) {
+                if (currentTile.get(i).getType().equals("Wall")) {
+                    onWall = true;
+                    onBlocked = getBlockingDirections(currentTile);
                 }
             }
-        }
-        if(toWall){
-            if (target.getValue0()<currentPosition.getValue0()){
-                if(toBlocked.contains(Direction.EAST)){
-                    result = true;
+            for (int i = 0; i < targetTile.size(); i++) {
+                if (targetTile.get(i).getType().equals("Wall")) {
+                    toWall = true;
+                    toBlocked = getBlockingDirections(targetTile);
                 }
-            }else if(target.getValue0()>currentPosition.getValue0()){
-                if(toBlocked.contains(Direction.WEST)){
-                    result = true;
+            }
+
+            if (targetTile.get(0).getType().equals("Antenna")) {
+                result = true;
+            }
+
+            //if onWall true it checks which direction is blocked
+            if (onWall) {
+                if (target.getValue0() < currentPosition.getValue0()) {
+                    if (onBlocked.contains(Direction.WEST)) {
+                        result = true;
+                    }
+                } else if (target.getValue0() > currentPosition.getValue0()) {
+                    if (onBlocked.contains(Direction.EAST)) {
+                        result = true;
+                    }
+                } else if (target.getValue1() < currentPosition.getValue1()) {
+                    if (onBlocked.contains(Direction.NORTH)) {
+                        result = true;
+                    }
+                } else if (target.getValue1() > currentPosition.getValue1()) {
+                    if (onBlocked.contains(Direction.SOUTH)) {
+                        result = true;
+                    }
                 }
-            }else if(target.getValue1()<currentPosition.getValue1()){
-                if(toBlocked.contains(Direction.SOUTH)){
-                    result = true;
-                }
-            }else if(target.getValue1()>currentPosition.getValue1()){
-                if(toBlocked.contains(Direction.NORTH)){
-                    result = true;
+            }
+            if (toWall) {
+                if (target.getValue0() < currentPosition.getValue0()) {
+                    if (toBlocked.contains(Direction.EAST)) {
+                        result = true;
+                    }
+                } else if (target.getValue0() > currentPosition.getValue0()) {
+                    if (toBlocked.contains(Direction.WEST)) {
+                        result = true;
+                    }
+                } else if (target.getValue1() < currentPosition.getValue1()) {
+                    if (toBlocked.contains(Direction.SOUTH)) {
+                        result = true;
+                    }
+                } else if (target.getValue1() > currentPosition.getValue1()) {
+                    if (toBlocked.contains(Direction.NORTH)) {
+                        result = true;
+                    }
                 }
             }
         }
         return result;
+    }
+    private boolean checkFallFromMap(Pair<Integer, Integer> target){
+        boolean result = false;
+        Pair<Integer,Integer> boardSize = board.getDimension();
+        if(target.getValue0()<0 || target.getValue0() > boardSize.getValue0()){
+            result = true;
+        }else if (target.getValue1()<0 || target.getValue1() > boardSize.getValue1()){
+            result = true;
+        }
+        return result;
+    }
+    private Robot checkForRobot(Pair<Integer, Integer> target){
+        ArrayList<Robot> robots = playerList.getAllRobots();
+        for (Robot robot: robots){
+            if(robot.getCurrentPosition().equals(target)){
+                return robot;
+            }
+        }
+        return null;
     }
 
 
