@@ -442,6 +442,15 @@ public class Client {
                             Client.this.setGameLogMessage(message);
 
                         }
+                        if(message.getMessageType().equals(MessageType.RefillShop)){
+                            //TODO: display cards from the message
+                        }
+                        if(message.getMessageBody().equals(MessageType.ExchangeShop)){
+                            //TODO: no idea why there needs to be a distinction between a refill and a complete redraw
+                        }
+                        if(message.getMessageType().equals(MessageType.UpgradeBought)){
+                            //TODO: receive purchase confirmation
+                        }
                     }
                 }
             } catch (IOException e) {
@@ -511,8 +520,10 @@ public class Client {
     public void sendReturnCards(String[] returnCards) {
         //sendMessageToServer(messageCreator.generateReturnCardsMessage(returnCards));
     }
-
-
+    //TODO: Please call this method in the correct place. Player has both variables isBuying (isBuying lol) and card (upgradeToBuy) accessible with setters and getters
+    public void sendBuyUpgrade(Boolean isBuying, String card){
+        sendMessageToServer(messageCreator.generateBuyUpgradeMessage(isBuying, card));
+    }
     public void sendMessageToServer(Message message) {
         try {
             out.writeUTF(JsonSerializer.serializeJson(message));
