@@ -577,8 +577,15 @@ public class Game implements Runnable {
             e.printStackTrace();
         }
         refreshUpgradeShop();
-
-
+        int cardIndex = -1;
+        for(int i= 0; i < upgradeShop.size(); i++){
+            if(activePlayer.getUpgradeToBuy().equals(upgradeShop.get(i).getCard())){
+                cardIndex = i;
+            }
+        }
+        if(activePlayer.isBuying()){
+            activePlayer.purchaseUpgrade(cardIndex);
+        }
 
     }
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {

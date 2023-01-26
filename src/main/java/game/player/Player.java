@@ -7,7 +7,6 @@ import game.card.CardType;
 import game.card.ProgrammingDeck;
 
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -30,6 +29,7 @@ public class Player {
     private boolean isPlaying;
     private boolean isReady;
     private boolean isBuying;
+    private String upgradeToBuy;
     private boolean[][] isUsingUpgrade = {{false, false, false},{false, false, false}};
     private ArrayList<Card> hand;
     private Card[] cardRegister = new Card[5];
@@ -62,7 +62,6 @@ public class Player {
     public void setUsingUpgrade(boolean[][] values) {
         isUsingUpgrade = values;
     }
-
     public String getUsername() {
         return username;
     }
@@ -101,6 +100,8 @@ public class Player {
     }
     public boolean isBuying() {return isBuying;}
     public void setBuying(boolean buying) {isBuying = buying;}
+    public String getUpgradeToBuy() {return upgradeToBuy;}
+    public void setUpgradeToBuy(String upgradeToBuy) {this.upgradeToBuy = upgradeToBuy;}
 
     //TODO: Fix crash if reboot happened
     public Card getCardFromRegister(int index){
