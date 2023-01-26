@@ -64,7 +64,9 @@ public class Client {
     private ObjectProperty<Message> gameLogMessage;
     private ObjectProperty<Message> gameEventMessage;
     private BooleanProperty gameStarted;
+    private StringProperty currentPlayer;
     private BooleanProperty activePlayer;
+    private SimpleStringProperty activePhase;
     private boolean prioPlayer = false;
     private IntegerProperty score;
     private ObservableList<String> myCards;
@@ -88,8 +90,10 @@ public class Client {
         this.maps = FXCollections.observableArrayList();
         this.errorMessage = new SimpleStringProperty();
         this.gameStarted = new SimpleBooleanProperty();
-        this.score = new SimpleIntegerProperty(0);
+        this.activePhase = new SimpleStringProperty();
+        this.activePlayer = new SimpleBooleanProperty();
         this.activePlayer = new SimpleBooleanProperty(false);
+        this.score = new SimpleIntegerProperty(0);
         this.myCards = FXCollections.observableArrayList();
         this.energy = new SimpleIntegerProperty(5);
         this.movement = new SimpleObjectProperty<>();
@@ -180,6 +184,22 @@ public class Client {
 
     public BooleanProperty gameStartedProperty() {
         return gameStarted;
+    }
+
+    public SimpleStringProperty activePhaseProperty() {
+        return activePhase;
+    }
+
+    public void setActivePhase(String activePhase) {
+        this.activePhase.set(activePhase);
+    }
+
+    public StringProperty currentPlayerProperty() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(String currentPlayer) {
+        this.currentPlayer.set(currentPlayer);
     }
 
     public BooleanProperty activePlayerProperty() {
@@ -330,6 +350,16 @@ public class Client {
                         }
                         if (message.getMessageType().equals(MessageType.CurrentPlayer)) {
                             Client.this.activePlayer.set(true);
+                            Client.this.setCurrentPlayer("It's your turn");
+                        }
+                        if (message.getMessageType().equals(MessageType.ActivePhase)) {
+                            int activePhase = message.getMessageBody().getPhase();
+                            switch (activePhase) {
+                                case 0: Client.this.setActivePhase("Construction Phase");
+                                case 1: Client.this.setActivePhase("Upgrade Phase");
+                                case 2: Client.this.setActivePhase("Programming Phase");
+                                case 3: Client.this.setActivePhase("Activation Phase");
+                            }
                         }
                         if (message.getMessageType().equals(MessageType.YourCards)) {
                             String[] cardsInHand = message.getMessageBody().getCardsInHand();
@@ -357,18 +387,7 @@ public class Client {
                             Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.CardSelected)) {
-                            //TODO: Rethinking this implementation
-                            /*
-                            int clientID = message.getMessageBody().getClientID();
-                            int register = message.getMessageBody().getRegister();
-                            boolean filled = message.getMessageBody().isFilled();
-                            for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
-                                if (clientPlayerList.getPlayerList().get(i).getId() == clientID) {
-                                    Client.this.clientPlayerList.getPlayerList().get(i).getRegisterInformations().add(new RegisterInformation(register, filled));
-                                }
-                            }
-                             */
-                            //Client.this.setGameLogMessage(message);
+                            Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.SelectionFinished)) {
                             Client.this.setGameEventMessage(message);
@@ -424,9 +443,6 @@ public class Client {
                         }
                         if (message.getMessageType().equals(MessageType.PickDamage)) {
                             Client.this.setGameEventMessage(message);
-                        }
-                        if (message.getMessageType().equals(MessageType.SelectedDamage)) {
-                            //TODO: Set DamageCards to something
                         }
                         if (message.getMessageType().equals(MessageType.CheckPointReached)) {
                             int clientID = message.getMessageBody().getClientID();

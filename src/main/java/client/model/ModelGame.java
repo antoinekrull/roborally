@@ -40,8 +40,10 @@ public class ModelGame {
     private SimpleIntegerProperty robotProperty;
     private SimpleStringProperty robotAlignment;
     private SimpleIntegerProperty score;
+    private SimpleStringProperty activePhase;
     private SimpleIntegerProperty energy;
     private BooleanProperty readyToPlay;
+    private SimpleStringProperty currentPlayer;
     private BooleanProperty activePlayer;
     private ObservableList<Integer> readyList;
     private LinkedBlockingQueue<Message> PLAYER_MOVEMENTS;
@@ -71,10 +73,14 @@ public class ModelGame {
         score.bind(client.scoreProperty());
         this.energy = new SimpleIntegerProperty();
         energy.bind(client.energyProperty());
+        this.activePhase = new SimpleStringProperty("");
+        activePhase.bind(client.activePhaseProperty());
+        this.currentPlayer = new SimpleStringProperty("");
+        currentPlayer.bind(client.currentPlayerProperty());
         this.activePlayer = new SimpleBooleanProperty(false);
         this.activePlayer.bind(client.activePlayerProperty());
         //this.maps = FXCollections.observableArrayList(client.getMaps());
-        this.errorMessage = new SimpleStringProperty();
+        this.errorMessage = new SimpleStringProperty("");
         errorMessage.bind(client.errorMessageProperty());
         this.myHandCards = FXCollections.observableArrayList();
         myHandCards = client.getMyCards();
@@ -178,6 +184,14 @@ public class ModelGame {
 
     public SimpleIntegerProperty scoreProperty() {
         return score;
+    }
+
+    public SimpleStringProperty activePhaseProperty() {
+        return activePhase;
+    }
+
+    public SimpleStringProperty currentPlayerProperty() {
+        return currentPlayer;
     }
 
     public ObservableList<Integer> getReadyList() {

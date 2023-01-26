@@ -165,11 +165,10 @@ public class ViewModelGameWindow {
             updateWidth(width);
         });
 
-        //TODO: set phase
-        //currentPhaseLabel.textProperty().bind("");
 
-        //TODO: setActivePlayer
-        //currentActivePlayerLabeL.textProperty().bind("");
+        currentPhaseLabel.textProperty().bind(modelGame.activePhaseProperty());
+
+        currentActivePlayerLabeL.textProperty().bind(modelGame.currentPlayerProperty());
 
         scoreLabel.textProperty().bind(modelGame.scoreProperty().asString());
 
@@ -381,6 +380,13 @@ public class ViewModelGameWindow {
             String card = logMessage.getMessageBody().getCard();
 
             logMessageStyling(MessageType.CardPlayed, username, card, null, null, -1);
+        }
+        if (logMessage.getMessageType().equals(MessageType.CardSelected)) {
+            int clientID = logMessage.getMessageBody().getClientID();
+            int register = logMessage.getMessageBody().getRegister();
+            boolean filled = logMessage.getMessageBody().isFilled();
+
+            //TODO: Thinking about implementation
         }
         if (logMessage.getMessageType().equals(MessageType.TimerEnded)) {
             int[] clientIDs = Arrays.copyOf(logMessage.getMessageBody().getClientIDs(),logMessage.getMessageBody().getClientIDs().length);

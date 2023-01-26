@@ -339,7 +339,12 @@
                                     <Label fx:id="timerLabel" text="" />
                                     <Label fx:id="currentActivePlayerLabel" text="" />
                                     <Label fx:id="currentPhaseLabel" text="" />
-                                    <Label fx:id="scoreLabel" />
+                                    <HBox>
+                                       <children>
+                                          <Label text="Your Score: " />
+                                          <Label fx:id="scoreLabel" />
+                                       </children>
+                                    </HBox>
                                  </children>
                                  <HBox.margin>
                                     <Insets right="30.0" />
