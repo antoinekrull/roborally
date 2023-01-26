@@ -15,6 +15,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import server.connection.Server;
 
 import static game.Game.upgradeShop;
 
@@ -39,10 +40,13 @@ public class Player {
     private Robot robot;
     private final Logger logger = LogManager.getLogger(Player.class);
 
+    private Server server;
+
     public Player(int id, String username, Robot robot) {
         this.id = id;
         this.username = username;
         this.robot = robot;
+        robot.setId(id);
         robot.setDirection(Direction.NORTH);
         this.hand = new ArrayList<Card>();
         this.score = 0;
@@ -118,6 +122,10 @@ public class Player {
             status = setAll;
         }
     }
+    public void setServerForPlayerAndRobot(Server server) {
+        this.server = server;
+        robot.setServer(server);
+    }
     public void drawFullHand(){
         int cardsToDraw = 9 - hand.size();
         for(int i = 0; i < cardsToDraw; i++){
@@ -146,6 +154,7 @@ public class Player {
     public void refillDeck(){
         robot.setDeck(personalDiscardPile);
         robot.getDeck().shuffleDeck();
+        server.sendShuffleCoding(this);
     }
     public void addCard(Card drawnCard) {
         hand.add(drawnCard);
@@ -192,6 +201,23 @@ public class Player {
         }
     }
 
+    public void playCard(String cardName, int index) {
+        Card card = null;
+        if(cardNameInHand(cardName)) {
+            card = hand.get(getIndexOfCard(cardName));
+        }
+        if(index == 0 && card instanceof AgainCard) {
+            System.out.println("You cant play this card in the first register, please try again!");
+        } else if(index > 0 || index < cardRegister.length){
+            System.out.println("The register has not been addressed properly, please try again!");
+        } else {
+            cardRegister[index] = card;
+        }
+        if(getEmptyRegisterAmount() == 0) {
+            setReady(true);
+        }
+    }
+
     public boolean allRegistersActivated() {
         boolean result = false;
         int registerCount = 0;
@@ -207,18 +233,22 @@ public class Player {
     }
 
     //if timer runs out all unfilled registers of player get filled with random cards
-    public void fillRegisterWithRandomCards() {
+    public String[] fillRegisterWithRandomCards() {
         Random random = new Random();
+        String[] cardNames = new String[getEmptyRegisterAmount()];
+        int iterator = 0;
         for(int x = 0; x < getEmptyRegisterAmount(); x++) {
             for(int y = 0; y < cardRegister.length; y++) {
                 if(cardRegister[y] == null) {
                     if(hand.size() > 0) {
                         cardRegister[y] = discard(random.nextInt(hand.size()));
+                        cardNames[iterator++] = cardRegister[y].getCardName();
                     }
                     logger.info("Hand too empty to fill all registers");
                 }
             }
         }
+        return cardNames;
     }
 
     public int getEmptyRegisterAmount() {
@@ -266,5 +296,39 @@ public class Player {
                 logger.info(cardRegister[i].getCardName());
             }
         }
+    }
+
+    public boolean cardNameInHand(String cardName) {
+        boolean result = false;
+        for(int i = 0; i < hand.size(); i++) {
+            if(cardName.equals(hand.get(i).getCardName())) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    private int getIndexOfCard(Card card) {
+        int result = -1;
+        Object cardClass = card.getClass();
+        for(int i = 0; i < hand.size(); i++) {
+            if(hand.get(i).getCardName().equals(card.getCardName())) {
+                result = i;
+                break;
+            }
+        }
+        return result;
+    }
+
+    private int getIndexOfCard(String cardName) {
+        int result = -1;
+        Object cardClass = cardName.getClass();
+        for(int i = 0; i < hand.size(); i++) {
+            if(hand.get(i).getCardName().equals(cardName)) {
+                result = i;
+                break;
+            }
+        }
+        return result;
     }
 }

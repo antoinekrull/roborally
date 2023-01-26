@@ -18,12 +18,8 @@ import static java.lang.Integer.parseInt;
 public class Board {
     protected static int columns;
     protected static int rows;
-
     private int checkPointCount;
-
-
     protected static ArrayList<ArrayList<ArrayList<Tile>>> board = new ArrayList<ArrayList<ArrayList<Tile>>>();
-
     //Lists of used tiles on the board, would be iterated on during the activation phase
     public static ArrayList<ConveyorBeltTile> conveyorBelt2List = new ArrayList<>();
     public static ArrayList<ConveyorBeltTile> conveyorBelt1List = new ArrayList<>();
@@ -135,11 +131,11 @@ public class Board {
                                 if(board.get(x).get(y).get(0).getType().equals("Wall")){
                                     ArrayList<Direction> directionsWall = new ArrayList<>();
                                     ArrayList<String> orientations = board.get(x).get(y).get(0).getOrientations();
-                                    for (int t = 0; t < orientations.size(); t++) {
-                                        directionsWall.add(parseDirection(orientations.get(t)));
+                                    for (String orientation : orientations) {
+                                        directionsWall.add(parseDirection(orientation));
                                     }
-                                    for (int s = 0; s < directionsWall.size();s++) {
-                                        if(angelCalculation(directionLaser, directionsWall.get(s)) == 180) {
+                                    for (Direction direction : directionsWall) {
+                                        if (angelCalculation(directionLaser, direction) == 180) {
                                             onWall = true;
                                         }
                                     }
@@ -184,7 +180,7 @@ public class Board {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("An error occurred: " + e);
         }
     }
 

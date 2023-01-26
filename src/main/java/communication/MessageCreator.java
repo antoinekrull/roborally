@@ -1,6 +1,10 @@
 package communication;
 
+import game.card.Card;
+import org.javatuples.Pair;
 import server.connection.PlayerList;
+
+import java.util.ArrayList;
 
 /**
      * This class is used for communication between the server and the client by processing the client's input
@@ -131,15 +135,32 @@ import server.connection.PlayerList;
             messageBody.setClientID(clientID);
             return new Message(MessageType.StartingPointTaken, messageBody);
         }
+        /*
         public Message generateYourCardsMessage(String[] cardsInHand){
             MessageBodyCardsInHandStringArray messageBody = new MessageBodyCardsInHandStringArray();
             messageBody.setCardsInHand(cardsInHand);
             return new Message(MessageType.YourCards, messageBody);
         }
+
+         */
+        /*
         public Message generateNotYourCardsMessage(int clientID, int cardsInHand){
             MessageBodyCardsInHandInteger messageBody = new MessageBodyCardsInHandInteger();
             messageBody.setClientID(clientID);
             messageBody.setCardsInHand(cardsInHand);
+            return new Message(MessageType.NotYourCards, messageBody);
+        }
+
+         */
+        public Message generateYourCardsMessage(String[] cardsInHand){
+            MessageBody messageBody = new MessageBody();
+            messageBody.setCardsInHand(cardsInHand);
+            return new Message(MessageType.YourCards, messageBody);
+        }
+        public Message generateNotYourCardsMessage(int clientID, int cardsAmountInHand){
+            MessageBody messageBody = new MessageBody();
+            messageBody.setClientID(clientID);
+            messageBody.setCardsAmountInHand(cardsAmountInHand);
             return new Message(MessageType.NotYourCards, messageBody);
         }
         public Message generateShuffleCodingMessage(int clientID){
@@ -174,12 +195,19 @@ import server.connection.PlayerList;
             messageBody.setClientIDs(clientIDs);
             return new Message(MessageType.TimerEnded, messageBody);
         }
+        /*
         public Message generateCardsYouGotNowMessage(String[] cards){
             MessageBodyCardsInHandStringArray messageBody = new MessageBodyCardsInHandStringArray();
             messageBody.setCardsInHand(cards);
             return new Message(MessageType.CardsYouGotNow, messageBody);
         }
-        public Message generateCurrentCardsMessage(Object[] activeCards){
+         */
+        public Message generateCardsYouGotNowMessage(String[] cards){
+            MessageBody messageBody = new MessageBody();
+            messageBody.setCardsInHand(cards);
+            return new Message(MessageType.CardsYouGotNow, messageBody);
+        }
+        public Message generateCurrentCardsMessage(ArrayList<Pair<Integer, String>> activeCards){
             MessageBody messageBody = new MessageBody();
             messageBody.setActiveCards(activeCards);
             return new Message(MessageType.CurrentCards, messageBody);

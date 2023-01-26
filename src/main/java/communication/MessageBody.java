@@ -1,6 +1,9 @@
 package communication;
 
+import org.javatuples.Pair;
 import server.connection.PlayerList;
+
+import java.util.ArrayList;
 
 /**
  * @author Antoine, Firas
@@ -31,7 +34,7 @@ public class MessageBody {
     private int register;
     private boolean filled;
     private int[] clientIDs;
-    private Object[] activeCards;
+    private ArrayList<Pair<Integer, String>> activeCards;
     private String newCard;
     private String rotation;
     private String type;
@@ -44,6 +47,8 @@ public class MessageBody {
     private String action;
     private boolean isBuying;
     private int checkpointID;
+    private String[] cardsInHand;
+    private int cardsAmountInHand;
 
     public int getNumber() {
         return number;
@@ -221,11 +226,11 @@ public class MessageBody {
         this.clientIDs = clientIDs;
     }
 
-    public Object[] getActiveCards() {
+    public ArrayList<Pair<Integer, String>> getActiveCards() {
         return activeCards;
     }
 
-    public void setActiveCards(Object[] activeCards) {
+    public void setActiveCards(ArrayList<Pair<Integer, String>> activeCards) {
         this.activeCards = activeCards;
     }
 
@@ -245,9 +250,7 @@ public class MessageBody {
         this.rotation = rotation;
     }
 
-    public String getType() {
-        return type;
-    }
+    public String getType() { return type; }
 
     public void setType(String type) {
         this.type = type;
@@ -315,6 +318,22 @@ public class MessageBody {
 
     public void setCheckpointID(int checkpointID) {
         this.checkpointID = checkpointID;
+    }
+
+    public String[] getCardsInHand() {
+        return cardsInHand;
+    }
+
+    public void setCardsInHand(String[] cardsInHand) {
+        this.cardsInHand = cardsInHand;
+    }
+
+    public int getCardsAmountInHand() {
+        return cardsAmountInHand;
+    }
+
+    public void setCardsAmountInHand(int cardsInHand) {
+        this.cardsAmountInHand = cardsAmountInHand;
     }
 
 

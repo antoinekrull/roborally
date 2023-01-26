@@ -1,6 +1,5 @@
 package game;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.*;
 import game.card.*;
 import game.player.Player;
@@ -9,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
 import server.connection.PlayerList;
+import server.connection.Server;
 
 import java.util.*;
 
@@ -18,7 +18,8 @@ import java.util.TimerTask;
 
 public class Game implements Runnable {
     private GamePhase currentGamePhase;
-    private Timer timer = new Timer();
+    private final Timer timer = new Timer();
+    private String mapName;
     public static PlayerList playerList;
     public Board board = new Board();
     private Player activePlayer;
@@ -29,24 +30,35 @@ public class Game implements Runnable {
     public static UpgradeDeck upgradeDeck = new UpgradeDeck();
     public static ArrayList<Card> upgradeShop = new ArrayList<>();
     public static int currentRegister = 0;
-
-    //TODO: Remove this?
     private LinkedList<Integer> readyList = new LinkedList<>();
-    private String[] maps = {"DizzyHighway"};
-
+    private final String[] maps = {"DizzyHighway", "ExtraCrispy", "DeathTrap", "LostBearings", "Twister"};
     private static Game INSTANCE;
-
     private ArrayList<CheckpointTile> checkpointTileArrayList = null;
     private ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
+    private Server server;
     private final Logger logger = LogManager.getLogger(Game.class);
+    private String jsonMap;
+    private int firstReady;
+    private boolean gameIsRunning = true;
 
-    public Game() {}
+    //TODO: discuss ShuffleCoding functionality
+
+    private Game(){
+        new Thread(this).start();
+    }
 
     public static Game getInstance() {
         if(INSTANCE == null) {
             INSTANCE = new Game();
         }
         return INSTANCE;
+    }
+
+    //TODO: needs to be used somewhere, once all players have been added
+    public void setServerForPlayers() {
+        for(int i = 0; i < playerList.size(); i++) {
+            playerList.get(i).setServerForPlayerAndRobot(server);
+        }
     }
     public Board getBoard() {
         return board;
@@ -56,7 +68,7 @@ public class Game implements Runnable {
         this.board = board;
     }
     public void setPlayerList(PlayerList playerList) {
-        this.playerList = playerList;
+        Game.playerList = playerList;
     }
 
     private void applyAllTileEffects() throws Exception {
@@ -126,19 +138,19 @@ public class Game implements Runnable {
 
     private void applyPushPanelEffects() throws Exception {
         for (int i = 0; i < playerList.size(); i++) {
-            if((pushPanelInTile(board.getTile(playerList.get(i).getRobot().getCurrentPosition())).getValue0())){
-                int index = pushPanelInTile(board.getTile(playerList.get(i).getRobot().getCurrentPosition())).getValue1();
-                if(((PushPanelTile) board.getTile(playerList.get(i).getRobot().getCurrentPosition()).get(index))
+            if((pushPanelInTile(Objects.requireNonNull(Board.getTile(playerList.get(i).getRobot().getCurrentPosition()))).getValue0())){
+                int index = pushPanelInTile(Objects.requireNonNull(Board.getTile(playerList.get(i).getRobot().getCurrentPosition()))).getValue1();
+                if(((PushPanelTile) Board.getTile(playerList.get(i).getRobot().getCurrentPosition()).get(index))
                         .getActiveRegisterList().contains(currentRegister)) {
-                    applyTileEffects(board.getTile(playerList.get(i).getRobot().getCurrentPosition()), playerList.getPlayerFromList(i));
+                    applyTileEffects(Objects.requireNonNull(Board.getTile(playerList.get(i).getRobot().getCurrentPosition())), playerList.getPlayerFromList(i));
                 }
             }
         }
     }
 
     private void applyTileEffects(ArrayList<Tile> tileList, Player player) throws Exception {
-        for (int i = 0; i < tileList.size(); i++) {
-            tileList.get(i).applyEffect(player);
+        for (Tile tile : tileList) {
+            tile.applyEffect(player);
         }
     }
 
@@ -162,19 +174,19 @@ public class Game implements Runnable {
         }
     }
 
-    private ArrayList<Robot> determinePriority() {
+    private ArrayList<Player> determinePriority() {
         Pair<Integer, Integer> antennaPosition = Board.antenna.getPosition();
-        ArrayList<Robot> roboList = new ArrayList<>();
+        ArrayList<Player> priorityList = new ArrayList<>();
         for (PlayerList it = playerList; it.hasNext(); ) {
             Player player = it.next();
-            roboList.add(player.getRobot());
+            priorityList.add(player);
         }
-        roboList.sort((r1, r2) -> {
-            double dist1 = Math.sqrt(Math.pow(r1.getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(r1.getCurrentPosition().getValue1() - antennaPosition.getValue1(), 2));
-            double dist2 = Math.sqrt(Math.pow(r2.getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(r2.getCurrentPosition().getValue1(), 2));
+        priorityList.sort((p1, p2) -> {
+            double dist1 = Math.sqrt(Math.pow(p1.getRobot().getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(p1.getRobot().getCurrentPosition().getValue1() - antennaPosition.getValue1(), 2));
+            double dist2 = Math.sqrt(Math.pow(p2.getRobot().getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(p2.getRobot().getCurrentPosition().getValue1(), 2));
             return Double.compare(dist1, dist2);
         });
-        return roboList;
+        return priorityList;
     }
 
     private void computeRobotLaserPositions(){
@@ -256,13 +268,15 @@ public class Game implements Runnable {
         return result;
     }
 
-    //TODO: Implement this
     public void runTimer() {
+        server.sendTimerStarted();
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
                 PlayerList unreadyPlayers = playerList.getUnreadyPlayers();
                 for (int i = 0; i < unreadyPlayers.size(); i++) {
+                    String[] placedCards = unreadyPlayers.get(i).fillRegisterWithRandomCards();
+                    server.sendCardsYouGotNow(unreadyPlayers.get(i), placedCards);
                     unreadyPlayers.get(i).fillRegisterWithRandomCards();
 
                     // for testing purposes
@@ -272,6 +286,7 @@ public class Game implements Runnable {
             }
         };
         timer.schedule(timerTask, 30000);
+        server.sendTimerEnded(playerList.getUnreadyPlayers());
     }
 
     public GamePhase getCurrentGamePhase() {
@@ -296,7 +311,7 @@ public class Game implements Runnable {
                     playerList.get(i).getRobot().setDirection(Direction.WEST);
                 }
             }
-            case "DizzyHighway", "ExtraCrispy", "LostBearings" -> {
+            case "DizzyHighway", "ExtraCrispy", "LostBearings", "Twister" -> {
                 for(int i = 0; i < playerList.size(); i++) {
                     playerList.get(i).getRobot().setDirection(Direction.EAST);
                 }
@@ -304,11 +319,15 @@ public class Game implements Runnable {
         }
     }
 
-    public void runSetupPhase() {
+    private void runSetupPhase() {
+        server.sendActivePhase(0);
+        logger.debug("Running Setup Phase now");
         logger.debug(maps[0]);
         playerList.setPlayerReadiness(false);
         while(!playerList.playersAreReady()) {
+            //TODO: implement this properly
             //pickStartLocationForRobot();
+
         }
         //map name logic
         setStartDirectionForRobot(maps[0]);
@@ -316,28 +335,42 @@ public class Game implements Runnable {
     }
 
     private void runUpgradePhase(){
+        server.sendActivePhase(1);
         refreshUpgradeShop();
 
 
     }
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
+        server.sendActivePhase(2);
+        for(int i = 0; i < playerList.size(); i++) {
+            server.sendYourCards(playerList.get(i));
+        }
         playerList.setPlayersPlaying(true);
         while(!playerList.playersAreReady()) {
             logger.info("Waiting for players to be ready");
-            Thread.sleep(10000);
+            Thread.sleep(5000);
+            if(playerList.getAmountOfReadyPlayers() <= 1) {
+                runTimer();
+            }
         }
     }
-
-    //TODO: Make this private once testing in console is done
-    public void runActivationPhase() throws Exception {
+    private void runActivationPhase() throws Exception {
+        server.sendActivePhase(3);
         int playerRegisterLength = 5;
+        ArrayList<Pair<Integer, String>> dataList = new ArrayList<>();
+        Pair<Integer, String> dataPoint;
         while(!playerList.allPlayerRegistersActivated()) {
             for(int i = 0; i < playerList.size(); i++) {
                 logger.debug("Activating registers");
+                dataPoint = new Pair<>(playerList.get(i).getId(), playerList.get(i).getCardFromRegister(currentRegister).getCardName());
+                dataList.add(dataPoint);
                 activateRegister(playerList.get(i));
                 playerList.get(i).setStatusRegister(true, currentRegister);
             }
+            server.sendCurrentCards(dataList);
+            dataList.clear();
             currentRegister++;
+            determinePriority();
             //checks if all registers have been activated
             if(currentRegister == playerRegisterLength) {
                 for(int i = 0; i < playerList.size(); i++) {
@@ -347,7 +380,18 @@ public class Game implements Runnable {
             }
             logger.debug("Applying tile effects");
             applyAllTileEffects();
+            if(checkIfPlayerWon(playerList)){
+                Player winner = determineWichPlayerWon(playerList);
+                logger.debug("The winning player is: " + winner);
+                //sends a message to all clients
+                server.sendGameFinished(winner);
+                //stops the game thread
+                gameIsRunning = false;
+            }
         }
+    }
+    public void setServer(Server server) {
+        this.server = server;
     }
 
     private void activateRegister(Player player) throws Exception {
@@ -358,12 +402,23 @@ public class Game implements Runnable {
         }
     }
     public String[] getMaps(){return this.maps;}
-    public void addReady(int clientID) {readyList.add(clientID);}
+    public void addReady(int clientID) {
+        readyList.add(clientID);
+        logger.debug(readyList.size());
+        if(clientID == getFirstReadyID()){
+            server.sendSelectMap(maps);
+        }
+    }
 
     public void removeReady(int clientID) {
         for (int i = 0; i < readyList.size(); i++) {
             if (readyList.get(i).equals(clientID)) {
+                int temp = readyList.get(i);
+                int first = getFirstReadyID();
                 readyList.remove(i);
+                if(temp==first){
+                    server.sendSelectMap(maps);
+                }
             }
         }
     }
@@ -375,18 +430,85 @@ public class Game implements Runnable {
             return -1;
         }
     }
+    public LinkedList<Integer> getReadyList() {
+        return readyList;
+    }
 
-    //TEST!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    public void createBoard(String map) throws JsonProcessingException {
-        //board.createBoard(map);
-        //board.testBoard();
+    /**
+     * Checks every game round if a player has won the game.
+     *
+     * @param playerList The list of players who are playing the game at the moment
+     * @return returns if a Player has won the game
+     */
+    public boolean checkIfPlayerWon(PlayerList playerList){
+        int checkpointsInGame = board.getCheckPointCount();
+        for(int i = 0; i < playerList.size(); i++){
+            //checks if the current Obj. of the robot is higher than the checkpoints in game. This should happen
+            //when the robot gets to the last checkpoint
+            if(playerList.get(i).getRobot().getCurrentObjective() == checkpointsInGame){
+                return true;
+            }
+        }
+        return false;
+    }
+    /**
+     * Determines which player won the game.
+     *
+     * @param playerList The list of players who are playing the game at the moment
+     * @return returns the Player that has won the game
+     */
+    public Player determineWichPlayerWon(PlayerList playerList){
+        int checkpointsInGame = board.getCheckPointCount();
+        for(int i = 0; i < playerList.size(); i++){
+            if(playerList.get(i).getRobot().getCurrentObjective() == checkpointsInGame){
+                return playerList.get(i);
+            }
+        }
+        return null;
+    }
+
+    public String getJsonMap() {
+        return jsonMap;
+    }
+
+    public void setJsonMap(String jsonMap) {
+        this.jsonMap = jsonMap;
+    }
+
+    public boolean checkIfStartTileIsTaken(int x, int y) {
+        boolean result = false;
+        for(StartTile startTile: Board.startTileList) {
+            if(startTile.getXCoordinate() == x && startTile.getYCoordinate() == y) {
+                if(startTile.isTaken()) {
+                    result = true;
+                    //Board.startTileList.remove(startTile);
+                }
+            }
+        }
+        return result;
     }
 
     @Override
     public void run() {
         logger.debug("This game is running");
-        playerList.setPlayerReadiness(false);
-        while(true) {
+        boolean readyToStart = false;
+        while(gameIsRunning) {
+            //this while block checks when the game starts
+            while (!readyToStart) {
+                try {
+                    //thread needs to sleep to check the if statement probably
+                    Thread.sleep(100);
+                    if (readyList.size() >= 2 && this.jsonMap != null) {
+                        server.sendGameStarted(jsonMap);
+                        Thread.sleep(100);
+                        readyToStart = true;
+
+                    }
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            //runSetupPhase();
             logger.debug("This game is running the Upgrade Phase now");
             runUpgradePhase();
             try {
@@ -395,8 +517,10 @@ public class Game implements Runnable {
                 logger.debug("This game is running the Activation Phase now");
                 runActivationPhase();
             } catch (Exception e) {
+                logger.warn("An error occurred :" + e);
                 throw new RuntimeException(e);
             }
         }
     }
+
 }

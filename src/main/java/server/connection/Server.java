@@ -5,14 +5,17 @@ import communication.MessageCreator;
 import communication.MessageType;
 import game.Game;
 import game.player.Player;
+import game.player.Robot;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.javatuples.Pair;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -27,12 +30,12 @@ public class Server {
 
     protected Socket socket;
     protected ServerSocket serverSocket;
-    private static Game game;
+    private Game game;
     public PlayerList players;
     public HashMap<Integer, HandleClient> CLIENTS = new HashMap<>();
     //Message type instead of Strings
     public LinkedBlockingQueue<Message> messages;
-    public int uniqueID = 0;
+    public int uniqueID = 1;
     public Boolean alive;
     public BooleanProperty online;
     MessageCreator messageCreator;
@@ -66,6 +69,7 @@ public class Server {
     }
 
     public void startServer(int port) {
+        this.game = Game.getInstance();
         this.alive = true;
         server.setOnline(true);
         Thread acceptClients = new Thread() {
@@ -109,22 +113,32 @@ public class Server {
                                     client.getValue().write(message);
                                 }
                             }
+                        } else if(message.getMessageType() == MessageType.SelectMap){
+                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                                if (client.getKey() == game.getFirstReadyID()) {
+                                    client.getValue().write(message);
+                                }
+                            }
+                        } else if(message.getMessageType() == MessageType.GameStarted){
+                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                                    client.getValue().write(message);
+                            }
                         }
                         //Changed group messages: will only be displayed to other clients, not to yourself
-                        if (!isPrivate) {
-                            int id = message.getMessageBody().getFrom();
+                        //added private message to work in chat
+                        //still need other players clientID to send message
+                        else if (isPrivate) {
+                            int toUser = message.getMessageBody().getFrom();
                             for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
-                                if (client.getKey() != id) {
+                                if (client.getKey() == toUser) {
                                     client.getValue().write(message);
                                 }
                             }
                         }
-                        //added private message to work in chat
-                        //still need other players clientID to send message
-                        if (isPrivate) {
-                            int toUser = message.getMessageBody().getFrom();
+                        else {
+                            int id = message.getMessageBody().getFrom();
                             for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
-                                if (client.getKey() == toUser) {
+                                if (client.getKey() != id) {
                                     client.getValue().write(message);
                                 }
                             }
@@ -154,12 +168,112 @@ public class Server {
         }
     }
 
-    public static Game getGameInstance(){
-        if (game == null) {
-            game = new Game();
+    public void sendGameFinished(Player player) {
+        try{
+            messages.put(messageCreator.generateGameFinishedMessage(player.getId()));
+        } catch (InterruptedException e) {
+            logger.warn("An error occurred: " + e);
         }
-        return game;
     }
+    public void sendGameStarted(String jsonMap) {
+
+        try {
+            messages.put(messageCreator.generateGameStartedMessage(jsonMap));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public void sendSelectMap(String[] maps){
+        try {
+            messages.put(messageCreator.generateSelectMapMessage(maps));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+    public void sendActivePhase(int phase) {
+        try {
+            messages.put(messageCreator.generateActivePhaseMessage(phase));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void sendYourCards(Player player) {
+        String[] cardsInHand = new String[player.getHand().size()];
+        for(int i = 0; i < player.getHand().size(); i++) {
+            cardsInHand[i] = player.getHand().get(i).getCardName();
+        }
+        try {
+            CLIENTS.get(player.getId()).write(messageCreator.generateYourCardsMessage(cardsInHand));
+            //TODO: Client side has to ignore this message if his id is identical to the one in the messageBody
+            messages.put(messageCreator.generateNotYourCardsMessage(player.getId(), player.getHand().size()));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void sendShuffleCoding(Player player) {
+        try {
+            CLIENTS.get(player.getId()).write(messageCreator.generateShuffleCodingMessage(player.getId()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendTimerStarted() {
+        try {
+            messages.put(messageCreator.generateTimerStartedMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendTimerEnded(PlayerList latePlayers) {
+        int[] latePlayerIds = new int[latePlayers.size()];
+        for(int i = 0; i < latePlayers.size(); i++) {
+            latePlayerIds[i] = latePlayers.get(i).getId();
+        }
+        try {
+            messages.put(messageCreator.generateTimerEndedMessage(latePlayerIds));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendCardsYouGotNow(Player player, String[] cardNames) {
+        try {
+            CLIENTS.get(player.getId()).write(messageCreator.generateCardsYouGotNowMessage(cardNames));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendCurrentCards(ArrayList<Pair<Integer, String>> input) {
+        try {
+            messages.put(messageCreator.generateCurrentCardsMessage(input));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendMovement(Robot robot) {
+        try {
+            messages.put(messageCreator.generateMovementMessage(robot.getId(), robot.getCurrentPosition().getValue0(),
+                    robot.getCurrentPosition().getValue1()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendPlayerTurning(Robot robot) {
+        try {
+            messages.put(messageCreator.generatePlayerTurningMessage(robot.getId(), robot.getDirection().toString()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public synchronized int getUniqueID() {
         return uniqueID++;

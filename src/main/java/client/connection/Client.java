@@ -44,13 +44,17 @@ public class Client {
     private BooleanProperty connected;
     private BooleanProperty accepted;
     private BooleanProperty isAI;
+
+
+
+    private BooleanProperty gameStarted;
     private ObjectProperty<Message> message;
     private IntegerProperty userID;
     private StringProperty errorMessage;
     private Boolean prioPlayer = false;
 
     public static ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
-
+    public ObservableList<String> myCards;
     MessageCreator messageCreator;
     String address = "localhost";
     int port = 3000;
@@ -62,15 +66,18 @@ public class Client {
 
 
     private Client() {
+
         this.messageCreator = new MessageCreator();
         this.message = new SimpleObjectProperty<>();
         this.userID = new SimpleIntegerProperty();
+        this.gameStarted = new SimpleBooleanProperty();
         this.isAI = new SimpleBooleanProperty();
         this.maps = FXCollections.observableArrayList();
         this.connected = new SimpleBooleanProperty();
         this.accepted = new SimpleBooleanProperty(false);
         this.clientPlayerList = new ClientPlayerList();
         this.errorMessage = new SimpleStringProperty();
+        this.myCards = FXCollections.observableArrayList();
     }
 
     public static Client getInstance() {
@@ -129,6 +136,21 @@ public class Client {
 
     public void setErrorMessage(String errorMessage) {
         this.errorMessage.set(errorMessage);
+    }
+    public boolean isGameStarted() {
+        return gameStarted.get();
+    }
+
+    public BooleanProperty gameStartedProperty() {
+        return gameStarted;
+    }
+
+    public ObservableList<String> getMyCards() {
+        return myCards;
+    }
+
+    public void setMyCards(ObservableList<String> myCards) {
+        this.myCards = myCards;
     }
 
     private class ReadMessagesFromServer implements Runnable {
@@ -211,9 +233,13 @@ public class Client {
                         if (message.getMessageType().equals(MessageType.GameStarted)) {
                             Board board = new Board();
                             board.createBoard(message.getMessageBody().getGameMap());
+                            //TODO: connect to Model/ViewModel to switch scenes
+                            System.out.println("game started");
+                            gameStarted.set(true);
+
                         }
                         if (message.getMessageType().equals(MessageType.YourCards)) {
-
+                            Client.this.myCards.setAll(message.getMessageBody().getCardsInHand());
                         }
                         if (message.getMessageType().equals(MessageType.NotYourCards)) {
 
@@ -226,6 +252,7 @@ public class Client {
                             }
                         }
                         if (message.getMessageType().equals(MessageType.Movement)) {
+
 
                         }
                         if (message.getMessageType().equals(MessageType.ConnectionUpdate)) {
@@ -271,9 +298,8 @@ public class Client {
         sendMessageToServer(messageCreator.generatePlayerValuesMessage(name, figure));
     }
     public void sendSetStatusMessage(boolean ready){
-        if (!ready) {
-            prioPlayer = false;
-        }
+        prioPlayer = false;
+        this.maps.clear();
         sendMessageToServer(messageCreator.generateSetStatusMessage(ready));
     }
     public void sendPrivateMessage(String message, int to){
