@@ -1,16 +1,19 @@
-package client.connection;
+package client.changesupport;
 
 import client.viewmodel.ViewModelGameWindow;
 import client.viewmodel.ViewModelLobby;
 import client.viewmodel.ViewModelRobotSelection;
 
 import java.io.IOException;
+import javafx.application.Platform;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Notifier class. Actively notifies specific instances for changes.
  *
  * @author Tobias
- * @version 0.1
+ * @version 2.0
  */
 public class NotifyChangeSupport {
 
@@ -22,6 +25,7 @@ public class NotifyChangeSupport {
     private boolean lobby;
     private boolean gamewindow;
     private boolean robotselection;
+    private final Logger logger = LogManager.getLogger(ViewModelGameWindow.class);
 
     private NotifyChangeSupport() {
 
@@ -54,14 +58,13 @@ public class NotifyChangeSupport {
         this.robotselection = true;
     }
 
-    public void messageArrived() {
+    public void chatMessageArrived() {
         if (lobby) {
             viewModelLobby.receivedMessage();
         }
         if (gamewindow) {
-            viewModelGameWindow.receivedMessage();
+            viewModelGameWindow.receivedChatMessage();
         }
-
     }
 
     public void robotAccepted() {
@@ -77,7 +80,42 @@ public class NotifyChangeSupport {
 
     public void updateProgrammingHandCards() {
         if (gamewindow) {
+            logger.debug("programmingHandCards");
             viewModelGameWindow.fillHandCards();
+        }
+    }
+
+    public void robotSetPosition() {
+        Platform.runLater(() -> {
+            if (gamewindow) {
+                viewModelGameWindow.robotSetPosition();
+                logger.debug("RobotID in robotSetPosition: ");
+            }
+        });
+    }
+
+    public void logMessageArrived() {
+        if (gamewindow) {
+            viewModelGameWindow.receivedGameLogMessage();
+        }
+    }
+
+    public void gameEventMessageArrived() {
+        if (gamewindow) {
+            viewModelGameWindow.reveivedGameEventMessage();
+        }
+    }
+
+    public void startTimer() {
+        if(gamewindow) {
+            viewModelGameWindow.startTimer();
+        }
+    }
+
+
+    public void setRobotAlignment() {
+        if (gamewindow) {
+            viewModelGameWindow.setRobotAlignment();
         }
     }
 }

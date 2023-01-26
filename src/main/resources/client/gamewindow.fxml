@@ -6,6 +6,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -48,31 +49,31 @@
                            <children>
                       <GridPane fx:id="gameboard" alignment="CENTER" gridLinesVisible="true" StackPane.alignment="CENTER_LEFT">
                         <columnConstraints>
-                          <ColumnConstraints fx:id="gameboardColumn" halignment="CENTER" hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
-                          <ColumnConstraints hgrow="ALWAYS" />
+                          <ColumnConstraints fx:id="gameboardColumn" fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
+                          <ColumnConstraints fillWidth="false" hgrow="NEVER" />
                         </columnConstraints>
                         <rowConstraints>
-                          <RowConstraints vgrow="ALWAYS" />
-                          <RowConstraints vgrow="ALWAYS" />
-                          <RowConstraints vgrow="ALWAYS" />
-                          <RowConstraints vgrow="ALWAYS" />
-                          <RowConstraints vgrow="ALWAYS" />
-                          <RowConstraints vgrow="ALWAYS" />
-                          <RowConstraints vgrow="ALWAYS" />
-                          <RowConstraints vgrow="ALWAYS" />
-                          <RowConstraints vgrow="ALWAYS" />
-                          <RowConstraints vgrow="ALWAYS" />
+                          <RowConstraints fillHeight="false" vgrow="NEVER" />
+                          <RowConstraints fillHeight="false" vgrow="NEVER" />
+                          <RowConstraints fillHeight="false" vgrow="NEVER" />
+                          <RowConstraints fillHeight="false" vgrow="NEVER" />
+                          <RowConstraints fillHeight="false" vgrow="NEVER" />
+                          <RowConstraints fillHeight="false" vgrow="NEVER" />
+                          <RowConstraints fillHeight="false" vgrow="NEVER" />
+                          <RowConstraints fillHeight="false" vgrow="NEVER" />
+                          <RowConstraints fillHeight="false" vgrow="NEVER" />
+                          <RowConstraints fillHeight="false" vgrow="NEVER" />
                         </rowConstraints>
                         <children>
                           <Region GridPane.columnIndex="0" GridPane.rowIndex="0" />
@@ -225,7 +226,7 @@
                         <children>
                           <Pane fx:id="programspacePane" prefHeight="200.0" prefWidth="200.0" styleClass="programmierflaeche">
                             <children>
-                              <ImageView fitWidth="${programmingGrid.width}" preserveRatio="true">
+                              <ImageView fitHeight="${programmingGrid.height}" fitWidth="${programmingGrid.width}" preserveRatio="true">
                                 <image>
                                   <Image url="@../textures/designelements/programmingFields.png" />
                                 </image>
@@ -249,7 +250,7 @@
                               <Insets />
                             </StackPane.margin>
                                        <children>
-                                          <Pane fx:id="programmingPane1" prefHeight="500.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                                          <Pane fx:id="programmingPane1" prefHeight="500.0" prefWidth="200.0" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                                           <Pane fx:id="programmingPane2" prefHeight="500.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                                           <Pane fx:id="programmingPane3" prefHeight="500.0" prefWidth="500.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                                           <Pane fx:id="programmingPane4" prefHeight="500.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
@@ -258,70 +259,53 @@
                           </GridPane>
                         </children>
                       </StackPane>
-                              <GridPane GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+                              <GridPane fx:id="deckGrid" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                                  <columnConstraints>
                                     <ColumnConstraints hgrow="ALWAYS" percentWidth="33.0" />
                                     <ColumnConstraints hgrow="ALWAYS" percentWidth="33.0" />
-                                    <ColumnConstraints hgrow="ALWAYS" percentWidth="33.0" />
+                                    <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" percentWidth="33.0" prefWidth="100.0" />
                                  </columnConstraints>
                                  <rowConstraints>
                                     <RowConstraints fx:id="deckRow" minHeight="10.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Pane fx:id="cardDeck">
-                                       <children>
-                                          <ImageView fitHeight="${cardDeck.height}" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../textures/cards/kartendeckStapel.png" />
-                                             </image>
-                                          </ImageView>
-                                       </children>
-                                    </Pane>
-                                    <Pane GridPane.columnIndex="1">
-                                       <children>
-                                <ImageView fitHeight="${cardDeck.height}" pickOnBounds="true" preserveRatio="true">
-                                  <image>
-                                    <Image url="@../textures/cards/roborally_upgrade.jpg" />
-                                  </image>
-                                </ImageView>
-                                       </children>
-                                    </Pane>
-                                    <Pane GridPane.columnIndex="2">
-                                       <children>
-                                <ImageView fitHeight="${cardDeck.height}" pickOnBounds="true" preserveRatio="true">
-                                  <image>
-                                    <Image url="@../textures/cards/SPAM.png" />
-                                  </image>
-                                </ImageView>
-                                       </children>
-                                    </Pane>
+                                    <Pane fx:id="upgradeDeck" GridPane.columnIndex="0" />
+                                    <Pane fx:id="damageDeck" GridPane.columnIndex="1" />
                                  </children>
                               </GridPane>
                            </children>
                         </GridPane>
               </children>
             </GridPane>
-            <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
+                  <GridPane GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+              <StackPane fx:id="handStackPane" GridPane.columnIndex="1">
               <children>
-              <StackPane fx:id="handStackPane" HBox.hgrow="ALWAYS">
-              <children>
-                <GridPane fx:id="handGrid" alignment="CENTER" gridLinesVisible="true" maxHeight="130.0" maxWidth="700.0" nodeOrientation="RIGHT_TO_LEFT" prefWidth="700.0" HBox.hgrow="ALWAYS">
+                <GridPane fx:id="handGrid" alignment="CENTER" gridLinesVisible="true" maxHeight="140.0" maxWidth="800.0" nodeOrientation="RIGHT_TO_LEFT" prefWidth="700.0" HBox.hgrow="ALWAYS">
                   <columnConstraints>
                     <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
                     <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
                     <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
                   </columnConstraints>
                   <rowConstraints>
                     <RowConstraints minHeight="10.0" valignment="BOTTOM" vgrow="SOMETIMES" />
                   </rowConstraints>
                   <children>
-                              <Pane fx:id="programCard1" />
+                              <Pane fx:id="programCard1" GridPane.columnIndex="0" />
                               <Pane fx:id="programCard2" GridPane.columnIndex="1" />
                               <Pane fx:id="programCard3" GridPane.columnIndex="2" />
                               <Pane fx:id="programCard4" GridPane.columnIndex="3" />
@@ -334,8 +318,51 @@
                 </GridPane>
               </children>
               </StackPane>
-              </children>
-            </HBox>
+                        <GridPane>
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                        </GridPane>
+                        <HBox fx:id="myPlayerInfoHBox" alignment="CENTER" GridPane.columnIndex="2" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER">
+                           <children>
+                              <VBox fx:id="myPlayerInfoVBox" alignment="CENTER_LEFT" fillWidth="false" spacing="12.0">
+                                 <children>
+                                    <Label fx:id="timerLabel" text="" />
+                                    <Label fx:id="currentActivePlayerLabel" text="" />
+                                    <Label fx:id="currentPhaseLabel" text="" />
+                                 </children>
+                                 <HBox.margin>
+                                    <Insets right="30.0" />
+                                 </HBox.margin>
+                              </VBox>
+                              <StackPane fx:id="myEnergyStackPane" HBox.hgrow="NEVER">
+                                 <HBox.margin>
+                                    <Insets left="20.0" />
+                                 </HBox.margin>
+                                 <children>
+                                    <Label fx:id="myEnergyLabel" />
+                                    <ProgressBar fx:id="myEnergyBar" prefWidth="100.0" progress="0.0" />
+                                 </children>
+                              </StackPane>
+                           </children>
+                        </HBox>
+                        <Pane>
+                           <children>
+                              <ScrollPane fx:id="logScrollPane" fitToHeight="true" fitToWidth="true" minHeight="80.0" minWidth="400.0">
+                                 <content>
+                                    <VBox fx:id="logVBox" />
+                                 </content>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </ScrollPane>
+                           </children>
+                        </Pane>
+                     </children>
+                  </GridPane>
           </children>
           <BorderPane.margin>
             <Insets top="20.0" />
@@ -357,7 +384,7 @@
                       </Menu>
                     </menus>
                   </MenuBar>
-                        <Label text="??? Turn - 00:00 left" />
+                        <Label text="00:00 left" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="5.0" />
@@ -375,66 +402,61 @@
               <children>
                 <HBox spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                   <children>
-                              <StackPane fx:id="chatStackPane" HBox.hgrow="ALWAYS">
-                                 <HBox.margin>
-                                    <Insets bottom="30.0" />
-                                 </HBox.margin>
-                                 <children>
-                          <Pane fx:id="toprightRow">
-                            <children>
-                              <ScrollPane fx:id="chatScrollPane" fitToHeight="true" fitToWidth="true" minHeight="80.0" minWidth="400.0">
-                                <content>
-                                  <VBox fx:id="chatVBox" />
-                                </content>
-                                <padding>
-                                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                </padding>
-                              </ScrollPane>
-                              <HBox layoutY="80.0">
-                                <children>
-                                  <TextField fx:id="chatTextfield" focusTraversable="false" prefHeight="30.0" prefWidth="388.0" promptText="Type here...">
-                                    <font>
-                                      <Font name="Hiragino Sans W2" size="13.0" />
-                                    </font>
-                                  </TextField>
-                                  <Button fx:id="chatButton" mnemonicParsing="false" onAction="#chatButtonOnAction" prefHeight="26.0" prefWidth="55.0">
-                                    <opaqueInsets>
-                                      <Insets />
-                                    </opaqueInsets>
-                                    <graphic>
-                                      <Label fx:id="sendLabel">
-                                        <font>
-                                          <Font name="Hiragino Sans W2" size="11.0" />
-                                        </font>
-                                        <graphic>
-                                          <ImageView fitHeight="18.0" fitWidth="24.0">
-                                            <image>
-                                              <Image url="@Send_Image.png" />
-                                            </image>
-                                          </ImageView>
-                                        </graphic>
-                                      </Label>
-                                    </graphic>
-                                  </Button>
-                                </children>
-                              </HBox>
-                            </children>
-                          </Pane>
-                                 </children>
-                              </StackPane>
+                    <Pane fx:id="toprightRow">
+                      <children>
+                        <ScrollPane fx:id="chatScrollPane" fitToHeight="true" fitToWidth="true" minHeight="80.0" minWidth="400.0">
+                          <content>
+                            <VBox fx:id="chatVBox" />
+                          </content>
+                          <padding>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                          </padding>
+                        </ScrollPane>
+                        <HBox layoutY="80.0">
+                          <children>
+                            <TextField fx:id="chatTextfield" focusTraversable="false" prefHeight="30.0" prefWidth="388.0" promptText="Type here...">
+                              <font>
+                                <Font name="Hiragino Sans W2" size="13.0" />
+                              </font>
+                            </TextField>
+                            <Button fx:id="chatButton" mnemonicParsing="false" onAction="#chatButtonOnAction" prefHeight="26.0" prefWidth="55.0">
+                              <opaqueInsets>
+                                <Insets />
+                              </opaqueInsets>
+                              <graphic>
+                                <Label fx:id="sendLabel">
+                                  <font>
+                                    <Font name="Hiragino Sans W2" size="11.0" />
+                                  </font>
+                                  <graphic>
+                                    <ImageView fitHeight="18.0" fitWidth="24.0">
+                                      <image>
+                                        <Image url="@Send_Image.png" />
+                                      </image>
+                                    </ImageView>
+                                  </graphic>
+                                </Label>
+                              </graphic>
+                            </Button>
+                          </children>
+                        </HBox>
+                      </children>
+                    </Pane>
                   </children>
                 </HBox>
                 <GridPane fx:id="playerInfoGrid" GridPane.rowIndex="1">
                   <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" />
+                    <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" />
+                              <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   </columnConstraints>
                   <rowConstraints>
                     <RowConstraints minHeight="10.0" valignment="BOTTOM" vgrow="SOMETIMES" />
                   </rowConstraints>
                   <children>
-                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                    <ImageView fx:id="enemyCards" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                       <image>
                         <Image url="@../textures/cards/kartendeckGegner.png" />
                       </image>

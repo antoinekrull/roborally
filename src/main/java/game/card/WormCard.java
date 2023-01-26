@@ -6,10 +6,10 @@ public class WormCard extends Card {
     //immediately reboot your robot
     public WormCard() {
         cardType = CardType.DAMAGE_CARD;
-        setCardName("Worm");
+        setCard("Worm");
     }
     @Override
     public void applyEffect(Player player) throws Exception {
-        player.getRobot().reboot(0);
+        //player.getRobot().reboot(0);
     }
 }

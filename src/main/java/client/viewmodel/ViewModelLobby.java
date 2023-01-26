@@ -1,7 +1,7 @@
 package client.viewmodel;
 
 import client.RoboRallyStart;
-import client.connection.NotifyChangeSupport;
+import client.changesupport.NotifyChangeSupport;
 import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
@@ -11,8 +11,6 @@ import client.ui.PlayerListCell;
 import communication.Message;
 import client.player.ClientPlayer;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
@@ -46,11 +44,7 @@ public class ViewModelLobby {
     @FXML
     private TextField chatTextfield;
     @FXML
-    private Button chatButton;
-    @FXML
-    private MenuItem exitMenuItem;
-    @FXML
-    private MenuItem helpMenuItem;
+    private Button chatButton, readyButton, mapButton;
     @FXML
     private ListView<ClientPlayer> userList;
     @FXML
@@ -58,19 +52,18 @@ public class ViewModelLobby {
     @FXML
     private ChoiceBox<ClientPlayer> usersChoiceBox;
     @FXML
-    private Button readyButton;
+    private Label timerLabel;
     @FXML
-    private Label timeLabel;
-    @FXML
-    private Button mapButton;
+    private MenuItem exitMenuItem, helpMenuItem;
 
-    private Boolean ready = false;
     private ModelChat modelChat;
     private ModelUser modelUser;
     private ModelGame modelGame;
-
     private NotifyChangeSupport notifyChangeSupport;
     private final Logger logger = LogManager.getLogger(ViewModelLobby.class);
+
+    private Boolean ready = false;
+
 
     public ViewModelLobby() {
         modelChat = ModelChat.getInstance();
@@ -151,7 +144,7 @@ public class ViewModelLobby {
     public void receivedMessage() {
         Message message = null;
         try {
-            message = modelChat.getMESSSAGES().take();
+            message = modelChat.getCHAT_MESSSAGES().take();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

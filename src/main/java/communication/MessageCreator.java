@@ -207,9 +207,10 @@ import java.util.ArrayList;
             messageBody.setCardsInHand(cards);
             return new Message(MessageType.CardsYouGotNow, messageBody);
         }
-        public Message generateCurrentCardsMessage(ArrayList<Pair<Integer, String>> activeCards){
+        public Message generateCurrentCardsMessage(ArrayList<Card> cardArrayList){
+            String jsonString = cardArrayList.toString();
             MessageBody messageBody = new MessageBody();
-            messageBody.setActiveCards(activeCards);
+            messageBody.setActiveCards(jsonString);
             return new Message(MessageType.CurrentCards, messageBody);
         }
         public Message generateReplaceCardMessage(int register, String newCard, int clientID){
@@ -236,6 +237,23 @@ import java.util.ArrayList;
             MessageBody messageBody = new MessageBody();
             messageBody.setType(type);
             return new Message(MessageType.Animation, messageBody);
+        }
+        public Message generateDrawDamageMessage(int clientID, String[] drawnCards) {
+            MessageBody messageBody = new MessageBody();
+            messageBody.setClientID(clientID);
+            messageBody.setCards(drawnCards);
+            return new Message(MessageType.DrawDamage, messageBody);
+        }
+        public Message generatePickDamage(int clientID, String[] availablePiles) {
+            MessageBody messageBody = new MessageBody();
+            messageBody.setClientID(clientID);
+            messageBody.setAvailablePiles(availablePiles);
+            return new Message(MessageType.PickDamage, messageBody);
+        }
+        public Message generateSelectDamage(String[] cards) {
+            MessageBody messageBody = new MessageBody();
+            messageBody.setCards(cards);
+            return new Message(MessageType.SelectedDamage, messageBody);
         }
         public Message generateRebootMessage(int clientID){
             MessageBody messageBody = new MessageBody();

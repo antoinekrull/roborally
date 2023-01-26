@@ -1,7 +1,7 @@
 package client.model;
 
 import client.connection.Client;
-import client.connection.NotifyChangeSupport;
+import client.changesupport.NotifyChangeSupport;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,14 +16,14 @@ import javafx.beans.value.ObservableValue;
 public class ModelUser {
 
     private static ModelUser modelUser;
-    private BooleanProperty connected;
-    private BooleanProperty accepted;
+    private NotifyChangeSupport notifyChangeSupport;
+    private Client client;
     private String username;
     private IntegerProperty userID;
     private StringProperty usernameProperty;
+    private BooleanProperty connected;
+    private BooleanProperty accepted;
     private BooleanProperty isAI;
-    private NotifyChangeSupport notifyChangeSupport;
-    private Client client;
 
 
     private ModelUser() {
@@ -64,14 +64,13 @@ public class ModelUser {
     }
 
     public boolean getConnection() {return this.connected.get();}
+
     public void reconnect() {client.reconnect();}
 
-    public void sendPlayerValues(String name, int figure) {
-        client.sendPlayerValuesMessage(name, figure);
-    }
     public void sendSetStatus(Boolean status) {
         client.sendSetStatusMessage(status);
     }
+
     public void sendMapSelected(String map) {
         client.sendMapSelected(map);
     }

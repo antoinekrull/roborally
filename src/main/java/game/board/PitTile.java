@@ -8,8 +8,6 @@ import game.player.Player;
  */
 public class PitTile extends Tile {
 
-    private int rebootTileIndex;
-
     public PitTile(int xCoordinate, int yCoordinate) {
         super(xCoordinate, yCoordinate, "/textures/gameboard/pit.png", "PitTile");
         this.path = getClass().getResource("/textures/gameboard/pit.png").toString();
@@ -19,14 +17,9 @@ public class PitTile extends Tile {
         isBlocking = false;
     }
 
-    public int getRebootTileIndex() {
-        return rebootTileIndex;
-    }
-    public void setRebootTileIndex(int rebootTileIndex) {
-        this.rebootTileIndex = rebootTileIndex;
-    }
     @Override
     public void applyEffect(Player player) throws Exception {
-        player.getRobot().reboot(this.getRebootTileIndex());
+        //applied in Game
+        //player.getRobot().reboot();
     }
 }

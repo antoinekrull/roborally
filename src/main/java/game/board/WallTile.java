@@ -20,16 +20,11 @@ public class WallTile extends Tile {
         this.imageFXid = "WallTile";
         setType("Wall");
         isDanger = false;
-        isBlocking = true;
+        isBlocking = false;
         this.blockedDirections = blockedDirections;
+        setBlockedDirections(blockedDirections);
     }
 
-    public ArrayList<Direction> getBlockedDirections() {
-        return blockedDirections;
-    }
-    public void setBlockedDirections(ArrayList<Direction> blockedDirections) {
-        this.blockedDirections = blockedDirections;
-    }
     @Override
     public void applyEffect(Player player) throws Exception {
         //has no effect, the robot movement is what detects collisions

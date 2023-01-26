@@ -8,7 +8,7 @@ public class SpamCard extends Card {
     //play the top card of your programming deck this register
     public SpamCard(){
         cardType = CardType.DAMAGE_CARD;
-        setCardName("Spam");
+        setCard("Spam");
     }
 
     @Override
