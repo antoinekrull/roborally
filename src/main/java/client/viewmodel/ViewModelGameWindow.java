@@ -90,7 +90,7 @@ public class ViewModelGameWindow {
     @FXML
     private Pane upgradeDeck, damageDeck;
     @FXML
-    private Label timerLabel, currentPhaseLabel, currentActivePlayerLabeL, myEnergyLabel, scoreLabel;
+    private Label timerLabel, currentPhaseLabel, currentActivePlayerLabel, myEnergyLabel, scoreLabel;
     @FXML
     private HBox myPlayerInfoHBox;
     @FXML
@@ -169,7 +169,7 @@ public class ViewModelGameWindow {
 
         currentPhaseLabel.textProperty().bind(modelGame.activePhaseProperty());
 
-        currentActivePlayerLabeL.textProperty().bind(modelGame.currentPlayerProperty());
+        currentActivePlayerLabel.textProperty().bind(modelGame.currentPlayerProperty());
 
         scoreLabel.textProperty().bind(modelGame.scoreProperty().asString());
 
@@ -374,21 +374,22 @@ public class ViewModelGameWindow {
             int clientID = logMessage.getMessageBody().getClientID();
             String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
 
-            logMessageStyling(MessageType.SelectionFinished, username, null, null, null, -1);
+            logMessageStyling(MessageType.SelectionFinished, username, null, null, null, -1, false);
         }
         if (logMessage.getMessageType().equals(MessageType.CardPlayed)) {
             int clientID = logMessage.getMessageBody().getClientID();
             String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
             String card = logMessage.getMessageBody().getCard();
 
-            logMessageStyling(MessageType.CardPlayed, username, card, null, null, -1);
+            logMessageStyling(MessageType.CardPlayed, username, card, null, null, -1, false);
         }
         if (logMessage.getMessageType().equals(MessageType.CardSelected)) {
             int clientID = logMessage.getMessageBody().getClientID();
+            String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
             int register = logMessage.getMessageBody().getRegister();
             boolean filled = logMessage.getMessageBody().isFilled();
 
-            //TODO: Thinking about implementation
+            logMessageStyling(MessageType.CardSelected, username, null, null, null, register, filled);
         }
         if (logMessage.getMessageType().equals(MessageType.TimerEnded)) {
             int[] clientIDs = Arrays.copyOf(logMessage.getMessageBody().getClientIDs(),logMessage.getMessageBody().getClientIDs().length);
@@ -402,7 +403,7 @@ public class ViewModelGameWindow {
                 }
             }
 
-            logMessageStyling(MessageType.TimerEnded, null, null, null, players, -1);
+            logMessageStyling(MessageType.TimerEnded, null, null, null, players, -1, false);
         }
         if (logMessage.getMessageType().equals(MessageType.DrawDamage)) {
             String[] damageCards = Arrays.copyOf(logMessage.getMessageBody().getCards(), logMessage.getMessageBody().getCards().length);
@@ -414,13 +415,13 @@ public class ViewModelGameWindow {
                 }
             }
 
-            logMessageStyling(MessageType.DrawDamage, username, null, damageCards, null, -1);
+            logMessageStyling(MessageType.DrawDamage, username, null, damageCards, null, -1, false);
         }
         if (logMessage.getMessageType().equals(MessageType.RegisterChosen)) {
             int clientID = logMessage.getMessageBody().getClientID();
             String username = logMessage.getMessageBody().getName();
             int register = logMessage.getMessageBody().getRegister();
-            logMessageStyling(MessageType.RegisterChosen, username, null, null, null, register);
+            logMessageStyling(MessageType.RegisterChosen, username, null, null, null, register, false);
         }
         if (logMessage.getMessageType().equals(MessageType.GameFinished)) {
             int clientID = logMessage.getMessageBody().getClientID();
@@ -464,7 +465,7 @@ public class ViewModelGameWindow {
     }
 
     public void logMessageStyling(MessageType messageType, String username, String card,
-                                  String[] cards, String[] players, int register) {
+                                  String[] cards, String[] players, int register, boolean filled) {
 
         TextFlow logTextFlow = new TextFlow();
         Text timeText = new Text();
@@ -472,55 +473,68 @@ public class ViewModelGameWindow {
         Text usernameText = new Text();
         Text logText = new Text();
 
-        timeText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+        timeText.setStyle("-fx-fill: gray;" + "-fx-font-size: 8pt;");
         timeText.setText('(' + System.currentTimeMillis() + ')' + "  ");
 
-        usernameText.setStyle("-fx-font-weight: bold;" + "-fx-text-fill: gray;");
+        usernameText.setStyle("-fx-font-weight: bold;" + "-fx-fill: gray;");
         usernameText.setText(username);
 
         if (messageType.equals(MessageType.SelectionFinished)) {
             typeLogText.setText("[SelectionFinished] ");
-            typeLogText.setStyle("-fx-text-fill: purple;" + "-fx-font-size: 8pt;");
+            typeLogText.setStyle("-fx-fill: purple;" + "-fx-font-size: 8pt;");
 
-            logText.setText(" finished his selection.");
-            logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+            if (filled) {
+                logText.setText(" put a card in register " + register);
+                logText.setStyle("-fx-fill: gray;" + "-fx-font-size: 8pt;");
+            }
+            else {
+                logText.setText(" took a card from register " + register);
+                logText.setStyle("-fx-fill: gray;" + "-fx-font-size: 8pt;");
+            }
         }
         else if (messageType.equals(MessageType.CardPlayed)) {
             typeLogText.setText("[CardPlayed] ");
-            typeLogText.setStyle("-fx-text-fill: orange;" + "-fx-font-size: 8pt;");
+            typeLogText.setStyle("-fx-fill: orange;" + "-fx-font-size: 8pt;");
 
             logText.setText(" played following card: " + card);
-            logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+            logText.setStyle("-fx-fill: gray;" + "-fx-font-size: 8pt;");
+        }
+        else if (messageType.equals(MessageType.CardSelected)) {
+            typeLogText.setText("[CardSelected] ");
+            typeLogText.setStyle("-fx-fill: orange;" + "-fx-font-size: 8pt;");
+
+            logText.setText(" played following card: " + card);
+            logText.setStyle("-fx-fill: gray;" + "-fx-font-size: 8pt;");
         }
         else if (messageType.equals(MessageType.TimerEnded)) {
             if (players.length == 0) {
                 typeLogText.setText("[TimerEnded] ");
-                typeLogText.setStyle("-fx-text-fill: blue;" + "-fx-font-size: 8pt;");
+                typeLogText.setStyle("-fx-fill: blue;" + "-fx-font-size: 8pt;");
 
                 logText.setText("Nobody was too slow.");
-                logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+                logText.setStyle("-fx-fill: gray;" + "-fx-font-size: 8pt;");
             }
             else {
                 typeLogText.setText("[TimerEnded] ");
-                typeLogText.setStyle("-fx-text-fill: blue;" + "-fx-font-size: 8pt;");
+                typeLogText.setStyle("-fx-fill: blue;" + "-fx-font-size: 8pt;");
 
                 logText.setText(Arrays.toString(players) + " missed timing.");
-                logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+                logText.setStyle("-fx-fill: gray;" + "-fx-font-size: 8pt;");
             }
         }
         else if (messageType.equals(MessageType.DrawDamage)) {
             typeLogText.setText("[DrawDamage] ");
-            typeLogText.setStyle("-fx-text-fill: black;" + "-fx-font-size: 8pt;");
+            typeLogText.setStyle("-fx-fill: black;" + "-fx-font-size: 8pt;");
 
             logText.setText(Arrays.toString(cards));
-            logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+            logText.setStyle("-fx-fill: gray;" + "-fx-font-size: 8pt;");
         }
         else if (messageType.equals(MessageType.RegisterChosen)) {
             typeLogText.setText("[RegisterChosen] ");
-            typeLogText.setStyle("-fx-text-fill: yellow;" + "-fx-font-size: 8pt;");
+            typeLogText.setStyle("-fx-fill: yellow;" + "-fx-font-size: 8pt;");
 
             logText.setText(" chose register " + register);
-            logText.setStyle("-fx-text-fill: yellow;" + "-fx-font-size: 8pt;");
+            logText.setStyle("-fx-fill: yellow;" + "-fx-font-size: 8pt;");
         }
 
         logTextFlow.getChildren().addAll(timeText, typeLogText, usernameText, logText);
