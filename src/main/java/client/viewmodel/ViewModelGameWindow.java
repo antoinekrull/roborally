@@ -182,7 +182,7 @@ public class ViewModelGameWindow {
         playerGameInfo = new PlayerGameInfo(playerInfoGrid, modelGame.getPlayerList());
         playerGameInfo.loadPlayerInfo();
 
-        cardSelection = new CardSelection();
+        cardSelection = new CardSelection(baseStackPane);
 
 
         setOnDragDetected(programCard1);
@@ -591,7 +591,7 @@ public class ViewModelGameWindow {
             int clientID = gamemessage.getMessageBody().getClientID();
             if(clientID == gamemessage.getMessageBody().getClientID()) {
                 int counter = gamemessage.getMessageBody().getCount();
-                cardSelection.overlayDamagecards(gamemessage.getMessageBody().getCards(), counter, baseStackPane);
+                cardSelection.overlayDamagecards(gamemessage.getMessageBody().getCards(), counter);
             }
         }
     }

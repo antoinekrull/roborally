@@ -1,5 +1,6 @@
 package client.ui;
 
+import client.model.ModelGame;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +14,15 @@ import javafx.scene.layout.StackPane;
 public class CardSelection {
 
   private StackPane baseStackPane;
+  private ModelGame modelGame;
+  private int finalCounter;
 
-  public void overlayDamagecards(String[] damagePiles, int counter, StackPane baseStackPane) {
+  public CardSelection(StackPane baseStackPane) {
+    this.baseStackPane = baseStackPane;
+  }
+
+  public void overlayDamagecards(String[] damagePiles, int counter) {
+    finalCounter = counter;
     StackPane overlay = new StackPane();
     overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.8);");
     overlay.setAlignment(Pos.CENTER);
@@ -60,23 +68,25 @@ public class CardSelection {
         }
       }
     }
-
+    List<String> selectedCards = new ArrayList<>();
     for (ImageView imageView : imageViews) {
       imageView.setOnMouseClicked(event -> {
         if (event.getButton() == MouseButton.PRIMARY) {
-          //TODO: send Message
-          int finalCounter = counter;
+          String selectedCard = imageView.getId();
+          selectedCards.add(selectedCard);
           finalCounter--;
           if (finalCounter == 0) {
             baseStackPane.getChildren().remove(overlay);
             for (String c : damagePiles) {
               overlay.getChildren().remove(c);
             }
+            // send the selected cards to the model
+            modelGame.sendReturnCards(selectedCards.toArray(new String[0]));
           }
         }
       });
     }
-    }
   }
+}
 
 
