@@ -1,9 +1,11 @@
 package client.viewmodel;
 
+import client.RoboRallyStart;
 import client.changesupport.NotifyChangeSupport;
 import client.model.ModelChat;
 import client.model.ModelGame;
 import client.model.ModelUser;
+import client.ui.CardSelection;
 import client.ui.PlayerGameInfo;
 import client.ui.Tutorial;
 import communication.Message;
@@ -12,8 +14,11 @@ import game.board.Tile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -69,9 +74,9 @@ public class ViewModelGameWindow {
     @FXML
     private TextField chatTextfield;
     @FXML
-    private VBox chatVBox;
+    private VBox chatVBox, logVBox;
     @FXML
-    private ScrollPane chatScrollPane;
+    private ScrollPane chatScrollPane, logScrollPane;
     @FXML
     private GridPane deckGrid, gameboard, programmingGrid;
     @FXML
@@ -85,7 +90,7 @@ public class ViewModelGameWindow {
     @FXML
     private Pane upgradeDeck, damageDeck;
     @FXML
-    private Label timerLabel, currentPhaseLabel, currentActivePlayerLabeL, myEnergyLabel;
+    private Label timerLabel, currentPhaseLabel, currentActivePlayerLabeL, myEnergyLabel, scoreLabel;
     @FXML
     private HBox myPlayerInfoHBox;
     @FXML
@@ -109,12 +114,15 @@ public class ViewModelGameWindow {
     private PlayerGameInfo playerGameInfo;
     //private ObservableList<String> handCardsUI;
     private Tutorial tutorial;
+    private CardSelection cardSelection;
+    private Timeline timeline;
     private double gameboardTileWidth;
     private double programcardsWidth;
     private int columnIndex;
     private boolean isClickable;
     private boolean isDroppedSuccessfully = false;
     private int registerCounter = 0;
+    private int timer = 30;
 
     public ViewModelGameWindow() {
         this.modelChat = ModelChat.getInstance();
@@ -135,10 +143,19 @@ public class ViewModelGameWindow {
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
 
-        chatVBox.heightProperty().addListener(new ChangeListener<Number>() {@Override
+        chatVBox.heightProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
         public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
             chatScrollPane.setVvalue((Double) newValue);
         }
+        });
+
+        logVBox.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                logScrollPane.setVvalue((Double) newValue);
+            }
         });
 
         gameboardRegion.widthProperty().addListener((obs, oldValue, newValue) -> {
@@ -148,16 +165,24 @@ public class ViewModelGameWindow {
             updateWidth(width);
         });
 
-        //TODO: setActivePlayer Text to bind
+        //TODO: set phase
+        //currentPhaseLabel.textProperty().bind("");
+
+        //TODO: setActivePlayer
         //currentActivePlayerLabeL.textProperty().bind("");
 
+        scoreLabel.textProperty().bind(modelGame.scoreProperty().asString());
+
         myEnergyBar.progressProperty().bind(modelGame.energyProperty());
-        myEnergyLabel.textProperty().bind(modelGame.energyProperty().asString());
-        myEnergyLabel.setStyle("-flex: red;");
+        myEnergyLabel.textProperty().bind(myEnergyBar.progressProperty().asString());
+        myEnergyLabel.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;");
+        StackPane.setAlignment(myEnergyBar, Pos.CENTER);
         StackPane.setAlignment(myEnergyLabel, Pos.CENTER);
 
         playerGameInfo = new PlayerGameInfo(playerInfoGrid, modelGame.getPlayerList());
         playerGameInfo.loadPlayerInfo();
+
+        cardSelection = new CardSelection();
 
         setOnDragDetected(programCard1);
         setOnDragDetected(programCard2);
@@ -253,7 +278,6 @@ public class ViewModelGameWindow {
             modelChat.sendPrivateMessage(userID);
             privateMessageToChat(chatTextfield.getText(), false);
         }
-
          */
     }
 
@@ -347,40 +371,83 @@ public class ViewModelGameWindow {
     public void logMessageToLogger(Message logMessage) {
         if (logMessage.getMessageType().equals(MessageType.SelectionFinished)) {
             int clientID = logMessage.getMessageBody().getClientID();
-            //show selectionfinished for this client
+            String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
+
+            logMessageStyling(MessageType.SelectionFinished, username, null, null, null, -1);
         }
         if (logMessage.getMessageType().equals(MessageType.CardPlayed)) {
             int clientID = logMessage.getMessageBody().getClientID();
             String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
             String card = logMessage.getMessageBody().getCard();
-            //Show something on log Screen
+
+            logMessageStyling(MessageType.CardPlayed, username, card, null, null, -1);
         }
         if (logMessage.getMessageType().equals(MessageType.TimerEnded)) {
-            for (int i = 0; i < logMessage.getMessageBody().getClientIDs().length; i++) {
-                int clientID = logMessage.getMessageBody().getClientIDs()[i];
-                //Show something on log Screen
-            }
-        }
-        if (logMessage.getMessageType().equals(MessageType.DrawDamage)) {
-            //int[] damageCards = logmessage.getMessageBody().getCards();
-            //add all damage: int damage;
-            int clientID = logMessage.getMessageBody().getClientID();
-            for (int i = 0; i < modelGame.getPlayerList().getPlayerList().size(); i++) {
-                if (modelGame.getPlayerList().getPlayerList().get(i).getId() == clientID) {
+            int[] clientIDs = Arrays.copyOf(logMessage.getMessageBody().getClientIDs(),logMessage.getMessageBody().getClientIDs().length);
+            String[] players = new String[clientIDs.length];
+            for (int i = 0; i < clientIDs.length; i++) {
+                for (int j = 0; j < modelGame.getPlayerList().getPlayerList().size(); j++) {
+                    if (clientIDs[i] == modelGame.getPlayerList().getPlayerList().get(j).getId()) {
+                        String username = modelGame.getPlayerList().getPlayer(clientIDs[i]).getUsername();
+                        players[i] = username;
+                    }
                 }
             }
+
+            logMessageStyling(MessageType.TimerEnded, null, null, null, players, -1);
+        }
+        if (logMessage.getMessageType().equals(MessageType.DrawDamage)) {
+            String[] damageCards = Arrays.copyOf(logMessage.getMessageBody().getCards(), logMessage.getMessageBody().getCards().length);
+            int clientID = logMessage.getMessageBody().getClientID();
+            String username = "";
+            for (int i = 0; i < modelGame.getPlayerList().getPlayerList().size(); i++) {
+                if (modelGame.getPlayerList().getPlayer(clientID).getId() == clientID) {
+                    username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
+                }
+            }
+
+            logMessageStyling(MessageType.DrawDamage, username, null, damageCards, null, -1);
+        }
+        if (logMessage.getMessageType().equals(MessageType.RegisterChosen)) {
+            int clientID = logMessage.getMessageBody().getClientID();
+            String username = logMessage.getMessageBody().getName();
+            int register = logMessage.getMessageBody().getRegister();
+            logMessageStyling(MessageType.RegisterChosen, username, null, null, null, register);
         }
         if (logMessage.getMessageType().equals(MessageType.GameFinished)) {
             int clientID = logMessage.getMessageBody().getClientID();
-            String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
+            String username = "";
+            if (modelUser.userIDProperty().get() == clientID) {
+                username = modelUser.getUsername();
+            }
+            else {
+                username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
+            }
+            Label win = new Label("WINNER");
+            win.setStyle("-fx-text-fill: gold;");
             Label winnerLabel = new Label(username);
+            winnerLabel.setStyle("-fx-text-fill: red;");
             VBox winnerVBox = new VBox();
+            winnerVBox.setSpacing(20);
             StackPane winnerStackPane = new StackPane();
+            winnerStackPane.setStyle("-fx-opacity: 0.84;");
+            winnerStackPane.setAlignment(Pos.CENTER);
             Button winnerButton = new Button("Easy Win");
-            winnerVBox.getChildren().addAll(winnerLabel, winnerButton);
+            winnerButton.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    try {
+                        RoboRallyStart.switchScene("lobby.fxml");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            winnerVBox.getChildren().addAll(win, winnerLabel, winnerButton);
             winnerStackPane.getChildren().add(winnerVBox);
 
-            //TODO: making button return scene and set StackPane over everything
+            baseStackPane.getChildren().add(winnerStackPane);
         }
         if (logMessage.getMessageType().equals(MessageType.CheckPointReached)) {
             int clientID = logMessage.getMessageBody().getClientID();
@@ -388,6 +455,76 @@ public class ViewModelGameWindow {
         }
     }
 
+    public void logMessageStyling(MessageType messageType, String username, String card,
+                                  String[] cards, String[] players, int register) {
+
+        TextFlow logTextFlow = new TextFlow();
+        Text timeText = new Text();
+        Text typeLogText = new Text();
+        Text usernameText = new Text();
+        Text logText = new Text();
+
+        timeText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+        timeText.setText('(' + System.currentTimeMillis() + ')' + "  ");
+
+        usernameText.setStyle("-fx-font-weight: bold;" + "-fx-text-fill: gray;");
+        usernameText.setText(username);
+
+        if (messageType.equals(MessageType.SelectionFinished)) {
+            typeLogText.setText("[SelectionFinished] ");
+            typeLogText.setStyle("-fx-text-fill: purple;" + "-fx-font-size: 8pt;");
+
+            logText.setText(" finished his selection.");
+            logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+        }
+        else if (messageType.equals(MessageType.CardPlayed)) {
+            typeLogText.setText("[CardPlayed] ");
+            typeLogText.setStyle("-fx-text-fill: orange;" + "-fx-font-size: 8pt;");
+
+            logText.setText(" played following card: " + card);
+            logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+        }
+        else if (messageType.equals(MessageType.TimerEnded)) {
+            if (players.length == 0) {
+                typeLogText.setText("[TimerEnded] ");
+                typeLogText.setStyle("-fx-text-fill: blue;" + "-fx-font-size: 8pt;");
+
+                logText.setText("Nobody was too slow.");
+                logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+            }
+            else {
+                typeLogText.setText("[TimerEnded] ");
+                typeLogText.setStyle("-fx-text-fill: blue;" + "-fx-font-size: 8pt;");
+
+                logText.setText(Arrays.toString(players) + " missed timing.");
+                logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+            }
+        }
+        else if (messageType.equals(MessageType.DrawDamage)) {
+            typeLogText.setText("[DrawDamage] ");
+            typeLogText.setStyle("-fx-text-fill: black;" + "-fx-font-size: 8pt;");
+
+            logText.setText(Arrays.toString(cards));
+            logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+        }
+        else if (messageType.equals(MessageType.RegisterChosen)) {
+            typeLogText.setText("[RegisterChosen] ");
+            typeLogText.setStyle("-fx-text-fill: yellow;" + "-fx-font-size: 8pt;");
+
+            logText.setText(" chose register " + register);
+            logText.setStyle("-fx-text-fill: yellow;" + "-fx-font-size: 8pt;");
+        }
+
+        logTextFlow.getChildren().addAll(timeText, typeLogText, usernameText, logText);
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                logVBox.getChildren().add(logTextFlow);
+            }
+        });
+
+    }
     public void reveivedGameEventMessage() {
         Message gamemessage = null;
         try {
@@ -418,9 +555,20 @@ public class ViewModelGameWindow {
             }
         }
         if (gamemessage.getMessageType().equals(MessageType.ReplaceCard)) {
-
+//            int clientID = gamemessage.getMessageBody().getClientID();
+//            if(clientID == gamemessage.getMessageBody().getClientID()) {
+//                int register = gamemessage.getMessageBody().getRegister();
+            //TODO: SwitchCase - Idee: Alles was mit Karten zu tun hat auslagern?
+//            }
         }
         if (gamemessage.getMessageType().equals(MessageType.DrawDamage)) {
+            drawDamage(gamemessage.getMessageBody().getCards());
+        }
+        if (gamemessage.getMessageType().equals(MessageType.PickDamage)) {
+            //TODO: Pile Array?
+            //ArrayList<String> damagePiles = gamemessage.getMessageBody().getPiles[];
+            //int counter = gamemessage.getMessageBody().getCounter();
+            //cardSelection.overlayDamagecards(damagePiles, counter);
 
         }
     }
@@ -518,15 +666,7 @@ public class ViewModelGameWindow {
             }
         }
         this.isClickable = true;
-        ObservableList<Node> children = handGrid.getChildren();
         logger.debug("VM - fillHandCards Start:");
-        for (Node child : children) {
-            logger.debug(child);
-            if (child instanceof Pane) {
-                Pane pane = (Pane) child;
-                logger.debug("Pane contains: " + pane.getChildren());
-            }
-        }
         ArrayList<String> handCards = new ArrayList<>(modelGame.getMyHandCards());
         Platform.runLater(() -> {
             logger.debug("VM - handGrid children size: " + handGrid.getChildren().size());
@@ -669,6 +809,7 @@ public class ViewModelGameWindow {
                 }
             }
             logger.debug(" ");
+            ObservableList<Node> children = handGrid.getChildren();
             for (Node child : children) {
                 logger.debug(child);
                 if (child instanceof Pane) {
@@ -805,10 +946,12 @@ public class ViewModelGameWindow {
                     Dragboard db = event.getDragboard();
                     if (db.hasImage()) {
                         Image data = db.getImage();
+                        String cardName = db.getString();
                         Pane source = (Pane) handGrid.getChildren().get(columnIndex);
                         ImageView card = new ImageView(data);
                         card.setFitWidth(programcardsWidth);
                         card.setPreserveRatio(true);
+                        card.setId(cardName);
                         source.getChildren().add(card);
                         logger.debug("VM - Card returned to Column: " + columnIndex);
                         success = true;
@@ -842,7 +985,6 @@ public class ViewModelGameWindow {
                     }
                 }
                 event.consume();
-                logger.debug("Changing isDroppedSuccessfully to false");
                 isDroppedSuccessfully = false;
             }
         });
@@ -884,26 +1026,23 @@ public class ViewModelGameWindow {
     }
 
     public void startTimer() {
-        Timeline timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new EventHandler<>() {
-            int timer = 30;
-            @Override
-            public void handle(ActionEvent event) {
-                timerLabel.setText(String.valueOf(timer));
-                if (timer <= 10) {
-                    timerLabel.setStyle("-fx-text-fill: red;");
-                }
-                timer--;
-                if (timer <= 0) {
-                    timeline.stop();
-                    //TODO: something could happen after timer ended
-                }
+        timerLabel.setText(String.format("%02d:%02d", timer / 60, timer % 60));
+        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+            timer--;
+            timerLabel.setText(String.format("%02d:%02d", timer / 60, timer % 60));
+            if (timer <= 10) {
+                timerLabel.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;" + "-fx-font-size: 16pt;");
+            }
+            if (timer <= 0) {
+                timeline.stop();
+                timerLabel.setVisible(false);
             }
         }));
-        timeline.setCycleCount(30);
+        
+        timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
+        timerLabel.setVisible(true);
     }
-
     public void setRobotAlignment() {
         //set Robot Alignment
     }
@@ -932,6 +1071,56 @@ public class ViewModelGameWindow {
         }
     }
 
+    public void drawDamage(String[] damageCards) {
+        int index = getFirstFreeSlot();
+        if (index != -1) {
+            Pane pane = (Pane) handGrid.getChildren().get(index);
+            for (String card : damageCards) {
+                switch (card) {
+                    case "Spam" -> {
+                        InputStream input10 = getClass().getResourceAsStream(
+                            "/textures/cards/SPAM.png");
+                        Image image10 = new Image(input10);
+                        ImageView imageView10 = new ImageView(image10);
+                        imageView10.setId("Spam");
+                        imageView10.setFitWidth(programcardsWidth);
+                        imageView10.setPreserveRatio(true);
+                        pane.getChildren().add(imageView10);
+                    }
+                    case "Worm" -> {
+                        InputStream input11 = getClass().getResourceAsStream(
+                            "/textures/cards/WORM.png");
+                        Image image11 = new Image(input11);
+                        ImageView imageView11 = new ImageView(image11);
+                        imageView11.setId("Worm");
+                        imageView11.setFitWidth(programcardsWidth);
+                        imageView11.setPreserveRatio(true);
+                        pane.getChildren().add(imageView11);
+                    }
+                    case "Virus" -> {
+                        InputStream input12 = getClass().getResourceAsStream(
+                            "/textures/cards/VIRUS.png");
+                        Image image12 = new Image(input12);
+                        ImageView imageView12 = new ImageView(image12);
+                        imageView12.setId("Virus");
+                        imageView12.setFitWidth(programcardsWidth);
+                        imageView12.setPreserveRatio(true);
+                        pane.getChildren().add(imageView12);
+                    }
+                    case "Trojan" -> {
+                        InputStream input13 = getClass().getResourceAsStream(
+                            "/textures/cards/TROJAN_HORSE.png");
+                        Image image13 = new Image(input13);
+                        ImageView imageView13 = new ImageView(image13);
+                        imageView13.setId("Trojan");
+                        imageView13.setFitWidth(programcardsWidth);
+                        imageView13.setPreserveRatio(true);
+                        pane.getChildren().add(imageView13);
+                    }
+                }
+            }
+        }
+    }
 
     public void exit() throws IOException {
         //send disconnect notification to server
