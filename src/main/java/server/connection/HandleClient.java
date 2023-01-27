@@ -6,6 +6,7 @@ import communication.MessageCreator;
 import communication.MessageType;
 import game.CollisionCalculator;
 import game.Game;
+import game.player.AI_Player;
 import game.player.Player;
 import game.player.Robot;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -41,6 +42,7 @@ public class HandleClient implements Runnable{
     //private ServerMain.Server serverMain;
 
     private Server server;
+    private int ai_id = 20;
 
     private MessageCreator messageCreator;
     private Game game;
@@ -137,7 +139,6 @@ public class HandleClient implements Runnable{
         try {
 
             String line;
-
             //Accept client if his protocol version is correct
             while(!accepted) {
                 Message incomingMessage = JsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
@@ -266,7 +267,7 @@ public class HandleClient implements Runnable{
                         else {
                             boolean taken = false;
                             for (int i = 0; i < game.playerList.size(); i++) {
-                                if (game.playerList.get(i).getRobot().getFigure() == figure) {
+                                if (game.playerList.get(i).getRobot() != null && game.playerList.get(i).getRobot().getFigure() == figure) {
                                     taken = true;
                                     write(messageCreator.generateErrorMessage("Your figure was already chosen. Choose another one."));
                                     break;
@@ -283,7 +284,7 @@ public class HandleClient implements Runnable{
                                 server.sendPlayerValuesToAll(getClientID(), playerAddedMessage);
 
                                 for(int i = 0; i < game.playerList.size(); i++) {
-                                    if(game.playerList.get(i).getId() != getClientID()) {
+                                    if(game.playerList.get(i).getRobot() != null && game.playerList.get(i).getId() != getClientID()) {
                                         Message addOtherPlayer = messageCreator.generatePlayerAddedMessage(game.playerList.get(i).getUsername(), game.playerList.get(i).getRobot().getFigure(), game.playerList.get(i).getId());
                                         write(addOtherPlayer);
                                     }
