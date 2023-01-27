@@ -1,6 +1,8 @@
 package game;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import communication.JsonSerializer;
+import communication.Message;
 import game.board.*;
 import game.card.*;
 import game.player.AI_Player;
@@ -537,22 +539,29 @@ public class Game implements Runnable {
         logger.debug("Setup phase starts");
         server.sendActivePhase(0);
         logger.debug("Server sent the active phase (value=0) to the players");
-        playerList.add(new AI_Player(420, "robot ai", new Robot(findUnusedRobotId(), server.getUniqueID())));
+
+        // testing ai player
+        playerList.add(new AI_Player(420, "robot ai", new Robot(findUnusedRobotId(), server.getUniqueID()), board));
+        playerList.getPlayerFromList(420).setIsAI(true);
+        addReady(420);
         logger.debug("AI player was added");
-//        for(Player player: playerList.getPlayerList()){
-//            // checks if there is an ai player in the list and if so, gives him an unused robot
-//            if(player.getRobot() == null){
-//                logger.debug("A player has a null robot");
-//                player.setRobot(new Robot(findUnusedRobotId(), server.getUniqueID()));
-//            }
-//        }
+        // testing ai player
+
         setServerForPlayers();
         logger.debug("Server set the server for all players and robots");
         try {
             Thread.sleep(100);
             for (int i = 0; i < readyList.size(); i++) {
                 activePlayer = playerList.getPlayerFromList(readyList.get(i));
+                if(activePlayer instanceof AI_Player){
+                    ((AI_Player) activePlayer).sendPlayerAddedMessage();
+                    logger.debug("AI player choose starting point.");
+                    ((AI_Player) activePlayer).chooseStartingPoint(this);
+                    setRobotSet(true);
+                }
+                logger.debug("Get active player " + i);
                 server.sendCurrentPlayer(readyList.get(i));
+                logger.debug("Server sent currentPlayer message");
                 Thread.sleep(100);
                 while (!robotSet) {
                     Thread.sleep(100);
