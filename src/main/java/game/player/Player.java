@@ -38,13 +38,19 @@ public class Player {
         this.id = id;
         this.username = username;
         this.robot = robot;
-        robot.setId(id);
+        if(robot != null) {
+            robot.setId(id);
+        }
         //robot.setDirection(Direction.NORTH);
         this.hand = new ArrayList<Card>();
         this.score = 0;
         this.personalDiscardPile = new ProgrammingDeck();
         isPlaying = false;
         isReady = false;
+    }
+
+    public void setRobot(Robot robot) {
+        this.robot = robot;
     }
 
     public String getUsername() {
