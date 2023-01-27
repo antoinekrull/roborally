@@ -3,6 +3,7 @@ package game;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.*;
 import game.card.*;
+import game.player.AI_Player;
 import game.player.Player;
 import game.player.Robot;
 import org.apache.logging.log4j.LogManager;
@@ -497,9 +498,40 @@ public class Game implements Runnable {
         }
     }
 
+    /**
+     * Finds a robot id that is not used.
+     *
+     * @return Returns an int that describes an unused robot id
+     */
+    public int findUnusedRobotId() {
+        int unusedId = 1;
+        Set<Integer> set = new HashSet<>();
+        for(Player player: playerList.getPlayerList()){
+            set.add(player.getRobot().getFigure());
+        }
+        for (int i = 1; i <= 6; i++) {
+            if (!set.contains(i)) {
+                return i;
+            }
+        }
+        return unusedId;
+    }
+
     private void runSetupPhase() {
+        logger.debug("Setup phase starts");
         server.sendActivePhase(0);
+        logger.debug("Server sent the active phase (value=0) to the players");
+        playerList.add(new AI_Player(420, "robot ai", new Robot(findUnusedRobotId(), server.getUniqueID())));
+        logger.debug("AI player was added");
+//        for(Player player: playerList.getPlayerList()){
+//            // checks if there is an ai player in the list and if so, gives him an unused robot
+//            if(player.getRobot() == null){
+//                logger.debug("A player has a null robot");
+//                player.setRobot(new Robot(findUnusedRobotId(), server.getUniqueID()));
+//            }
+//        }
         setServerForPlayers();
+        logger.debug("Server set the server for all players and robots");
         try {
             Thread.sleep(100);
             for (int i = 0; i < readyList.size(); i++) {
@@ -517,6 +549,7 @@ public class Game implements Runnable {
         }
         setStartDirectionForRobot(currentMap);
         setUpDone = true;
+        logger.debug("all robots are set");
     }
 
     private void runUpgradePhase(){
@@ -736,6 +769,7 @@ public class Game implements Runnable {
         }
         return false;
     }
+
     /**
      * Determines which player won the game.
      *
