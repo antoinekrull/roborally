@@ -23,9 +23,10 @@ import static game.Game.upgradeShop;
  */
 public class Player {
 
-    private String username;
+    protected String username;
     private int score;
-    private int id;
+    private boolean isAI = false;
+    protected int id;
     private boolean isPlaying;
     private boolean isReady;
     private boolean isBuying;
@@ -39,9 +40,9 @@ public class Player {
     private boolean[] statusRegister = new boolean[5];
     private ProgrammingDeck personalDiscardPile;
     protected Robot robot;
-    private final Logger logger = LogManager.getLogger(Player.class);
+    protected final Logger logger = LogManager.getLogger(Player.class);
 
-    private Server server;
+    protected Server server;
 
     public Player(int id, String username, Robot robot) {
         this.id = id;
@@ -73,6 +74,13 @@ public class Player {
     }
     public int getScore() {
         return score;
+    }
+
+    public boolean getIsAI() {
+        return isAI;
+    }
+    public void setIsAI(boolean isAI) {
+        this.isAI = isAI;
     }
     public void increaseScore() {
         score++;
