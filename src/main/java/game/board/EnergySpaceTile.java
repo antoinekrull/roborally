@@ -15,6 +15,7 @@ public class EnergySpaceTile extends Tile {
         setType("EnergySpace");
         isDanger = false;
         isBlocking = false;
+        setEnergyCube(true);
     }
 
     @Override
@@ -22,4 +23,5 @@ public class EnergySpaceTile extends Tile {
         player.getRobot().setEnergyCubes(player.getRobot().getEnergyCubes() + 1);
         System.out.println("Robot energy increased to " + player.getRobot().getEnergyCubes());
     }
+
 }

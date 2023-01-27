@@ -124,14 +124,6 @@ public class Game implements Runnable {
             Thread.sleep(500);
             applyPushPanelEffects();
 
-            // Sollte nicht nötig sein, da im collision calculator nach pit gecheckt wird
-//            for (PitTile pitTile : board.getPitList()) {
-//                for (int y = 0; y < playerList.size(); y++) {
-//                    if (pitTile.getPosition().equals(playerList.get(y).getRobot().getCurrentPosition())) {
-//                        reboot(playerList.get(y));
-//                    }
-//                }
-//            }
             for (int x = 0; x < board.getGearTileList().size(); x++) {
                 for (int y = 0; y < playerList.size(); y++) {
                     if (playerList.get(y).getRobot().getCurrentPosition().equals(board.getGearTileList().get(x).getPosition())) {
@@ -394,6 +386,7 @@ public class Game implements Runnable {
             case "MoveI", "MoveII", "MoveIII" -> {
 
                 for (int i = 0; i < card.getVelocity(); i++) {
+                    logger.debug("kawaii");
                     Pair<Integer, Integer> newPosition = new Pair<>(player.getRobot().getCurrentPosition().getValue0(),
                             player.getRobot().getCurrentPosition().getValue1());
                     try {
@@ -413,19 +406,12 @@ public class Game implements Runnable {
                         newPosition = tempPosition;
 
                         collisionCalculator.moveRobot(player.getRobot(), newPosition);
-                        for (PitTile pitTile : board.getPitList()) {
-                            if (pitTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    throw new RuntimeException(e);
-                                }
-                                reboot(playerList.get(i));
-                            }
-                        }
                 }
             }
-            case "PowerUp" -> player.getRobot().increaseEnergyCubes();
+            case "PowerUp" -> {
+                player.getRobot().increaseEnergyCubes();
+                server.sendEnergy(player, card);
+            }
             case "Spam" -> {
                 Card topProgrammingCard = player.getRobot().getDeck().popCardFromDeck();
                 spamDeck.addCard(new SpamCard());
@@ -586,20 +572,16 @@ public class Game implements Runnable {
             Thread.sleep(100);
         ArrayList<Card> cardList = new ArrayList<>();
         while(currentRegister < 5) {
+            logger.debug("Current register = " + currentRegister);
             for(int i = 0; i < playerList.size(); i++) {
                 Thread.sleep(1000);
                 //playerList.get(i).getCardFromRegister(currentRegister).setClientID(playerList.get(i).getId());
                 cardList.add(playerList.get(i).getCardFromRegister(currentRegister));
                 activateRegister(playerList.get(i));
-                if(board.getTile(playerList.get(i).getRobot().getCurrentPosition()).get(0) instanceof PitTile) {
-                    reboot(playerList.get(i));
-                }
-                //playerList.get(i).setStatusRegister(true, currentRegister);
             }
             server.sendCurrentCards(cardList);
             Thread.sleep(100);
             cardList.clear();
-            logger.debug("Current register = " + currentRegister);
             Thread.sleep(1000);
             if(playerList.robotNeedsReboot()) {
                 for(int i = 0; i < playerList.numberOfNeededReboots(); i++) {
@@ -702,8 +684,8 @@ public class Game implements Runnable {
                 server.sendEnergy(player, player.getCardFromRegister(currentRegister));
                     Thread.sleep(100);
             }
-        } catch (IndexOutOfBoundsException | InterruptedException e) {
-            logger.warn("This register was not activated because you're Robot can not move past this point" + e);
+        } catch (InterruptedException e) {
+//            logger.warn("This register was not activated because you're Robot can not move past this point" + e);
         }
     }
     public void addReady(int clientID) {

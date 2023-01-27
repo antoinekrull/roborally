@@ -2,7 +2,6 @@ package game;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.*;
-import game.player.Player;
 import game.player.Robot;
 import org.javatuples.Pair;
 import server.connection.PlayerList;
@@ -39,13 +38,12 @@ public class CollisionCalculator {
                     }
                 }
             }
-
         if (canMove&&checkFallFromMap(target)){
             game.reboot(playerList.getPlayerFromList(robot1));
-        }else if (canMove){
+        } else if (canMove){
+            harvestEnergyCubes(target, robot1);
             robot1.setCurrentPosition(target);
         }
-
         return canMove;
     }
 
@@ -208,6 +206,7 @@ public class CollisionCalculator {
         }
         return result;
     }
+
     private boolean checkFallFromMap(Pair<Integer, Integer> target){
         boolean result = false;
         Pair<Integer,Integer> boardSize = board.getDimension();
@@ -258,6 +257,17 @@ public class CollisionCalculator {
                     shooting = false;
                 }
                 pos = nextPos;
+            }
+        }
+    }
+
+    private void harvestEnergyCubes(Pair<Integer, Integer> target, Robot robot) {
+        for(Tile tile: board.getTile(target)) {
+            if(tile instanceof EnergySpaceTile) {
+                if(tile.hasEnergyCube()) {
+                    robot.increaseEnergyCubes();
+                    tile.setEnergyCube(false);
+                }
             }
         }
     }

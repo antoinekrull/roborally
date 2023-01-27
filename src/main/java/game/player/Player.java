@@ -102,8 +102,6 @@ public class Player {
     public void setBuying(boolean buying) {isBuying = buying;}
     public String getUpgradeToBuy() {return upgradeToBuy;}
     public void setUpgradeToBuy(String upgradeToBuy) {this.upgradeToBuy = upgradeToBuy;}
-
-    //TODO: Fix crash if reboot happened
     public Card getCardFromRegister(int index){
         if(cardRegister[index] == null) {
             return null;
