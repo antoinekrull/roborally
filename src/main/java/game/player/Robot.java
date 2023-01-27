@@ -37,7 +37,7 @@ public class Robot {
         this.figure = figure;
         deck.createDeck();
         energyCubes = 0;
-        currentObjective = 1;
+        currentObjective = 0;
         this.id = id;
     }
 
@@ -70,8 +70,9 @@ public class Robot {
     public int getCurrentObjective() {
         return currentObjective;
     }
-    public void setCurrentObjective(int currentObjective) {
-        this.currentObjective = currentObjective;
+    public void increaseObjectiveNumber() {
+        currentObjective++;
+        server.sendCheckpointReached(new Pair<>(id, currentObjective));
     }
     public void setDirection(Direction direction) {
         this.direction = direction;
@@ -162,8 +163,6 @@ public class Robot {
         damageCount++;
     }
     public int getActiveRegister() {return activeRegister;}
-    public void setActiveRegister(int activeRegister) {this.activeRegister = activeRegister;}
-
     public void shootLaser(Player player) throws Exception {
         //checkRobotLaserCollision(player);
     }

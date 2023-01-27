@@ -38,7 +38,10 @@ public class CheckpointTile extends Tile {
 
     @Override
     public void applyEffect(Player player) {
-        player.getRobot().setCurrentObjective(player.getRobot().getCurrentObjective() + 1);
+        if(player.getRobot().getCurrentObjective() == (count - 1)) {
+            System.out.println("Penis");
+            player.getRobot().increaseObjectiveNumber();
+        }
     }
     @Override
     public int getCount() {
