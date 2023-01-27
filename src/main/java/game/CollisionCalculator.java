@@ -218,6 +218,9 @@ public class CollisionCalculator {
             result = true;
         }else if (target.getValue1()<0 || target.getValue1() > boardSize.getValue1()){
             result = true;
+            //could also be try catch block
+        } else if(board.getTile(target) == null) {
+            result = true;
         } else if (board.getTile(target).get(0).getType().equals("Pit")) {
             result = true;
         }

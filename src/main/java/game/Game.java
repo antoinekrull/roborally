@@ -671,7 +671,7 @@ public class Game implements Runnable {
                 //checks if any robot is on a checkpoint and his current objective matches the checkpoint-number
                 if (playerList.get(i).getRobot().getCurrentPosition().getValue0() == checkpointTile.getXCoordinate() &&
                     playerList.get(i).getRobot().getCurrentPosition().getValue1() == checkpointTile.getYCoordinate() &&
-                    playerList.get(i).getRobot().getCurrentObjective() == checkpointTile.getNumber()) {
+                    playerList.get(i).getRobot().getCurrentObjective() == checkpointTile.getCount()) {
                     return true;
                 }
             }
@@ -693,8 +693,8 @@ public class Game implements Runnable {
                 //If so, the player ID is added to the list in combination with the checkpoint-number
                 if (playerList.get(i).getRobot().getCurrentPosition().getValue0() == checkpointTile.getXCoordinate() &&
                     playerList.get(i).getRobot().getCurrentPosition().getValue1() == checkpointTile.getYCoordinate() &&
-                    playerList.get(i).getRobot().getCurrentObjective() == checkpointTile.getNumber()) {
-                    playersThatReachedCheckpointsList.add(new Pair<>(playerList.get(i).getId(), checkpointTile.getNumber()));
+                    playerList.get(i).getRobot().getCurrentObjective() == checkpointTile.getCount()) {
+                    playersThatReachedCheckpointsList.add(new Pair<>(playerList.get(i).getId(), checkpointTile.getCount()));
                 }
             }
         }
