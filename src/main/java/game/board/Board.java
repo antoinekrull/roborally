@@ -93,7 +93,11 @@ public class Board {
                         switch (type) {
                             case "Empty", "tbd" -> replaceTileInMap(board, x, y, tile, new NormalTile(x, y));
                             case "EnergySpace" -> {
-                                EnergySpaceTile energy = new EnergySpaceTile(x, y);
+                                boolean single = true;
+                                if(i>0){
+                                    single = false;
+                                }
+                                EnergySpaceTile energy = new EnergySpaceTile(x, y,single);
                                 replaceTileInMap(board, x, y, tile, energy);
                                 energySpaceList.add(energy);
                             }
@@ -153,7 +157,12 @@ public class Board {
                                 rebootTile = reboot;
                             }
                             case "CheckPoint" -> {
-                                CheckpointTile checkpoint = new CheckpointTile(x, y, tile.getCount());
+                                boolean single = true;
+                                if(i > 0) {
+                                    single = false;
+                                }
+
+                                CheckpointTile checkpoint = new CheckpointTile(x, y, tile.getCount(), single);
                                 replaceTileInMap(board, x, y, tile, checkpoint);
                                 increaseCheckPointCount();
                                 checkpointList.add(checkpoint);
