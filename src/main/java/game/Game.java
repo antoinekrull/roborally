@@ -20,7 +20,6 @@ import java.util.TimerTask;
 
 public class Game implements Runnable {
     private GamePhase currentGamePhase;
-    private final Timer timer = new Timer();
     public static PlayerList playerList = new PlayerList();
     public Board board = new Board();
     private Player activePlayer;
@@ -28,6 +27,8 @@ public class Game implements Runnable {
     public static VirusDeck virusDeck = new VirusDeck();
     public static TrojanDeck trojanDeck = new TrojanDeck();
     public static WormDeck wormDeck = new WormDeck();
+    public static UpgradeDeck upgradeDeck = new UpgradeDeck();
+    public static ArrayList<Card> upgradeShop = new ArrayList<>();
     public static int currentRegister = 0;
     private boolean timerIsRunning=false;
     private LinkedList<Integer> readyList = new LinkedList<>();
@@ -42,6 +43,7 @@ public class Game implements Runnable {
     private String jsonMap;
     private String currentMap;
     private boolean gameIsRunning = true;
+    private CollisionCalculator collisionCalculator;
 
     private Game(){
         new Thread(this).start();
@@ -68,6 +70,9 @@ public class Game implements Runnable {
     public Board getBoard() {
         return board;
     }
+    public static int getCurrentRegister() {
+        return currentRegister;
+    }
     public PlayerList getPlayerList() {
         return playerList;
     }
@@ -85,40 +90,50 @@ public class Game implements Runnable {
     public Player getActivePlayer() {
         return activePlayer;
     }
+    public boolean isTimerIsRunning() {
+        return timerIsRunning;
+    }
+    public void setTimerIsRunning(boolean timerIsRunning) {
+        this.timerIsRunning = timerIsRunning;
+    }
 
 
     private void applyAllTileEffects() throws Exception {
         try {
-            logger.debug("Applying conveyor belt 2 effects");
-            for (int x = 0; x < board.getConveyorBelt2List().size(); x++) {
-                for (int y = 0; y < playerList.size(); y++) {
-                    for (int i = 0; i < board.getConveyorBelt2List().get(x).getVelocity(); i++) {
-                        if (playerList.get(y).getRobot().getCurrentPosition().equals(board.getConveyorBelt2List().get(x).getPosition())) {
-                            board.getConveyorBelt2List().get(x).applyEffect(playerList.get(y));
-                            if (board.getTile(playerList.get(i).getRobot().getCurrentPosition()).get(0) instanceof PitTile) {
-                                reboot(playerList.get(i));
-                            }
+
+                for (int y = 0; y < board.getConveyorBelt2List().size(); y++) {
+                    for (int x = 0; x < playerList.size(); x++) {
+                        for (int i = 0; i < 2; i++) {
+                            Pair position = playerList.get(x).getRobot().getCurrentPosition();
+                            if (board.getConveyorBelt2List().get(y).getPosition().equals(position)) {
+                                logger.debug("Applying conveyor belt 2 ");
+                                collisionCalculator.moveConveyorBelt(playerList.get(x).getRobot());
                         }
                     }
                 }
             }
             Thread.sleep(500);
-            logger.debug("Applying conveyor belt 1 effects");
-            for (int x = 0; x < board.getConveyorBelt1List().size(); x++) {
-                for (int y = 0; y < playerList.size(); y++) {
-                    if (playerList.get(y).getRobot().getCurrentPosition().equals(board.getConveyorBelt1List().get(x).getPosition())) {
-                        board.getConveyorBelt1List().get(x).applyEffect(playerList.get(y));
-                        for (PitTile pitTile : board.getPitList()) {
-                            if (pitTile.getPosition().equals(playerList.get(y).getRobot().getCurrentPosition())) {
-                                reboot(playerList.get(y));
-                            }
-                        }
+            for (int y = 0; y < board.getConveyorBelt1List().size(); y++) {
+                for (int x = 0; x < playerList.size(); x++) {
+                    Pair position = playerList.get(x).getRobot().getCurrentPosition();
+                    if (board.getConveyorBelt1List().get(y).getPosition().equals(position)) {
+                        logger.debug("Applying conveyor belt 1");
+                        collisionCalculator.moveConveyorBelt(playerList.get(x).getRobot());
                     }
                 }
             }
+
             Thread.sleep(500);
-            logger.debug("Applying pushpanel effects");
             applyPushPanelEffects();
+
+            // Sollte nicht nötig sein, da im collision calculator nach pit gecheckt wird
+//            for (PitTile pitTile : board.getPitList()) {
+//                for (int y = 0; y < playerList.size(); y++) {
+//                    if (pitTile.getPosition().equals(playerList.get(y).getRobot().getCurrentPosition())) {
+//                        reboot(playerList.get(y));
+//                    }
+//                }
+//            }
             for (int x = 0; x < board.getGearTileList().size(); x++) {
                 for (int y = 0; y < playerList.size(); y++) {
                     if (playerList.get(y).getRobot().getCurrentPosition().equals(board.getGearTileList().get(x).getPosition())) {
@@ -127,11 +142,11 @@ public class Game implements Runnable {
                 }
             }
             Thread.sleep(500);
-            logger.debug("Applying laser tile effects");
             for (int x = 0; x < board.getLaserTileList().size(); x++) {
                 for (int y = 0; y < playerList.size(); y++) {
                     if (playerList.get(y).getRobot().getCurrentPosition().equals(board.getLaserTileList().get(x).getPosition())) {
                         //add functionality once collision Calculator is in
+                        logger.debug("Applying laser tile effects");
                         board.getLaserTileList().get(x).applyEffect(playerList.get(y));
                         drawDamageCards(playerList.get(y));
                     }
@@ -139,7 +154,6 @@ public class Game implements Runnable {
             }
             Thread.sleep(500);
             //robotLaser
-            logger.debug("Applying robot laser effects");
             computeRobotLaserPositions();
             for (int i = 0; i < playerList.size(); i++) {
                 for (int x = 0; x < robotLaserList.size(); x++) {
@@ -158,10 +172,10 @@ public class Game implements Runnable {
                 }
             }
             Thread.sleep(500);
-            logger.debug("Applying energy tile effects");
             for (int x = 0; x < board.getEnergySpaceList().size(); x++) {
                 for (int y = 0; y < playerList.size(); y++) {
                     if (playerList.get(y).getRobot().getCurrentPosition().equals(board.getEnergySpaceList().get(x).getPosition())) {
+                        logger.debug("Applying energy tile effects");
                         board.getEnergySpaceList().get(x).applyEffect(playerList.get(y));
                         server.sendEnergy(playerList.get(y), board.getEnergySpaceList().get(x));
                         Thread.sleep(100);
@@ -169,46 +183,41 @@ public class Game implements Runnable {
                 }
             }
             Thread.sleep(500);
-            logger.debug("Applying checkpoint effects");
             for (int x = 0; x < board.getCheckpointList().size(); x++) {
                 for (int y = 0; y < playerList.size(); y++) {
                     if (playerList.get(y).getRobot().getCurrentPosition().equals(board.getCheckpointList().get(x).getPosition())) {
+                        logger.debug("Applying checkpoint effects");
                         board.getCheckpointList().get(x).applyEffect(playerList.get(y));
                     }
                 }
             }
             Thread.sleep(500);
         } catch (IndexOutOfBoundsException e) {
-            logger.warn("You're Robot can not move past this point." + e);
+            logger.warn("Your Robot can not move past this point." + e);
         }
     }
 
-    private void applyPushPanelEffects() throws Exception {
+    private void applyPushPanelEffects() {
         for (int i = 0; i < playerList.size(); i++) {
             for (PushPanelTile pushPanelTile : board.getPushPanelList()) {
                 //checks if any robos on pushPanel
                 if (pushPanelTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
                     //checks if pushpanel would be active in current register
-                    if (pushPanelTile.getActiveRegisterList().contains(currentRegister)) {
-                        logger.debug(3);
-                        //activates effect of pushpanel
-                        applyTileEffects(board.getTile(playerList.get(i).getRobot().getCurrentPosition()), playerList.get(i));
-                        logger.debug(4);
-                    }
-                }
-                //pit check
-                for (PitTile pitTile : board.getPitList()) {
-                    if (pitTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
-                        reboot(playerList.get(i));
+                    if (pushPanelTile.getRegisters().contains(currentRegister + 1)) {
+                        logger.debug("Applying pushpanel effects");
+                        Pair<Integer, Integer> temp = new Pair<>(0 ,0);
+                        Pair<Integer, Integer> newPosition = new Pair<>(playerList.get(i).getRobot().getCurrentPosition().getValue0(),
+                                playerList.get(i).getRobot().getCurrentPosition().getValue1());
+                        switch(pushPanelTile.getPushDirection()) {
+                            case NORTH -> temp = newPosition.setAt1(newPosition.getValue1() - 1);
+                            case SOUTH -> temp = newPosition.setAt1(newPosition.getValue1() + 1);
+                            case EAST -> temp = newPosition.setAt0(newPosition.getValue0() + 1);
+                            case WEST -> temp = newPosition.setAt0(newPosition.getValue0() - 1);
+                        }
+                        collisionCalculator.moveRobot(playerList.get(i).getRobot(), temp);
                     }
                 }
             }
-        }
-    }
-
-    private void applyTileEffects(ArrayList<Tile> tileList, Player player) throws Exception {
-        for (Tile tile : tileList) {
-            tile.applyEffect(player);
         }
     }
 
@@ -219,6 +228,21 @@ public class Game implements Runnable {
             double dist2 = Math.sqrt(Math.pow(p2.getRobot().getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(p2.getRobot().getCurrentPosition().getValue1(), 2));
             return Double.compare(dist1, dist2);
         });
+    }
+
+    private void refreshUpgradeShop(){
+        int leftoverCards;
+        if(upgradeShop.size() == playerList.size()){
+            upgradeShop.clear();
+            for(int i = 0; i < playerList.size(); i++){
+                upgradeShop.add(upgradeDeck.popCardFromDeck());
+            }
+        } else {
+            leftoverCards = playerList.size() - upgradeShop.size();
+            for(int i = 0; i < leftoverCards; i++){
+                upgradeShop.add(upgradeDeck.popCardFromDeck());
+            }
+        }
     }
 
     private void computeRobotLaserPositions(){
@@ -296,22 +320,19 @@ public class Game implements Runnable {
             String[] drawnDamageCards = new String[player.getRobot().getDamageCount()];
             for(int i = 0; i < player.getRobot().getDamageCount(); i++) {
                 if(spamDeck.getSize() > 0) {
-                    player.addCard(spamDeck.popCardFromDeck());
+                    player.addCardToHand(spamDeck.popCardFromDeck());
                     drawnDamageCards[i] = "Spam";
                     logger.debug("Spam added");
                 } else {
                     ArrayList<String> availableDecks = new ArrayList<>();
                     if(wormDeck.getSize() > 0) {
                         availableDecks.add("Worm");
-                        logger.debug("Worm added");
                     }
                     if(trojanDeck.getSize() > 0) {
                         availableDecks.add("Trojan");
-                        logger.debug("Trojan added");
                     }
                     if(virusDeck.getSize() > 0) {
                         availableDecks.add("Virus");
-                        logger.debug("Virus added");
                     }
                     String[] availablePiles = availableDecks.toArray(String[]::new);
                     server.sendPickDamage(player, availablePiles);
@@ -333,15 +354,15 @@ public class Game implements Runnable {
             for(int i = 0; i < selectedDecks.length; i++) {
                 switch (selectedDecks[i]) {
                     case "Worm" -> {
-                        player.addCard(wormDeck.popCardFromDeck());
+                        player.addCardToHand(wormDeck.popCardFromDeck());
                         drawnDamageCards[i] = "Worm";
                     }
                     case "Trojan" -> {
-                        player.addCard(trojanDeck.popCardFromDeck());
+                        player.addCardToHand(trojanDeck.popCardFromDeck());
                         drawnDamageCards[i] = "Trojan";
                     }
                     case "Virus" -> {
-                        player.addCard(virusDeck.popCardFromDeck());
+                        player.addCardToHand(virusDeck.popCardFromDeck());
                         drawnDamageCards[i] = "Virus";
                     }
                 }
@@ -367,7 +388,7 @@ public class Game implements Runnable {
                 Pair<Integer, Integer> newPosition = new Pair<>(player.getRobot().getCurrentPosition().getValue0(),
                         player.getRobot().getCurrentPosition().getValue1());
                 for (int i = 0; i < card.getVelocity(); i++) {
-                    if (!CollisionCalculator.checkRobotCollision(player)) {
+
                         Pair<Integer, Integer> tempPosition;
                         switch (player.getRobot().getDirection()) {
                             case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
@@ -376,18 +397,22 @@ public class Game implements Runnable {
                             case WEST -> tempPosition = newPosition.setAt0(newPosition.getValue0() + 1);
                             default -> tempPosition = newPosition;
                         }
-                        System.out.println("okay ich habe den robo von " + newPosition + " zu " + tempPosition + " bewegt");
                         newPosition = tempPosition;
-                        player.getRobot().setCurrentPosition(newPosition);
-                    }
+                        collisionCalculator.moveRobot(player.getRobot(), newPosition);
+
                 }
             }
             case "MoveI", "MoveII", "MoveIII" -> {
-                Pair<Integer, Integer> newPosition = new Pair<>(player.getRobot().getCurrentPosition().getValue0(),
-                        player.getRobot().getCurrentPosition().getValue1());
+
                 for (int i = 0; i < card.getVelocity(); i++) {
-                    if (!CollisionCalculator.checkRobotCollision(player)) {
-                        Pair<Integer, Integer> tempPosition;
+                    Pair<Integer, Integer> newPosition = new Pair<>(player.getRobot().getCurrentPosition().getValue0(),
+                            player.getRobot().getCurrentPosition().getValue1());
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    Pair<Integer, Integer> tempPosition;
                         switch (player.getRobot().getDirection()) {
                             case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
                             case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
@@ -395,34 +420,50 @@ public class Game implements Runnable {
                             case WEST -> tempPosition = newPosition.setAt0(newPosition.getValue0() - 1);
                             default -> tempPosition = newPosition;
                         }
-                        System.out.println("okay ich habe den robo von " + newPosition + " zu " + tempPosition + " bewegt");
+
                         newPosition = tempPosition;
-                        player.getRobot().setCurrentPosition(newPosition);
+
+                        collisionCalculator.moveRobot(player.getRobot(), newPosition);
                         for (PitTile pitTile : board.getPitList()) {
                             if (pitTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    throw new RuntimeException(e);
+                                }
                                 reboot(playerList.get(i));
                             }
                         }
-                    }
                 }
             }
             case "PowerUp" -> player.getRobot().increaseEnergyCubes();
             case "Spam" -> {
                 Card topProgrammingCard = player.getRobot().getDeck().popCardFromDeck();
+                spamDeck.addCard(new SpamCard());
                 player.setCardRegister(topProgrammingCard, currentRegister);
+                server.sendReplaceCard(player);
+                player.getCardFromRegister(currentRegister);
             }
             case "Trojan" -> {
-                player.getHand().add(Game.spamDeck.popCardFromDeck());
-                player.getHand().add(Game.spamDeck.popCardFromDeck());
-                Card topProgrammingCard = player.getRobot().getDeck().popCardFromDeck();
-                player.setCardRegister(topProgrammingCard, player.getRobot().getActiveRegister());
+                player.getRobot().increaseDamageCount();
+                player.getRobot().increaseDamageCount();
+                drawDamageCards(player);
             }
             case "TurnLeft" -> player.getRobot().rotateRobot(Direction.LEFT);
             case "TurnRight" -> player.getRobot().rotateRobot(Direction.RIGHT);
+            case "UTurn" -> {
+                switch (player.getRobot().getDirection()) {
+                    case NORTH -> player.getRobot().setDirection(Direction.SOUTH);
+                    case EAST -> player.getRobot().setDirection(Direction.WEST);
+                    case SOUTH -> player.getRobot().setDirection(Direction.NORTH);
+                    case WEST -> player.getRobot().setDirection(Direction.EAST);
+                    default -> logger.warn("Invalid Direction");
+                }
+            }
             case "Virus" -> {
                 for (int i = 0; i < Game.playerList.size(); i++) {
-                    if (isInRangeOfVirus(player.getRobot(), Game.playerList.getPlayerFromList(i).getRobot())) {
-                        Game.playerList.getPlayerFromList(i).addCard(Game.virusDeck.popCardFromDeck());
+                    if (isInRangeOfVirus(player.getRobot(), Game.playerList.get(i).getRobot())) {
+                        Game.playerList.get(i).addCardToHand(Game.virusDeck.popCardFromDeck());
                     }
                 }
             }
@@ -448,31 +489,6 @@ public class Game implements Runnable {
             }
         }
         return result;
-    }
-
-    private void runTimer() {
-        timerIsRunning=true;
-        System.out.println("Timer is running");
-        server.sendTimerStarted();
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                PlayerList unreadyPlayers = playerList.getUnreadyPlayers();
-                for (int i = 0; i < unreadyPlayers.size(); i++) {
-                    String[] placedCards = unreadyPlayers.get(i).fillRegisterWithRandomCards();
-                    server.sendCardsYouGotNow(unreadyPlayers.get(i), placedCards);
-                    unreadyPlayers.get(i).fillRegisterWithRandomCards();
-
-                    // for testing purposes
-                    unreadyPlayers.get(i).printRegisters();
-                    logger.info("Time ran through");
-                    server.sendTimerEnded(playerList.getUnreadyPlayers());
-                    playerList.setPlayerReadiness(true);
-                }
-            }
-        };
-        //TODO: MAKE THIS 30000 AGAIN!!!!
-        timer.schedule(timerTask, 3000);
     }
 
     public GamePhase getCurrentGamePhase() {
@@ -555,34 +571,51 @@ public class Game implements Runnable {
     private void runUpgradePhase(){
         logger.debug("This game is running the Upgrade Phase now");
         server.sendActivePhase(1);
+        setCurrentGamePhase(GamePhase.UPGRADE_PHASE);
         determinePriority();
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        refreshUpgradeShop();
+        int cardIndex = -1;
+        for(int i= 0; i < upgradeShop.size(); i++){
+            if(activePlayer.getUpgradeToBuy().equals(upgradeShop.get(i).getCard())){
+                cardIndex = i;
+            }
+        }
+        if(activePlayer.isBuying()){
+            activePlayer.purchaseUpgrade(cardIndex);
+        }
 
     }
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
         server.sendActivePhase(2);
         timerIsRunning = false;
+        setCurrentGamePhase(GamePhase.PROGRAMMING_PHASE);
         try {
+            CustomTimer customTimer = new CustomTimer(server);
             Thread.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         for(int i = 0; i < playerList.size(); i++) {
             playerList.get(i).drawFullHand();
+            Thread.sleep(100);
             server.sendYourCards(playerList.get(i));
         }
         playerList.setPlayersPlaying(true);
         while(!playerList.playersAreReady()) {
             Thread.sleep(3000);
-            if (playerList.getAmountOfReadyPlayers() <= 1) {
+            if (playerList.getAmountOfReadyPlayers() >= 1) {
                 if(!timerIsRunning) {
-                    runTimer();
+                    customTimer.runTimer();
                 }
             }
+        }
+        if (timerIsRunning) {
+            customTimer.cancel();
+        }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         timerIsRunning=false;
         playerList.setPlayerReadiness(false);
@@ -590,14 +623,14 @@ public class Game implements Runnable {
     private void runActivationPhase() throws Exception {
         logger.debug("This game is running the Activation Phase now");
         server.sendActivePhase(3);
+        setCurrentGamePhase(GamePhase.ACTIVATION_PHASE);
         try {
             Thread.sleep(100);
         ArrayList<Card> cardList = new ArrayList<>();
         while(currentRegister < 5) {
-            //TODO: Player cant activate cards while playing
             for(int i = 0; i < playerList.size(); i++) {
                 Thread.sleep(1000);
-                playerList.get(i).getCardFromRegister(currentRegister).setClientID(playerList.get(i).getId());
+                //playerList.get(i).getCardFromRegister(currentRegister).setClientID(playerList.get(i).getId());
                 cardList.add(playerList.get(i).getCardFromRegister(currentRegister));
                 activateRegister(playerList.get(i));
                 if(board.getTile(playerList.get(i).getRobot().getCurrentPosition()).get(0) instanceof PitTile) {
@@ -616,8 +649,8 @@ public class Game implements Runnable {
                     Thread.sleep(1000);
                 }
             }
-
             determinePriority();
+
             //checks if all registers have been activated
             if(currentRegister == 4) {
                 for(int i = 0; i < playerList.size(); i++) {
@@ -627,7 +660,7 @@ public class Game implements Runnable {
             Thread.sleep(1000);
             logger.debug("Applying tile effects");
             applyAllTileEffects();
-            currentRegister++;
+            ++currentRegister;
             /*
             if(checkIfPlayersReachedCheckPoints(playerList)){
                 ArrayList<Pair<Integer, Integer>> playersReachedCheckpoints = playersThatReachedCheckpoints(playerList);
@@ -700,15 +733,16 @@ public class Game implements Runnable {
         return playersThatReachedCheckpointsList;
     }
 
-    private void activateRegister(Player player) throws Exception {
+    private void activateRegister(Player player) {
         try{
-            applyCardEffect(player, player.getCardFromRegister(currentRegister));
+            if(player.getCardFromRegister(currentRegister) == null) {
+                logger.debug("No card in register" + currentRegister);
+            } else {
+                applyCardEffect(player, player.getCardFromRegister(currentRegister));
+            }
             if(player.getCardFromRegister(currentRegister) instanceof PowerUpCard) {
                 server.sendEnergy(player, player.getCardFromRegister(currentRegister));
                     Thread.sleep(100);
-            }
-            if(player.getCardFromRegister(currentRegister) == null) {
-                logger.debug("No card in register" + currentRegister);
             }
         } catch (IndexOutOfBoundsException | InterruptedException e) {
             logger.warn("This register was not activated because you're Robot can not move past this point" + e);
@@ -792,6 +826,7 @@ public class Game implements Runnable {
     public void createBoard(String map) {
         try {
             board.createBoard(map);
+            this.collisionCalculator = new CollisionCalculator(board, playerList, this);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
@@ -826,12 +861,13 @@ public class Game implements Runnable {
         player.discardEntireHand();
         player.emptyAllCardRegisters();
         player.getRobot().setCurrentPosition(board.getRebootTile().getPosition());
-        server.sendReboot(player);
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        server.sendReboot(player);
+
         //TODO: Implement additional robo check
     }
 

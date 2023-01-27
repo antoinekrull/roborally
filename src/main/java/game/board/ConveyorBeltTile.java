@@ -14,8 +14,6 @@ import game.player.Player;
  */
 public class ConveyorBeltTile extends Tile {
     private int velocity;
-    private ArrayList<Direction> directionIn;
-    private Direction directionOut;
     private enum Variant {
         STRAIGHT, CURVE, TSECTION
     }
@@ -28,23 +26,15 @@ public class ConveyorBeltTile extends Tile {
         isDanger = false;
         isBlocking = false;
         this.velocity = velocity;
-        this.directionIn = directionIn;
-        this.directionOut = directionOut;
-        setVariant(this.directionIn, this.directionOut, velocity);
+        setDirectionIn(directionIn);
+        setDirectionOut(directionOut);
+
+        setVariant(getDirectionIn(), getDirectionOut(), velocity);
     }
 
     public int getVelocity() { return velocity; }
     public void setVelocity(int velocity) { this.velocity = velocity; }
-    public ArrayList<Direction> getDirectionIn() { return directionIn; }
-    public void setDirectionIn(ArrayList<Direction> directionIn) { this.directionIn = directionIn; }
 
-    public Direction getDirectionOut() {
-        return directionOut;
-    }
-
-    public void setDirectionOut(Direction directionOut) {
-        this.directionOut = directionOut;
-    }
     public Variant getVariant() {return variant;}
     private final String pathToStraight = "/textures/gameboard/foerderbandGeradeAnimated.gif";
     private final String pathToFastStraight = "/textures/gameboard/foerderbandGeradeAnimatedROT_Schnell.gif";
@@ -56,22 +46,22 @@ public class ConveyorBeltTile extends Tile {
 
     @Override
     public void applyEffect(Player player) throws Exception {
-        player.getRobot().setDirection(this.directionOut);
-        Pair<Integer, Integer> newPosition = new Pair<>(player.getRobot().getCurrentPosition().getValue0(), player.getRobot().getCurrentPosition().getValue1());
-        Pair<Integer, Integer> tempPosition;
-        switch(this.directionOut){
-            //TODO: 1.Conveyorbelts sollen den robo drehen wenn sie um die ecke gehen
-            //TODO: 2.Conveyorbelts sollen robo nur so weit schieben bis er wieder auf normalem boden steht. Siehe Regeln
-            case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
-            case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
-            case EAST -> tempPosition = newPosition.setAt0(newPosition.getValue0() + 1);
-            case WEST -> tempPosition = newPosition.setAt0(newPosition.getValue0() - 1);
-            default -> throw(new Exception("Invalid direction"));
-        }
-        player.getRobot().setCurrentPosition(tempPosition);
+//        player.getRobot().setDirection(directionOut);
+//        Pair<Integer, Integer> newPosition = new Pair<>(player.getRobot().getCurrentPosition().getValue0(), player.getRobot().getCurrentPosition().getValue1());
+//        Pair<Integer, Integer> tempPosition;
+//        switch(this.directionOut){
+//            case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
+//            case SOUTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() + 1);
+//            case EAST -> tempPosition = newPosition.setAt0(newPosition.getValue0() + 1);
+//            case WEST -> tempPosition = newPosition.setAt0(newPosition.getValue0() - 1);
+//            default -> throw(new Exception("Invalid direction"));
+//        }
+//        player.getRobot().setCurrentPosition(tempPosition);
     }
     @Override
     public void makeImage(GridPane tiles) {
+        Direction directionOut = getDirectionOut();
+        ArrayList<Direction> directionIn = getDirectionIn();
         ImageView img = new ImageView();
         img.setId(imageFXid);
         Image im = new Image(path, (double) height, 70, true, false);

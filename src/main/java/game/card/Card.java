@@ -12,7 +12,10 @@ import game.player.Player;
  */
 public abstract class Card {
 
-    private int clientID;
+    private String cardName;
+    private int cost = 0;
+    private boolean isPermanent = false;
+    //private int clientID;
     private String card;
 
     private int velocity;
@@ -20,12 +23,12 @@ public abstract class Card {
     protected boolean isDamageCard = false;
     private String cardEffect;
     protected CardType cardType;
-    public int getClientID() {
-        return clientID;
-    }
-    public void setClientID(int clientID) {
-        this.clientID = clientID;
-    }
+//    public int getClientID() {
+//        return clientID;
+//   }
+//    public void setClientID(int clientID) {
+//        this.clientID = clientID;
+//    }
     public CardType getCardType() {
         return cardType;
     }
@@ -59,5 +62,11 @@ public abstract class Card {
     public void setDamageCard(boolean damageCard) {
         isDamageCard = damageCard;
     }
+    public int getCost() {return cost;}
+    public void setCost(int cost) {this.cost = cost;}
+    public boolean isPermanent() {return isPermanent;}
+    public void setPermanent(boolean permanent) {isPermanent = permanent;}
+
     public void applyEffect(Player player) throws Exception {}
+
 }

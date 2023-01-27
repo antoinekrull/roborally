@@ -304,9 +304,13 @@ public class Server {
         }
     }
 
-    //TODO: Implement this
-    public void sendReplaceCards() {
-
+    public void sendReplaceCard(Player player) {
+        try {
+            messages.put(messageCreator.generateReplaceCardMessage(game.getCurrentRegister(),
+                    player.getCardFromRegister(game.getCurrentRegister()).getCard(), player.getId()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void sendMovement(Robot robot) {
@@ -374,6 +378,28 @@ public class Server {
         }
     }
 
+    public void sendRefillShop(String[] cards){
+        try{
+            messages.put(messageCreator.generateRefillShopMessage(cards));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void sendExchangeShop(String[] cards){
+        try{
+            messages.put(messageCreator.generateExchangeShopMessage(cards));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendUpgradeBought(Player player, String card){
+        try{
+            messages.put(messageCreator.generateUpgradeBoughtMessage(player.getId(), card));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     public synchronized int getUniqueID() {
         return uniqueID++;

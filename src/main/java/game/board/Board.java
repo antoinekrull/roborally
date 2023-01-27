@@ -273,6 +273,10 @@ public class Board {
     public Antenna getAntenna() {
         return antenna;
     }
+    public Pair<Integer, Integer> getDimension(){
+        Pair<Integer, Integer> dimension = new Pair<>(board.size(), board.get(0).size());
+        return dimension;
+    }
 
     public ArrayList<PitTile> getPitList() {
         return pitList;

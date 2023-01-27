@@ -7,12 +7,15 @@ import game.card.CardType;
 import game.card.ProgrammingDeck;
 
 import java.util.ArrayList;
-import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import server.connection.Server;
+
+import static game.Game.upgradeShop;
 
 /**
  * @author Moritz, Dominic, Antoine, Firas
@@ -25,9 +28,15 @@ public class Player {
     private int id;
     private boolean isPlaying;
     private boolean isReady;
+    private boolean isBuying;
+    private String upgradeToBuy;
+    private boolean[][] isUsingUpgrade = {{false, false, false},{false, false, false}};
     private ArrayList<Card> hand;
     private Card[] cardRegister = new Card[5];
     //private boolean[] statusRegister = new boolean[5];
+    private ArrayBlockingQueue<Card> PermanentUpgradeSlots = new ArrayBlockingQueue<>(3);
+    private ArrayBlockingQueue<Card> TemporaryUpgradeSlots = new ArrayBlockingQueue<>(3);
+    private boolean[] statusRegister = new boolean[5];
     private ProgrammingDeck personalDiscardPile;
     protected Robot robot;
     private final Logger logger = LogManager.getLogger(Player.class);
@@ -53,6 +62,12 @@ public class Player {
         this.robot = robot;
     }
 
+    public boolean[][] isUsingUpgrade() {
+        return isUsingUpgrade;
+    }
+    public void setUsingUpgrade(boolean[][] values) {
+        isUsingUpgrade = values;
+    }
     public String getUsername() {
         return username;
     }
@@ -89,10 +104,18 @@ public class Player {
     public Card[] getCardRegister() {
         return cardRegister;
     }
+    public boolean isBuying() {return isBuying;}
+    public void setBuying(boolean buying) {isBuying = buying;}
+    public String getUpgradeToBuy() {return upgradeToBuy;}
+    public void setUpgradeToBuy(String upgradeToBuy) {this.upgradeToBuy = upgradeToBuy;}
 
     //TODO: Fix crash if reboot happened
     public Card getCardFromRegister(int index){
-        return cardRegister[index];
+        if(cardRegister[index] == null) {
+            return null;
+        } else {
+            return cardRegister[index];
+        }
     }
     public int getCurrentRegister(Card currentCard){
         return ArrayUtils.indexOf(cardRegister, currentCard);
@@ -101,12 +124,6 @@ public class Player {
     public void setCardRegister(Card card, int index) {
         cardRegister[index] = card;
     }
-//    public boolean[] getStatusRegister() {
-//        return statusRegister;
-//    }
-//    public void setStatusRegister(boolean setter, int index) {
-//        statusRegister[index] = setter;
-//    }
     public ProgrammingDeck getPersonalDiscardPile() {
         return personalDiscardPile;
     }
@@ -154,7 +171,7 @@ public class Player {
         robot.getDeck().shuffleDeck();
         server.sendShuffleCoding(this);
     }
-    public void addCard(Card drawnCard) {
+    public void addCardToHand(Card drawnCard) {
         hand.add(drawnCard);
     }
     public void drawCard() {
@@ -166,6 +183,34 @@ public class Player {
         }
     }
 
+    public void purchaseUpgrade(int index){
+        if(upgradeShop.get(index).equals(null)){
+            logger.log(Level.ERROR, "No card available at the selected index");
+        }
+        else {
+            if(this.getRobot().getEnergyCubes() >= upgradeShop.get(index).getCost()){
+                this.getRobot().setEnergyCubes(this.getRobot().getEnergyCubes() - upgradeShop.get(index).getCost());
+                if(upgradeShop.get(index).isPermanent()){
+                    this.PermanentUpgradeSlots.add(upgradeShop.get(index));
+                    upgradeShop.remove(index);
+                }
+                else{
+                    this.TemporaryUpgradeSlots.add(upgradeShop.get(index));
+                    upgradeShop.remove(index);
+                }
+            }
+            else
+            {
+                logger.log(Level.INFO, "Player does not have enough energy cubes to purchase upgrade");
+            }
+        }
+    }
+
+    private void useUpgrades(boolean[][] parameter){
+        isUsingUpgrade = parameter;
+    }
+
+    //TODO: Add GUI functionality / exceptions
     public void playCard(Card card, int index) {
         if(index == 0 && card instanceof AgainCard) {
             logger.info("You cant play this card in the first register, please try again!");
@@ -194,21 +239,6 @@ public class Player {
         }
     }
 
-    /*
-    public boolean allRegistersActivated() {
-        boolean result = false;
-        int registerCount = 0;
-        for(int i = 0; i < statusRegister.length; i++) {
-            if(statusRegister[i] == true) {
-                registerCount++;
-            }
-            if(registerCount == statusRegister.length) {
-                result = true;
-            }
-        }
-        return result;
-    }
-    */
 
     //if timer runs out all unfilled registers of player get filled with random cards
     //TODO: Fix this
@@ -241,19 +271,19 @@ public class Player {
 
     public void emptyAllCardRegisters() {
         for(int i = 0; i < cardRegister.length; i++) {
-            if(cardRegister[i].isDamageCard()) {
-                switch (cardRegister[i].getCard()) {
-                    case "Trojan" -> Game.trojanDeck.addCard(cardRegister[i]);
-                    case "Worm" -> Game.wormDeck.addCard(cardRegister[i]);
-                    case "Spam" -> Game.spamDeck.addCard(cardRegister[i]);
-                    case "Virus" -> Game.virusDeck.addCard(cardRegister[i]);
+            if(cardRegister[i] != null) {
+                if(cardRegister[i].isDamageCard()) {
+                    switch (cardRegister[i].getCard()) {
+                        case "Trojan" -> Game.trojanDeck.addCard(cardRegister[i]);
+                        case "Worm" -> Game.wormDeck.addCard(cardRegister[i]);
+                        case "Spam" -> Game.spamDeck.addCard(cardRegister[i]);
+                        case "Virus" -> Game.virusDeck.addCard(cardRegister[i]);
+                    }
+                } else {
+                    personalDiscardPile.addCard(cardRegister[i]);
+                    cardRegister[i] = null;
                 }
-            } else {
-                personalDiscardPile.addCard(cardRegister[i]);
-                cardRegister[i] = null;
             }
-            setCardRegister(null, i);
-            //setStatusRegister(false, i);
         }
     }
     @Override

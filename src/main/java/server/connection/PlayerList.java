@@ -2,6 +2,7 @@ package server.connection;
 
 import game.player.Robot;
 import game.player.Player;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -168,6 +169,13 @@ public class PlayerList extends ArrayList implements Iterator<Player> {
             return true;
         }
         return false;
+    }
+    public ArrayList<Robot> getAllRobots(){
+        ArrayList<Robot> robots = new ArrayList<>();
+        for (Player player: playerList) {
+            robots.add(player.getRobot());
+        }
+        return robots;
     }
 
     @Override

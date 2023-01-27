@@ -7,6 +7,7 @@ import communication.MessageType;
 import game.CollisionCalculator;
 import game.Game;
 import game.player.AI_Player;
+import game.GamePhase;
 import game.player.Player;
 import game.player.Robot;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -209,7 +210,6 @@ public class HandleClient implements Runnable{
                         game.setJsonMap(jsonMap);
                         game.setCurrentMap(map);
                         game.createBoard(jsonMap);
-                        CollisionCalculator.createBoard(jsonMap);
                         server.messages.put(messageCreator.generateMapSelectedMessage(map));
                         //write(messageCreator.generateMapSelectedMessage(map));
 
@@ -222,18 +222,21 @@ public class HandleClient implements Runnable{
                                 getClientID()));
                     }
                     else if (incomingMessage.getMessageType() == MessageType.SelectedCard) {
-                        logger.debug(incomingMessage.getMessageBody().getCard());
-                        Game.playerList.getPlayerFromList(getClientID()).playCard(incomingMessage.getMessageBody().getCard(),
-                                incomingMessage.getMessageBody().getRegister() - 1);
-                        if(incomingMessage.getMessageBody().getCard().equals("Null")) {
-                            Message cardRemovedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
-                                    incomingMessage.getMessageBody().getRegister(), false);
-                            write(cardRemovedMessage);
+                        if (game.getCurrentGamePhase() == GamePhase.PROGRAMMING_PHASE) {
+                            Game.playerList.getPlayerFromList(getClientID()).playCard(incomingMessage.getMessageBody().getCard(),
+                                    incomingMessage.getMessageBody().getRegister() - 1);
+                            if (incomingMessage.getMessageBody().getCard().equals("Null")) {
+                                Message cardRemovedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
+                                        incomingMessage.getMessageBody().getRegister(), false);
+                                server.messages.put(cardRemovedMessage);
+                            } else {
+                                Message cardPlayedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
+                                        incomingMessage.getMessageBody().getRegister(), true);
+                                server.messages.put(cardPlayedMessage);
+                                logger.debug(incomingMessage.getMessageBody().getCard());
+                            }
                         } else {
-                            logger.debug("else-case HandleClient for selectedCard");
-                            Message cardPlayedMessage = messageCreator.generateCardSelectedMessage(getClientID(),
-                                    incomingMessage.getMessageBody().getRegister(), true);
-                            write(cardPlayedMessage);
+                            logger.warn("Card was changed during the" + game.getCurrentGamePhase() + "so it wasnt applied");
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.SelectedDamage) {
                         //Should be damage card
@@ -307,11 +310,14 @@ public class HandleClient implements Runnable{
                         } else {
                             game.removeReady(clientID);
                         }
-                        write(messageCreator.generatePlayerStatusMessage(clientID, ready));
+                        server.messages.put(messageCreator.generatePlayerStatusMessage(clientID, ready));
                         //server.messages.put(messageCreator.generatePlayerStatusMessage(clientID, ready));
                     }
                     else if (incomingMessage.getMessageType() == MessageType.ConnectionUpdate) {
 
+                    }
+                    else if (incomingMessage.getMessageType().equals(MessageType.BuyUpgrade)) {
+                        //TODO: handle purchase request
                     }
                 } catch (Exception e) {
                     logger.warn("An exception occurred: " + e);

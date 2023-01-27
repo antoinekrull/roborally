@@ -23,7 +23,7 @@ public class VirusCard extends Card {
     public void applyEffect(Player player) throws Exception {
         for(int i = 0; i < Game.playerList.size(); i++){
             if(isInRange(player.getRobot(), Game.playerList.getPlayerFromList(i).getRobot())){
-                Game.playerList.getPlayerFromList(i).addCard(Game.virusDeck.popCardFromDeck());
+                Game.playerList.getPlayerFromList(i).addCardToHand(Game.virusDeck.popCardFromDeck());
             }
         }
     }

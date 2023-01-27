@@ -334,6 +334,24 @@ import java.util.ArrayList;
             return new Message(MessageType.RegisterChosen, messageBody);
         }
 
+        public Message generateRefillShopMessage(String[] cards){
+            MessageBody messageBody = new MessageBody();
+            messageBody.setCards(cards);
+            return  new Message(MessageType.RefillShop, messageBody);
+        }
+
+        public Message generateExchangeShopMessage(String[] cards){
+            MessageBody messageBody = new MessageBody();
+            messageBody.setCards(cards);
+            return  new Message(MessageType.ExchangeShop, messageBody);
+        }
+
+        public Message generateBuyUpgradeMessage(Boolean isBuying, String card){
+            MessageBody messageBody = new MessageBody();
+            messageBody.setBuying(isBuying);
+            messageBody.setCard(card);
+            return new Message(MessageType.BuyUpgrade, messageBody);
+        }
 
 
 }
