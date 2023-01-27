@@ -38,6 +38,7 @@ public class Player {
     private ArrayBlockingQueue<Card> TemporaryUpgradeSlots = new ArrayBlockingQueue<>(3);
     private boolean[] statusRegister = new boolean[5];
     private ProgrammingDeck personalDiscardPile;
+    private ArrayBlockingQueue<Card> cardsToSwap = new ArrayBlockingQueue<>(3); //meant for the use with the memory swap upgrade card
     private Robot robot;
     private final Logger logger = LogManager.getLogger(Player.class);
 
@@ -102,7 +103,7 @@ public class Player {
     public void setBuying(boolean buying) {isBuying = buying;}
     public String getUpgradeToBuy() {return upgradeToBuy;}
     public void setUpgradeToBuy(String upgradeToBuy) {this.upgradeToBuy = upgradeToBuy;}
-
+    public ArrayBlockingQueue<Card> getCardsToSwap() {return cardsToSwap;}
     //TODO: Fix crash if reboot happened
     public Card getCardFromRegister(int index){
         if(cardRegister[index] == null) {

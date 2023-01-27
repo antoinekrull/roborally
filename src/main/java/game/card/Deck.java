@@ -29,6 +29,8 @@ public abstract class Deck {
     public void addCard(Card card) {
         deck.add(card);
     }
+    //this is only used by the memory swap card, since  swapped cards are placed on top of the deck
+    public void addCard(Card card, int index){deck.add(index, card);}
     public void shuffleDeck() {
         Collections.shuffle(deck);
     }
