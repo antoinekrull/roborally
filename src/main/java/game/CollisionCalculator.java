@@ -215,14 +215,12 @@ public class CollisionCalculator {
         System.out.println("target = " + target);
         System.out.println("boardsize = " + boardSize);
         if(target.getValue0()<0 || target.getValue0() > boardSize.getValue0()){
-            result = true;
-        }else if (target.getValue1()<0 || target.getValue1() > boardSize.getValue1()){
-            result = true;
+            return true;
+        }else if (target.getValue1()<0 || target.getValue1() > boardSize.getValue1()) {
+            return true;
             //could also be try catch block
-        } else if(board.getTile(target) == null) {
-            result = true;
         } else if (board.getTile(target).get(0).getType().equals("Pit")) {
-            result = true;
+            return true;
         }
         return result;
     }
