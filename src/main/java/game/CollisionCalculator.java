@@ -120,7 +120,6 @@ public class CollisionCalculator {
     public boolean moveConveyorBelt(Robot robot){
         boolean result = false;
         boolean conveyorBelt = false;
-        boolean pit = false;
         int xMove = 0;
         int yMove = 0;
         Direction outCurrent = null;
@@ -154,48 +153,48 @@ public class CollisionCalculator {
         }
 
         Pair<Integer, Integer> target = new Pair<>(currentPosition.getValue0()+xMove,currentPosition.getValue1()+yMove);
-        ArrayList<Tile> targetTile = board.getTile(target);
-        for (Tile tile : targetTile) {
-            if (tile.getType().equals("ConveyorBelt")) {
-                conveyorBelt = true;
-                outTarget = tile.getDirectionOut();
-            } else if (tile.getType().equals("Pit")) {
-                pit = true;
-            }
-        }
-
-
-        if(conveyorBelt){
-            if(outTarget!=outCurrent){
-                if(outTarget == Direction.NORTH){
-                    if (outCurrent == Direction.WEST){
-                        robot.rotateRobot(Direction.RIGHT);
-                    }else{
-                        robot.rotateRobot(Direction.LEFT);
-                    }
-                } else if (outTarget == Direction.EAST) {
-                    if (outCurrent == Direction.NORTH) {
-                        robot.rotateRobot(Direction.RIGHT);
-                    }else{
-                        robot.rotateRobot(Direction.LEFT);
-                    }
-                } else if (outTarget == Direction.SOUTH) {
-                    if (outCurrent == Direction.EAST) {
-                        robot.rotateRobot(Direction.RIGHT);
-                    } else {
-                        robot.rotateRobot(Direction.LEFT);
-                    }
-                } else {
-                    if (outCurrent == Direction.NORTH) {
-                        robot.rotateRobot(Direction.RIGHT);
-                    } else {
-                        robot.rotateRobot(Direction.LEFT);
-                    }
+        if(!checkFallFromMap(target)) {
+            ArrayList<Tile> targetTile = board.getTile(target);
+            for (Tile tile : targetTile) {
+                if (tile.getType().equals("ConveyorBelt")) {
+                    conveyorBelt = true;
+                    outTarget = tile.getDirectionOut();
                 }
             }
-            moveRobot(robot, target);
-            result = true;
-        } else if (checkFallFromMap(target)){
+
+
+            if (conveyorBelt) {
+                if (outTarget != outCurrent) {
+                    if (outTarget == Direction.NORTH) {
+                        if (outCurrent == Direction.WEST) {
+                            robot.rotateRobot(Direction.RIGHT);
+                        } else {
+                            robot.rotateRobot(Direction.LEFT);
+                        }
+                    } else if (outTarget == Direction.EAST) {
+                        if (outCurrent == Direction.NORTH) {
+                            robot.rotateRobot(Direction.RIGHT);
+                        } else {
+                            robot.rotateRobot(Direction.LEFT);
+                        }
+                    } else if (outTarget == Direction.SOUTH) {
+                        if (outCurrent == Direction.EAST) {
+                            robot.rotateRobot(Direction.RIGHT);
+                        } else {
+                            robot.rotateRobot(Direction.LEFT);
+                        }
+                    } else {
+                        if (outCurrent == Direction.NORTH) {
+                            robot.rotateRobot(Direction.RIGHT);
+                        } else {
+                            robot.rotateRobot(Direction.LEFT);
+                        }
+                    }
+                }
+                moveRobot(robot, target);
+                result = true;
+            }
+        }else if (checkFallFromMap(target)){
             game.reboot(playerList.getPlayerFromList(robot));
         }
         else{
@@ -236,7 +235,6 @@ public class CollisionCalculator {
         Pair<Integer, Integer> shot;
         ArrayList<LaserTile> lasers = board.getLaserTileList();
         for (int i = 0; i < lasers.size(); i++) {
-            System.out.println("ich schieße Laser " + i);
             LaserTile laser = lasers.get(i);
             Pair<Integer,Integer> pos = laser.getPosition();
             Direction direction = laser.getLos();

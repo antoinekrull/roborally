@@ -108,10 +108,8 @@ public class Board {
                                 replaceTileInMap(board, x, y, tile, conveyor);
 
                                 switch (velocity) {
-                                    case 1:
-                                        conveyorBelt1List.add(conveyor);
-                                    case 2:
-                                        conveyorBelt2List.add(conveyor);
+                                    case 1 -> conveyorBelt1List.add(conveyor);
+                                    case 2 -> conveyorBelt2List.add(conveyor);
                                 }
                             }
                             case "Wall" -> {

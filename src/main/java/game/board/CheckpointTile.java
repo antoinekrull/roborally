@@ -24,7 +24,9 @@ public class CheckpointTile extends Tile {
             this.path = getClass().getResource("/textures/gameboard/checkpoint4.png").toString();
             this.imageFXid = "Checkpoint4";
         } else if (count == 5) {
-
+            //TODO: replace with image of 5. checkpoint
+            this.path = getClass().getResource("/textures/gameboard/checkpoint4.png").toString();
+            this.imageFXid = "Checkpoint4";
         } else {
             this.path = getClass().getResource("/textures/gameboard/checkpoint.png").toString();
             this.imageFXid = "Checkpoint";
@@ -38,7 +40,10 @@ public class CheckpointTile extends Tile {
 
     @Override
     public void applyEffect(Player player) {
-        player.getRobot().setCurrentObjective(player.getRobot().getCurrentObjective() + 1);
+        if(player.getRobot().getCurrentObjective() == (count - 1)) {
+            System.out.println("Penis");
+            player.getRobot().increaseObjectiveNumber();
+        }
     }
     @Override
     public int getCount() {
