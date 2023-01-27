@@ -2,7 +2,6 @@ package game;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.*;
-import game.player.Player;
 import game.player.Robot;
 import org.javatuples.Pair;
 import server.connection.PlayerList;
@@ -39,13 +38,12 @@ public class CollisionCalculator {
                     }
                 }
             }
-
         if (canMove&&checkFallFromMap(target)){
             game.reboot(playerList.getPlayerFromList(robot1));
-        }else if (canMove){
+        } else if (canMove){
+            harvestEnergyCubes(target, robot1);
             robot1.setCurrentPosition(target);
         }
-
         return canMove;
     }
 
@@ -207,6 +205,7 @@ public class CollisionCalculator {
         }
         return result;
     }
+
     private boolean checkFallFromMap(Pair<Integer, Integer> target){
         boolean result = false;
         Pair<Integer,Integer> boardSize = board.getDimension();
@@ -260,28 +259,19 @@ public class CollisionCalculator {
         }
     }
 
-
-
-
-
-    //might be unnecessary
-
-    private boolean tileIsBlocking(ArrayList<Tile> tileList) {
-        boolean result = false;
-        if(tileList.size() == 1) {
-            result = tileList.get(0).isBlocking();
-        } else {
-            result = tileList.get(0).isBlocking() || tileList.get(1).isBlocking();
+    private void harvestEnergyCubes(Pair<Integer, Integer> target, Robot robot) {
+        for(Tile tile: board.getTile(target)) {
+            if(tile instanceof EnergySpaceTile) {
+                if(tile.hasEnergyCube()) {
+                    robot.increaseEnergyCubes("EnergySpace");
+                    tile.setEnergyCube(false);
+                }
+            }
         }
-        return result;
     }
 
     public void setBoard(Board newBoard) {
         board = newBoard;
-    }
-
-    public void createBoard(String jsonMap) throws JsonProcessingException {
-        board.createBoard(jsonMap);
     }
 
     private ArrayList<Direction> getBlockingDirections(ArrayList<Tile> tiles){

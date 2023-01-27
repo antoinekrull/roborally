@@ -11,7 +11,7 @@ public class PowerUpCard extends Card{
 
     @Override
     public void applyEffect(Player player) throws Exception {
-        player.getRobot().increaseEnergyCubes();
+        player.getRobot().increaseEnergyCubes("PowerUpCard");
     }
 
 }
