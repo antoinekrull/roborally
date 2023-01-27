@@ -99,22 +99,21 @@ public class Game implements Runnable {
 
     private void applyAllTileEffects() throws Exception {
         try {
-
+            for (int x = 0; x < playerList.size(); x++) {
+                Pair position = playerList.get(x).getRobot().getCurrentPosition();
                 for (int y = 0; y < board.getConveyorBelt2List().size(); y++) {
-                    for (int x = 0; x < playerList.size(); x++) {
+                    if (board.getConveyorBelt2List().get(y).getPosition().equals(position)) {
                         for (int i = 0; i < 2; i++) {
-                            Pair position = playerList.get(x).getRobot().getCurrentPosition();
-                            if (board.getConveyorBelt2List().get(y).getPosition().equals(position)) {
-                                logger.debug("Applying conveyor belt 2 ");
-                                collisionCalculator.moveConveyorBelt(playerList.get(x).getRobot());
+                            logger.debug("Applying conveyor belt 2 ");
+                            collisionCalculator.moveConveyorBelt(playerList.get(x).getRobot());
                         }
                     }
                 }
             }
             Thread.sleep(500);
-            for (int y = 0; y < board.getConveyorBelt1List().size(); y++) {
-                for (int x = 0; x < playerList.size(); x++) {
-                    Pair position = playerList.get(x).getRobot().getCurrentPosition();
+            for (int x = 0; x < playerList.size(); x++) {
+                Pair position = playerList.get(x).getRobot().getCurrentPosition();
+                for (int y = 0; y < board.getConveyorBelt1List().size(); y++) {
                     if (board.getConveyorBelt1List().get(y).getPosition().equals(position)) {
                         logger.debug("Applying conveyor belt 1");
                         collisionCalculator.moveConveyorBelt(playerList.get(x).getRobot());
