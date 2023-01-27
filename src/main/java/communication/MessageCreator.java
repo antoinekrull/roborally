@@ -248,6 +248,7 @@ import java.util.ArrayList;
             MessageBody messageBody = new MessageBody();
             messageBody.setClientID(clientID);
             messageBody.setAvailablePiles(availablePiles);
+            messageBody.setCount(availablePiles.length);
             return new Message(MessageType.PickDamage, messageBody);
         }
         public Message generateSelectDamage(String[] cards) {

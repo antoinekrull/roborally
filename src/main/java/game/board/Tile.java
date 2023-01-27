@@ -20,6 +20,7 @@ public class Tile {
     private int speed;
     private int count;
     private ArrayList<Integer> registers;
+    private boolean hasEnergyCube;
 
 
     private ArrayList<Direction> blockedDirections;
@@ -91,6 +92,12 @@ public class Tile {
     }
     public void setRegisters(ArrayList<Integer> registers) {
         this.registers = registers;
+    }
+    public boolean hasEnergyCube() {
+        return hasEnergyCube;
+    }
+    public void setEnergyCube(boolean hasEnergyCube) {
+        this.hasEnergyCube = hasEnergyCube;
     }
     String path;
     String imageFXid;
