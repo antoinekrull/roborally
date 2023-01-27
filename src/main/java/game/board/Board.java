@@ -35,8 +35,9 @@ public class Board {
         try {
             return board.get(position.getValue0()).get(position.getValue1());
         } catch(IndexOutOfBoundsException e) {
-            logger.warn("This tile is invalid " + e);
-            logger.debug(position.getValue0() + " " + position.getValue1());
+            e.printStackTrace();
+//            logger.warn("This tile is invalid " + e);
+//            logger.debug(position.getValue0() + " " + position.getValue1());
             return null;
         }
     }
@@ -188,6 +189,17 @@ public class Board {
         } catch (Exception e) {
             logger.warn("An error occurred: " + e);
         }
+    }
+    public boolean isPositionOnBoard(Pair<Integer, Integer> position){
+        Pair<Integer, Integer> dimension = getDimension();
+        if (position.getValue0()<0 || position.getValue0() >= dimension.getValue0()){
+            return false;
+        } else if (position.getValue1() < 0 || position.getValue1() >= dimension.getValue1()){
+            return false;
+        } else{
+            return true;
+        }
+
     }
 
     public Direction parseDirection(String direction) {

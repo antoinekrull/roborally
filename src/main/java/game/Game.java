@@ -14,8 +14,6 @@ import server.connection.Server;
 import java.util.*;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Game implements Runnable {
     private GamePhase currentGamePhase;
@@ -132,26 +130,11 @@ public class Game implements Runnable {
                 }
             }
             Thread.sleep(500);
-            collisionCalculator.shootLasers();
+            collisionCalculator.shootMapLasers();
             Thread.sleep(500);
             //robotLaser
-            computeRobotLaserPositions();
-            for (int i = 0; i < playerList.size(); i++) {
-                for (int x = 0; x < robotLaserList.size(); x++) {
-                    for (int y = 0; y < robotLaserList.get(x).size(); y++) {
-                        if (playerList.get(i).getRobot().getCurrentPosition().equals(robotLaserList.get(y))) {
-                            playerList.get(i).getRobot().increaseDamageCount();
-                        }
-                    }
-                }
-            }
-            Thread.sleep(500);
-            robotLaserList.clear();
-            if (playerList.getDamagedPlayers().size() != 0) {
-                for (Player player : playerList.getDamagedPlayers()) {
-                    drawDamageCards(player);
-                }
-            }
+            collisionCalculator.shootRobotLasers();
+
             Thread.sleep(500);
             for (int x = 0; x < board.getEnergySpaceList().size(); x++) {
                 for (int y = 0; y < playerList.size(); y++) {
@@ -301,7 +284,7 @@ public class Game implements Runnable {
     }
 
     //method for applying damage to robot
-    private void drawDamageCards(Player player) {
+    public void drawDamageCards(Player player) {
         try {
             String[] drawnDamageCards = new String[player.getRobot().getDamageCount()];
             for(int i = 0; i < player.getRobot().getDamageCount(); i++) {

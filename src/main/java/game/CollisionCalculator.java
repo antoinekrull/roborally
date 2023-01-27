@@ -1,6 +1,5 @@
 package game;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import game.board.*;
 import game.player.Robot;
 import org.javatuples.Pair;
@@ -209,8 +208,6 @@ public class CollisionCalculator {
     private boolean checkFallFromMap(Pair<Integer, Integer> target){
         boolean result = false;
         Pair<Integer,Integer> boardSize = board.getDimension();
-        System.out.println("target = " + target);
-        System.out.println("boardsize = " + boardSize);
         if(target.getValue0()<0 || target.getValue0() >= boardSize.getValue0()){
             return true;
         }else if (target.getValue1()<0 || target.getValue1() >= boardSize.getValue1()) {
@@ -230,7 +227,7 @@ public class CollisionCalculator {
         }
         return null;
     }
-    public void shootLasers() {
+    public void shootMapLasers() {
         boolean shooting = true;
         Pair<Integer, Integer> shot;
         ArrayList<LaserTile> lasers = board.getLaserTileList();
@@ -250,6 +247,7 @@ public class CollisionCalculator {
                 Robot robot = checkForRobot(pos);
                 if(robot != null){
                     robot.increaseDamageCount();
+                    game.drawDamageCards(playerList.getPlayerFromList(robot));
                     shooting = false;
                 } else if (checkWallCollision(pos, nextPos)) {
                     shooting = false;
@@ -257,6 +255,41 @@ public class CollisionCalculator {
                 pos = nextPos;
             }
         }
+    }
+    public void shootRobotLasers(){
+        boolean shooting = true;
+        Pair<Integer, Integer> shot;
+        ArrayList<Robot> robots = playerList.getAllRobots();
+        for (int i = 0; i < robots.size(); i++) {
+            System.out.println("IMMA FIRING MA LASOOOORRR");
+            Robot robot = robots.get(i);
+            Pair<Integer,Integer> pos = robot.getCurrentPosition();
+            Direction direction = robot.getDirection();
+            switch (direction) {
+                case NORTH -> shot = new Pair<>(0, -1);
+                case EAST -> shot = new Pair<>(1, 0);
+                case SOUTH -> shot = new Pair<>(0, 1);
+                case WEST -> shot = new Pair<>(-1, 0);
+                default -> shot = new Pair<>(0, 0);
+            }
+            while (shooting) {
+                Pair<Integer, Integer> nextPos = new Pair<>(pos.getValue0() + shot.getValue0(), pos.getValue1() + shot.getValue1());
+                if (board.isPositionOnBoard(nextPos)) {
+                    Robot robot2 = checkForRobot(nextPos);
+                    if (robot2 != null) {
+                        robot2.increaseDamageCount();
+                        game.drawDamageCards(playerList.getPlayerFromList(robot2));
+                        shooting = false;
+                    } else if (checkWallCollision(pos, nextPos)) {
+                        shooting = false;
+                    }
+                    pos = nextPos;
+                } else {
+                    shooting = false;
+                }
+            }
+        }
+
     }
 
     private void harvestEnergyCubes(Pair<Integer, Integer> target, Robot robot) {

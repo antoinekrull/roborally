@@ -46,6 +46,7 @@ public class HandleClient implements Runnable{
     private MessageCreator messageCreator;
     private Game game;
     private final Logger logger = LogManager.getLogger(HandleClient.class);
+    private JsonSerializer jsonSerializer;
 
     /**
      * Thread which handles the logged in clients.
@@ -61,6 +62,7 @@ public class HandleClient implements Runnable{
         this.server = server;
         this.threadID = threadID;
         this.messageCreator = new MessageCreator();
+        jsonSerializer = new JsonSerializer();
         //closes handler when stopServer method is called
         serverStatus = new SimpleBooleanProperty();
         serverStatus.bind(server.onlineProperty());
@@ -97,7 +99,7 @@ public class HandleClient implements Runnable{
 
     public void write(Message message) {
         try {
-            this.out.writeUTF(JsonSerializer.serializeJson(message));
+            this.out.writeUTF(jsonSerializer.serializeJson(message));
         } catch (IOException e) {
             logger.warn("An error occurred: " + e);
         }
@@ -107,7 +109,7 @@ public class HandleClient implements Runnable{
         try {
             for (Map.Entry<Integer, HandleClient> client : server.CLIENTS.entrySet()) {
                 if (client.getValue().getClientID() == id) {
-                    client.getValue().out.writeUTF(JsonSerializer.serializeJson(messageCreator.generateAliveMessage()));
+                    client.getValue().out.writeUTF(jsonSerializer.serializeJson(messageCreator.generateAliveMessage()));
                 }
             }
         } catch (Exception e) {
@@ -141,7 +143,7 @@ public class HandleClient implements Runnable{
 
             //Accept client if his protocol version is correct
             while(!accepted) {
-                Message incomingMessage = JsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
+                Message incomingMessage = jsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
                 try {
                     if (incomingMessage.getMessageType() == MessageType.HelloServer) {
                         if(incomingMessage.getMessageBody().getProtocol().equals(server.getProtocolVersion())){
@@ -182,7 +184,7 @@ public class HandleClient implements Runnable{
             executor.scheduleAtFixedRate(sendAliveMessages, 5, 5, TimeUnit.SECONDS);
 
             while (accepted) {
-                Message incomingMessage = JsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
+                Message incomingMessage = jsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
                 line = incomingMessage.getMessageBody().getMessage();
                 String line_formatted = this.username + ": " + line;
                 try {
