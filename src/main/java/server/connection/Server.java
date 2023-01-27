@@ -362,22 +362,37 @@ public class Server {
         }
     }
 
-    public void sendEnergy(Player player, Object object) {
+    public void sendEnergy(int id, int count, String source) {
         try {
-            String energySource = "";
-            if(object instanceof EnergySpaceTile) {
-                energySource = "EnergySpace";
-            } else if(object instanceof PowerUpCard) {
-                energySource = "PowerUpCard";
-            } else {
-                energySource = "error";
-            }
-            messages.put(messageCreator.generateEnergyMessage(player.getId(), player.getRobot().getEnergyCubes() ,energySource));
+            String energySource = source;
+            messages.put(messageCreator.generateEnergyMessage(id, count, energySource));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public void sendRefillShop(String[] cards){
+        try{
+            messages.put(messageCreator.generateRefillShopMessage(cards));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void sendExchangeShop(String[] cards){
+        try{
+            messages.put(messageCreator.generateExchangeShopMessage(cards));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendUpgradeBought(Player player, String card){
+        try{
+            messages.put(messageCreator.generateUpgradeBoughtMessage(player.getId(), card));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     public synchronized int getUniqueID() {
         return uniqueID++;

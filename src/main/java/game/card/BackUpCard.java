@@ -5,7 +5,7 @@ import game.player.Player;
 import org.javatuples.Pair;
 
 public class BackUpCard extends Card {
-    int velocity = -1;
+    int velocity = 1;
 
     public BackUpCard(){
         cardType = CardType.PROGRAMMING_CARD;

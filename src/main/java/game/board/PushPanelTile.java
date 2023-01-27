@@ -15,7 +15,6 @@ public class PushPanelTile extends Tile {
     ArrayList<Integer> registers;
     Pair<Integer, Integer> tileLocation;
 
-    ArrayList<Integer> activeRegisterList = new ArrayList<>();
     public PushPanelTile(int xCoordinate, int yCoordinate, Direction pushDirection, ArrayList<Integer> registers) {
         super(xCoordinate, yCoordinate, "/textures/gameboard/pushPanel.png", "PushPanel");
         if (registers.size()==2){
@@ -23,8 +22,7 @@ public class PushPanelTile extends Tile {
             this.imageFXid = "PushPanelRegister2";
         }
         else {
-            //TODO: change picture with new push panel with registers
-            this.path = getClass().getResource("/textures/gameboard/pushPanel.png").toString();
+            this.path = getClass().getResource("/textures/gameboard/pushPanel_1_3_5.png").toString();
             this.imageFXid = "PushPanel";
         }
 
@@ -59,12 +57,6 @@ public class PushPanelTile extends Tile {
             }
         }
     }
-    public ArrayList<Integer> getActiveRegisterList() {
-        return activeRegisterList;
-    }
-    public void setActiveRegisterList(ArrayList<Integer> activeRegisterList) {
-        this.activeRegisterList = activeRegisterList;
-    }
     @Override
     public void makeImage(GridPane tiles){
         ImageView img = new ImageView();
@@ -79,5 +71,9 @@ public class PushPanelTile extends Tile {
         }
         img.setRotate(rot);
         tiles.add(img,this.xCoordinate,this.yCoordinate);
+    }
+
+    public ArrayList<Integer> getRegisters() {
+        return registers;
     }
 }

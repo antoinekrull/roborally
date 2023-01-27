@@ -315,6 +315,9 @@ public class HandleClient implements Runnable{
                     else if (incomingMessage.getMessageType() == MessageType.ConnectionUpdate) {
 
                     }
+                    else if (incomingMessage.getMessageType().equals(MessageType.BuyUpgrade)) {
+                        //TODO: handle purchase request
+                    }
                 } catch (Exception e) {
                     logger.warn("An exception occurred: " + e);
                 }

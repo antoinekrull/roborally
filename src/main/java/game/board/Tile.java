@@ -20,6 +20,7 @@ public class Tile {
     private int speed;
     private int count;
     private ArrayList<Integer> registers;
+    private boolean hasEnergyCube;
 
 
     private ArrayList<Direction> blockedDirections;
@@ -51,6 +52,26 @@ public class Tile {
         this.blockedDirections = blockedDirections;
     }
 
+    public void setDirectionIn(ArrayList<Direction> directionIn) {
+        this.directionIn = directionIn;
+    }
+
+    public void setDirectionOut(Direction directionOut) {
+        this.directionOut = directionOut;
+    }
+
+    private ArrayList<Direction> directionIn;
+
+    public ArrayList<Direction> getDirectionIn() {
+        return directionIn;
+    }
+
+    public Direction getDirectionOut() {
+        return directionOut;
+    }
+
+    private Direction directionOut;
+
     public String getType() {
         return type;
     }
@@ -71,6 +92,12 @@ public class Tile {
     }
     public void setRegisters(ArrayList<Integer> registers) {
         this.registers = registers;
+    }
+    public boolean hasEnergyCube() {
+        return hasEnergyCube;
+    }
+    public void setEnergyCube(boolean hasEnergyCube) {
+        this.hasEnergyCube = hasEnergyCube;
     }
     String path;
     String imageFXid;

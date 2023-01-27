@@ -52,6 +52,17 @@ public enum MessageType {
     PickDamage,
     DrawDamage,
     Sample,
-    PlayerList, Accepted, ConnectionUpdate, UpgradeBought, BuyUpgrade, Boink, CheckpointMoved, ChooseRegister, RegisterChosen, Goodbye
+    PlayerList,
+    Accepted,
+    ConnectionUpdate,
+    UpgradeBought,
+    BuyUpgrade,
+    Boink,
+    CheckpointMoved,
+    ChooseRegister,
+    RegisterChosen,
+    Goodbye,
+    RefillShop,
+    ExchangeShop
     }
 

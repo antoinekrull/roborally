@@ -108,10 +108,8 @@ public class Board {
                                 replaceTileInMap(board, x, y, tile, conveyor);
 
                                 switch (velocity) {
-                                    case 1:
-                                        conveyorBelt1List.add(conveyor);
-                                    case 2:
-                                        conveyorBelt2List.add(conveyor);
+                                    case 1 -> conveyorBelt1List.add(conveyor);
+                                    case 2 -> conveyorBelt2List.add(conveyor);
                                 }
                             }
                             case "Wall" -> {
@@ -143,7 +141,9 @@ public class Board {
                                 laser = new LaserTile(x, y, directionLaser, onWall);
 
                                 replaceTileInMap(board,x,y,tile, laser);
-                                laserTileList.add(laser);
+                                if (onWall) {
+                                    laserTileList.add(laser);
+                                }
                             }
                             //TODO: needs to work with directions, once they have been added to json
                             case "RestartPoint" -> {
