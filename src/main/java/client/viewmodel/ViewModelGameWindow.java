@@ -90,7 +90,7 @@ public class ViewModelGameWindow {
     @FXML
     private Pane upgradeDeck, damageDeck;
     @FXML
-    private Label timerLabel, currentPhaseLabel, currentActivePlayerLabeL, myEnergyLabel, scoreLabel;
+    private Label timerLabel, currentPhaseLabel, currentActivePlayerLabel, myEnergyLabel, scoreLabel;
     @FXML
     private HBox myPlayerInfoHBox;
     @FXML
@@ -115,6 +115,7 @@ public class ViewModelGameWindow {
     //private ObservableList<String> handCardsUI;
     private Tutorial tutorial;
     private CardSelection cardSelection;
+
     private Timeline timeline;
     private double gameboardTileWidth;
     private double programcardsWidth;
@@ -165,11 +166,10 @@ public class ViewModelGameWindow {
             updateWidth(width);
         });
 
-        //TODO: set phase
-        //currentPhaseLabel.textProperty().bind("");
 
-        //TODO: setActivePlayer
-        //currentActivePlayerLabeL.textProperty().bind("");
+        currentPhaseLabel.textProperty().bind(modelGame.activePhaseProperty());
+
+        currentActivePlayerLabel.textProperty().bind(modelGame.currentPlayerProperty());
 
         scoreLabel.textProperty().bind(modelGame.scoreProperty().asString());
 
@@ -183,6 +183,7 @@ public class ViewModelGameWindow {
         playerGameInfo.loadPlayerInfo();
 
         cardSelection = new CardSelection();
+
 
         setOnDragDetected(programCard1);
         setOnDragDetected(programCard2);
@@ -373,14 +374,22 @@ public class ViewModelGameWindow {
             int clientID = logMessage.getMessageBody().getClientID();
             String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
 
-            logMessageStyling(MessageType.SelectionFinished, username, null, null, null, -1);
+            logMessageStyling(MessageType.SelectionFinished, username, null, null, null, -1, false);
         }
         if (logMessage.getMessageType().equals(MessageType.CardPlayed)) {
             int clientID = logMessage.getMessageBody().getClientID();
             String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
             String card = logMessage.getMessageBody().getCard();
 
-            logMessageStyling(MessageType.CardPlayed, username, card, null, null, -1);
+            logMessageStyling(MessageType.CardPlayed, username, card, null, null, -1, false);
+        }
+        if (logMessage.getMessageType().equals(MessageType.CardSelected)) {
+            int clientID = logMessage.getMessageBody().getClientID();
+            String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
+            int register = logMessage.getMessageBody().getRegister();
+            boolean filled = logMessage.getMessageBody().isFilled();
+
+            logMessageStyling(MessageType.CardSelected, username, null, null, null, register, filled);
         }
         if (logMessage.getMessageType().equals(MessageType.TimerEnded)) {
             int[] clientIDs = Arrays.copyOf(logMessage.getMessageBody().getClientIDs(),logMessage.getMessageBody().getClientIDs().length);
@@ -394,7 +403,7 @@ public class ViewModelGameWindow {
                 }
             }
 
-            logMessageStyling(MessageType.TimerEnded, null, null, null, players, -1);
+            logMessageStyling(MessageType.TimerEnded, null, null, null, players, -1, false);
         }
         if (logMessage.getMessageType().equals(MessageType.DrawDamage)) {
             String[] damageCards = Arrays.copyOf(logMessage.getMessageBody().getCards(), logMessage.getMessageBody().getCards().length);
@@ -406,13 +415,13 @@ public class ViewModelGameWindow {
                 }
             }
 
-            logMessageStyling(MessageType.DrawDamage, username, null, damageCards, null, -1);
+            logMessageStyling(MessageType.DrawDamage, username, null, damageCards, null, -1, false);
         }
         if (logMessage.getMessageType().equals(MessageType.RegisterChosen)) {
             int clientID = logMessage.getMessageBody().getClientID();
             String username = logMessage.getMessageBody().getName();
             int register = logMessage.getMessageBody().getRegister();
-            logMessageStyling(MessageType.RegisterChosen, username, null, null, null, register);
+            logMessageStyling(MessageType.RegisterChosen, username, null, null, null, register, false);
         }
         if (logMessage.getMessageType().equals(MessageType.GameFinished)) {
             int clientID = logMessage.getMessageBody().getClientID();
@@ -456,7 +465,7 @@ public class ViewModelGameWindow {
     }
 
     public void logMessageStyling(MessageType messageType, String username, String card,
-                                  String[] cards, String[] players, int register) {
+                                  String[] cards, String[] players, int register, boolean filled) {
 
         TextFlow logTextFlow = new TextFlow();
         Text timeText = new Text();
@@ -464,55 +473,68 @@ public class ViewModelGameWindow {
         Text usernameText = new Text();
         Text logText = new Text();
 
-        timeText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+        timeText.setStyle("-fx-fill: gray;" + "-fx-font-size: 8pt;");
         timeText.setText('(' + System.currentTimeMillis() + ')' + "  ");
 
-        usernameText.setStyle("-fx-font-weight: bold;" + "-fx-text-fill: gray;");
+        usernameText.setStyle("-fx-font-weight: bold;" + "-fx-fill: gray;");
         usernameText.setText(username);
 
         if (messageType.equals(MessageType.SelectionFinished)) {
             typeLogText.setText("[SelectionFinished] ");
-            typeLogText.setStyle("-fx-text-fill: purple;" + "-fx-font-size: 8pt;");
+            typeLogText.setStyle("-fx-fill: purple;" + "-fx-font-size: 8pt;");
 
-            logText.setText(" finished his selection.");
-            logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+            if (filled) {
+                logText.setText(" put a card in register " + register);
+                logText.setStyle("-fx-fill: gray;" + "-fx-font-size: 8pt;");
+            }
+            else {
+                logText.setText(" took a card from register " + register);
+                logText.setStyle("-fx-fill: gray;" + "-fx-font-size: 8pt;");
+            }
         }
         else if (messageType.equals(MessageType.CardPlayed)) {
             typeLogText.setText("[CardPlayed] ");
-            typeLogText.setStyle("-fx-text-fill: orange;" + "-fx-font-size: 8pt;");
+            typeLogText.setStyle("-fx-fill: orange;" + "-fx-font-size: 8pt;");
 
             logText.setText(" played following card: " + card);
-            logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+            logText.setStyle("-fx-fill: gray;" + "-fx-font-size: 8pt;");
+        }
+        else if (messageType.equals(MessageType.CardSelected)) {
+            typeLogText.setText("[CardSelected] ");
+            typeLogText.setStyle("-fx-fill: orange;" + "-fx-font-size: 8pt;");
+
+            logText.setText(" played following card: " + card);
+            logText.setStyle("-fx-fill: gray;" + "-fx-font-size: 8pt;");
         }
         else if (messageType.equals(MessageType.TimerEnded)) {
             if (players.length == 0) {
                 typeLogText.setText("[TimerEnded] ");
-                typeLogText.setStyle("-fx-text-fill: blue;" + "-fx-font-size: 8pt;");
+                typeLogText.setStyle("-fx-fill: blue;" + "-fx-font-size: 8pt;");
 
                 logText.setText("Nobody was too slow.");
-                logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+                logText.setStyle("-fx-fill: gray;" + "-fx-font-size: 8pt;");
             }
             else {
                 typeLogText.setText("[TimerEnded] ");
-                typeLogText.setStyle("-fx-text-fill: blue;" + "-fx-font-size: 8pt;");
+                typeLogText.setStyle("-fx-fill: blue;" + "-fx-font-size: 8pt;");
 
                 logText.setText(Arrays.toString(players) + " missed timing.");
-                logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+                logText.setStyle("-fx-fill: gray;" + "-fx-font-size: 8pt;");
             }
         }
         else if (messageType.equals(MessageType.DrawDamage)) {
             typeLogText.setText("[DrawDamage] ");
-            typeLogText.setStyle("-fx-text-fill: black;" + "-fx-font-size: 8pt;");
+            typeLogText.setStyle("-fx-fill: black;" + "-fx-font-size: 8pt;");
 
             logText.setText(Arrays.toString(cards));
-            logText.setStyle("-fx-text-fill: gray;" + "-fx-font-size: 8pt;");
+            logText.setStyle("-fx-fill: gray;" + "-fx-font-size: 8pt;");
         }
         else if (messageType.equals(MessageType.RegisterChosen)) {
             typeLogText.setText("[RegisterChosen] ");
-            typeLogText.setStyle("-fx-text-fill: yellow;" + "-fx-font-size: 8pt;");
+            typeLogText.setStyle("-fx-fill: yellow;" + "-fx-font-size: 8pt;");
 
             logText.setText(" chose register " + register);
-            logText.setStyle("-fx-text-fill: yellow;" + "-fx-font-size: 8pt;");
+            logText.setStyle("-fx-fill: yellow;" + "-fx-font-size: 8pt;");
         }
 
         logTextFlow.getChildren().addAll(timeText, typeLogText, usernameText, logText);
@@ -555,21 +577,22 @@ public class ViewModelGameWindow {
             }
         }
         if (gamemessage.getMessageType().equals(MessageType.ReplaceCard)) {
-//            int clientID = gamemessage.getMessageBody().getClientID();
-//            if(clientID == gamemessage.getMessageBody().getClientID()) {
-//                int register = gamemessage.getMessageBody().getRegister();
-            //TODO: SwitchCase - Idee: Alles was mit Karten zu tun hat auslagern?
-//            }
+            int clientID = gamemessage.getMessageBody().getClientID();
+            if(clientID == gamemessage.getMessageBody().getClientID()) {
+                int register = gamemessage.getMessageBody().getRegister();
+                String cardname = gamemessage.getMessageBody().getCard();
+                replaceCard(register, cardname);
+            }
         }
         if (gamemessage.getMessageType().equals(MessageType.DrawDamage)) {
             drawDamage(gamemessage.getMessageBody().getCards());
         }
         if (gamemessage.getMessageType().equals(MessageType.PickDamage)) {
-            //TODO: Pile Array?
-            //ArrayList<String> damagePiles = gamemessage.getMessageBody().getPiles[];
-            //int counter = gamemessage.getMessageBody().getCounter();
-            //cardSelection.overlayDamagecards(damagePiles, counter);
-
+            int clientID = gamemessage.getMessageBody().getClientID();
+            if(clientID == gamemessage.getMessageBody().getClientID()) {
+                // TODO: Coutner in MessageCreator - int counter = gamemessage.getMessageBody().getCounter();
+                //cardSelection.overlayDamagecards(gamemessage.getMessageBody().getCards(), counter);
+            }
         }
     }
 
@@ -1117,6 +1140,118 @@ public class ViewModelGameWindow {
                         imageView13.setPreserveRatio(true);
                         pane.getChildren().add(imageView13);
                     }
+                }
+            }
+        }
+    }
+
+    private void replaceCard(int register, String cardname) {
+        Pane columnPane = null;
+        for (Node node : programmingGrid.getChildren()) {
+            if (GridPane.getColumnIndex(node) == register) {
+                if (node instanceof Pane) {
+                    columnPane = (Pane) node;
+                    break;
+                }
+            }
+        }
+        if (columnPane != null) {
+            for (Node child : columnPane.getChildren()) {
+                if (child instanceof ImageView) {
+                    columnPane.getChildren().remove(child);
+                    break;
+                }
+            }
+            switch (cardname) {
+                case "MoveI" -> {
+                    InputStream input = getClass().getResourceAsStream(
+                        "/textures/cards/Move1.png");
+                    Image image = new Image(input);
+                    ImageView imageView = new ImageView(image);
+                    imageView.setId("MoveI");
+                    imageView.setFitWidth(programcardsWidth);
+                    imageView.setPreserveRatio(true);
+                    columnPane.getChildren().add(imageView);
+                }
+                case "MoveII" -> {
+                    InputStream input2 = getClass().getResourceAsStream(
+                        "/textures/cards/Move2.png");
+                    Image image2 = new Image(input2);
+                    ImageView imageView2 = new ImageView(image2);
+                    imageView2.setId("MoveII");
+                    imageView2.setFitWidth(programcardsWidth);
+                    imageView2.setPreserveRatio(true);
+                    columnPane.getChildren().add(imageView2);
+                }
+                case "MoveIII" -> {
+                    InputStream input3 = getClass().getResourceAsStream(
+                        "/textures/cards/Move3.png");
+                    Image image3 = new Image(input3);
+                    ImageView imageView3 = new ImageView(image3);
+                    imageView3.setId("MoveIII");
+                    imageView3.setFitWidth(programcardsWidth);
+                    imageView3.setPreserveRatio(true);
+                    columnPane.getChildren().add(imageView3);
+                }
+                case "TurnLeft" -> {
+                    InputStream input4 = getClass().getResourceAsStream(
+                        "/textures/cards/leftTurn.png");
+                    Image image4 = new Image(input4);
+                    ImageView imageView4 = new ImageView(image4);
+                    imageView4.setId("TurnLeft");
+                    imageView4.setFitWidth(programcardsWidth);
+                    imageView4.setPreserveRatio(true);
+                    columnPane.getChildren().add(imageView4);
+                }
+                case "TurnRight" -> {
+                    InputStream input5 = getClass().getResourceAsStream(
+                        "/textures/cards/rightTurn.png");
+                    Image image5 = new Image(input5);
+                    ImageView imageView5 = new ImageView(image5);
+                    imageView5.setId("TurnRight");
+                    imageView5.setFitWidth(programcardsWidth);
+                    imageView5.setPreserveRatio(true);
+                    columnPane.getChildren().add(imageView5);
+                }
+                case "UTurn" -> {
+                    InputStream input6 = getClass().getResourceAsStream(
+                        "/textures/cards/uTurn.png");
+                    Image image6 = new Image(input6);
+                    ImageView imageView6 = new ImageView(image6);
+                    imageView6.setId("UTurn");
+                    imageView6.setFitWidth(programcardsWidth);
+                    imageView6.setPreserveRatio(true);
+                    columnPane.getChildren().add(imageView6);
+                }
+                case "BackUp" -> {
+                    InputStream input7 = getClass().getResourceAsStream(
+                        "/textures/cards/moveBack.png");
+                    Image image7 = new Image(input7);
+                    ImageView imageView7 = new ImageView(image7);
+                    imageView7.setId("BackUp");
+                    imageView7.setFitWidth(programcardsWidth);
+                    imageView7.setPreserveRatio(true);
+                    columnPane.getChildren().add(imageView7);
+                }
+                case "PowerUp" -> {
+                    InputStream input8 = getClass().getResourceAsStream(
+                        "/textures/cards/powerUp.png");
+                    Image image8 = new Image(input8);
+                    ImageView imageView8 = new ImageView(image8);
+                    imageView8.setId("PowerUp");
+                    imageView8.setFitWidth(programcardsWidth);
+                    imageView8.setPreserveRatio(true);
+                    columnPane.getChildren().add(imageView8);
+                }
+                case "Again" -> {
+                    InputStream input9 = getClass().getResourceAsStream(
+                        "/textures/cards/Again.png");
+                    Image image9 = new Image(input9);
+                    ImageView imageView9 = new ImageView(image9);
+                    imageView9.setId("Again");
+                    imageView9.setFitWidth(programcardsWidth);
+                    imageView9.setPreserveRatio(true);
+                    columnPane.getChildren().add(imageView9);
                 }
             }
         }
