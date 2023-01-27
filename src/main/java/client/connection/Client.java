@@ -379,7 +379,7 @@ public class Client {
                                 Client.this.myCards.clear();
                                 Client.this.myCards.addAll(cardsInHand);
                                 for(String card: cardsInHand){
-                                    logger.debug("Client - cardsInHand" + card);
+                                    logger.debug("Client - cardsInHand: " + card);
                                 }
                             });
                             for (int i = 0; i < myCards.size(); i++) {

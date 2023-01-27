@@ -14,7 +14,7 @@ public class CardSelection {
 
   private StackPane baseStackPane;
 
-  private void overlayDamagecards(ArrayList<String> damagePiles, int counter) {
+  public void overlayDamagecards(String[] damagePiles, int counter, StackPane baseStackPane) {
     StackPane overlay = new StackPane();
     overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.8);");
     overlay.setAlignment(Pos.CENTER);

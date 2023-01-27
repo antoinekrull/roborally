@@ -590,8 +590,8 @@ public class ViewModelGameWindow {
         if (gamemessage.getMessageType().equals(MessageType.PickDamage)) {
             int clientID = gamemessage.getMessageBody().getClientID();
             if(clientID == gamemessage.getMessageBody().getClientID()) {
-                // TODO: Coutner in MessageCreator - int counter = gamemessage.getMessageBody().getCounter();
-                //cardSelection.overlayDamagecards(gamemessage.getMessageBody().getCards(), counter);
+                int counter = gamemessage.getMessageBody().getCount();
+                cardSelection.overlayDamagecards(gamemessage.getMessageBody().getCards(), counter, baseStackPane);
             }
         }
     }
@@ -682,12 +682,20 @@ public class ViewModelGameWindow {
 
     public void fillHandCards() {
         //clear the handcards
+
         for (Node child : programmingGrid.getChildren()) {
             if (child instanceof Pane) {
                 Pane pane = (Pane) child;
                 pane.getChildren().clear();
             }
         }
+        for (Node child : handGrid.getChildren()) {
+            if (child instanceof Pane) {
+                Pane pane = (Pane) child;
+                pane.getChildren().clear();
+            }
+        }
+
         this.isClickable = true;
         logger.debug("VM - fillHandCards Start:");
         ArrayList<String> handCards = new ArrayList<>(modelGame.getMyHandCards());
@@ -867,7 +875,7 @@ public class ViewModelGameWindow {
             @Override
             public void handle(MouseEvent event) {
                 //drag was detected, start drag-and-drop gesture
-                logger.debug("Drag detected");
+                //logger.debug("Drag detected");
 
                 //Any TransferMode is allowed
                 Dragboard db = source.startDragAndDrop(TransferMode.ANY);
@@ -906,7 +914,7 @@ public class ViewModelGameWindow {
         target.setOnDragEntered(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                logger.debug("setOnDragEntered");
+                //logger.debug("setOnDragEntered");
                 //drag-and-drop gesture entered target
                 //Show entering visually
                 if (event.getGestureSource() != target && event.getDragboard().hasImage()) {
@@ -921,7 +929,7 @@ public class ViewModelGameWindow {
         target.setOnDragExited(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                logger.debug("setOnDragExited");
+                //logger.debug("setOnDragExited");
                 //mouse moves out of enntered area
                 //remove visuals
                 target.setStyle("-fx-border-color: transparent;");
@@ -935,15 +943,15 @@ public class ViewModelGameWindow {
         target.setOnDragDropped(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                logger.debug("setOnDragDropped");
+                //logger.debug("setOnDragDropped");
                 //data dropped
                 isDroppedSuccessfully = true;
                 boolean success = false;
-                logger.debug("VM - target Children: " + target.getChildren());
+                logger.debug("setOnDragDropped - Content of Target: " + target.getChildren());
                 if (target.getChildren().isEmpty()) {
                     Dragboard db = event.getDragboard();
                     if (db.hasImage()) {
-                        logger.debug("VM - ColumnIndex of Target: " + GridPane.getColumnIndex(target));
+                        logger.debug("setOnDragDropped - ColumnIndex of Target: " + GridPane.getColumnIndex(target));
                         String cardName = db.getString();
                         Image data = db.getImage();
                         ImageView card = new ImageView(data);
@@ -952,15 +960,13 @@ public class ViewModelGameWindow {
                         card.setPreserveRatio(true);
                         target.getChildren().add(card);
                         int targetIndex = GridPane.getColumnIndex(target) + 1;
-                        logger.debug("VM - 1 Cardname: " + cardName);
-                        logger.debug("VM - 3 target for message: " + targetIndex);
-                        logger.debug("VM - 4 SendSelectedCard sent: " + cardName);
                         try {
                             Thread.sleep(100);
                         } catch (InterruptedException e) {
                             throw new RuntimeException(e);
                         }
                         modelGame.sendSelectedCard(cardName, targetIndex);
+                        logger.debug("setOnDragDropped - SendSelectedCard sent: " + cardName + " | Register: " + targetIndex);
                         success = true;
                     }
 
@@ -976,7 +982,7 @@ public class ViewModelGameWindow {
                         card.setPreserveRatio(true);
                         card.setId(cardName);
                         source.getChildren().add(card);
-                        logger.debug("VM - Card returned to Column: " + columnIndex);
+                        logger.debug("setOnDragDropped - Card returned to Column: " + columnIndex);
                         success = true;
                     }
                 }
@@ -992,8 +998,7 @@ public class ViewModelGameWindow {
         source.setOnDragDone(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                logger.debug("Drag done - completed: " + event.isDropCompleted());
-                logger.debug("Drag done - completed in variable: " + event.isDropCompleted());
+                //logger.debug("Drag done - completed in variable: " + event.isDropCompleted());
                 if (!isDroppedSuccessfully) {
                     // drag and drop failed, add the card back to the source pane
                     Dragboard db = event.getDragboard();
