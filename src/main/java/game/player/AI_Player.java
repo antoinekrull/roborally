@@ -1,19 +1,42 @@
 package game.player;
 
+import communication.Message;
+import communication.MessageCreator;
+import game.Game;
 import game.board.Board;
+import game.board.StartTile;
 import game.card.Card;
 import game.card.CardType;
-import helper.Helper;
-import helper.Node;
 import org.javatuples.Pair;
-
-import java.util.ArrayList;
 
 public class AI_Player extends Player {
     private Board board;
-    public AI_Player(int id, String username, Robot robot) {
+    MessageCreator messageCreator;
+    public AI_Player(int id, String username, Robot robot, Board board) {
         super(id, username, robot);
+        this.board = board;
+        messageCreator = new MessageCreator();
     }
+
+    public void chooseStartingPoint(Game game) throws InterruptedException {
+        Pair<Integer, Integer> aiStartTilePosition = new Pair<>(0,0);
+        for(StartTile startTile: board.getStartTileList()) {
+            if(!startTile.isTaken()) {
+                aiStartTilePosition = startTile.getPosition();
+                startTile.setTaken(true);
+            }
+        }
+        logger.debug("AI choose startingpoint x: " + aiStartTilePosition.getValue0() + " y: " + aiStartTilePosition.getValue1());
+        Message startingPointTakenMessage = messageCreator.generateStartingPointTakenMessage(aiStartTilePosition.getValue0(), aiStartTilePosition.getValue1(), id);
+        game.setStartPoint(aiStartTilePosition.getValue0(), aiStartTilePosition.getValue1());
+        server.messages.put(startingPointTakenMessage);
+    }
+    public void sendPlayerAddedMessage() throws InterruptedException {
+        Message playerAddedMessage = messageCreator.generatePlayerAddedMessage(username, robot.getFigure(), id);
+        //server.CLIENTS.get(1).write(playerAddedMessage);
+        server.messages.put(playerAddedMessage);
+    }
+
     public void playTurn(){
         //preparation
         drawFullHand();
