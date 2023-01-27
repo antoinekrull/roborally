@@ -107,11 +107,10 @@ public class Board {
                                 ConveyorBeltTile conveyor = new ConveyorBeltTile(x, y, velocity, in, out);
                                 replaceTileInMap(board, x, y, tile, conveyor);
 
-                                switch (velocity) {
-                                    case 1:
-                                        conveyorBelt1List.add(conveyor);
-                                    case 2:
-                                        conveyorBelt2List.add(conveyor);
+                                if(velocity==1) {
+                                    conveyorBelt1List.add(conveyor);
+                                } else if(velocity==2){
+                                    conveyorBelt2List.add(conveyor);
                                 }
                             }
                             case "Wall" -> {
