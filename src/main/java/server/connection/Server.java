@@ -362,17 +362,10 @@ public class Server {
         }
     }
 
-    public void sendEnergy(Player player, Object object) {
+    public void sendEnergy(int id, int count, String source) {
         try {
-            String energySource = "";
-            if(object instanceof EnergySpaceTile) {
-                energySource = "EnergySpace";
-            } else if(object instanceof PowerUpCard) {
-                energySource = "PowerUpCard";
-            } else {
-                energySource = "error";
-            }
-            messages.put(messageCreator.generateEnergyMessage(player.getId(), player.getRobot().getEnergyCubes() ,energySource));
+            String energySource = source;
+            messages.put(messageCreator.generateEnergyMessage(id, count, energySource));
         } catch (Exception e) {
             e.printStackTrace();
         }

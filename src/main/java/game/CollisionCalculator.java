@@ -265,35 +265,15 @@ public class CollisionCalculator {
         for(Tile tile: board.getTile(target)) {
             if(tile instanceof EnergySpaceTile) {
                 if(tile.hasEnergyCube()) {
-                    robot.increaseEnergyCubes();
+                    robot.increaseEnergyCubes("EnergySpace");
                     tile.setEnergyCube(false);
                 }
             }
         }
     }
 
-
-
-
-
-    //might be unnecessary
-
-    private boolean tileIsBlocking(ArrayList<Tile> tileList) {
-        boolean result = false;
-        if(tileList.size() == 1) {
-            result = tileList.get(0).isBlocking();
-        } else {
-            result = tileList.get(0).isBlocking() || tileList.get(1).isBlocking();
-        }
-        return result;
-    }
-
     public void setBoard(Board newBoard) {
         board = newBoard;
-    }
-
-    public void createBoard(String jsonMap) throws JsonProcessingException {
-        board.createBoard(jsonMap);
     }
 
     private ArrayList<Direction> getBlockingDirections(ArrayList<Tile> tiles){

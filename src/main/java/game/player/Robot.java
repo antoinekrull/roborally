@@ -134,8 +134,15 @@ public class Robot {
     public void setEnergyCubes(int energyCubes) {
         this.energyCubes = energyCubes;
     }
-    public void increaseEnergyCubes() {
+    public void increaseEnergyCubes(String input) {
         energyCubes++;
+        if(input.equals("EnergySpace")) {
+            server.sendEnergy(id, energyCubes, input);
+        } else if(input.equals("PowerUpCard")) {
+            server.sendEnergy(id, energyCubes, input);
+        } else {
+            server.sendEnergy(id, energyCubes, "error");
+        }
     }
     public ProgrammingDeck getDeck(){
         return deck;

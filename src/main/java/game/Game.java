@@ -158,7 +158,6 @@ public class Game implements Runnable {
                     if (playerList.get(y).getRobot().getCurrentPosition().equals(board.getEnergySpaceList().get(x).getPosition())) {
                         logger.debug("Applying energy tile effects");
                         board.getEnergySpaceList().get(x).applyEffect(playerList.get(y));
-                        server.sendEnergy(playerList.get(y), board.getEnergySpaceList().get(x));
                         Thread.sleep(100);
                     }
                 }
@@ -409,8 +408,7 @@ public class Game implements Runnable {
                 }
             }
             case "PowerUp" -> {
-                player.getRobot().increaseEnergyCubes();
-                server.sendEnergy(player, card);
+                player.getRobot().increaseEnergyCubes("PowerUpCard");
             }
             case "Spam" -> {
                 Card topProgrammingCard = player.getRobot().getDeck().popCardFromDeck();
@@ -674,20 +672,13 @@ public class Game implements Runnable {
     }
 
     private void activateRegister(Player player) {
-        try{
-            if(player.getCardFromRegister(currentRegister) == null) {
-                logger.debug("No card in register" + currentRegister);
-            } else {
-                applyCardEffect(player, player.getCardFromRegister(currentRegister));
-            }
-            if(player.getCardFromRegister(currentRegister) instanceof PowerUpCard) {
-                server.sendEnergy(player, player.getCardFromRegister(currentRegister));
-                    Thread.sleep(100);
-            }
-        } catch (InterruptedException e) {
-//            logger.warn("This register was not activated because you're Robot can not move past this point" + e);
+        if (player.getCardFromRegister(currentRegister) == null) {
+            logger.debug("No card in register" + currentRegister);
+        } else {
+            applyCardEffect(player, player.getCardFromRegister(currentRegister));
         }
     }
+
     public void addReady(int clientID) {
         readyList.add(clientID);
         if(clientID == getFirstReadyID()){
