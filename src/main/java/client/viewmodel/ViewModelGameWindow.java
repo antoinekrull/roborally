@@ -587,7 +587,7 @@ public class ViewModelGameWindow {
         }
         if (gamemessage.getMessageType().equals(MessageType.CurrentCards)) {
             int clientID = gamemessage.getMessageBody().getClientID();
-            if(clientID == gamemessage.getMessageBody().getClientID()){
+            if(clientID == modelUser.userIDProperty().get()){
                 registerCounter++;
                 if (registerCounter > 5) {
                     registerCounter = 1;
@@ -598,22 +598,38 @@ public class ViewModelGameWindow {
         }
         if (gamemessage.getMessageType().equals(MessageType.ReplaceCard)) {
             int clientID = gamemessage.getMessageBody().getClientID();
-            if(clientID == gamemessage.getMessageBody().getClientID()) {
-                int register = gamemessage.getMessageBody().getRegister();
-                String cardname = gamemessage.getMessageBody().getCard();
-                replaceCard(register, cardname);
-            }
+            Platform.runLater(() -> {
+                if (clientID == modelUser.userIDProperty().get()) {
+                    int register = gamemessage.getMessageBody().getRegister();
+                    String cardname = gamemessage.getMessageBody().getNewCard();
+                    replaceCard(register, cardname);
+                }
+            });
         }
         if (gamemessage.getMessageType().equals(MessageType.DrawDamage)) {
             drawDamage(gamemessage.getMessageBody().getCards());
         }
         if (gamemessage.getMessageType().equals(MessageType.PickDamage)) {
             int clientID = gamemessage.getMessageBody().getClientID();
-            if(clientID == gamemessage.getMessageBody().getClientID()) {
+            if(clientID == modelUser.userIDProperty().get()) {
                 int counter = gamemessage.getMessageBody().getCount();
                 cardSelection.overlayDamagecards(gamemessage.getMessageBody().getCards(), counter);
             }
         }
+        if (gamemessage.getMessageType().equals(MessageType.Reboot)){
+            int clientID = gamemessage.getMessageBody().getClientID();
+            Platform.runLater(() -> {
+                if (clientID == modelUser.userIDProperty().get()) {
+                    for (Node child : programmingGrid.getChildren()) {
+                        if (child instanceof Pane) {
+                            Pane pane = (Pane) child;
+                            pane.getChildren().clear();
+                        }
+                    }
+                }
+            });
+        }
+
     }
 
     private void placeTiles(ArrayList<ArrayList<ArrayList<Tile>>> map) {
@@ -1124,166 +1140,170 @@ public class ViewModelGameWindow {
     }
 
     public void drawDamage(String[] damageCards) {
-        int index = getFirstFreeSlot();
-        if (index != -1) {
-            Pane pane = (Pane) handGrid.getChildren().get(index);
-            for (String card : damageCards) {
-                switch (card) {
-                    case "Spam" -> {
-                        InputStream input10 = getClass().getResourceAsStream(
-                            "/textures/cards/SPAM.png");
-                        Image image10 = new Image(input10);
-                        ImageView imageView10 = new ImageView(image10);
-                        imageView10.setId("Spam");
-                        imageView10.setFitWidth(programcardsWidth);
-                        imageView10.setPreserveRatio(true);
-                        pane.getChildren().add(imageView10);
-                    }
-                    case "Worm" -> {
-                        InputStream input11 = getClass().getResourceAsStream(
-                            "/textures/cards/WORM.png");
-                        Image image11 = new Image(input11);
-                        ImageView imageView11 = new ImageView(image11);
-                        imageView11.setId("Worm");
-                        imageView11.setFitWidth(programcardsWidth);
-                        imageView11.setPreserveRatio(true);
-                        pane.getChildren().add(imageView11);
-                    }
-                    case "Virus" -> {
-                        InputStream input12 = getClass().getResourceAsStream(
-                            "/textures/cards/VIRUS.png");
-                        Image image12 = new Image(input12);
-                        ImageView imageView12 = new ImageView(image12);
-                        imageView12.setId("Virus");
-                        imageView12.setFitWidth(programcardsWidth);
-                        imageView12.setPreserveRatio(true);
-                        pane.getChildren().add(imageView12);
-                    }
-                    case "Trojan" -> {
-                        InputStream input13 = getClass().getResourceAsStream(
-                            "/textures/cards/TROJAN_HORSE.png");
-                        Image image13 = new Image(input13);
-                        ImageView imageView13 = new ImageView(image13);
-                        imageView13.setId("Trojan");
-                        imageView13.setFitWidth(programcardsWidth);
-                        imageView13.setPreserveRatio(true);
-                        pane.getChildren().add(imageView13);
+        Platform.runLater(() -> {
+            int index = getFirstFreeSlot();
+            if (index != -1) {
+                Pane pane = (Pane) handGrid.getChildren().get(index);
+                for (String card : damageCards) {
+                    switch (card) {
+                        case "Spam" -> {
+                            InputStream input10 = getClass().getResourceAsStream(
+                                "/textures/cards/SPAM.png");
+                            Image image10 = new Image(input10);
+                            ImageView imageView10 = new ImageView(image10);
+                            imageView10.setId("Spam");
+                            imageView10.setFitWidth(programcardsWidth);
+                            imageView10.setPreserveRatio(true);
+                            pane.getChildren().add(imageView10);
+                        }
+                        case "Worm" -> {
+                            InputStream input11 = getClass().getResourceAsStream(
+                                "/textures/cards/WORM.png");
+                            Image image11 = new Image(input11);
+                            ImageView imageView11 = new ImageView(image11);
+                            imageView11.setId("Worm");
+                            imageView11.setFitWidth(programcardsWidth);
+                            imageView11.setPreserveRatio(true);
+                            pane.getChildren().add(imageView11);
+                        }
+                        case "Virus" -> {
+                            InputStream input12 = getClass().getResourceAsStream(
+                                "/textures/cards/VIRUS.png");
+                            Image image12 = new Image(input12);
+                            ImageView imageView12 = new ImageView(image12);
+                            imageView12.setId("Virus");
+                            imageView12.setFitWidth(programcardsWidth);
+                            imageView12.setPreserveRatio(true);
+                            pane.getChildren().add(imageView12);
+                        }
+                        case "Trojan" -> {
+                            InputStream input13 = getClass().getResourceAsStream(
+                                "/textures/cards/TROJAN_HORSE.png");
+                            Image image13 = new Image(input13);
+                            ImageView imageView13 = new ImageView(image13);
+                            imageView13.setId("Trojan");
+                            imageView13.setFitWidth(programcardsWidth);
+                            imageView13.setPreserveRatio(true);
+                            pane.getChildren().add(imageView13);
+                        }
                     }
                 }
             }
-        }
+        });
     }
 
     private void replaceCard(int register, String cardname) {
+        Platform.runLater(() -> {
         Pane columnPane = null;
-        for (Node node : programmingGrid.getChildren()) {
-            if (GridPane.getColumnIndex(node) == register) {
-                if (node instanceof Pane) {
-                    columnPane = (Pane) node;
-                    break;
+            for (Node node : programmingGrid.getChildren()) {
+                if (GridPane.getColumnIndex(node) == register) {
+                    if (node instanceof Pane) {
+                        columnPane = (Pane) node;
+                        break;
+                    }
                 }
             }
-        }
-        if (columnPane != null) {
-            for (Node child : columnPane.getChildren()) {
-                if (child instanceof ImageView) {
-                    columnPane.getChildren().remove(child);
-                    break;
+            if (columnPane != null) {
+                for (Node child : columnPane.getChildren()) {
+                    if (child instanceof ImageView) {
+                        columnPane.getChildren().remove(child);
+                        break;
+                    }
+                }
+                switch (cardname) {
+                    case "MoveI" -> {
+                        InputStream input = getClass().getResourceAsStream(
+                            "/textures/cards/Move1.png");
+                        Image image = new Image(input);
+                        ImageView imageView = new ImageView(image);
+                        imageView.setId("MoveI");
+                        imageView.setFitWidth(programcardsWidth);
+                        imageView.setPreserveRatio(true);
+                        columnPane.getChildren().add(imageView);
+                    }
+                    case "MoveII" -> {
+                        InputStream input2 = getClass().getResourceAsStream(
+                            "/textures/cards/Move2.png");
+                        Image image2 = new Image(input2);
+                        ImageView imageView2 = new ImageView(image2);
+                        imageView2.setId("MoveII");
+                        imageView2.setFitWidth(programcardsWidth);
+                        imageView2.setPreserveRatio(true);
+                        columnPane.getChildren().add(imageView2);
+                    }
+                    case "MoveIII" -> {
+                        InputStream input3 = getClass().getResourceAsStream(
+                            "/textures/cards/Move3.png");
+                        Image image3 = new Image(input3);
+                        ImageView imageView3 = new ImageView(image3);
+                        imageView3.setId("MoveIII");
+                        imageView3.setFitWidth(programcardsWidth);
+                        imageView3.setPreserveRatio(true);
+                        columnPane.getChildren().add(imageView3);
+                    }
+                    case "TurnLeft" -> {
+                        InputStream input4 = getClass().getResourceAsStream(
+                            "/textures/cards/leftTurn.png");
+                        Image image4 = new Image(input4);
+                        ImageView imageView4 = new ImageView(image4);
+                        imageView4.setId("TurnLeft");
+                        imageView4.setFitWidth(programcardsWidth);
+                        imageView4.setPreserveRatio(true);
+                        columnPane.getChildren().add(imageView4);
+                    }
+                    case "TurnRight" -> {
+                        InputStream input5 = getClass().getResourceAsStream(
+                            "/textures/cards/rightTurn.png");
+                        Image image5 = new Image(input5);
+                        ImageView imageView5 = new ImageView(image5);
+                        imageView5.setId("TurnRight");
+                        imageView5.setFitWidth(programcardsWidth);
+                        imageView5.setPreserveRatio(true);
+                        columnPane.getChildren().add(imageView5);
+                    }
+                    case "UTurn" -> {
+                        InputStream input6 = getClass().getResourceAsStream(
+                            "/textures/cards/uTurn.png");
+                        Image image6 = new Image(input6);
+                        ImageView imageView6 = new ImageView(image6);
+                        imageView6.setId("UTurn");
+                        imageView6.setFitWidth(programcardsWidth);
+                        imageView6.setPreserveRatio(true);
+                        columnPane.getChildren().add(imageView6);
+                    }
+                    case "BackUp" -> {
+                        InputStream input7 = getClass().getResourceAsStream(
+                            "/textures/cards/moveBack.png");
+                        Image image7 = new Image(input7);
+                        ImageView imageView7 = new ImageView(image7);
+                        imageView7.setId("BackUp");
+                        imageView7.setFitWidth(programcardsWidth);
+                        imageView7.setPreserveRatio(true);
+                        columnPane.getChildren().add(imageView7);
+                    }
+                    case "PowerUp" -> {
+                        InputStream input8 = getClass().getResourceAsStream(
+                            "/textures/cards/powerUp.png");
+                        Image image8 = new Image(input8);
+                        ImageView imageView8 = new ImageView(image8);
+                        imageView8.setId("PowerUp");
+                        imageView8.setFitWidth(programcardsWidth);
+                        imageView8.setPreserveRatio(true);
+                        columnPane.getChildren().add(imageView8);
+                    }
+                    case "Again" -> {
+                        InputStream input9 = getClass().getResourceAsStream(
+                            "/textures/cards/Again.png");
+                        Image image9 = new Image(input9);
+                        ImageView imageView9 = new ImageView(image9);
+                        imageView9.setId("Again");
+                        imageView9.setFitWidth(programcardsWidth);
+                        imageView9.setPreserveRatio(true);
+                        columnPane.getChildren().add(imageView9);
+                    }
                 }
             }
-            switch (cardname) {
-                case "MoveI" -> {
-                    InputStream input = getClass().getResourceAsStream(
-                        "/textures/cards/Move1.png");
-                    Image image = new Image(input);
-                    ImageView imageView = new ImageView(image);
-                    imageView.setId("MoveI");
-                    imageView.setFitWidth(programcardsWidth);
-                    imageView.setPreserveRatio(true);
-                    columnPane.getChildren().add(imageView);
-                }
-                case "MoveII" -> {
-                    InputStream input2 = getClass().getResourceAsStream(
-                        "/textures/cards/Move2.png");
-                    Image image2 = new Image(input2);
-                    ImageView imageView2 = new ImageView(image2);
-                    imageView2.setId("MoveII");
-                    imageView2.setFitWidth(programcardsWidth);
-                    imageView2.setPreserveRatio(true);
-                    columnPane.getChildren().add(imageView2);
-                }
-                case "MoveIII" -> {
-                    InputStream input3 = getClass().getResourceAsStream(
-                        "/textures/cards/Move3.png");
-                    Image image3 = new Image(input3);
-                    ImageView imageView3 = new ImageView(image3);
-                    imageView3.setId("MoveIII");
-                    imageView3.setFitWidth(programcardsWidth);
-                    imageView3.setPreserveRatio(true);
-                    columnPane.getChildren().add(imageView3);
-                }
-                case "TurnLeft" -> {
-                    InputStream input4 = getClass().getResourceAsStream(
-                        "/textures/cards/leftTurn.png");
-                    Image image4 = new Image(input4);
-                    ImageView imageView4 = new ImageView(image4);
-                    imageView4.setId("TurnLeft");
-                    imageView4.setFitWidth(programcardsWidth);
-                    imageView4.setPreserveRatio(true);
-                    columnPane.getChildren().add(imageView4);
-                }
-                case "TurnRight" -> {
-                    InputStream input5 = getClass().getResourceAsStream(
-                        "/textures/cards/rightTurn.png");
-                    Image image5 = new Image(input5);
-                    ImageView imageView5 = new ImageView(image5);
-                    imageView5.setId("TurnRight");
-                    imageView5.setFitWidth(programcardsWidth);
-                    imageView5.setPreserveRatio(true);
-                    columnPane.getChildren().add(imageView5);
-                }
-                case "UTurn" -> {
-                    InputStream input6 = getClass().getResourceAsStream(
-                        "/textures/cards/uTurn.png");
-                    Image image6 = new Image(input6);
-                    ImageView imageView6 = new ImageView(image6);
-                    imageView6.setId("UTurn");
-                    imageView6.setFitWidth(programcardsWidth);
-                    imageView6.setPreserveRatio(true);
-                    columnPane.getChildren().add(imageView6);
-                }
-                case "BackUp" -> {
-                    InputStream input7 = getClass().getResourceAsStream(
-                        "/textures/cards/moveBack.png");
-                    Image image7 = new Image(input7);
-                    ImageView imageView7 = new ImageView(image7);
-                    imageView7.setId("BackUp");
-                    imageView7.setFitWidth(programcardsWidth);
-                    imageView7.setPreserveRatio(true);
-                    columnPane.getChildren().add(imageView7);
-                }
-                case "PowerUp" -> {
-                    InputStream input8 = getClass().getResourceAsStream(
-                        "/textures/cards/powerUp.png");
-                    Image image8 = new Image(input8);
-                    ImageView imageView8 = new ImageView(image8);
-                    imageView8.setId("PowerUp");
-                    imageView8.setFitWidth(programcardsWidth);
-                    imageView8.setPreserveRatio(true);
-                    columnPane.getChildren().add(imageView8);
-                }
-                case "Again" -> {
-                    InputStream input9 = getClass().getResourceAsStream(
-                        "/textures/cards/Again.png");
-                    Image image9 = new Image(input9);
-                    ImageView imageView9 = new ImageView(image9);
-                    imageView9.setId("Again");
-                    imageView9.setFitWidth(programcardsWidth);
-                    imageView9.setPreserveRatio(true);
-                    columnPane.getChildren().add(imageView9);
-                }
-            }
-        }
+        });
     }
 
     public void exit() throws IOException {

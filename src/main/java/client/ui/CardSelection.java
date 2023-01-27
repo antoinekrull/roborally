@@ -22,12 +22,13 @@ public class CardSelection {
   }
 
   public void overlayDamagecards(String[] damagePiles, int counter) {
+    //TODO: Logo für Damageauswahl
     finalCounter = counter;
     StackPane overlay = new StackPane();
     overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.8);");
     overlay.setAlignment(Pos.CENTER);
     baseStackPane.getChildren().add(overlay);
-    Label label = new Label("Cards to pick: " + counter);
+    Label label = new Label("Damages to pick: " + counter);
     overlay.getChildren().add(label);
     List<ImageView> imageViews = new ArrayList<>();
     for (String card : damagePiles) {
@@ -86,6 +87,19 @@ public class CardSelection {
         }
       });
     }
+  }
+
+  //Wenn Upgradephase aktiv, dann kann man auf den Kartenstapel für Upgradekarten klicken, damit sich Shop öffnet
+  //In VMgameWindow wird Liste der kaufbaren Karten gepflegt (durch Messages refillshop und exchange shop), aktuelle Liste wird Übertragen
+  public void upgradeShop (){
+    //TODO: Grundstruktur - Stackpane mit einem Gridpane in der Mitte
+    //Energie Guthaben Oben ersichtlich
+    //Logo für UpgradeShop
+
+    //Karten werden für "isBuying" auf false gesetzt
+    //Karten anklicken zum Kaufen, dabei wird "isBuying" auf "true" gesetzt Message "BuyUpgrade" verschickt
+    //Wenn "UpgradeBought" zurückkommt, wird Karte aus Shop entfernt
+    //Mit "Go Back" schließt sich der Shop wieder
   }
 }
 
