@@ -30,6 +30,7 @@ public class Player {
     private boolean isReady;
     private boolean isBuying;
     private String upgradeToBuy;
+    private int adminRegister;
     private boolean[][] isUsingUpgrade = {{false, false, false},{false, false, false}};
     private ArrayList<Card> hand;
     private Card[] cardRegister = new Card[5];
@@ -59,7 +60,35 @@ public class Player {
         isPlaying = false;
         isReady = false;
     }
+    public void permanentUpgradeUsed(){
+        setHasAdminPrivilege(false);
+        setAdminRegister(-1);
+        setRearLaserOn(false);
+    }
 
+    public void temporaryUpgradeUsed(){
+        ArrayList<Card> slotContent = new ArrayList<>();
+            //copies the content of the slot to allow for direct access to elements
+        for(int i = 0; i < 3; i++){
+            slotContent.add(TemporaryUpgradeSlots.peek());
+            TemporaryUpgradeSlots.remove(TemporaryUpgradeSlots.peek());
+        }
+            //slots are cleared and would be repopulated after removing used cards
+        TemporaryUpgradeSlots.clear();
+            //cards are removed from the back of the list so that the indexes of unused cards remain unchanged
+        for(int i = 2; i >= 0; i--){
+            if(isUsingUpgrade[0][i]){
+                slotContent.remove(slotContent.get(i));
+            }
+        }
+            //slots are repopulated with the remaining cards
+        for(int i = 0; i < 3; i++){
+            TemporaryUpgradeSlots.add(slotContent.get(i));
+        }
+    }
+    public int getAdminRegister() {return adminRegister;}
+
+    public void setAdminRegister(int adminRegister) {this.adminRegister = adminRegister;}
     public boolean[][] isUsingUpgrade() {
         return isUsingUpgrade;
     }
