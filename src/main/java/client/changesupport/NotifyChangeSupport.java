@@ -107,8 +107,14 @@ public class NotifyChangeSupport {
     }
 
     public void startTimer() {
-        if(gamewindow) {
+        if (gamewindow) {
             viewModelGameWindow.startTimer();
+        }
+    }
+
+    public void stopTimer() {
+        if (gamewindow) {
+            viewModelGameWindow.stopTimer();
         }
     }
 

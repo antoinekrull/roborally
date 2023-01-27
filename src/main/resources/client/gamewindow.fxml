@@ -336,13 +336,13 @@
                            <children>
                               <VBox fx:id="myPlayerInfoVBox" alignment="CENTER_LEFT" fillWidth="false" spacing="12.0">
                                  <children>
-                                    <Label fx:id="timerLabel" text="" />
-                                    <Label fx:id="currentActivePlayerLabel" text="" />
-                                    <Label fx:id="currentPhaseLabel" text="" />
+                                    <Label fx:id="timerLabel" styleClass="playerInfoLabel" text="" />
+                                    <Label fx:id="currentActivePlayerLabel" styleClass="playerInfoLabel" text="" />
+                                    <Label fx:id="currentPhaseLabel" styleClass="playerInfoLabel" text="" />
                                     <HBox>
                                        <children>
-                                          <Label text="Your Score: " />
-                                          <Label fx:id="scoreLabel" />
+                                          <Label fx:id="yourScoreLabel" styleClass="playerInfoLabel" text="Your Score: " />
+                                          <Label fx:id="scoreLabel" styleClass="playerInfoLabel" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -350,15 +350,20 @@
                                     <Insets right="30.0" />
                                  </HBox.margin>
                               </VBox>
-                              <StackPane fx:id="myEnergyStackPane" HBox.hgrow="NEVER">
+                              <VBox alignment="CENTER" spacing="5.0" HBox.hgrow="NEVER">
                                  <HBox.margin>
                                     <Insets left="20.0" />
                                  </HBox.margin>
                                  <children>
-                                    <ProgressBar fx:id="myEnergyBar" prefWidth="150.0" progress="0.0" />
-                                    <Label fx:id="myEnergyLabel" />
+                                    <Label fx:id="myEnergyMeterLabel" styleClass="playerInfoLabel" text="Energymeter" />
+                                    <StackPane fx:id="myEnergyStackPane">
+                                       <children>
+                                          <ProgressBar fx:id="myEnergyBar" prefWidth="150.0" progress="0.0" />
+                                          <Label fx:id="myEnergyLabel" styleClass="energyMeterLabel" />
+                                       </children>
+                                    </StackPane>
                                  </children>
-                              </StackPane>
+                              </VBox>
                            </children>
                         </HBox>
                         <Pane fx:id="logPane">
