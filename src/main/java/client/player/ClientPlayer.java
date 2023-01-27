@@ -17,6 +17,7 @@ public class ClientPlayer {
     private BooleanProperty isReady;
     private BooleanProperty isPlaying;
     private IntegerProperty score;
+    private StringProperty activePlayer;
     private DoubleProperty energyCubes;
     private IntegerProperty cardsInHand;
 
@@ -30,6 +31,7 @@ public class ClientPlayer {
         this.score = new SimpleIntegerProperty();
         this.isPlaying = new SimpleBooleanProperty();
         this.isReady = new SimpleBooleanProperty();
+        this.activePlayer = new SimpleStringProperty("");
         this.energyCubes = new SimpleDoubleProperty(5);
         this.cardsInHand = new SimpleIntegerProperty(9);
         this.registerInformations = FXCollections.observableArrayList();
@@ -120,14 +122,6 @@ public class ClientPlayer {
         this.energyCubes.set(energyCubes);
     }
 
-    public int getHand() {
-        return cardsInHand.get();
-    }
-
-    public IntegerProperty handProperty() {
-        return cardsInHand;
-    }
-
     public void setCardsInHand(int hand) {
         this.cardsInHand.set(hand);
     }
@@ -154,5 +148,9 @@ public class ClientPlayer {
 
     public void addEnergy(int count) {
         this.energyCubes.add(count);
+    }
+
+    public void setActivePlayer(String activePlayer) {
+        this.activePlayer.set(activePlayer);
     }
 }

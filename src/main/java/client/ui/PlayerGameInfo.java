@@ -56,6 +56,11 @@ public class PlayerGameInfo {
                 name.setText(username);
                 name.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;");
 
+                Label score = new Label();
+                int playerScore = clientPlayerList.getPlayerList().get(i).getScore();
+                score.setText(String.valueOf(playerScore));
+                score.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;");
+
                 //amount of cards the user currently has
                 Label cardAmount = new Label();
                 cardAmount.textProperty().bind(clientPlayerList.getPlayerList().get(i).cardsInHandProperty().asString());
@@ -72,14 +77,12 @@ public class PlayerGameInfo {
                 enemyCards.setPreserveRatio(true);
 
                  */
-
                 //adds energybar and its label to stackpane
                 StackPane energyBarStackPane = new StackPane();
                 energyBarStackPane.getChildren().addAll(energyCubesBar, energy);
                 //places label over energybar
                 StackPane.setAlignment(energyBarStackPane, Pos.CENTER);
                 StackPane.setAlignment(energy, Pos.CENTER);
-
                 /*
 
                 //adding username, hand and progressbar to the gridpane
@@ -87,13 +90,12 @@ public class PlayerGameInfo {
                 hBox.setSpacing(10);
                 hBox.setAlignment(Pos.CENTER_LEFT);
                 hBox.getChildren().addAll(energyCubesBar, energy);
-
                  */
 
                 VBox vBox = new VBox();
                 vBox.setSpacing(12);
                 vBox.setPadding(new Insets(0, 0, 0, 10));
-                vBox.getChildren().addAll(name, cardAmount);
+                vBox.getChildren().addAll(name, score,  cardAmount);
 
                 //StackPane for PlayerInfomation
                 StackPane playerInfoStackPane = new StackPane();
