@@ -13,12 +13,14 @@ import communication.MessageType;
 import game.board.Tile;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javafx.animation.Animation;
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -144,6 +146,7 @@ public class ViewModelGameWindow {
         chatButton.disableProperty().bind(chatTextfield.textProperty().isEmpty());
         chatTextfield.textProperty().bindBidirectional(modelChat.textfieldProperty());
 
+        //updates to the newest added element in the ScrollPane
         chatVBox.heightProperty().addListener(new ChangeListener<Number>() {
 
             @Override
@@ -152,6 +155,7 @@ public class ViewModelGameWindow {
         }
         });
 
+        //updates to the newest added element in the ScrollPane
         logVBox.heightProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -173,9 +177,21 @@ public class ViewModelGameWindow {
 
         scoreLabel.textProperty().bind(modelGame.scoreProperty().asString());
 
-        myEnergyBar.progressProperty().bind(modelGame.energyProperty());
-        myEnergyLabel.textProperty().bind(myEnergyBar.progressProperty().asString());
-        myEnergyLabel.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;");
+
+        myEnergyBar.progressProperty().bind(modelGame.energyProperty().divide(22));
+
+        myEnergyBar.progressProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                FadeTransition transition = new FadeTransition(Duration.millis(1000), myEnergyBar);
+                transition.setFromValue(oldValue.doubleValue());
+                transition.setToValue(newValue.doubleValue());
+                transition.play();
+            }
+        });
+
+        Platform.runLater(() -> myEnergyLabel.textProperty().bind(myEnergyBar.progressProperty().multiply(22).asString()));
         StackPane.setAlignment(myEnergyBar, Pos.CENTER);
         StackPane.setAlignment(myEnergyLabel, Pos.CENTER);
 
@@ -473,8 +489,12 @@ public class ViewModelGameWindow {
         Text usernameText = new Text();
         Text logText = new Text();
 
+        long currentMiliseconds = System.currentTimeMillis();
+        SimpleDateFormat time_format = new SimpleDateFormat("HH:mm:ss.SSS");
+        String formatted_miliseconds = time_format.format(currentMiliseconds);
+
         timeText.setStyle("-fx-fill: gray;" + "-fx-font-size: 8pt;");
-        timeText.setText('(' + System.currentTimeMillis() + ')' + "  ");
+        timeText.setText("(" + formatted_miliseconds + ")" + "  ");
 
         usernameText.setStyle("-fx-font-weight: bold;" + "-fx-fill: gray;");
         usernameText.setText(username);
@@ -1054,25 +1074,29 @@ public class ViewModelGameWindow {
     }
 
     public void startTimer() {
-        timerLabel.setText(String.format("%02d:%02d", timer / 60, timer % 60));
+        Platform.runLater(() -> timerLabel.setText(String.format("%02d:%02d", timer / 60, timer % 60)));
         timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
             timer--;
-            timerLabel.setText(String.format("%02d:%02d", timer / 60, timer % 60));
+            Platform.runLater(() -> timerLabel.setText(String.format("%02d:%02d", timer / 60, timer % 60)));
             if (timer <= 10) {
-                timerLabel.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;" + "-fx-font-size: 16pt;");
+                timerLabel.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;" + "-fx-font-size: 20pt;");
             }
             if (timer <= 0) {
                 timeline.stop();
                 timerLabel.setVisible(false);
             }
         }));
-        
         timeline.setCycleCount(Animation.INDEFINITE);
         timeline.play();
         timerLabel.setVisible(true);
     }
+
+    public void stopTimer() {
+        timeline.stop();
+    }
+
     public void setRobotAlignment() {
-        //set Robot Alignment
+        //TODO: implementation of robotdirection
     }
 
     public void setProgramcardsUnmovable () {
