@@ -39,6 +39,9 @@ public class Player {
     private boolean[] statusRegister = new boolean[5];
     private ProgrammingDeck personalDiscardPile;
     private ArrayBlockingQueue<Card> cardsToSwap = new ArrayBlockingQueue<>(3); //meant for the use with the memory swap upgrade card
+    private Boolean rearLaserOn = false;
+    private Boolean hasAdminPrivilege = false;
+
     private Robot robot;
     private final Logger logger = LogManager.getLogger(Player.class);
 
@@ -104,6 +107,10 @@ public class Player {
     public String getUpgradeToBuy() {return upgradeToBuy;}
     public void setUpgradeToBuy(String upgradeToBuy) {this.upgradeToBuy = upgradeToBuy;}
     public ArrayBlockingQueue<Card> getCardsToSwap() {return cardsToSwap;}
+    public Boolean getRearLaserOn() {return rearLaserOn;}
+    public void setRearLaserOn(Boolean rearLaserOn) {this.rearLaserOn = rearLaserOn;}
+    public Boolean getHasAdminPrivilege() {return hasAdminPrivilege;}
+    public void setHasAdminPrivilege(Boolean hasAdminPrivilege) {this.hasAdminPrivilege = hasAdminPrivilege;}
     //TODO: Fix crash if reboot happened
     public Card getCardFromRegister(int index){
         if(cardRegister[index] == null) {

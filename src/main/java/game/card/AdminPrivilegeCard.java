@@ -12,6 +12,6 @@ public class AdminPrivilegeCard extends Card{
 
     @Override
     public void applyEffect(Player player) throws Exception {
-        super.applyEffect(player);
+        player.setHasAdminPrivilege(true);
     }
 }
