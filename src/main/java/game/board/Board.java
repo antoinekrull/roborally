@@ -143,7 +143,9 @@ public class Board {
                                 laser = new LaserTile(x, y, directionLaser, onWall);
 
                                 replaceTileInMap(board,x,y,tile, laser);
-                                laserTileList.add(laser);
+                                if (onWall) {
+                                    laserTileList.add(laser);
+                                }
                             }
                             //TODO: needs to work with directions, once they have been added to json
                             case "RestartPoint" -> {

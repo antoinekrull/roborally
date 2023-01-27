@@ -213,9 +213,9 @@ public class CollisionCalculator {
         Pair<Integer,Integer> boardSize = board.getDimension();
         System.out.println("target = " + target);
         System.out.println("boardsize = " + boardSize);
-        if(target.getValue0()<0 || target.getValue0() > boardSize.getValue0()){
+        if(target.getValue0()<0 || target.getValue0() >= boardSize.getValue0()){
             return true;
-        }else if (target.getValue1()<0 || target.getValue1() > boardSize.getValue1()) {
+        }else if (target.getValue1()<0 || target.getValue1() >= boardSize.getValue1()) {
             return true;
             //could also be try catch block
         } else if (board.getTile(target).get(0).getType().equals("Pit")) {
@@ -237,6 +237,7 @@ public class CollisionCalculator {
         Pair<Integer, Integer> shot;
         ArrayList<LaserTile> lasers = board.getLaserTileList();
         for (int i = 0; i < lasers.size(); i++) {
+            System.out.println("ich schieße Laser " + i);
             LaserTile laser = lasers.get(i);
             Pair<Integer,Integer> pos = laser.getPosition();
             Direction direction = laser.getLos();
@@ -245,7 +246,7 @@ public class CollisionCalculator {
                 case EAST -> shot = new Pair<>(1, 0);
                 case SOUTH -> shot = new Pair<>(0, 1);
                 case WEST -> shot = new Pair<>(-1, 0);
-                default -> shot = new Pair<>(0,0);
+                default -> shot = new Pair<>(0, 0);
             }
             while (shooting){
                 Pair<Integer, Integer> nextPos = new Pair<>(pos.getValue0()+shot.getValue0(), pos.getValue1()+shot.getValue1());

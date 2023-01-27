@@ -140,16 +140,7 @@ public class Game implements Runnable {
                 }
             }
             Thread.sleep(500);
-            for (int x = 0; x < board.getLaserTileList().size(); x++) {
-                for (int y = 0; y < playerList.size(); y++) {
-                    if (playerList.get(y).getRobot().getCurrentPosition().equals(board.getLaserTileList().get(x).getPosition())) {
-                        //add functionality once collision Calculator is in
-                        logger.debug("Applying laser tile effects");
-                        board.getLaserTileList().get(x).applyEffect(playerList.get(y));
-                        drawDamageCards(playerList.get(y));
-                    }
-                }
-            }
+            collisionCalculator.shootLasers();
             Thread.sleep(500);
             //robotLaser
             computeRobotLaserPositions();
