@@ -4,7 +4,7 @@
             <PatternLayout pattern="%sn %d{HH:mm:ss.SSS} %r [%-5p] [%t] %C{3}.%M(%F:%L) - %m%n"/>
         </File>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%sn %d{HH:mm:ss.SSS} %r [%-5p] [%t] %highlight{%level}{FATAL=bg_red, ERROR=red, WARN=yellow, INFO=green, DEBUG=blue}  %C{3}.%M(%F:%L) - %m%n"/>
+            <PatternLayout pattern="%sn %d{HH:mm:ss.SSS} %r [%-5p] [%t] %highlight{%level}{FATAL=bg_red, ERROR=red, WARN=yellow, DEBUG=blue, INFO=green}  %C{3}.%M(%F:%L) - %m%n"/>
         </Console>
     </Appenders>
 

@@ -463,7 +463,7 @@ public class Game implements Runnable {
                     }
                 }
             }
-            if (timerIsRunning == !(playerList.playersAreReady())) {
+            if (timerIsRunning) {
                 customTimer.cancel();
             }
         } catch (InterruptedException e) {

@@ -119,7 +119,7 @@ import java.util.ArrayList;
         }
         public Message generateActivePhaseMessage(int phase){
             MessageBody messageBody = new MessageBody();
-            messageBody.setClientID(phase);
+            messageBody.setPhase(phase);
             return new Message(MessageType.ActivePhase, messageBody);
         }
         public Message generateSetStartingPointMessage(int x, int y){
