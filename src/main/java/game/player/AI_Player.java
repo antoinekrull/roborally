@@ -9,6 +9,9 @@ import game.card.Card;
 import game.card.CardType;
 import org.javatuples.Pair;
 
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+
 public class AI_Player extends Player {
     private Board board;
     MessageCreator messageCreator;
@@ -26,6 +29,7 @@ public class AI_Player extends Player {
                 startTile.setTaken(true);
             }
         }
+        robot.setCurrentPosition(aiStartTilePosition);
         logger.debug("AI choose startingpoint x: " + aiStartTilePosition.getValue0() + " y: " + aiStartTilePosition.getValue1());
         Message startingPointTakenMessage = messageCreator.generateStartingPointTakenMessage(aiStartTilePosition.getValue0(), aiStartTilePosition.getValue1(), id);
         game.setStartPoint(aiStartTilePosition.getValue0(), aiStartTilePosition.getValue1());
@@ -37,7 +41,7 @@ public class AI_Player extends Player {
         server.messages.put(playerAddedMessage);
     }
 
-    public void playTurn(){
+    public void playTurn() throws InterruptedException {
         //preparation
         drawFullHand();
         //UPGRADE PHASE
@@ -56,23 +60,23 @@ public class AI_Player extends Player {
     public void playUpgradePhase(){
     }
     @Override
-    public void playProgrammingPhase(){
+    public void playProgrammingPhase() throws InterruptedException {
+        logger.debug("A KI Player starts his programming phase");
+        logger.debug(getHand());
+        TimeUnit.SECONDS.sleep(10);
         //play cards in register
-        for(int i = 0; i <= 5; i++){
-            playCard(getHand().get(i), i);
+        for(int i = 0; i < 5; i++){
+            playCard(getHand().get(i).getCard(), i);
         }
         //discard the rest of the programming cards
-        for(Card card: getHand()){
+        for(Iterator<Card> iterator = getHand().iterator(); iterator.hasNext();){
+            Card card = iterator.next();
             if(card.getCardType() == CardType.PROGRAMMING_CARD){
-                discard(getHand().indexOf(card));
+                iterator.remove();
+                //discard(getHand().indexOf(card));
             }
         }
     }
-
-//    public ArrayList<Node> getShortestPath(){
-//        Pair<Integer, Integer> currentObjective = Helper.getPositionOfCurrentObjective(robot.getCurrentObjective(), board);
-//
-//    }
 
     /**
      * The setter for the board. This is important as KIs are generated before a board exists. But for getting the
