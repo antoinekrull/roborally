@@ -19,8 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import game.player.Robot;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
@@ -88,7 +86,7 @@ public class ViewModelGameWindow {
     @FXML
     private Pane gameboardRegion;
     @FXML
-    private Pane programCard1, programCard2, programCard3, programCard4, programCard5, programCard6, programCard7, programCard8, programCard9;
+    private Pane programCard1, programCard2, programCard3, programCard4, programCard5, programCard6, programCard7, programCard8, programCard9, programCard10, programCard11, programCard12, programCard13, programCard14, programCard15, programCard16, programCard17, programCard18, programCard19, programCard20;
     @FXML
     private Pane programmingPane1, programmingPane2, programmingPane3, programmingPane4, programmingPane5;
     @FXML
@@ -223,6 +221,19 @@ public class ViewModelGameWindow {
         setOnDragDetected(programCard7);
         setOnDragDetected(programCard8);
         setOnDragDetected(programCard9);
+        setOnDragDetected(programCard9);
+        setOnDragDetected(programCard10);
+        setOnDragDetected(programCard11);
+        setOnDragDetected(programCard12);
+        setOnDragDetected(programCard13);
+        setOnDragDetected(programCard14);
+        setOnDragDetected(programCard15);
+        setOnDragDetected(programCard16);
+        setOnDragDetected(programCard17);
+        setOnDragDetected(programCard18);
+        setOnDragDetected(programCard19);
+        setOnDragDetected(programCard20);
+
 
         setOnDragOver(programmingPane1);
         setOnDragOver(programmingPane2);
@@ -263,6 +274,17 @@ public class ViewModelGameWindow {
         setOnDragDone(programCard7);
         setOnDragDone(programCard8);
         setOnDragDone(programCard9);
+        setOnDragDone(programCard10);
+        setOnDragDone(programCard11);
+        setOnDragDone(programCard12);
+        setOnDragDone(programCard13);
+        setOnDragDone(programCard14);
+        setOnDragDone(programCard15);
+        setOnDragDone(programCard16);
+        setOnDragDone(programCard17);
+        setOnDragDone(programCard18);
+        setOnDragDone(programCard19);
+        setOnDragDone(programCard20);
 
         placeTiles(map);
 
@@ -272,6 +294,9 @@ public class ViewModelGameWindow {
                 handStackPane, handGrid, programmingGrid, gameboard, modelUser.usernameProperty().get());
         tutorial.loadGameWindowTutorial();
          */
+
+//        String[] damagePiles = {"Virus", "Worm","Trojan",};
+//        cardSelection.overlayDamagecards(damagePiles, 3);
     }
 
     private void scaleImages(Parent parent, double width, double scaleFactor) {
@@ -599,15 +624,13 @@ public class ViewModelGameWindow {
             }
         }
         if (gamemessage.getMessageType().equals(MessageType.CurrentCards)) {
-            int clientID = gamemessage.getMessageBody().getClientID();
-            if(clientID == modelUser.userIDProperty().get()){
                 registerCounter++;
                 if (registerCounter > 5) {
                     registerCounter = 1;
                 }
                 logger.debug("Current register: " + registerCounter);
                 setShadowOnImage(registerCounter - 1);
-            }
+
         }
         if (gamemessage.getMessageType().equals(MessageType.ReplaceCard)) {
             int clientID = gamemessage.getMessageBody().getClientID();
