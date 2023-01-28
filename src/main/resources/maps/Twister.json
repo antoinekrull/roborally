@@ -45,8 +45,11 @@
       ],
       [
         {
-          "type": "Empty",
-          "isOnBoard": "Start A"
+          "type": "RestartPoint",
+          "isOnBoard": "A",
+          "orientations": [
+            "right"
+          ]
         }
       ],
       [
