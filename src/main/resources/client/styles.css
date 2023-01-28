@@ -66,3 +66,13 @@
 .selectedRoboter{
 -fx-effect: dropshadow(three-pass-box, grey, 30, 0.0, 0, 0);
 }
+
+.playerInfoLabel{
+-fx-text-fill: #3b3bf1;
+-fx-font-size: 10pt;
+}
+
+.energyMeterLabel{
+-fx-text-fill: #3b3bf1;
+-fx-font-weight: bold;
+}

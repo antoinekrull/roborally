@@ -38,6 +38,7 @@ public class CustomTimer {
                         String[] placedCards = unreadyPlayers.get(i).fillRegisterWithRandomCards();
                         server.sendCardsYouGotNow(unreadyPlayers.get(i), placedCards);
                         unreadyPlayers.get(i).fillRegisterWithRandomCards();
+                        unreadyPlayers.get(i).printRegisters();
                         game.getPlayerList().setPlayerReadiness(true);
                         game.setTimerIsRunning(false);
                     }
@@ -53,6 +54,7 @@ public class CustomTimer {
     //cancels timer
     public void cancel() {
         timer.cancel();
+        server.sendTimerEnded(new PlayerList());
         logger.debug("Timer cancelled");
     }
 

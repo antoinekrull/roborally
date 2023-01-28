@@ -88,7 +88,7 @@ public class Client {
         this.isAI = new SimpleBooleanProperty();
         this.message = new SimpleObjectProperty<>();
         this.maps = FXCollections.observableArrayList();
-        this.errorMessage = new SimpleStringProperty();
+        this.errorMessage = new SimpleStringProperty("");
         this.gameStarted = new SimpleBooleanProperty();
         this.currentPlayer = new SimpleStringProperty("");
         this.activePhase = new SimpleStringProperty();
@@ -365,12 +365,19 @@ public class Client {
                             }
                         }
                         if (message.getMessageType().equals(MessageType.ActivePhase)) {
+                            logger.debug("active Phase: " + message.getMessageBody().getPhase());
                             int activePhase = message.getMessageBody().getPhase();
-                            switch (activePhase) {
-                                case 0: Platform.runLater(() -> Client.this.setActivePhase("Construction Phase"));
-                                case 1: Platform.runLater(() -> Client.this.setActivePhase("Upgrade Phase"));
-                                case 2: Platform.runLater(() -> Client.this.setActivePhase("Programming Phase"));
-                                case 3: Platform.runLater(() -> Client.this.setActivePhase("Activation Phase"));
+                            if (activePhase == 0) {
+                                Platform.runLater(() -> Client.this.setActivePhase("Construction Phase"));
+                            }
+                            if (activePhase == 1) {
+                                Platform.runLater(() -> Client.this.setActivePhase("Upgrade Phase"));
+                            }
+                            if (activePhase == 2) {
+                                Platform.runLater(() -> Client.this.setActivePhase("Programming Phase"));
+                            }
+                            if (activePhase == 3) {
+                                Platform.runLater(() -> Client.this.setActivePhase("Activation Phase"));
                             }
                         }
                         if (message.getMessageType().equals(MessageType.YourCards)) {
@@ -379,7 +386,7 @@ public class Client {
                                 Client.this.myCards.clear();
                                 Client.this.myCards.addAll(cardsInHand);
                                 for(String card: cardsInHand){
-                                    logger.debug("Client - cardsInHand" + card);
+                                    logger.debug("Client - cardsInHand: " + card);
                                 }
                             });
                             for (int i = 0; i < myCards.size(); i++) {
@@ -387,6 +394,7 @@ public class Client {
                             }
                         }
                         if (message.getMessageType().equals(MessageType.NotYourCards)) {
+                            logger.debug("NotYourCards: -Amount of cards: " + message.getMessageBody().getCardsAmountInHand());
                             int clientID = message.getMessageBody().getClientID();
                             int cardsInHand = message.getMessageBody().getCardsAmountInHand();
                             if (clientPlayerList.containsPlayer(clientID)) {
@@ -397,6 +405,7 @@ public class Client {
                             Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.CardSelected)) {
+                            logger.debug("card selected: " + message.getMessageBody().getCard());
                             int clientID = message.getMessageBody().getClientID();
                             if (userIDProperty().get() != clientID) {
                                 Client.this.setGameLogMessage(message);
@@ -429,15 +438,20 @@ public class Client {
                             //TODO: implement
                         }
                         if (message.getMessageType().equals(MessageType.PlayerTurning)) {
+                            logger.debug("roboter alignment");
                             Client.this.setRoboterAlignment(message.getMessageBody().getRotation());
                         }
                         if (message.getMessageType().equals(MessageType.TimerStarted)) {
+                            logger.debug("timer started");
                             Client.this.setTimer(true);
                         }
                         if (message.getMessageType().equals(MessageType.TimerEnded)) {
+                            logger.debug("timer ended");
+                            Client.this.setTimer(false);
                             Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.Energy)) {
+                            logger.debug("Energy gained");
                             int clientID = message.getMessageBody().getClientID();
                             int count = message.getMessageBody().getCount();
                             if (userIDProperty().get() == clientID) {
@@ -446,7 +460,7 @@ public class Client {
                             else {
                                 for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
                                     if (clientPlayerList.getPlayer(clientID).getId() == clientID) {
-                                        clientPlayerList.getPlayer(clientID).addEnergy(count);
+                                        Platform.runLater(() -> clientPlayerList.getPlayer(clientID).addEnergy(count));
                                     }
                                 }
                             }
@@ -469,16 +483,18 @@ public class Client {
                         }
                         if (message.getMessageType().equals(MessageType.GameFinished)) {
                             Client.this.setGameLogMessage(message);
-
                         }
-                        if(message.getMessageType().equals(MessageType.RefillShop)){
+                        if (message.getMessageType().equals(MessageType.RefillShop)){
                             //TODO: display cards from the message
                         }
-                        if(message.getMessageBody().equals(MessageType.ExchangeShop)){
+                        if (message.getMessageBody().equals(MessageType.ExchangeShop)){
                             //TODO: no idea why there needs to be a distinction between a refill and a complete redraw
                         }
-                        if(message.getMessageType().equals(MessageType.UpgradeBought)){
+                        if (message.getMessageType().equals(MessageType.UpgradeBought)){
                             //TODO: receive purchase confirmation
+                        }
+                        if (message.getMessageType().equals(MessageType.Reboot)) {
+                            Client.this.setGameEventMessage(message);
                         }
                     }
                 }
