@@ -626,10 +626,6 @@ public class Game implements Runnable {
 
     @Override
     public void run() {
-        logger.info("hi");
-        logger.warn("hi");
-        logger.error("ih");
-        logger.fatal("oh");
         logger.debug("This game is running");
         boolean readyToStart = false;
         while(gameIsRunning) {

@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
+
+import game.CustomTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -20,6 +22,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * ViewModel for selecting a robot and choosing a name
@@ -49,6 +53,7 @@ public class ViewModelRobotSelection {
 
     private List<Node> robots;
     private ClientPlayerList clientPlayerList;
+    private final Logger logger = LogManager.getLogger(ViewModelRobotSelection.class);
 
     public ViewModelRobotSelection() {
         this.modelUser = ModelUser.getInstance();
@@ -125,7 +130,7 @@ public class ViewModelRobotSelection {
     }
 
     public void robotAccepted() {
-        System.out.println("Selection accepted.");
+        logger.info("Selection accepted.");
         Timeline timeline = new Timeline(new KeyFrame(
                 Duration.millis(650),
                 event -> {

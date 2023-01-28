@@ -2,9 +2,12 @@ package game.board;
 
 import java.util.ArrayList;
 
+import game.CustomTimer;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
 import game.player.Player;
 
@@ -18,6 +21,8 @@ public class ConveyorBeltTile extends Tile {
         STRAIGHT, CURVE, TSECTION
     }
     private Variant variant;
+
+    private final Logger logger = LogManager.getLogger(ConveyorBeltTile.class);
 
 
     public ConveyorBeltTile(int xCoordinate, int yCoordinate, int velocity, ArrayList<Direction> directionIn, Direction directionOut) {
@@ -201,7 +206,7 @@ public class ConveyorBeltTile extends Tile {
             }
         }
         else {
-            System.out.println("irgendwas stimmt mit Conveyorbelt nicht :/");
+            logger.warn("irgendwas stimmt mit Conveyorbelt nicht :/");
         }
     }
 }

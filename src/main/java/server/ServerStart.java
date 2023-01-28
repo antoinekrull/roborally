@@ -17,7 +17,7 @@ public class ServerStart extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException  {
-        logger.debug("Server started");
+        logger.info("Server started");
         FXMLLoader loader = new FXMLLoader(ServerStart.class.getResource("servergui.fxml"));
         Scene scene = new Scene(loader.load(), 250, 300);
         Stage stage = new Stage();

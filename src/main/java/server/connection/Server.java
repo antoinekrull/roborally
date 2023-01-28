@@ -96,7 +96,7 @@ public class Server {
                     }
 
                 } catch (Exception e) {
-                    System.out.println("Error here " + e.getMessage());
+                    logger.warn("Error here " + e.getMessage());
                 }
             }
         };

@@ -255,9 +255,9 @@ public class Player {
             card = hand.get(getIndexOfCard(cardName));
         }
         if(index == 0 && card instanceof AgainCard) {
-            System.out.println("You cant play this card in the first register, please try again!");
+            logger.info("You cant play this card in the first register, please try again!");
         } else if(index < 0 || index > cardRegister.length){
-            System.out.println("The register has not been addressed properly, please try again!");
+            logger.info("The register has not been addressed properly, please try again!");
         } else {
             cardRegister[index] = card;
         }

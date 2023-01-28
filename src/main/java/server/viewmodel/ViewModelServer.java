@@ -1,5 +1,6 @@
 package server.viewmodel;
 
+import game.CustomTimer;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -7,6 +8,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import server.model.ModelServer;
 
 public class ViewModelServer {
@@ -20,6 +23,7 @@ public class ViewModelServer {
     private StringProperty status;
 
     private ModelServer modelServer;
+    private final Logger logger = LogManager.getLogger(ViewModelServer.class);
 
 
     public ViewModelServer() {
@@ -46,7 +50,7 @@ public class ViewModelServer {
             modelServer.stopServer();
             modelServer.getAlive();
         } catch (NullPointerException e) {
-            System.out.println("No Server to stop.");
+            logger.warn("No Server to stop.");
         }
     }
 

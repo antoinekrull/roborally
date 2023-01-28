@@ -2,6 +2,7 @@ package client.ui;
 
 import client.player.ClientPlayerList;
 import client.viewmodel.ViewModelGameWindow;
+import game.CustomTimer;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -36,7 +37,7 @@ public class PlayerGameInfo {
 
     public void loadPlayerInfo() {
         int size = clientPlayerList.getPlayerList().size();
-        System.out.println(size);
+        logger.info(size);
         for (int i = 1; i < clientPlayerList.getPlayerList().size(); i++) {
             if (clientPlayerList.getPlayerList().get(i) != null) {
 
