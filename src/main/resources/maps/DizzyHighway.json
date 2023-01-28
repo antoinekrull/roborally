@@ -29,7 +29,10 @@
       [
         {
           "type": "Antenna",
-          "isOnBoard": "Start A"
+          "isOnBoard": "Start A",
+          "orientations": [
+            "right"
+          ]
         }
       ],
       [
@@ -1074,7 +1077,8 @@
       [
         {
           "type": "CheckPoint",
-          "isOnBoard": "5B"
+          "isOnBoard": "5B",
+          "count": 1
         }
       ],
       [

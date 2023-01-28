@@ -207,12 +207,14 @@ import java.util.ArrayList;
             messageBody.setCardsInHand(cards);
             return new Message(MessageType.CardsYouGotNow, messageBody);
         }
+
         public Message generateCurrentCardsMessage(ArrayList<Card> cardArrayList){
             String jsonString = cardArrayList.toString();
             MessageBody messageBody = new MessageBody();
             messageBody.setActiveCards(jsonString);
             return new Message(MessageType.CurrentCards, messageBody);
         }
+
         public Message generateReplaceCardMessage(int register, String newCard, int clientID){
             MessageBody messageBody = new MessageBody();
             messageBody.setRegister(register);
@@ -248,6 +250,7 @@ import java.util.ArrayList;
             MessageBody messageBody = new MessageBody();
             messageBody.setClientID(clientID);
             messageBody.setAvailablePiles(availablePiles);
+            messageBody.setCount(availablePiles.length);
             return new Message(MessageType.PickDamage, messageBody);
         }
         public Message generateSelectDamage(String[] cards) {

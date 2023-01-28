@@ -64,7 +64,9 @@ public class Client {
     private ObjectProperty<Message> gameLogMessage;
     private ObjectProperty<Message> gameEventMessage;
     private BooleanProperty gameStarted;
+    private StringProperty currentPlayer;
     private BooleanProperty activePlayer;
+    private SimpleStringProperty activePhase;
     private boolean prioPlayer = false;
     private IntegerProperty score;
     private ObservableList<String> myCards;
@@ -72,8 +74,6 @@ public class Client {
     private ObservableList<String> maps;
     private StringProperty roboterAlignment;
     private BooleanProperty timer;
-
-    public static ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
 
 
     private Client() {
@@ -86,10 +86,12 @@ public class Client {
         this.isAI = new SimpleBooleanProperty();
         this.message = new SimpleObjectProperty<>();
         this.maps = FXCollections.observableArrayList();
-        this.errorMessage = new SimpleStringProperty();
+        this.errorMessage = new SimpleStringProperty("");
         this.gameStarted = new SimpleBooleanProperty();
-        this.score = new SimpleIntegerProperty(0);
+        this.currentPlayer = new SimpleStringProperty("");
+        this.activePhase = new SimpleStringProperty();
         this.activePlayer = new SimpleBooleanProperty(false);
+        this.score = new SimpleIntegerProperty(0);
         this.myCards = FXCollections.observableArrayList();
         this.energy = new SimpleIntegerProperty(5);
         this.movement = new SimpleObjectProperty<>();
@@ -180,6 +182,22 @@ public class Client {
 
     public BooleanProperty gameStartedProperty() {
         return gameStarted;
+    }
+
+    public SimpleStringProperty activePhaseProperty() {
+        return activePhase;
+    }
+
+    public void setActivePhase(String activePhase) {
+        this.activePhase.set(activePhase);
+    }
+
+    public StringProperty currentPlayerProperty() {
+        return currentPlayer;
+    }
+
+    public void setCurrentPlayer(String currentPlayer) {
+        this.currentPlayer.set(currentPlayer);
     }
 
     public BooleanProperty activePlayerProperty() {
@@ -305,7 +323,6 @@ public class Client {
                         }
                         if (message.getMessageType().equals(MessageType.SelectMap)) {
                             prioPlayer = true;
-                            //TODO: if client looses prio because he removes ready or looses connection, he isn`t allowed to change map
                             String[] temp = message.getMessageBody().getAvailableMaps();
                             for (int i = 0; i < temp.length; i++) {
                                 maps.add(temp[i]);
@@ -329,7 +346,36 @@ public class Client {
                             gameStarted.set(true);
                         }
                         if (message.getMessageType().equals(MessageType.CurrentPlayer)) {
-                            Client.this.activePlayer.set(true);
+                            int clientID = message.getMessageBody().getClientID();
+                            if (userIDProperty().get() == clientID) {
+                                for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
+                                    clientPlayerList.getPlayerList().get(i).setActivePlayer("");
+                                }
+                                Client.this.activePlayer.set(true);
+                                Platform.runLater(() -> Client.this.setCurrentPlayer("It's your turn"));
+                            }
+                            else {
+                                Client.this.activePlayer.set(false);
+                                if (clientPlayerList.containsPlayer(clientID)) {
+                                    Platform.runLater(() -> clientPlayerList.getPlayer(clientID).setActivePlayer("It's their turn"));
+                                }
+                            }
+                        }
+                        if (message.getMessageType().equals(MessageType.ActivePhase)) {
+                            logger.debug("active Phase: " + message.getMessageBody().getPhase());
+                            int activePhase = message.getMessageBody().getPhase();
+                            if (activePhase == 0) {
+                                Platform.runLater(() -> Client.this.setActivePhase("Construction Phase"));
+                            }
+                            if (activePhase == 1) {
+                                Platform.runLater(() -> Client.this.setActivePhase("Upgrade Phase"));
+                            }
+                            if (activePhase == 2) {
+                                Platform.runLater(() -> Client.this.setActivePhase("Programming Phase"));
+                            }
+                            if (activePhase == 3) {
+                                Platform.runLater(() -> Client.this.setActivePhase("Activation Phase"));
+                            }
                         }
                         if (message.getMessageType().equals(MessageType.YourCards)) {
                             String[] cardsInHand = message.getMessageBody().getCardsInHand();
@@ -337,7 +383,7 @@ public class Client {
                                 Client.this.myCards.clear();
                                 Client.this.myCards.addAll(cardsInHand);
                                 for(String card: cardsInHand){
-                                    logger.debug("Client - cardsInHand" + card);
+                                    logger.debug("Client - cardsInHand: " + card);
                                 }
                             });
                             for (int i = 0; i < myCards.size(); i++) {
@@ -345,30 +391,22 @@ public class Client {
                             }
                         }
                         if (message.getMessageType().equals(MessageType.NotYourCards)) {
+                            logger.debug("NotYourCards: -Amount of cards: " + message.getMessageBody().getCardsAmountInHand());
                             int clientID = message.getMessageBody().getClientID();
                             int cardsInHand = message.getMessageBody().getCardsAmountInHand();
-                            for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
-                                if (clientPlayerList.getPlayerList().get(i).getId() == clientID) {
-                                    Client.this.clientPlayerList.getPlayerList().get(i).setCardsInHand(cardsInHand);
-                                }
+                            if (clientPlayerList.containsPlayer(clientID)) {
+                                Platform.runLater(() -> Client.this.clientPlayerList.getPlayer(clientID).setCardsInHand(cardsInHand));
                             }
                         }
                         if (message.getMessageType().equals(MessageType.CardPlayed)) {
                             Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.CardSelected)) {
-                            //TODO: Rethinking this implementation
-                            /*
+                            logger.debug("card selected: " + message.getMessageBody().getCard());
                             int clientID = message.getMessageBody().getClientID();
-                            int register = message.getMessageBody().getRegister();
-                            boolean filled = message.getMessageBody().isFilled();
-                            for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
-                                if (clientPlayerList.getPlayerList().get(i).getId() == clientID) {
-                                    Client.this.clientPlayerList.getPlayerList().get(i).getRegisterInformations().add(new RegisterInformation(register, filled));
-                                }
+                            if (userIDProperty().get() != clientID) {
+                                Client.this.setGameLogMessage(message);
                             }
-                             */
-                            //Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.SelectionFinished)) {
                             Client.this.setGameEventMessage(message);
@@ -383,7 +421,7 @@ public class Client {
                             //TODO: after timer ended and register are not filled probably
                         }
                         if (message.getMessageType().equals(MessageType.RegisterChosen)) {
-
+                            Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
                             Client.this.setMovement(message);
@@ -394,27 +432,32 @@ public class Client {
                             logger.debug("Movement message: " + message);
                         }
                         if (message.getMessageType().equals(MessageType.CheckpointMoved)) {
-
+                            //TODO: implement
                         }
                         if (message.getMessageType().equals(MessageType.PlayerTurning)) {
+                            logger.debug("roboter alignment");
                             Client.this.setRoboterAlignment(message.getMessageBody().getRotation());
                         }
                         if (message.getMessageType().equals(MessageType.TimerStarted)) {
+                            logger.debug("timer started");
                             Client.this.setTimer(true);
                         }
                         if (message.getMessageType().equals(MessageType.TimerEnded)) {
+                            logger.debug("timer ended");
+                            Client.this.setTimer(false);
                             Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.Energy)) {
+                            logger.debug("Energy gained");
                             int clientID = message.getMessageBody().getClientID();
                             int count = message.getMessageBody().getCount();
                             if (userIDProperty().get() == clientID) {
-                                Client.this.addEnergy(count);
+                                Platform.runLater(() -> Client.this.addEnergy(count));
                             }
                             else {
                                 for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
                                     if (clientPlayerList.getPlayer(clientID).getId() == clientID) {
-                                        clientPlayerList.getPlayer(clientID).addEnergy(count);
+                                        Platform.runLater(() -> clientPlayerList.getPlayer(clientID).addEnergy(count));
                                     }
                                 }
                             }
@@ -423,33 +466,32 @@ public class Client {
                             Client.this.setGameEventMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.PickDamage)) {
-                            //TODO: think about how it should be implemented
-                        }
-                        if (message.getMessageType().equals(MessageType.SelectedDamage)) {
-                            //TODO: Set DamageCards to something
+                            Client.this.setGameEventMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.CheckPointReached)) {
                             int clientID = message.getMessageBody().getClientID();
                             if (Client.this.userIDProperty().get() == clientID) {
-                                Client.this.setScore(message.getMessageBody().getNumber());
+                                Platform.runLater(() -> Client.this.setScore(message.getMessageBody().getNumber()));
                             }
                             else {
-                                clientPlayerList.getPlayer(clientID).setScore(message.getMessageBody().getNumber());
+                                Platform.runLater(() -> clientPlayerList.getPlayer(clientID).setScore(message.getMessageBody().getNumber()));
                                 Client.this.setGameLogMessage(message);
                             }
                         }
                         if (message.getMessageType().equals(MessageType.GameFinished)) {
                             Client.this.setGameLogMessage(message);
-
                         }
-                        if(message.getMessageType().equals(MessageType.RefillShop)){
+                        if (message.getMessageType().equals(MessageType.RefillShop)){
                             //TODO: display cards from the message
                         }
-                        if(message.getMessageBody().equals(MessageType.ExchangeShop)){
+                        if (message.getMessageBody().equals(MessageType.ExchangeShop)){
                             //TODO: no idea why there needs to be a distinction between a refill and a complete redraw
                         }
-                        if(message.getMessageType().equals(MessageType.UpgradeBought)){
+                        if (message.getMessageType().equals(MessageType.UpgradeBought)){
                             //TODO: receive purchase confirmation
+                        }
+                        if (message.getMessageType().equals(MessageType.Reboot)) {
+                            Client.this.setGameEventMessage(message);
                         }
                     }
                 }
@@ -500,20 +542,17 @@ public class Client {
         logger.debug("Selected card: " + card + " and register: " + register);
         sendMessageToServer(messageCreator.generateSelectedCardMessage(card, register));
     }
-    //TODO: add method in messageCreator
-    public void sendSelectedDamageCards() {
-
-    }
-    public void sendSelectionFinished(int clientID) {
-        sendMessageToServer(messageCreator.generateSelectionFinishedMessage(clientID));
+    public void sendSelectedDamageCards(String card, int register) {
+        sendMessageToServer(messageCreator.generateSelectedCardMessage(card, register));
     }
     public void sendRebootDirection(String direction) {
         sendMessageToServer(messageCreator.generateRebootDirectionMessage(direction));
     }
     public void sendDiscardSome(String[] discardSome) {
+        //TODO: Add discardSome to message
         //sendMessageToServer(messageCreator.generateDiscardSome)
     }
-    public void sendRegister(int register) {
+    public void sendChooseRegister(int register) {
         sendMessageToServer(messageCreator.generateChooseRegisterMessage(register));
     }
 

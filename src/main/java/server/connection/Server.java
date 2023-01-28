@@ -219,21 +219,11 @@ public class Server {
     }
     public void sendActivePhase(int phase) {
         try {
-
-            String[] cardsInHand = new String[9];
-            String cards = "";
-            for(int i = 0; i < cardsInHand.length; i++) {
-                String temp = cards;
-                cards = cards + "" + cardsInHand[i];
-            }
-
             messages.put(messageCreator.generateActivePhaseMessage(phase));
         } catch (Exception e){
             e.printStackTrace();
         }
     }
-
-
 
     public void sendYourCards(Player player) {
         String[] cardsInHand = new String[player.getHand().size()];
@@ -300,6 +290,7 @@ public class Server {
         }
     }
 
+    //TODO: Fix this
     public void sendCurrentCards(ArrayList<Card> cardArrayList) {
         try {
             messages.put(messageCreator.generateCurrentCardsMessage(cardArrayList));
@@ -366,17 +357,10 @@ public class Server {
         }
     }
 
-    public void sendEnergy(Player player, Object object) {
+    public void sendEnergy(int id, int count, String source) {
         try {
-            String energySource = "";
-            if(object instanceof EnergySpaceTile) {
-                energySource = "EnergySpace";
-            } else if(object instanceof PowerUpCard) {
-                energySource = "PowerUpCard";
-            } else {
-                energySource = "error";
-            }
-            messages.put(messageCreator.generateEnergyMessage(player.getId(), player.getRobot().getEnergyCubes() ,energySource));
+            String energySource = source;
+            messages.put(messageCreator.generateEnergyMessage(id, count, energySource));
         } catch (Exception e) {
             e.printStackTrace();
         }

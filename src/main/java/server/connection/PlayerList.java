@@ -1,12 +1,13 @@
 package server.connection;
 
+import game.board.Antenna;
+import game.board.Direction;
 import game.player.Robot;
 import game.player.Player;
-import javafx.util.Pair;
+import org.javatuples.Pair;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+
+import java.util.*;
 
 public class PlayerList extends ArrayList implements Iterator<Player> {
     private ArrayList<Player> playerList = new ArrayList<>();
@@ -162,6 +163,37 @@ public class PlayerList extends ArrayList implements Iterator<Player> {
         }
         return  unreadyPlayers;
     }
+    public void determinePriority(Antenna antenna){
+        Collections.sort(playerList, new Comparator<Player>() {
+            @Override
+            public int compare(Player o1, Player o2) {
+                Integer distance1 = o1.getRobot().getDistanceToAntenna(antenna.getPosition());
+                Integer distance2 = o2.getRobot().getDistanceToAntenna(antenna.getPosition());
+                if(o1.getHasAdminPrivilege()){
+                    distance1=0;
+                }
+                if(o2.getHasAdminPrivilege()){
+                    distance2=0;
+                }
+                int distanceCompare = Integer.compare(distance1,distance2);
+                if(distanceCompare == 0){
+                    Direction direction = antenna.getDirection();
+                    int yPos1 = o1.getRobot().getCurrentPosition().getValue1();
+                    int yPos2 = o2.getRobot().getCurrentPosition().getValue1();
+
+
+                    switch (direction) {
+                        case EAST -> {return Integer.compare(yPos1,yPos2);}
+                        case WEST -> {return Integer.compare(yPos2,yPos1);}
+                    }
+
+                }
+                return distanceCompare;
+            }
+        });
+
+    }
+
 
     @Override
     public boolean hasNext() {

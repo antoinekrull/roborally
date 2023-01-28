@@ -287,7 +287,7 @@
                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-              <StackPane fx:id="handStackPane" GridPane.columnIndex="1">
+              <StackPane fx:id="handStackPane" prefHeight="131.0" prefWidth="1076.0" GridPane.columnIndex="1">
               <children>
                 <GridPane fx:id="handGrid" alignment="CENTER" maxHeight="140.0" maxWidth="850.0" nodeOrientation="RIGHT_TO_LEFT" HBox.hgrow="ALWAYS">
                   <columnConstraints>
@@ -336,23 +336,34 @@
                            <children>
                               <VBox fx:id="myPlayerInfoVBox" alignment="CENTER_LEFT" fillWidth="false" spacing="12.0">
                                  <children>
-                                    <Label fx:id="timerLabel" text="" />
-                                    <Label fx:id="currentActivePlayerLabel" text="" />
-                                    <Label fx:id="currentPhaseLabel" text="" />
+                                    <Label fx:id="timerLabel" styleClass="playerInfoLabel" text="" />
+                                    <Label fx:id="currentActivePlayerLabel" styleClass="playerInfoLabel" text="" />
+                                    <Label fx:id="currentPhaseLabel" styleClass="playerInfoLabel" text="" />
+                                    <HBox>
+                                       <children>
+                                          <Label fx:id="yourScoreLabel" styleClass="playerInfoLabel" text="Your Score: " />
+                                          <Label fx:id="scoreLabel" styleClass="playerInfoLabel" />
+                                       </children>
+                                    </HBox>
                                  </children>
                                  <HBox.margin>
                                     <Insets right="30.0" />
                                  </HBox.margin>
                               </VBox>
-                              <StackPane fx:id="myEnergyStackPane" HBox.hgrow="NEVER">
+                              <VBox alignment="CENTER" spacing="5.0" HBox.hgrow="NEVER">
                                  <HBox.margin>
                                     <Insets left="20.0" />
                                  </HBox.margin>
                                  <children>
-                                    <Label fx:id="myEnergyLabel" />
-                                    <ProgressBar fx:id="myEnergyBar" prefWidth="100.0" progress="0.0" />
+                                    <Label fx:id="myEnergyMeterLabel" styleClass="playerInfoLabel" text="Energymeter" />
+                                    <StackPane fx:id="myEnergyStackPane">
+                                       <children>
+                                          <ProgressBar fx:id="myEnergyBar" prefWidth="150.0" progress="0.0" />
+                                          <Label fx:id="myEnergyLabel" styleClass="energyMeterLabel" />
+                                       </children>
+                                    </StackPane>
                                  </children>
-                              </StackPane>
+                              </VBox>
                            </children>
                         </HBox>
                         <Pane fx:id="logPane">
@@ -477,23 +488,6 @@
                   <rowConstraints>
                     <RowConstraints minHeight="10.0" valignment="BOTTOM" vgrow="SOMETIMES" />
                   </rowConstraints>
-                  <children>
-                    <ImageView fx:id="enemyCards" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-                      <image>
-                        <Image url="@../textures/cards/kartendeckGegner.png" />
-                      </image>
-                    </ImageView>
-                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
-                      <image>
-                        <Image url="@../textures/cards/kartendeckGegner.png" />
-                      </image>
-                    </ImageView>
-                    <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
-                      <image>
-                        <Image url="@../textures/cards/kartendeckGegner.png" />
-                      </image>
-                    </ImageView>
-                  </children>
                 </GridPane>
               </children>
             </GridPane>

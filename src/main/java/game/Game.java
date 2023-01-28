@@ -17,8 +17,6 @@ import server.connection.Server;
 import java.util.*;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class Game implements Runnable {
     private GamePhase currentGamePhase;
@@ -102,24 +100,23 @@ public class Game implements Runnable {
 
     private void applyAllTileEffects() throws Exception {
         try {
-
+            for (int x = 0; x < playerList.size(); x++) {
+                Pair position = playerList.get(x).getRobot().getCurrentPosition();
                 for (int y = 0; y < board.getConveyorBelt2List().size(); y++) {
-                    for (int x = 0; x < playerList.size(); x++) {
+                    if (board.getConveyorBelt2List().get(y).getPosition().equals(position)) {
                         for (int i = 0; i < 2; i++) {
-                            Pair position = playerList.get(x).getRobot().getCurrentPosition();
-                            if (board.getConveyorBelt2List().get(y).getPosition().equals(position)) {
-                                logger.debug("Applying conveyor belt 2 ");
-                                collisionCalculator.moveConveyorBelt(playerList.get(x).getRobot());
+                            logger.info("Applying conveyor belt 2 ");
+                            collisionCalculator.moveConveyorBelt(playerList.get(x).getRobot());
                         }
                     }
                 }
             }
             Thread.sleep(500);
-            for (int y = 0; y < board.getConveyorBelt1List().size(); y++) {
-                for (int x = 0; x < playerList.size(); x++) {
-                    Pair position = playerList.get(x).getRobot().getCurrentPosition();
+            for (int x = 0; x < playerList.size(); x++) {
+                Pair position = playerList.get(x).getRobot().getCurrentPosition();
+                for (int y = 0; y < board.getConveyorBelt1List().size(); y++) {
                     if (board.getConveyorBelt1List().get(y).getPosition().equals(position)) {
-                        logger.debug("Applying conveyor belt 1");
+                        logger.info("Applying conveyor belt 1");
                         collisionCalculator.moveConveyorBelt(playerList.get(x).getRobot());
                     }
                 }
@@ -128,14 +125,6 @@ public class Game implements Runnable {
             Thread.sleep(500);
             applyPushPanelEffects();
 
-            // Sollte nicht nötig sein, da im collision calculator nach pit gecheckt wird
-//            for (PitTile pitTile : board.getPitList()) {
-//                for (int y = 0; y < playerList.size(); y++) {
-//                    if (pitTile.getPosition().equals(playerList.get(y).getRobot().getCurrentPosition())) {
-//                        reboot(playerList.get(y));
-//                    }
-//                }
-//            }
             for (int x = 0; x < board.getGearTileList().size(); x++) {
                 for (int y = 0; y < playerList.size(); y++) {
                     if (playerList.get(y).getRobot().getCurrentPosition().equals(board.getGearTileList().get(x).getPosition())) {
@@ -144,42 +133,16 @@ public class Game implements Runnable {
                 }
             }
             Thread.sleep(500);
-            for (int x = 0; x < board.getLaserTileList().size(); x++) {
-                for (int y = 0; y < playerList.size(); y++) {
-                    if (playerList.get(y).getRobot().getCurrentPosition().equals(board.getLaserTileList().get(x).getPosition())) {
-                        //add functionality once collision Calculator is in
-                        logger.debug("Applying laser tile effects");
-                        board.getLaserTileList().get(x).applyEffect(playerList.get(y));
-                        drawDamageCards(playerList.get(y));
-                    }
-                }
-            }
+            collisionCalculator.shootMapLasers();
             Thread.sleep(500);
             //robotLaser
-            computeRobotLaserPositions();
-            for (int i = 0; i < playerList.size(); i++) {
-                for (int x = 0; x < robotLaserList.size(); x++) {
-                    for (int y = 0; y < robotLaserList.get(x).size(); y++) {
-                        if (playerList.get(i).getRobot().getCurrentPosition().equals(robotLaserList.get(y))) {
-                            playerList.get(i).getRobot().increaseDamageCount();
-                        }
-                    }
-                }
-            }
-            Thread.sleep(500);
-            robotLaserList.clear();
-            if (playerList.getDamagedPlayers().size() != 0) {
-                for (Player player : playerList.getDamagedPlayers()) {
-                    drawDamageCards(player);
-                }
-            }
+            collisionCalculator.shootRobotLasers();
             Thread.sleep(500);
             for (int x = 0; x < board.getEnergySpaceList().size(); x++) {
                 for (int y = 0; y < playerList.size(); y++) {
                     if (playerList.get(y).getRobot().getCurrentPosition().equals(board.getEnergySpaceList().get(x).getPosition())) {
-                        logger.debug("Applying energy tile effects");
+                        logger.info("Applying energy tile effects");
                         board.getEnergySpaceList().get(x).applyEffect(playerList.get(y));
-                        server.sendEnergy(playerList.get(y), board.getEnergySpaceList().get(x));
                         Thread.sleep(100);
                     }
                 }
@@ -188,8 +151,14 @@ public class Game implements Runnable {
             for (int x = 0; x < board.getCheckpointList().size(); x++) {
                 for (int y = 0; y < playerList.size(); y++) {
                     if (playerList.get(y).getRobot().getCurrentPosition().equals(board.getCheckpointList().get(x).getPosition())) {
-                        logger.debug("Applying checkpoint effects");
+                        logger.info("Applying checkpoint effects");
+                        logger.info("Number of Checkpoints " + board.getCheckpointList().size());
                         board.getCheckpointList().get(x).applyEffect(playerList.get(y));
+                        if(playerList.get(y).getRobot().getCurrentObjective() == board.getCheckpointList().size()) {
+                            logger.info("YAAAAAAAAAAY " + playerList.get(y).getUsername() + " WON THE GAME <3");
+                            server.sendGameFinished(playerList.get(y));
+                            gameIsRunning = false;
+                        }
                     }
                 }
             }
@@ -206,7 +175,7 @@ public class Game implements Runnable {
                 if (pushPanelTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
                     //checks if pushpanel would be active in current register
                     if (pushPanelTile.getRegisters().contains(currentRegister + 1)) {
-                        logger.debug("Applying pushpanel effects");
+                        logger.info("Applying pushpanel effects");
                         Pair<Integer, Integer> temp = new Pair<>(0 ,0);
                         Pair<Integer, Integer> newPosition = new Pair<>(playerList.get(i).getRobot().getCurrentPosition().getValue0(),
                                 playerList.get(i).getRobot().getCurrentPosition().getValue1());
@@ -222,16 +191,6 @@ public class Game implements Runnable {
             }
         }
     }
-
-    private void determinePriority() {
-        Pair<Integer, Integer> antennaPosition = board.getAntenna().getPosition();
-        playerList.getPlayerList().sort((p1, p2) -> {
-            double dist1 = Math.sqrt(Math.pow(p1.getRobot().getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(p1.getRobot().getCurrentPosition().getValue1() - antennaPosition.getValue1(), 2));
-            double dist2 = Math.sqrt(Math.pow(p2.getRobot().getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(p2.getRobot().getCurrentPosition().getValue1(), 2));
-            return Double.compare(dist1, dist2);
-        });
-    }
-
     private void refreshUpgradeShop(){
         int leftoverCards;
         if(upgradeShop.size() == playerList.size()){
@@ -247,84 +206,15 @@ public class Game implements Runnable {
         }
     }
 
-    private void computeRobotLaserPositions(){
-        //initializes the robotLaserList with the current robot positions
-        for (int i = 0; i < playerList.size(); i++) {
-            //initializes the robotLaserList with the current robot positions
-            robotLaserList.add(new ArrayList<>());
-            robotLaserList.get(i).add(playerList.get(i).getRobot().getCurrentPosition());
-            //determines the current tile positions with robot lasers
-            Pair<Integer, Integer> currentPosition;
-            switch(playerList.get(i).getRobot().getDirection()){
-                case EAST -> {
-                    currentPosition = playerList.get(i).getRobot().getCurrentPosition();
-                    currentPosition.setAt0(currentPosition.getValue0() + 1);
-                    while(board.tileIsBlocking(board.getTile(currentPosition))){
-                        robotLaserList.get(i).add(currentPosition);
-                        if(tileTakenByRobot(currentPosition)){
-                            break;
-                        }
-                        currentPosition.setAt0(currentPosition.getValue0() + 1);
-                        if(currentPosition.getValue0() > board.getBoard().size()){
-                           break;
-                        }
-                    }
-                }
-                case SOUTH -> {
-                    currentPosition = playerList.get(i).getRobot().getCurrentPosition();
-                    currentPosition.setAt1(currentPosition.getValue1() + 1);
-                    while(board.tileIsBlocking(board.getTile(currentPosition))){
-                        robotLaserList.get(i).add(currentPosition);
-                        if(tileTakenByRobot(currentPosition)){
-                            break;
-                        }
-                        currentPosition.setAt0(currentPosition.getValue1() + 1);
-                        if(currentPosition.getValue1() > board.getBoard().get(i).size()){
-                            break;
-                        }
-                    }
-                }
-                case WEST -> {
-                    currentPosition = playerList.get(i).getRobot().getCurrentPosition();
-                    currentPosition.setAt0(currentPosition.getValue0() - 1);
-                    while(board.tileIsBlocking(board.getTile(currentPosition))){
-                        robotLaserList.get(i).add(currentPosition);
-                        if(tileTakenByRobot(currentPosition)){
-                            break;
-                        }
-                        currentPosition.setAt0(currentPosition.getValue0() - 1);
-                        if(currentPosition.getValue0() < 0){
-                            break;
-                        }
-                    }
-                }
-                case NORTH -> {
-                    currentPosition = playerList.get(i).getRobot().getCurrentPosition();
-                    currentPosition.setAt1(currentPosition.getValue1() - 1);
-                    while(board.tileIsBlocking(board.getTile(currentPosition))){
-                        robotLaserList.get(i).add(currentPosition);
-                        if(tileTakenByRobot(currentPosition)){
-                            break;
-                        }
-                        currentPosition.setAt1(currentPosition.getValue1() - 1);
-                        if(currentPosition.getValue1() < 0){
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     //method for applying damage to robot
-    private void drawDamageCards(Player player) {
+    public void drawDamageCards(Player player) {
         try {
             String[] drawnDamageCards = new String[player.getRobot().getDamageCount()];
             for(int i = 0; i < player.getRobot().getDamageCount(); i++) {
                 if(spamDeck.getSize() > 0) {
                     player.addCardToHand(spamDeck.popCardFromDeck());
                     drawnDamageCards[i] = "Spam";
-                    logger.debug("Spam added");
+                    logger.info("Spam added");
                 } else {
                     ArrayList<String> availableDecks = new ArrayList<>();
                     if(wormDeck.getSize() > 0) {
@@ -426,19 +316,11 @@ public class Game implements Runnable {
                         newPosition = tempPosition;
 
                         collisionCalculator.moveRobot(player.getRobot(), newPosition);
-                        for (PitTile pitTile : board.getPitList()) {
-                            if (pitTile.getPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
-                                try {
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                    throw new RuntimeException(e);
-                                }
-                                reboot(playerList.get(i));
-                            }
-                        }
                 }
             }
-            case "PowerUp" -> player.getRobot().increaseEnergyCubes();
+            case "PowerUp" -> {
+                player.getRobot().increaseEnergyCubes("PowerUpCard");
+            }
             case "Spam" -> {
                 Card topProgrammingCard = player.getRobot().getDeck().popCardFromDeck();
                 spamDeck.addCard(new SpamCard());
@@ -578,11 +460,11 @@ public class Game implements Runnable {
     }
 
     private void runUpgradePhase(){
-        logger.debug("This game is running the Upgrade Phase now");
+        logger.info("This game is running the Upgrade Phase now");
         server.sendActivePhase(1);
         logger.debug("Server sent the active phase (value=1) to the players");
         setCurrentGamePhase(GamePhase.UPGRADE_PHASE);
-        determinePriority();
+        playerList.determinePriority(board.getAntenna());
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -600,6 +482,7 @@ public class Game implements Runnable {
         }
 
     }
+
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
         server.sendActivePhase(2);
         logger.debug("Server sent the active phase (value=2) to the players");
@@ -618,51 +501,49 @@ public class Game implements Runnable {
                     logger.debug("Server sent hand cards to " + player.getUsername());
                 }
             }
-        playerList.setPlayersPlaying(true);
-        while(!playerList.playersAreReady()) {
-            Thread.sleep(3000);
-            if (playerList.getAmountOfReadyPlayers() >= 1) {
-                if(!timerIsRunning) {
-                    customTimer.runTimer();
+            playerList.setPlayersPlaying(true);
+            while(!playerList.playersAreReady()) {
+                Thread.sleep(3000);
+                if (playerList.getAmountOfReadyPlayers() >= 1) {
+                    if(!timerIsRunning) {
+                        customTimer.runTimer();
+                    }
+                }
+                for (Player player : playerList.getPlayerList()) {
+                    if(player instanceof AI_Player && !player.isReady()){
+                        ((AI_Player) player).playProgrammingPhase();
+                    }
                 }
             }
-            for (Player player : playerList.getPlayerList()) {
-                if(player instanceof AI_Player && !player.isReady()){
-                    ((AI_Player) player).playProgrammingPhase();
-                }
+            if (timerIsRunning == !(playerList.playersAreReady())) {
+                customTimer.cancel();
             }
-        }
-        if (timerIsRunning) {
-            customTimer.cancel();
-        }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        timerIsRunning=false;
+        timerIsRunning = false;
         playerList.setPlayerReadiness(false);
     }
+
     private void runActivationPhase() throws Exception {
-        logger.debug("This game is running the Activation Phase now");
+        logger.info("This game is running the Activation Phase now");
         server.sendActivePhase(3);
         setCurrentGamePhase(GamePhase.ACTIVATION_PHASE);
         try {
             Thread.sleep(100);
         ArrayList<Card> cardList = new ArrayList<>();
-        while(currentRegister < 5) {
+        while(currentRegister < 5 && gameIsRunning) {
+            logger.debug("Current register = " + currentRegister);
+            playerList.determinePriority(board.getAntenna());
             for(int i = 0; i < playerList.size(); i++) {
                 Thread.sleep(1000);
-                //playerList.get(i).getCardFromRegister(currentRegister).setClientID(playerList.get(i).getId());
-                cardList.add(playerList.get(i).getCardFromRegister(currentRegister));
-                activateRegister(playerList.get(i));
-                if(board.getTile(playerList.get(i).getRobot().getCurrentPosition()).get(0) instanceof PitTile) {
-                    reboot(playerList.get(i));
-                }
-                //playerList.get(i).setStatusRegister(true, currentRegister);
+                    cardList.add(playerList.get(i).getCardFromRegister(currentRegister));
+                    activateRegister(playerList.get(i));
+                playerList.get(i).getCardFromRegister(currentRegister).setClientID(playerList.get(i).getId());
             }
             server.sendCurrentCards(cardList);
             Thread.sleep(100);
             cardList.clear();
-            logger.debug("Current register = " + currentRegister);
             Thread.sleep(1000);
             if(playerList.robotNeedsReboot()) {
                 for(int i = 0; i < playerList.numberOfNeededReboots(); i++) {
@@ -670,7 +551,6 @@ public class Game implements Runnable {
                     Thread.sleep(1000);
                 }
             }
-            determinePriority();
 
             //checks if all registers have been activated
             if(currentRegister == 4) {
@@ -679,30 +559,9 @@ public class Game implements Runnable {
                 }
             }
             Thread.sleep(1000);
-            logger.debug("Applying tile effects");
+            logger.info("Applying tile effects");
             applyAllTileEffects();
             ++currentRegister;
-            /*
-            if(checkIfPlayersReachedCheckPoints(playerList)){
-                ArrayList<Pair<Integer, Integer>> playersReachedCheckpoints = playersThatReachedCheckpoints(playerList);
-                for (Pair<Integer, Integer> playersReachedCheckpoint : playersReachedCheckpoints) {
-                    //sends the player id and the number of the reached checkpoint for every player that reaches a
-                    //checkpoint each played register
-                    server.sendCheckpointReached(playersReachedCheckpoint);
-                        Thread.sleep(100);
-                }
-            }
-            if(checkIfPlayerWon(playerList)){
-                //TODO: winner not working
-                //Player winner = determineWhichPlayerWon(playerList);
-                //logger.debug("The winning player is: " + winner);
-                //sends a message to all clients
-                //server.sendGameFinished(winner);
-                    Thread.sleep(100);
-                //stops the game thread
-                gameIsRunning = false;
-            }
-        */
         } } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -712,63 +571,14 @@ public class Game implements Runnable {
         this.server = server;
     }
 
-    /**
-     * Checks every game round if a robot stands on a checkpoint that is his current objective.
-     *
-     * @param playerList The list of players who are playing the game at the moment
-     * @return returns if at least one robot stands on a checkpoint
-     */
-    public boolean checkIfPlayersReachedCheckPoints(PlayerList playerList){
-        for(CheckpointTile checkpointTile: board.getCheckpointList()) {
-            for (int i = 0; i < playerList.size(); i++) {
-                //checks if any robot is on a checkpoint and his current objective matches the checkpoint-number
-                if (playerList.get(i).getRobot().getCurrentPosition().getValue0() == checkpointTile.getXCoordinate() &&
-                    playerList.get(i).getRobot().getCurrentPosition().getValue1() == checkpointTile.getYCoordinate() &&
-                    playerList.get(i).getRobot().getCurrentObjective() == checkpointTile.getNumber()) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Checks every game round if a robot stands on a checkpoint that is his current objective.
-     *
-     * @param playerList The list of players who are playing the game at the moment
-     * @return returns a list on (playerID, checkpointNumber) of each player that reached his current objective
-     */
-    public ArrayList<Pair<Integer, Integer>> playersThatReachedCheckpoints(PlayerList playerList){
-        ArrayList<Pair<Integer, Integer>> playersThatReachedCheckpointsList = new ArrayList<>();
-        for(CheckpointTile checkpointTile: board.getCheckpointList()) {
-            for (int i = 0; i < playerList.size(); i++) {
-                //checks if any robot is on a checkpoint and his current objective matches the checkpoint-number.
-                //If so, the player ID is added to the list in combination with the checkpoint-number
-                if (playerList.get(i).getRobot().getCurrentPosition().getValue0() == checkpointTile.getXCoordinate() &&
-                    playerList.get(i).getRobot().getCurrentPosition().getValue1() == checkpointTile.getYCoordinate() &&
-                    playerList.get(i).getRobot().getCurrentObjective() == checkpointTile.getNumber()) {
-                    playersThatReachedCheckpointsList.add(new Pair<>(playerList.get(i).getId(), checkpointTile.getNumber()));
-                }
-            }
-        }
-        return playersThatReachedCheckpointsList;
-    }
-
     private void activateRegister(Player player) {
-        try{
-            if(player.getCardFromRegister(currentRegister) == null) {
-                logger.debug("No card in register" + currentRegister);
-            } else {
-                applyCardEffect(player, player.getCardFromRegister(currentRegister));
-            }
-            if(player.getCardFromRegister(currentRegister) instanceof PowerUpCard) {
-                server.sendEnergy(player, player.getCardFromRegister(currentRegister));
-                    Thread.sleep(100);
-            }
-        } catch (IndexOutOfBoundsException | InterruptedException e) {
-            logger.warn("This register was not activated because you're Robot can not move past this point" + e);
+        if (player.getCardFromRegister(currentRegister) instanceof NullCard) {
+            logger.debug("No card in register" + currentRegister);
+        } else {
+            applyCardEffect(player, player.getCardFromRegister(currentRegister));
         }
     }
+
     public void addReady(int clientID) {
         readyList.add(clientID);
         if(clientID == getFirstReadyID()){
@@ -864,6 +674,7 @@ public class Game implements Runnable {
         }
         return result;
     }
+
     public void setStartPoint(int x, int y) {
         for(StartTile startTile: board.getStartTileList()) {
             if(startTile.getXCoordinate() == x && startTile.getYCoordinate() == y) {
@@ -875,7 +686,7 @@ public class Game implements Runnable {
     }
 
     public void reboot(Player player) {
-        logger.debug("Reboot under way");
+        logger.info("Reboot under way");
         player.getRobot().increaseDamageCount();
         player.getRobot().increaseDamageCount();
         drawDamageCards(player);
@@ -888,12 +699,23 @@ public class Game implements Runnable {
             e.printStackTrace();
         }
         server.sendReboot(player);
-
+//        for (int i = 0; i < playerList.size(); i++) {
+//            if(player.getRobot().getCurrentPosition().equals(playerList.get(i).getRobot().getCurrentPosition())) {
+//                Pair<Integer, Integer> newPosition = new Pair<>(player.getRobot().getCurrentPosition().getValue0()
+//                , player.getRobot().getCurrentPosition().getValue1());
+//                board.getRebootTile().getDirection()
+//                collisionCalculator.moveRobot(playerList.get(i).getRobot(), newPosition);
+//            }
+//        }
         //TODO: Implement additional robo check
     }
 
     @Override
     public void run() {
+        logger.info("hi");
+        logger.warn("hi");
+        logger.error("ih");
+        logger.fatal("oh");
         logger.debug("This game is running");
         boolean readyToStart = false;
         while(gameIsRunning) {
@@ -914,7 +736,6 @@ public class Game implements Runnable {
                     throw new RuntimeException(e);
                 }
             }
-            //TODO: Only run setup phase once
             if(!setUpDone){
                 runSetupPhase();
             }

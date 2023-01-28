@@ -40,8 +40,10 @@ public class ModelGame {
     private SimpleIntegerProperty robotProperty;
     private SimpleStringProperty robotAlignment;
     private SimpleIntegerProperty score;
+    private SimpleStringProperty activePhase;
     private SimpleIntegerProperty energy;
     private BooleanProperty readyToPlay;
+    private SimpleStringProperty currentPlayer;
     private BooleanProperty activePlayer;
     private ObservableList<Integer> readyList;
     private LinkedBlockingQueue<Message> PLAYER_MOVEMENTS;
@@ -67,11 +69,15 @@ public class ModelGame {
         this.maps = client.getMaps();
         this.gameBoard = client.getBoard();
         this.robotProperty = new SimpleIntegerProperty();
-        this.score = new SimpleIntegerProperty(0);
+        this.score = new SimpleIntegerProperty();
         score.bind(client.scoreProperty());
         this.energy = new SimpleIntegerProperty();
         energy.bind(client.energyProperty());
-        this.activePlayer = new SimpleBooleanProperty(false);
+        this.activePhase = new SimpleStringProperty();
+        activePhase.bind(client.activePhaseProperty());
+        this.currentPlayer = new SimpleStringProperty();
+        currentPlayer.bind(client.currentPlayerProperty());
+        this.activePlayer = new SimpleBooleanProperty();
         this.activePlayer.bind(client.activePlayerProperty());
         //this.maps = FXCollections.observableArrayList(client.getMaps());
         this.errorMessage = new SimpleStringProperty();
@@ -133,7 +139,13 @@ public class ModelGame {
         timer.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                notifyChangeSupport.startTimer();
+                logger.debug("timer triggered");
+                if (client.timerProperty().get()) {
+                    notifyChangeSupport.startTimer();
+                }
+                else {
+                    notifyChangeSupport.stopTimer();
+                }
             }
         });
 
@@ -174,6 +186,18 @@ public class ModelGame {
 
     public void setRobotProperty(int robotProperty) {
         this.robotProperty.set(robotProperty);
+    }
+
+    public SimpleIntegerProperty scoreProperty() {
+        return score;
+    }
+
+    public SimpleStringProperty activePhaseProperty() {
+        return activePhase;
+    }
+
+    public SimpleStringProperty currentPlayerProperty() {
+        return currentPlayer;
     }
 
     public ObservableList<Integer> getReadyList() {
@@ -231,8 +255,8 @@ public class ModelGame {
         client.sendSelectedCard(card, register);
     }
 
-    public void sendRegister(int register) {
-        client.sendRegister(register);
+    public void sendSelectedDamageCards(String card, int register) {
+        client.sendSelectedDamageCards(card, register);
     }
 
     public void sendReturnCards(String[] returnCards) {
@@ -241,6 +265,10 @@ public class ModelGame {
 
     public void sendDiscardSomeCards(String[] discardSome) {
         client.sendDiscardSome(discardSome);
+    }
+
+    public void sendChooseRegister(int register) {
+        client.sendChooseRegister(register);
     }
 
     public void sendRebootDirection(String direction) {

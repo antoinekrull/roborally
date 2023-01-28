@@ -15,20 +15,19 @@ public abstract class Card {
     private String cardName;
     private int cost = 0;
     private boolean isPermanent = false;
-    //private int clientID;
+    private int clientID;
     private String card;
-
     private int velocity;
     private boolean isActivated = false;
     protected boolean isDamageCard = false;
     private String cardEffect;
     protected CardType cardType;
-//    public int getClientID() {
-//        return clientID;
-//   }
-//    public void setClientID(int clientID) {
-//        this.clientID = clientID;
-//    }
+    public int getClientID() {
+        return clientID;
+   }
+    public void setClientID(int clientID) {
+        this.clientID = clientID;
+    }
     public CardType getCardType() {
         return cardType;
     }
