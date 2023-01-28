@@ -1,10 +1,7 @@
 package game.player;
 
 import game.Game;
-import game.card.AgainCard;
-import game.card.Card;
-import game.card.CardType;
-import game.card.ProgrammingDeck;
+import game.card.*;
 
 import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -104,7 +101,7 @@ public class Player {
     public void setUpgradeToBuy(String upgradeToBuy) {this.upgradeToBuy = upgradeToBuy;}
     public Card getCardFromRegister(int index){
         if(cardRegister[index] == null) {
-            return null;
+            return new NullCard();
         } else {
             return cardRegister[index];
         }

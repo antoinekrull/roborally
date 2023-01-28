@@ -215,14 +215,6 @@ public class Server {
     }
     public void sendActivePhase(int phase) {
         try {
-
-            String[] cardsInHand = new String[9];
-            String cards = "";
-            for(int i = 0; i < cardsInHand.length; i++) {
-                String temp = cards;
-                cards = cards + "" + cardsInHand[i];
-            }
-
             messages.put(messageCreator.generateActivePhaseMessage(phase));
         } catch (Exception e){
             e.printStackTrace();
@@ -236,6 +228,15 @@ public class Server {
         for(int i = 0; i < player.getHand().size(); i++) {
             cardsInHand[i] = player.getHand().get(i).getCard();
         }
+        for(int i = 0; i < cardsInHand.length; i++) {
+            System.out.println(cardsInHand[i]);
+        }
+//        String[] cardsInHand = new String[9];
+//        String cards = "";
+//        for(int i = 0; i < cardsInHand.length; i++) {
+//            String temp = cards;
+//            cards = cards + "" + cardsInHand[i];
+//        }
         try {
             CLIENTS.get(player.getId()).write(messageCreator.generateYourCardsMessage(cardsInHand));
             //TODO: Client side has to ignore this message if his id is identical to the one in the messageBody
@@ -296,6 +297,7 @@ public class Server {
         }
     }
 
+    //TODO: Fix this
     public void sendCurrentCards(ArrayList<Card> cardArrayList) {
         try {
             messages.put(messageCreator.generateCurrentCardsMessage(cardArrayList));
