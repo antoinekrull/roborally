@@ -34,7 +34,6 @@ public class CheckpointTile extends Tile {
         }
         if(!single){
             file = file + "_noBackground.png";
-            System.out.println(file);
         }
         else{
             file = file + ".png";
