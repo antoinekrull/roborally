@@ -21,6 +21,7 @@ public class CustomTimer {
         timer = new Timer();
         game = Game.getInstance();
         this.server = server;
+        System.out.println("Timer initialized");
     }
 
     //runs necessary timer logic
@@ -38,10 +39,10 @@ public class CustomTimer {
                         String[] placedCards = unreadyPlayers.get(i).fillRegisterWithRandomCards();
                         server.sendCardsYouGotNow(unreadyPlayers.get(i), placedCards);
                         unreadyPlayers.get(i).fillRegisterWithRandomCards();
+                        //for testing purposes
                         unreadyPlayers.get(i).printRegisters();
-                        game.getPlayerList().setPlayerReadiness(true);
-                        game.setTimerIsRunning(false);
                     }
+                    game.getPlayerList().setPlayerReadiness(true);
                     server.sendTimerEnded(new PlayerList());
                 }
             };

@@ -134,7 +134,6 @@ public class Game implements Runnable {
             Thread.sleep(500);
             //robotLaser
             collisionCalculator.shootRobotLasers();
-
             Thread.sleep(500);
             for (int x = 0; x < board.getEnergySpaceList().size(); x++) {
                 for (int y = 0; y < playerList.size(); y++) {
@@ -189,16 +188,6 @@ public class Game implements Runnable {
             }
         }
     }
-
-    private void determinePriority() {
-        Pair<Integer, Integer> antennaPosition = board.getAntenna().getPosition();
-        playerList.getPlayerList().sort((p1, p2) -> {
-            double dist1 = Math.sqrt(Math.pow(p1.getRobot().getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(p1.getRobot().getCurrentPosition().getValue1() - antennaPosition.getValue1(), 2));
-            double dist2 = Math.sqrt(Math.pow(p2.getRobot().getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(p2.getRobot().getCurrentPosition().getValue1(), 2));
-            return Double.compare(dist1, dist2);
-        });
-    }
-
     private void refreshUpgradeShop(){
         int leftoverCards;
         if(upgradeShop.size() == playerList.size()){
@@ -433,7 +422,7 @@ public class Game implements Runnable {
         logger.info("This game is running the Upgrade Phase now");
         server.sendActivePhase(1);
         setCurrentGamePhase(GamePhase.UPGRADE_PHASE);
-        determinePriority();
+        playerList.determinePriority(board.getAntenna());
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -451,6 +440,7 @@ public class Game implements Runnable {
         }
 
     }
+
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
         server.sendActivePhase(2);
         timerIsRunning = false;
@@ -458,29 +448,31 @@ public class Game implements Runnable {
         try {
             CustomTimer customTimer = new CustomTimer(server);
             Thread.sleep(100);
-        for(int i = 0; i < playerList.size(); i++) {
-            playerList.get(i).drawFullHand();
-            Thread.sleep(100);
-            server.sendYourCards(playerList.get(i));
-        }
-        playerList.setPlayersPlaying(true);
-        while(!playerList.playersAreReady()) {
-            Thread.sleep(3000);
-            if (playerList.getAmountOfReadyPlayers() >= 1) {
-                if(!timerIsRunning) {
-                    customTimer.runTimer();
+            for (int i = 0; i < playerList.size(); i++) {
+                playerList.get(i).drawFullHand();
+                Thread.sleep(100);
+                server.sendYourCards(playerList.get(i));
+            }
+            playerList.setPlayersPlaying(true);
+            while (!playerList.playersAreReady()) {
+                Thread.sleep(3000);
+                if (playerList.getAmountOfReadyPlayers() >= 1) {
+                    Thread.sleep(100);
+                    if (!timerIsRunning) {
+                        customTimer.runTimer();
+                    }
                 }
             }
-        }
-        if (timerIsRunning) {
-            customTimer.cancel();
-        }
+            if (timerIsRunning == !(playerList.playersAreReady())) {
+                customTimer.cancel();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        timerIsRunning=false;
+        timerIsRunning = false;
         playerList.setPlayerReadiness(false);
     }
+
     private void runActivationPhase() throws Exception {
         logger.info("This game is running the Activation Phase now");
         server.sendActivePhase(3);
@@ -490,6 +482,7 @@ public class Game implements Runnable {
         ArrayList<Card> cardList = new ArrayList<>();
         while(currentRegister < 5 && gameIsRunning) {
             logger.debug("Current register = " + currentRegister);
+            playerList.determinePriority(board.getAntenna());
             for(int i = 0; i < playerList.size(); i++) {
                 Thread.sleep(1000);
                     cardList.add(playerList.get(i).getCardFromRegister(currentRegister));
@@ -506,7 +499,6 @@ public class Game implements Runnable {
                     Thread.sleep(1000);
                 }
             }
-            determinePriority();
 
             //checks if all registers have been activated
             if(currentRegister == 4) {
@@ -528,7 +520,7 @@ public class Game implements Runnable {
     }
 
     private void activateRegister(Player player) {
-        if (player.getCardFromRegister(currentRegister) == null) {
+        if (player.getCardFromRegister(currentRegister) instanceof NullCard) {
             logger.debug("No card in register" + currentRegister);
         } else {
             applyCardEffect(player, player.getCardFromRegister(currentRegister));
