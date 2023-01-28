@@ -152,7 +152,7 @@ public class Player {
     }
     public void playUpgradePhase(){
     }
-    public void playProgrammingPhase(){
+    public void playProgrammingPhase() throws InterruptedException {
         //user decides which cards to play from his hand
         //code needs input from the UI of each user to know which cards are played
         //playCard(getHand().get(i), i);
@@ -216,17 +216,6 @@ public class Player {
 
     private void useUpgrades(boolean[][] parameter){
         isUsingUpgrade = parameter;
-    }
-
-    //TODO: Add GUI functionality / exceptions
-    public void playCard(Card card, int index) {
-        if(index == 0 && card instanceof AgainCard) {
-            logger.info("You cant play this card in the first register, please try again!");
-        } else if(index > 0 || index < cardRegister.length){
-            logger.info("The register has not been addressed properly, please try again!");
-        } else {
-            cardRegister[index] = card;
-        }
     }
 
     public void playCard(String cardName, int index) {
