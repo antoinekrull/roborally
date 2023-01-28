@@ -189,16 +189,6 @@ public class Game implements Runnable {
             }
         }
     }
-
-    private void determinePriority() {
-        Pair<Integer, Integer> antennaPosition = board.getAntenna().getPosition();
-        playerList.getPlayerList().sort((p1, p2) -> {
-            double dist1 = Math.sqrt(Math.pow(p1.getRobot().getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(p1.getRobot().getCurrentPosition().getValue1() - antennaPosition.getValue1(), 2));
-            double dist2 = Math.sqrt(Math.pow(p2.getRobot().getCurrentPosition().getValue0() - antennaPosition.getValue0(), 2) + Math.pow(p2.getRobot().getCurrentPosition().getValue1(), 2));
-            return Double.compare(dist1, dist2);
-        });
-    }
-
     private void refreshUpgradeShop(){
         int leftoverCards;
         if(upgradeShop.size() == playerList.size()){
@@ -502,7 +492,7 @@ public class Game implements Runnable {
         logger.debug("This game is running the Upgrade Phase now");
         server.sendActivePhase(1);
         setCurrentGamePhase(GamePhase.UPGRADE_PHASE);
-        determinePriority();
+        playerList.determinePriority(board.getAntenna());
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -559,6 +549,7 @@ public class Game implements Runnable {
         ArrayList<Card> cardList = new ArrayList<>();
         while(currentRegister < 5 && gameIsRunning) {
             logger.debug("Current register = " + currentRegister);
+            playerList.determinePriority(board.getAntenna());
             for(int i = 0; i < playerList.size(); i++) {
                 Thread.sleep(1000);
                 //playerList.get(i).getCardFromRegister(currentRegister).setClientID(playerList.get(i).getId());
@@ -575,7 +566,6 @@ public class Game implements Runnable {
                     Thread.sleep(1000);
                 }
             }
-            determinePriority();
 
             //checks if all registers have been activated
             if(currentRegister == 4) {

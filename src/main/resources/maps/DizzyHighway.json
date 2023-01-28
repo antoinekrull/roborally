@@ -29,7 +29,10 @@
       [
         {
           "type": "Antenna",
-          "isOnBoard": "Start A"
+          "isOnBoard": "Start A",
+          "orientations": [
+            "right"
+          ]
         }
       ],
       [
