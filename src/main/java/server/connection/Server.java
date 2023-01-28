@@ -221,22 +221,11 @@ public class Server {
         }
     }
 
-
-
     public void sendYourCards(Player player) {
         String[] cardsInHand = new String[player.getHand().size()];
         for(int i = 0; i < player.getHand().size(); i++) {
             cardsInHand[i] = player.getHand().get(i).getCard();
         }
-//        for(int i = 0; i < cardsInHand.length; i++) {
-//            System.out.println(cardsInHand[i]);
-//        }
-//        String[] cardsInHand = new String[9];
-//        String cards = "";
-//        for(int i = 0; i < cardsInHand.length; i++) {
-//            String temp = cards;
-//            cards = cards + "" + cardsInHand[i];
-//        }
         try {
             CLIENTS.get(player.getId()).write(messageCreator.generateYourCardsMessage(cardsInHand));
             //TODO: Client side has to ignore this message if his id is identical to the one in the messageBody
