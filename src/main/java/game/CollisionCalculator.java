@@ -261,7 +261,6 @@ public class CollisionCalculator {
         Pair<Integer, Integer> shot;
         ArrayList<Robot> robots = playerList.getAllRobots();
         for (int i = 0; i < robots.size(); i++) {
-            System.out.println("IMMA FIRING MA LASOOOORRR");
             Robot robot = robots.get(i);
             Pair<Integer,Integer> pos = robot.getCurrentPosition();
             Direction direction = robot.getDirection();
