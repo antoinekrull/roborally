@@ -1,5 +1,6 @@
 package client.player;
 
+import client.ui.RobotDirection;
 import game.player.Robot;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -14,6 +15,7 @@ public class ClientPlayer {
     private int id;
     private String username;
     private Robot robot;
+    private RobotDirection robotDirection;
     private BooleanProperty isReady;
     private BooleanProperty isPlaying;
     private IntegerProperty score;
@@ -28,6 +30,7 @@ public class ClientPlayer {
         this.id = id;
         this.username = username;
         this.robot = robot;
+        this.robotDirection = RobotDirection.EAST;
         this.score = new SimpleIntegerProperty();
         this.isPlaying = new SimpleBooleanProperty();
         this.isReady = new SimpleBooleanProperty();
@@ -97,9 +100,12 @@ public class ClientPlayer {
         this.robot = robot;
     }
 
-    @Override
-    public String toString() {
-        return username;
+    public RobotDirection getRobotDirection() {
+        return robotDirection;
+    }
+
+    public void setRobotDirection(RobotDirection robotDirection) {
+        this.robotDirection = robotDirection;
     }
 
     public boolean isIsReady() {
@@ -152,5 +158,10 @@ public class ClientPlayer {
 
     public void setActivePlayer(String activePlayer) {
         this.activePlayer.set(activePlayer);
+    }
+
+    @Override
+    public String toString() {
+        return username;
     }
 }

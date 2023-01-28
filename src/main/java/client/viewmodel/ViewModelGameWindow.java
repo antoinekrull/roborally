@@ -204,13 +204,17 @@ public class ViewModelGameWindow {
         cardSelection = new CardSelection(baseStackPane);
 
         rotation = new SimpleObjectProperty<>();
+        /*
         rotation.bind(modelGame.robotDirectionProperty());
+        /*
         rotation.addListener(new ChangeListener<RobotDirection>() {
             @Override
             public void changed(ObservableValue<? extends RobotDirection> observable, RobotDirection oldValue, RobotDirection newValue) {
                 rotateRobot();
             }
         });
+
+         */
 
         setOnDragDetected(programCard1);
         setOnDragDetected(programCard2);
@@ -643,11 +647,34 @@ public class ViewModelGameWindow {
             });
         }
         if (gamemessage.getMessageType().equals(MessageType.CardsYouGotNow)) {
+            //TODO: length says null
             String[] cardsIGotNow = Arrays.copyOf(gamemessage.getMessageBody().getCards(), gamemessage.getMessageBody().getCards().length);
             setBlindCards(cardsIGotNow);
         }
         if (gamemessage.getMessageType().equals(MessageType.DrawDamage)) {
             drawDamage(gamemessage.getMessageBody().getCards());
+        }
+        if (gamemessage.getMessageType().equals(MessageType.PlayerTurning)) {
+            int clientID = gamemessage.getMessageBody().getClientID();
+            String rotation = gamemessage.getMessageBody().getRotation();
+            if (modelUser.userIDProperty().get() == clientID){
+                RobotDirection ownRobotDirection = modelGame.getRobotDirection();
+                logger.debug("RobotDirection from modelGame OWN: " + ownRobotDirection);
+                RobotDirection newRobotDirection = updateDirection(ownRobotDirection, rotation);
+                modelGame.setRobotDirection(newRobotDirection);
+                logger.debug("RobotDirection from modelGame OWN: " + ownRobotDirection);
+                logger.debug("RobotDirection new OWN in ModelGame: " + modelGame.getRobotDirection());
+                rotateRobot(modelGame.robotProperty().get(), newRobotDirection);
+            }
+            else {
+                RobotDirection otherRobotDirection = modelGame.getPlayerList().getPlayer(clientID).getRobotDirection();
+                RobotDirection newOtherRobotDirection = updateDirection(otherRobotDirection, rotation);
+                logger.debug("RobotDirection other player currently: " + otherRobotDirection);
+                logger.debug("RobotDirection other player new: " + otherRobotDirection);
+                modelGame.getPlayerList().getPlayer(clientID).setRobotDirection(newOtherRobotDirection);
+                logger.debug("RobotDirection for player NEW SET: " + modelGame.getPlayerList().getPlayer(clientID).getRobotDirection());
+                rotateRobot(modelGame.getPlayerList().getPlayer(clientID).getRobot().getFigure(), newOtherRobotDirection);
+            }
         }
         if (gamemessage.getMessageType().equals(MessageType.PickDamage)) {
             int clientID = gamemessage.getMessageBody().getClientID();
@@ -668,7 +695,46 @@ public class ViewModelGameWindow {
                 }
             });
         }
+        if (gamemessage.getMessageType().equals(MessageType.CheckpointMoved)) {
+            //TODO: move checkpoint on board
+        }
 
+    }
+
+    public RobotDirection updateDirection(RobotDirection robotDirection, String rotation) {
+        if (RobotDirection.EAST.equals(robotDirection)) {
+            if (rotation.equals("clockwise")) {
+                return RobotDirection.SOUTH;
+            }
+            if (rotation.equals("counterclockwise")) {
+                return RobotDirection.NORTH;
+            }
+        }
+        if (RobotDirection.SOUTH.equals(robotDirection)) {
+            if (rotation.equals("clockwise")) {
+                return RobotDirection.WEST;
+            }
+            if (rotation.equals("counterclockwise")) {
+                return RobotDirection.EAST;
+            }
+        }
+        if (RobotDirection.WEST.equals(robotDirection)) {
+            if (rotation.equals("clockwise")) {
+                return RobotDirection.NORTH;
+            }
+            if (rotation.equals("counterclockwise")) {
+                return RobotDirection.SOUTH;
+            }
+        }
+        if (RobotDirection.NORTH.equals(robotDirection)) {
+            if (rotation.equals("clockwise")) {
+                return RobotDirection.EAST;
+            }
+            if (rotation.equals("counterclockwise")) {
+                return RobotDirection.WEST;
+            }
+        }
+        return RobotDirection.EAST;
     }
 
     private void placeTiles(ArrayList<ArrayList<ArrayList<Tile>>> map) {
@@ -714,17 +780,33 @@ public class ViewModelGameWindow {
             logger.debug("In viewModel - X: " + x + " | Y: " + y);
             int clientID = robotMovement.getMessageBody().getClientID();
             int figure;
+            RobotDirection direction;
             if (modelUser.userIDProperty().get() == clientID) {
                 figure = modelGame.robotProperty().get();
+                direction = modelGame.getRobotDirection();
             }
             else {
                 figure = modelGame.getPlayerList().getPlayer(clientID).getRobot().getFigure();
+                direction = modelGame.getPlayerList().getPlayer(clientID).getRobotDirection();
             }
 
+            logger.debug("direction: " + direction);
             logger.debug("RobotID in viewModel: " + figure);
             InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + figure + "_bunt.png");
             Image im = new Image(input);
             ImageView img = new ImageView(im);
+            if (direction == RobotDirection.EAST) {
+                img.setRotate(0);
+            }
+            if (direction == RobotDirection.SOUTH) {
+                img.setRotate(90);
+            }
+            if (direction == RobotDirection.WEST) {
+                img.setRotate(180);
+            }
+            if (direction == RobotDirection.NORTH) {
+                img.setRotate(270);
+            }
             img.setFitWidth(gameboardTileWidth);
             img.setPreserveRatio(true);
             img.setId("Robot_" + figure);
@@ -738,33 +820,36 @@ public class ViewModelGameWindow {
                     }
                 }
             }
+
             //adds new Image
             gameboard.add(img, x, y);
         });
     }
 
 
-
-    public void rotateRobot() {
-        RobotDirection robotDirection = modelGame.robotDirectionProperty().get();
-        InputStream input = getClass().getResourceAsStream(
-                "textures/robots/directionArrow.png");
-        ImageView imgV = new ImageView();
-        Image img = new Image(input);
-        if (robotDirection.equals(RobotDirection.EAST)) {
-            imgV.setImage(img);
-        }
-        if (robotDirection.equals(RobotDirection.SOUTH)) {
-            imgV.setImage(img);
-            imgV.setRotate(90);
-        }
-        if (robotDirection.equals(RobotDirection.WEST)) {
-            imgV.setImage(img);
-            imgV.setRotate(180);
-        }
-        if (robotDirection.equals(RobotDirection.NORTH)) {
-            imgV.setImage(img);
-            imgV.setRotate(270);
+    public void rotateRobot(int robotID, RobotDirection robotRotation) {
+        //Current robot image gets searched and then removed
+        for (Node node : gameboard.getChildren()) {
+            if (node instanceof ImageView imageView) {
+                if (imageView.getId() != null && imageView.getId().equals("Robot_" + robotID)) {
+                    if (robotRotation.equals(RobotDirection.EAST)) {
+                        imageView.setRotate(0);
+                        break;
+                    }
+                    if (robotRotation.equals(RobotDirection.SOUTH)) {
+                        imageView.setRotate(90);
+                        break;
+                    }
+                    if (robotRotation.equals(RobotDirection.WEST)) {
+                        imageView.setRotate(180);
+                        break;
+                    }
+                    if (robotRotation.equals(RobotDirection.NORTH)) {
+                        imageView.setRotate(270);
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -1175,6 +1260,7 @@ public class ViewModelGameWindow {
             }
             if (timer <= 0) {
                 timeline.stop();
+                timer = 30;
                 timerLabel.setVisible(false);
             }
         }));
@@ -1184,11 +1270,11 @@ public class ViewModelGameWindow {
     }
 
     public void stopTimer() {
+        timer = 30;
+        logger.debug("VM - stopTimer");
+        Platform.runLater(() -> timerLabel.setText(""));
         timeline.stop();
-    }
 
-    public void setRobotAlignment() {
-        //TODO: implementation of robotdirection
     }
 
     public void setProgramcardsUnmovable () {
