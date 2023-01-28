@@ -124,4 +124,10 @@ public class NotifyChangeSupport {
             viewModelGameWindow.setRobotAlignment();
         }
     }
+
+    public void rotateRobot() {
+        if (gamewindow) {
+            viewModelGameWindow.rotateRobot();
+        }
+    }
 }

@@ -7,6 +7,7 @@ import client.model.ModelGame;
 import client.model.ModelUser;
 import client.ui.CardSelection;
 import client.ui.PlayerGameInfo;
+import client.ui.RobotDirection;
 import client.ui.Tutorial;
 import communication.Message;
 import communication.MessageType;
@@ -19,11 +20,14 @@ import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import game.player.Robot;
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -119,6 +123,7 @@ public class ViewModelGameWindow {
     private CardSelection cardSelection;
 
     private Timeline timeline;
+    private ObjectProperty<RobotDirection> rotation;
     private double gameboardTileWidth;
     private double programcardsWidth;
     private int columnIndex;
@@ -200,6 +205,14 @@ public class ViewModelGameWindow {
 
         cardSelection = new CardSelection(baseStackPane);
 
+        rotation = new SimpleObjectProperty<>();
+        rotation.bind(modelGame.robotDirectionProperty());
+        rotation.addListener(new ChangeListener<RobotDirection>() {
+            @Override
+            public void changed(ObservableValue<? extends RobotDirection> observable, RobotDirection oldValue, RobotDirection newValue) {
+                rotateRobot();
+            }
+        });
 
         setOnDragDetected(programCard1);
         setOnDragDetected(programCard2);
@@ -606,6 +619,10 @@ public class ViewModelGameWindow {
                 }
             });
         }
+        if (gamemessage.getMessageType().equals(MessageType.CardsYouGotNow)) {
+            String[] cardsIGotNow = Arrays.copyOf(gamemessage.getMessageBody().getCards(), gamemessage.getMessageBody().getCards().length);
+            setBlindCards(cardsIGotNow);
+        }
         if (gamemessage.getMessageType().equals(MessageType.DrawDamage)) {
             drawDamage(gamemessage.getMessageBody().getCards());
         }
@@ -621,8 +638,7 @@ public class ViewModelGameWindow {
             Platform.runLater(() -> {
                 if (clientID == modelUser.userIDProperty().get()) {
                     for (Node child : programmingGrid.getChildren()) {
-                        if (child instanceof Pane) {
-                            Pane pane = (Pane) child;
+                        if (child instanceof Pane pane) {
                             pane.getChildren().clear();
                         }
                     }
@@ -663,45 +679,72 @@ public class ViewModelGameWindow {
     }
 
     public void robotSetPosition() {
-        Platform.runLater(() ->{
-        Message robotMovement;
-        try {
-            robotMovement = modelGame.getPLAYER_MOVEMENTS().take();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        int x = robotMovement.getMessageBody().getX();
-        int y = robotMovement.getMessageBody().getY();
-        logger.debug("In viewModel - X: " + x + " | Y: " + y);
-        int clientID = robotMovement.getMessageBody().getClientID();
-        int figure;
-        if (modelUser.userIDProperty().get() == clientID) {
-            figure = modelGame.robotProperty().get();
-        }
-        else {
-            figure = modelGame.getPlayerList().getPlayer(clientID).getRobot().getFigure();
-        }
+        Platform.runLater(() -> {
+            Message robotMovement;
+            try {
+                robotMovement = modelGame.getPLAYER_MOVEMENTS().take();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            int x = robotMovement.getMessageBody().getX();
+            int y = robotMovement.getMessageBody().getY();
+            logger.debug("In viewModel - X: " + x + " | Y: " + y);
+            int clientID = robotMovement.getMessageBody().getClientID();
+            int figure;
+            if (modelUser.userIDProperty().get() == clientID) {
+                figure = modelGame.robotProperty().get();
+            }
+            else {
+                figure = modelGame.getPlayerList().getPlayer(clientID).getRobot().getFigure();
+            }
 
             logger.debug("RobotID in viewModel: " + figure);
-        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + figure + "_bunt.png");
-        Image im = new Image(input);
-        ImageView img = new ImageView(im);
-        img.setFitWidth(gameboardTileWidth);
-        img.setPreserveRatio(true);
-        img.setId("Robot_" + figure);
-        //Current robot image gets searched and then removed
-        for (Node node : gameboard.getChildren()) {
-            if (node instanceof ImageView imageView) {
-                if (imageView.getId() != null && imageView.getId().equals("Robot_" + figure)) {
-                    gameboard.getChildren().remove(imageView);
-                    break;
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + figure + "_bunt.png");
+            Image im = new Image(input);
+            ImageView img = new ImageView(im);
+            img.setFitWidth(gameboardTileWidth);
+            img.setPreserveRatio(true);
+            img.setId("Robot_" + figure);
+
+            //Current robot image gets searched and then removed
+            for (Node node : gameboard.getChildren()) {
+                if (node instanceof ImageView imageView) {
+                    if (imageView.getId() != null && imageView.getId().equals("Robot_" + figure)) {
+                        gameboard.getChildren().remove(imageView);
+                        break;
+                    }
                 }
             }
-        }
-        //adds new Image
-        gameboard.add(img, x, y);
-    });
+            //adds new Image
+            gameboard.add(img, x, y);
+        });
     }
+
+
+
+    public void rotateRobot() {
+        RobotDirection robotDirection = modelGame.robotDirectionProperty().get();
+        InputStream input = getClass().getResourceAsStream(
+                "textures/robots/directionArrow.png");
+        ImageView imgV = new ImageView();
+        Image img = new Image(input);
+        if (robotDirection.equals(RobotDirection.EAST)) {
+            imgV.setImage(img);
+        }
+        if (robotDirection.equals(RobotDirection.SOUTH)) {
+            imgV.setImage(img);
+            imgV.setRotate(90);
+        }
+        if (robotDirection.equals(RobotDirection.WEST)) {
+            imgV.setImage(img);
+            imgV.setRotate(180);
+        }
+        if (robotDirection.equals(RobotDirection.NORTH)) {
+            imgV.setImage(img);
+            imgV.setRotate(270);
+        }
+    }
+
 
     public int getFirstFreeSlot() {
         for (int i = 0; i < handGrid.getChildren().size(); i++) {
@@ -902,6 +945,16 @@ public class ViewModelGameWindow {
         imgDamage.setFitWidth(programcardsWidth);
         imgDamage.setPreserveRatio(true);
         damageDeck.getChildren().add(imgDamage);
+    }
+
+    private void setBlindCards(String[] cardsIGotNow) {
+        int counter = 0;
+        for (int i = 0; i < programmingGrid.getChildren().size(); i++) {
+            if (programmingGrid.getChildren() instanceof Pane pane && programmingGrid.getChildren().isEmpty()) {
+                //TODO: maybe dropping handcards
+                //TODO: add card to pane with the counter
+            }
+        }
     }
 
 
@@ -1311,6 +1364,5 @@ public class ViewModelGameWindow {
         Platform.exit();
         System.exit(0);
     }
-
 }
 
