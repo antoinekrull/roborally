@@ -41,7 +41,7 @@ public class ModelGame {
     private final Logger logger = LogManager.getLogger(ViewModelGameWindow.class);
     private NotifyChangeSupport notifyChangeSupport;
     private SimpleIntegerProperty robotProperty;
-    private ObjectProperty<RobotDirection> robotDirection;
+    private RobotDirection robotDirection;
     private SimpleStringProperty robotRotation;
     private SimpleIntegerProperty score;
     private SimpleStringProperty activePhase;
@@ -123,10 +123,10 @@ public class ModelGame {
             }
         });
 
-        this.robotDirection = new SimpleObjectProperty<>();
-        robotDirection.set(RobotDirection.EAST);
+        this.robotDirection = RobotDirection.EAST;
         this.robotRotation = new SimpleStringProperty();
         robotRotation.bind(client.robotDirectionProperty());
+        /*
         robotRotation.addListener(new InvalidationListener() {
             @Override
             public void invalidated(Observable observable) {
@@ -165,6 +165,8 @@ public class ModelGame {
             }
         });
 
+         */
+
         this.GAME_EVENT_MESSAGES = new LinkedBlockingQueue<>();
         this.gameEvent = new SimpleObjectProperty<>();
         gameEvent.bind(client.gameEventMessageProperty());
@@ -187,9 +189,11 @@ public class ModelGame {
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 logger.debug("timer triggered");
                 if (client.timerProperty().get()) {
+                    logger.debug("client timerproperty POSITIVE: " + client.timerProperty().get());
                     notifyChangeSupport.startTimer();
                 }
                 else {
+                    logger.debug("client timerproperty NEGATIVE: " + client.timerProperty().get());
                     notifyChangeSupport.stopTimer();
                 }
             }
@@ -265,16 +269,12 @@ public class ModelGame {
         return myHandCards;
     }
 
-    public ObjectProperty<RobotDirection> robotDirectionProperty() {
+    public RobotDirection getRobotDirection() {
         return robotDirection;
     }
 
     public void setRobotDirection(RobotDirection robotDirection) {
-        this.robotDirection.set(robotDirection);
-    }
-
-    public SimpleStringProperty robotRotationProperty() {
-        return robotRotation;
+        this.robotDirection = robotDirection;
     }
 
     public LinkedBlockingQueue<Message> getPLAYER_MOVEMENTS() {

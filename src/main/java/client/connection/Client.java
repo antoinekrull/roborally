@@ -346,18 +346,20 @@ public class Client {
                             gameStarted.set(true);
                         }
                         if (message.getMessageType().equals(MessageType.CurrentPlayer)) {
+                            logger.debug("current player: " + message.getMessageBody().getClientID());
                             int clientID = message.getMessageBody().getClientID();
-                            if (userIDProperty().get() == clientID) {
+                            if (Client.this.userIDProperty().get() == clientID) {
+                                Client.this.setActivePlayer(true);
+                                Client.this.setCurrentPlayer("It's your turn");
                                 for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
                                     clientPlayerList.getPlayerList().get(i).setActivePlayer("");
                                 }
-                                Client.this.activePlayer.set(true);
-                                Platform.runLater(() -> Client.this.setCurrentPlayer("It's your turn"));
                             }
                             else {
-                                Client.this.activePlayer.set(false);
+                                Client.this.setActivePlayer(false);
+                                Client.this.setCurrentPlayer("");
                                 if (clientPlayerList.containsPlayer(clientID)) {
-                                    Platform.runLater(() -> clientPlayerList.getPlayer(clientID).setActivePlayer("It's their turn"));
+                                    clientPlayerList.getPlayer(clientID).setActivePlayer("It's their turn");
                                 }
                             }
                         }
@@ -398,9 +400,11 @@ public class Client {
                                 Platform.runLater(() -> Client.this.clientPlayerList.getPlayer(clientID).setCardsInHand(cardsInHand));
                             }
                         }
+                        /*
                         if (message.getMessageType().equals(MessageType.CardPlayed)) {
                             Client.this.setGameLogMessage(message);
                         }
+                         */
                         if (message.getMessageType().equals(MessageType.CardSelected)) {
                             logger.debug("card selected: " + message.getMessageBody().getCard());
                             int clientID = message.getMessageBody().getClientID();
@@ -418,6 +422,7 @@ public class Client {
                             Client.this.setGameEventMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.CardsYouGotNow)) {
+                            logger.debug("CardsYouGotNow: " + message.getMessageBody().getCards().toString() + message.getMessageBody().getCards().length);
                             Platform.runLater(() -> Client.this.setGameEventMessage(message));
                         }
                         if (message.getMessageType().equals(MessageType.RegisterChosen)) {
@@ -432,11 +437,15 @@ public class Client {
                             logger.debug("Movement message: " + message);
                         }
                         if (message.getMessageType().equals(MessageType.CheckpointMoved)) {
-                            //TODO: implement
+                            Platform.runLater(() -> Client.this.setGameEventMessage(message));
                         }
                         if (message.getMessageType().equals(MessageType.PlayerTurning)) {
+                            /*
                             logger.debug("roboter turning");
                             Client.this.setRobotDirection(message.getMessageBody().getRotation());
+                             */
+                            logger.debug("roboter turning");
+                            Client.this.setGameEventMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.TimerStarted)) {
                             logger.debug("timer started");
