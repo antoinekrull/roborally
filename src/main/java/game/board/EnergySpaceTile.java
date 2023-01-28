@@ -24,7 +24,6 @@ public class EnergySpaceTile extends Tile {
     @Override
     public void applyEffect(Player player) throws Exception {
         player.getRobot().increaseEnergyCubes("EnergySpace");
-        System.out.println("Robot energy increased to " + player.getRobot().getEnergyCubes());
     }
 
 }

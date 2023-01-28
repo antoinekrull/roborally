@@ -219,7 +219,7 @@ public class HandleClient implements Runnable{
                     } else if (incomingMessage.getMessageType() == MessageType.CurrentPlayer) {
                         Game.playerList.getPlayerFromList(incomingMessage.getMessageBody().getClientID()).setPlaying(true);
                     } else if (incomingMessage.getMessageType() == MessageType.PlayCard) {
-                        System.out.println(incomingMessage.getMessageBody().getCard());
+                        logger.info(incomingMessage.getMessageBody().getCard());
                         server.messages.put(messageCreator.generateCardPlayedMessage(incomingMessage.getMessageBody().getCard(),
                                 getClientID()));
                     }
