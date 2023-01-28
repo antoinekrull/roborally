@@ -228,9 +228,9 @@ public class Server {
         for(int i = 0; i < player.getHand().size(); i++) {
             cardsInHand[i] = player.getHand().get(i).getCard();
         }
-        for(int i = 0; i < cardsInHand.length; i++) {
-            System.out.println(cardsInHand[i]);
-        }
+//        for(int i = 0; i < cardsInHand.length; i++) {
+//            System.out.println(cardsInHand[i]);
+//        }
 //        String[] cardsInHand = new String[9];
 //        String cards = "";
 //        for(int i = 0; i < cardsInHand.length; i++) {

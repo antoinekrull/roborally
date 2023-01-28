@@ -528,7 +528,7 @@ public class Game implements Runnable {
     }
 
     private void activateRegister(Player player) {
-        if (player.getCardFromRegister(currentRegister) == null) {
+        if (player.getCardFromRegister(currentRegister) instanceof NullCard) {
             logger.debug("No card in register" + currentRegister);
         } else {
             applyCardEffect(player, player.getCardFromRegister(currentRegister));
