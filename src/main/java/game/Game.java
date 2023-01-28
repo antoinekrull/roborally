@@ -451,6 +451,7 @@ public class Game implements Runnable {
         }
 
     }
+
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
         server.sendActivePhase(2);
         timerIsRunning = false;
@@ -458,29 +459,31 @@ public class Game implements Runnable {
         try {
             CustomTimer customTimer = new CustomTimer(server);
             Thread.sleep(100);
-        for(int i = 0; i < playerList.size(); i++) {
-            playerList.get(i).drawFullHand();
-            Thread.sleep(100);
-            server.sendYourCards(playerList.get(i));
-        }
-        playerList.setPlayersPlaying(true);
-        while(!playerList.playersAreReady()) {
-            Thread.sleep(3000);
-            if (playerList.getAmountOfReadyPlayers() >= 1) {
-                if(!timerIsRunning) {
-                    customTimer.runTimer();
+            for (int i = 0; i < playerList.size(); i++) {
+                playerList.get(i).drawFullHand();
+                Thread.sleep(100);
+                server.sendYourCards(playerList.get(i));
+            }
+            playerList.setPlayersPlaying(true);
+            while (!playerList.playersAreReady()) {
+                Thread.sleep(3000);
+                if (playerList.getAmountOfReadyPlayers() >= 1) {
+                    Thread.sleep(100);
+                    if (!timerIsRunning) {
+                        customTimer.runTimer();
+                    }
                 }
             }
-        }
-        if (timerIsRunning) {
-            customTimer.cancel();
-        }
+            if (timerIsRunning == !(playerList.playersAreReady())) {
+                customTimer.cancel();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        timerIsRunning=false;
+        timerIsRunning = false;
         playerList.setPlayerReadiness(false);
     }
+
     private void runActivationPhase() throws Exception {
         logger.info("This game is running the Activation Phase now");
         server.sendActivePhase(3);
