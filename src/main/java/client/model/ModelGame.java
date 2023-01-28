@@ -69,18 +69,18 @@ public class ModelGame {
         this.maps = client.getMaps();
         this.gameBoard = client.getBoard();
         this.robotProperty = new SimpleIntegerProperty();
-        this.score = new SimpleIntegerProperty(0);
+        this.score = new SimpleIntegerProperty();
         score.bind(client.scoreProperty());
         this.energy = new SimpleIntegerProperty();
         energy.bind(client.energyProperty());
-        this.activePhase = new SimpleStringProperty("");
+        this.activePhase = new SimpleStringProperty();
         activePhase.bind(client.activePhaseProperty());
-        this.currentPlayer = new SimpleStringProperty("");
+        this.currentPlayer = new SimpleStringProperty();
         currentPlayer.bind(client.currentPlayerProperty());
-        this.activePlayer = new SimpleBooleanProperty(false);
+        this.activePlayer = new SimpleBooleanProperty();
         this.activePlayer.bind(client.activePlayerProperty());
         //this.maps = FXCollections.observableArrayList(client.getMaps());
-        this.errorMessage = new SimpleStringProperty("");
+        this.errorMessage = new SimpleStringProperty();
         errorMessage.bind(client.errorMessageProperty());
         this.myHandCards = FXCollections.observableArrayList();
         myHandCards = client.getMyCards();
@@ -139,7 +139,13 @@ public class ModelGame {
         timer.addListener(new ChangeListener<Boolean>() {
             @Override
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                notifyChangeSupport.startTimer();
+                logger.debug("timer triggered");
+                if (client.timerProperty().get()) {
+                    notifyChangeSupport.startTimer();
+                }
+                else {
+                    notifyChangeSupport.stopTimer();
+                }
             }
         });
 
