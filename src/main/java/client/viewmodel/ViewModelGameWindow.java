@@ -803,7 +803,7 @@ public class ViewModelGameWindow {
         ArrayList<String> handCards = new ArrayList<>(modelGame.getMyHandCards());
         Platform.runLater(() -> {
             logger.debug("VM - handGrid children size: " + handGrid.getChildren().size());
-            for (int i = 0; i < 9; i++) {
+            for (int i = 0; i < 20; i++) {
                 if (handGrid.getChildren().get(i) instanceof Pane pane) {
                     switch (handCards.get(i)) {
                         case "MoveI" -> {
