@@ -166,6 +166,13 @@ public class Robot {
     public void shootLaser(Player player) throws Exception {
         //checkRobotLaserCollision(player);
     }
+    public Integer getDistanceToAntenna(Pair<Integer, Integer> antennaPosition){
+        int x = Math.abs(antennaPosition.getValue0() - currentPosition.getValue0());
+        int y = Math.abs(antennaPosition.getValue1() - currentPosition.getValue1());
+        int distance = x+y;
+
+        return distance;
+    }
 
     public void makeImage(GridPane tiles){
         ImageView img = new ImageView();

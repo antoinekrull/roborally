@@ -2,6 +2,7 @@ package game.board;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.geometry.Orientation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
@@ -173,8 +174,11 @@ public class Board {
                                 startTileList.add(startTile);
                             }
                             case "Antenna" -> {
-                                replaceTileInMap(board, x, y, tile, new Antenna(x, y));
-                                antenna = new Antenna(x, y);
+
+                                ArrayList<String> orientation = tile.getOrientations();
+                                Direction direction = parseDirection(orientation.get(0));
+                                antenna = new Antenna(x, y,direction);
+                                replaceTileInMap(board, x, y, tile, antenna);
                             }
                             case "PushPanel" -> {
                                 String directionPushPanel = tile.getOrientations().get(0);
