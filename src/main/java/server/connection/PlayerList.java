@@ -169,6 +169,12 @@ public class PlayerList extends ArrayList implements Iterator<Player> {
             public int compare(Player o1, Player o2) {
                 Integer distance1 = o1.getRobot().getDistanceToAntenna(antenna.getPosition());
                 Integer distance2 = o2.getRobot().getDistanceToAntenna(antenna.getPosition());
+                if(o1.getHasAdminPrivilege()){
+                    distance1=0;
+                }
+                if(o2.getHasAdminPrivilege()){
+                    distance2=0;
+                }
                 int distanceCompare = Integer.compare(distance1,distance2);
                 if(distanceCompare == 0){
                     Direction direction = antenna.getDirection();

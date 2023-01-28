@@ -53,68 +53,70 @@ public class CollisionCalculator {
         boolean toWall = false;
         ArrayList<Direction> onBlocked = new ArrayList<>();
         ArrayList<Direction> toBlocked = new ArrayList<>();
-        ArrayList<Tile> currentTile = board.getTile(currentPosition);
-        ArrayList<Tile> targetTile = board.getTile(target);
-        if(targetTile != null) {
-
-            //checks if robot is currently on a tile, if so onWall is true
-            for (int i = 0; i < currentTile.size(); i++) {
-                if (currentTile.get(i).getType().equals("Wall")) {
-                    onWall = true;
-                    onBlocked = getBlockingDirections(currentTile);
-                }
-            }
-            for (int i = 0; i < targetTile.size(); i++) {
-                if (targetTile.get(i).getType().equals("Wall")) {
-                    toWall = true;
-                    toBlocked = getBlockingDirections(targetTile);
-                }
-            }
-
-            if (targetTile.get(0).getType().equals("Antenna")) {
-                result = true;
-            }
-
-            //if onWall true it checks which direction is blocked
-            if (onWall) {
-                if (target.getValue0() < currentPosition.getValue0()) {
-                    if (onBlocked.contains(Direction.WEST)) {
-                        result = true;
-                    }
-                } else if (target.getValue0() > currentPosition.getValue0()) {
-                    if (onBlocked.contains(Direction.EAST)) {
-                        result = true;
-                    }
-                } else if (target.getValue1() < currentPosition.getValue1()) {
-                    if (onBlocked.contains(Direction.NORTH)) {
-                        result = true;
-                    }
-                } else if (target.getValue1() > currentPosition.getValue1()) {
-                    if (onBlocked.contains(Direction.SOUTH)) {
-                        result = true;
+        if(board.isPositionOnBoard(target)) {
+            ArrayList<Tile> currentTile = board.getTile(currentPosition);
+            ArrayList<Tile> targetTile = board.getTile(target);
+            if (targetTile != null) {
+                //checks if robot is currently on a tile, if so onWall is true
+                for (int i = 0; i < currentTile.size(); i++) {
+                    if (currentTile.get(i).getType().equals("Wall")) {
+                        onWall = true;
+                        onBlocked = getBlockingDirections(currentTile);
                     }
                 }
-            }
-            if (toWall) {
-                if (target.getValue0() < currentPosition.getValue0()) {
-                    if (toBlocked.contains(Direction.EAST)) {
-                        result = true;
+                for (int i = 0; i < targetTile.size(); i++) {
+                    if (targetTile.get(i).getType().equals("Wall")) {
+                        toWall = true;
+                        toBlocked = getBlockingDirections(targetTile);
                     }
-                } else if (target.getValue0() > currentPosition.getValue0()) {
-                    if (toBlocked.contains(Direction.WEST)) {
-                        result = true;
+                }
+
+                if (targetTile.get(0).getType().equals("Antenna")) {
+                    result = true;
+                }
+
+                //if onWall true it checks which direction is blocked
+                if (onWall) {
+                    if (target.getValue0() < currentPosition.getValue0()) {
+                        if (onBlocked.contains(Direction.WEST)) {
+                            result = true;
+                        }
+                    } else if (target.getValue0() > currentPosition.getValue0()) {
+                        if (onBlocked.contains(Direction.EAST)) {
+                            result = true;
+                        }
+                    } else if (target.getValue1() < currentPosition.getValue1()) {
+                        if (onBlocked.contains(Direction.NORTH)) {
+                            result = true;
+                        }
+                    } else if (target.getValue1() > currentPosition.getValue1()) {
+                        if (onBlocked.contains(Direction.SOUTH)) {
+                            result = true;
+                        }
                     }
-                } else if (target.getValue1() < currentPosition.getValue1()) {
-                    if (toBlocked.contains(Direction.SOUTH)) {
-                        result = true;
-                    }
-                } else if (target.getValue1() > currentPosition.getValue1()) {
-                    if (toBlocked.contains(Direction.NORTH)) {
-                        result = true;
+                }
+                if (toWall) {
+                    if (target.getValue0() < currentPosition.getValue0()) {
+                        if (toBlocked.contains(Direction.EAST)) {
+                            result = true;
+                        }
+                    } else if (target.getValue0() > currentPosition.getValue0()) {
+                        if (toBlocked.contains(Direction.WEST)) {
+                            result = true;
+                        }
+                    } else if (target.getValue1() < currentPosition.getValue1()) {
+                        if (toBlocked.contains(Direction.SOUTH)) {
+                            result = true;
+                        }
+                    } else if (target.getValue1() > currentPosition.getValue1()) {
+                        if (toBlocked.contains(Direction.NORTH)) {
+                            result = true;
+                        }
                     }
                 }
             }
         }
+
         return result;
     }
     public boolean moveConveyorBelt(Robot robot){
@@ -263,7 +265,7 @@ public class CollisionCalculator {
         ArrayList<Robot> robots = playerList.getAllRobots();
         for (int i = 0; i < robots.size(); i++) {
             Robot robot = robots.get(i);
-            Pair<Integer,Integer> pos = robot.getCurrentPosition();
+            Pair<Integer, Integer> pos = robot.getCurrentPosition();
             Direction direction = robot.getDirection();
             switch (direction) {
                 case NORTH -> shot = new Pair<>(0, -1);
@@ -272,56 +274,52 @@ public class CollisionCalculator {
                 case WEST -> shot = new Pair<>(-1, 0);
                 default -> shot = new Pair<>(0, 0);
             }
-            while (shooting) {
+            while (shooting){
                 Pair<Integer, Integer> nextPos = new Pair<>(pos.getValue0() + shot.getValue0(), pos.getValue1() + shot.getValue1());
-                if (board.isPositionOnBoard(nextPos)) {
-                    Robot robot2 = checkForRobot(nextPos);
-                    if (robot2 != null) {
-                        robot2.increaseDamageCount();
-                        game.drawDamageCards(playerList.getPlayerFromList(robot2));
-                        shooting = false;
-                    } else if (checkWallCollision(pos, nextPos)) {
-                        shooting = false;
-                    }
-                    pos = nextPos;
-                } else {
+            if (board.isPositionOnBoard(nextPos)) {
+                Robot robot2 = checkForRobot(nextPos);
+                if (robot2 != null) {
+                    robot2.increaseDamageCount();
+                    game.drawDamageCards(playerList.getPlayerFromList(robot2));
+                    shooting = false;
+                } else if (checkWallCollision(pos, nextPos)) {
                     shooting = false;
                 }
+                pos = nextPos;
+            } else {
+                shooting = false;
             }
         }
 
-    }
-
-    public void shootRearLaser(Player player){
-        if(player.getRearLaserOn()){
-            boolean shooting = true;
-            Pair<Integer, Integer> pos = player.getRobot().getCurrentPosition();
-            Direction direction = player.getRobot().getDirection();
-            Pair<Integer, Integer> shot;
-            switch (direction) {
-                case NORTH -> shot = new Pair<>(0, 1);
-                case EAST -> shot = new Pair<>(-1, 0);
-                case SOUTH -> shot = new Pair<>(0, -1);
-                case WEST -> shot = new Pair<>(1, 0);
-                default -> shot = new Pair<>(0, 0);
-            }
-            while (shooting) {
-                Pair<Integer, Integer> nextPos = new Pair<>(pos.getValue0() + shot.getValue0(), pos.getValue1() + shot.getValue1());
-                if (board.isPositionOnBoard(nextPos)) {
-                    Robot robot2 = checkForRobot(nextPos);
-                    if (robot2 != null) {
-                        robot2.increaseDamageCount();
-                        game.drawDamageCards(playerList.getPlayerFromList(robot2));
-                        shooting = false;
-                    } else if (checkWallCollision(pos, nextPos)) {
+            Player player = playerList.getPlayerFromList(robot);
+            if (player.getRearLaserOn()) {
+                shooting = true;
+                pos = player.getRobot().getCurrentPosition();
+                switch (direction) {
+                    case NORTH -> shot = new Pair<>(0, 1);
+                    case EAST -> shot = new Pair<>(-1, 0);
+                    case SOUTH -> shot = new Pair<>(0, -1);
+                    case WEST -> shot = new Pair<>(1, 0);
+                    default -> shot = new Pair<>(0, 0);
+                }
+                while (shooting) {
+                    Pair<Integer, Integer> nextPos = new Pair<>(pos.getValue0() + shot.getValue0(), pos.getValue1() + shot.getValue1());
+                    if (board.isPositionOnBoard(nextPos)) {
+                        Robot robot2 = checkForRobot(nextPos);
+                        if (robot2 != null) {
+                            robot2.increaseDamageCount();
+                            game.drawDamageCards(playerList.getPlayerFromList(robot2));
+                            shooting = false;
+                        } else if (checkWallCollision(pos, nextPos)) {
+                            shooting = false;
+                        }
+                        pos = nextPos;
+                    } else {
                         shooting = false;
                     }
-                    pos = nextPos;
-                } else {
-                    shooting = false;
                 }
+                player.setRearLaserOn(false);
             }
-            player.setRearLaserOn(false);
         }
     }
 

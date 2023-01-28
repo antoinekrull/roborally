@@ -134,7 +134,6 @@ public class Game implements Runnable {
             Thread.sleep(500);
             //robotLaser
             collisionCalculator.shootRobotLasers();
-            collisionCalculator.shootRearLaser(activePlayer);
             Thread.sleep(500);
             for (int x = 0; x < board.getEnergySpaceList().size(); x++) {
                 for (int y = 0; y < playerList.size(); y++) {
