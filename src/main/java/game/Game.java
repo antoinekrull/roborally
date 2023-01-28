@@ -580,6 +580,7 @@ public class Game implements Runnable {
     private void runUpgradePhase(){
         logger.debug("This game is running the Upgrade Phase now");
         server.sendActivePhase(1);
+        logger.debug("Server sent the active phase (value=1) to the players");
         setCurrentGamePhase(GamePhase.UPGRADE_PHASE);
         determinePriority();
         try {
@@ -601,22 +602,33 @@ public class Game implements Runnable {
     }
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
         server.sendActivePhase(2);
+        logger.debug("Server sent the active phase (value=2) to the players");
         timerIsRunning = false;
         setCurrentGamePhase(GamePhase.PROGRAMMING_PHASE);
         try {
             CustomTimer customTimer = new CustomTimer(server);
             Thread.sleep(100);
-        for(int i = 0; i < playerList.size(); i++) {
-            playerList.get(i).drawFullHand();
-            Thread.sleep(100);
-            server.sendYourCards(playerList.get(i));
-        }
+            for (Player player : playerList.getPlayerList()) {
+                logger.debug("Player " + player.getUsername() + " draws now.");
+                player.drawFullHand();
+                logger.debug("Player " + player.getUsername() + " has drawn.");
+                Thread.sleep(100);
+                if(!(player instanceof AI_Player)){
+                    server.sendYourCards(player);
+                    logger.debug("Server sent hand cards to " + player.getUsername());
+                }
+            }
         playerList.setPlayersPlaying(true);
         while(!playerList.playersAreReady()) {
             Thread.sleep(3000);
             if (playerList.getAmountOfReadyPlayers() >= 1) {
                 if(!timerIsRunning) {
                     customTimer.runTimer();
+                }
+            }
+            for (Player player : playerList.getPlayerList()) {
+                if(player instanceof AI_Player && !player.isReady()){
+                    ((AI_Player) player).playProgrammingPhase();
                 }
             }
         }
