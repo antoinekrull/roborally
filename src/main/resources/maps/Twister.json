@@ -265,7 +265,7 @@
           "type": "Laser",
           "isOnBoard": "6B",
           "orientations": [
-            "top"
+            "bottom"
           ],
           "count": 1
         }
@@ -586,7 +586,7 @@
           "type": "Laser",
           "isOnBoard": "6B",
           "orientations": [
-            "right"
+            "left"
           ],
           "count": 1
         }
@@ -630,10 +630,6 @@
           "orientations": [
             "right"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "6B"
         }
       ],
       [
@@ -715,10 +711,6 @@
           "orientations": [
             "left"
           ]
-        },
-        {
-          "type": "Empty",
-          "isOnBoard": "6B"
         }
       ],
       [
@@ -765,7 +757,7 @@
           "type": "Laser",
           "isOnBoard": "6B",
           "orientations": [
-            "left"
+            "right"
           ],
           "count": 1
         }
@@ -1086,7 +1078,7 @@
           "type": "Laser",
           "isOnBoard": "6B",
           "orientations": [
-            "bottom"
+            "top"
           ],
           "count": 1
         }
