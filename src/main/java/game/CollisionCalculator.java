@@ -1,6 +1,7 @@
 package game;
 
 import game.board.*;
+import game.player.Player;
 import game.player.Robot;
 import org.javatuples.Pair;
 import server.connection.PlayerList;
@@ -289,6 +290,39 @@ public class CollisionCalculator {
             }
         }
 
+    }
+
+    public void shootRearLaser(Player player){
+        if(player.getRearLaserOn()){
+            boolean shooting = true;
+            Pair<Integer, Integer> pos = player.getRobot().getCurrentPosition();
+            Direction direction = player.getRobot().getDirection();
+            Pair<Integer, Integer> shot;
+            switch (direction) {
+                case NORTH -> shot = new Pair<>(0, 1);
+                case EAST -> shot = new Pair<>(-1, 0);
+                case SOUTH -> shot = new Pair<>(0, -1);
+                case WEST -> shot = new Pair<>(1, 0);
+                default -> shot = new Pair<>(0, 0);
+            }
+            while (shooting) {
+                Pair<Integer, Integer> nextPos = new Pair<>(pos.getValue0() + shot.getValue0(), pos.getValue1() + shot.getValue1());
+                if (board.isPositionOnBoard(nextPos)) {
+                    Robot robot2 = checkForRobot(nextPos);
+                    if (robot2 != null) {
+                        robot2.increaseDamageCount();
+                        game.drawDamageCards(playerList.getPlayerFromList(robot2));
+                        shooting = false;
+                    } else if (checkWallCollision(pos, nextPos)) {
+                        shooting = false;
+                    }
+                    pos = nextPos;
+                } else {
+                    shooting = false;
+                }
+            }
+            player.setRearLaserOn(false);
+        }
     }
 
     private void harvestEnergyCubes(Pair<Integer, Integer> target, Robot robot) {
