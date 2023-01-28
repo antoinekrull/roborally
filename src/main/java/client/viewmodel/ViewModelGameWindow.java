@@ -792,7 +792,7 @@ public class ViewModelGameWindow {
 
             logger.debug("direction: " + direction);
             logger.debug("RobotID in viewModel: " + figure);
-            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + figure + "_bunt.png");
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_" + figure + "_game.png");
             Image im = new Image(input);
             ImageView img = new ImageView(im);
             if (direction == RobotDirection.EAST) {
