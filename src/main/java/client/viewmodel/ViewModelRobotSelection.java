@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-
-import game.CustomTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -74,37 +72,37 @@ public class ViewModelRobotSelection {
         robot1.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(1);
             applyStyle(robot1);
-            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_1_bunt.png");
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_1_menu.png");
             selectedRobot.setImage(new Image(input));
         });
         robot2.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(2);
             applyStyle(robot2);
-            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_2_bunt.png");
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_2_menu.png");
             selectedRobot.setImage(new Image(input));
         });
         robot3.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(3);
             applyStyle(robot3);
-            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_3_bunt.png");
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_3_menu.png");
             selectedRobot.setImage(new Image(input));
         });
         robot4.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(4);
             applyStyle(robot4);
-            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_4_bunt.png");
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_4_menu.png");
             selectedRobot.setImage(new Image(input));
         });
         robot5.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(5);
             applyStyle(robot5);
-            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_5_bunt.png");
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_5_menu.png");
             selectedRobot.setImage(new Image(input));
         });
         robot6.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(6);
             applyStyle(robot6);
-            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_6_bunt.png");
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_6_menu.png");
             selectedRobot.setImage(new Image(input));
         });
     }
