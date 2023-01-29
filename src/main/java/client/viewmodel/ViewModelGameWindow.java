@@ -186,8 +186,8 @@ public class ViewModelGameWindow {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 FadeTransition transition = new FadeTransition(Duration.millis(1000), myEnergyBar);
-                transition.setFromValue(oldValue.doubleValue());
-                transition.setToValue(newValue.doubleValue());
+                transition.setFromValue(0.7);
+                transition.setToValue(1.0);
                 transition.play();
             }
         });
@@ -513,7 +513,7 @@ public class ViewModelGameWindow {
         }
         if (logMessage.getMessageType().equals(MessageType.CheckPointReached)) {
             int clientID = logMessage.getMessageBody().getClientID();
-            //add message to logger
+            //TODO: add to logger
         }
 
     }
@@ -543,7 +543,7 @@ public class ViewModelGameWindow {
 
             usernameText.setStyle("-fx-fill: #a80000");
 
-            logText.setText(" is current map.");
+            logText.setText(" was chosen by the god of robots.");
             logText.setStyle("-fx-fill: #a80000;" + "-fx-font-size: 8pt;");
         }
         else if (messageType.equals(MessageType.SelectionFinished)) {
@@ -614,7 +614,7 @@ public class ViewModelGameWindow {
         });
 
     }
-    public void reveivedGameEventMessage() {
+    public void receivedGameEventMessage() {
         Message gamemessage = null;
         try {
             gamemessage = modelGame.getGAME_EVENT_MESSAGES().take();
@@ -645,7 +645,6 @@ public class ViewModelGameWindow {
                 }
                 logger.debug("Current register: " + registerCounter);
                 setShadowOnImage(registerCounter - 1);
-
         }
         if (gamemessage.getMessageType().equals(MessageType.ReplaceCard)) {
             int clientID = gamemessage.getMessageBody().getClientID();
@@ -1379,7 +1378,7 @@ public class ViewModelGameWindow {
             timer--;
             Platform.runLater(() -> timerLabel.setText(String.format("%02d:%02d", timer / 60, timer % 60)));
             if (timer <= 10) {
-                timerLabel.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;" + "-fx-font-size: 20pt;");
+                timerLabel.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;" + "-fx-font-size: 17pt;");
             }
             if (timer <= 0) {
                 timeline.stop();
@@ -1394,7 +1393,6 @@ public class ViewModelGameWindow {
 
     public void stopTimer() {
         timer = 30;
-        logger.debug("VM - stopTimer");
         Platform.runLater(() -> timerLabel.setText(""));
         timeline.stop();
 

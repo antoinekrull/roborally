@@ -356,7 +356,7 @@
                         </GridPane>
                         <HBox fx:id="myPlayerInfoHBox" alignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                            <children>
-                              <VBox fx:id="myPlayerInfoVBox" alignment="CENTER_LEFT" fillWidth="false" spacing="12.0">
+                              <VBox fx:id="myPlayerInfoVBox" alignment="CENTER_LEFT" fillWidth="false" spacing="6.0">
                                  <children>
                                     <Label fx:id="timerLabel" styleClass="playerInfoLabel" text="" />
                                     <Label fx:id="currentActivePlayerLabel" styleClass="playerInfoLabel" text="" />
