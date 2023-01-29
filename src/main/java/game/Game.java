@@ -548,6 +548,7 @@ public class Game implements Runnable {
             Thread.sleep(100);
             refreshUpgradeShop();
             for (int i = 0; i < playerList.size(); i++) {
+                Thread.sleep(100);
                 server.sendCurrentPlayer(playerList.get(i).getId());
                 Thread.sleep(100);
                 while (!isShopping) {
