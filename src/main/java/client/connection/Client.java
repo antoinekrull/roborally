@@ -81,7 +81,7 @@ public class Client {
         this.errorMessage = new SimpleStringProperty("");
         this.gameStarted = new SimpleBooleanProperty();
         this.currentPlayer = new SimpleStringProperty("");
-        this.activePhase = new SimpleStringProperty();
+        this.activePhase = new SimpleStringProperty("Construction Phase");
         this.activePlayer = new SimpleBooleanProperty(false);
         this.score = new SimpleIntegerProperty(0);
         this.myCards = FXCollections.observableArrayList();
@@ -476,12 +476,13 @@ public class Client {
                             Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.RefillShop)){
+                            logger.debug("refill shop");
                             Client.this.setGameLogMessage(message);
                             String[] refillCards = message.getMessageBody().getCards();
                             Platform.runLater(() -> {
                                 Client.this.upgradeShop.addAll(refillCards);
                                 for(String card: refillCards){
-                                    logger.debug("Client - cardsInHand: " + card);
+                                    logger.debug("Client - refillCards: " + card);
                                 }
                             });
                             for (int i = 0; i < myCards.size(); i++) {
@@ -489,6 +490,7 @@ public class Client {
                             }
                         }
                         if (message.getMessageType().equals(MessageType.ExchangeShop)){
+                            logger.debug("exchange shop started");
                             Client.this.setGameLogMessage(message);
                             String[] exchangeCards = message.getMessageBody().getCards();
                             Platform.runLater(() -> {
@@ -501,7 +503,6 @@ public class Client {
                             for (int i = 0; i < myCards.size(); i++) {
                                 logger.debug("Client - myCards: " + myCards.get(i));
                             }
-
                         }
                         if (message.getMessageType().equals(MessageType.UpgradeBought)){
                             //TODO: receive purchase confirmation
