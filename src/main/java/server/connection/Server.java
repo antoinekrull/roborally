@@ -134,6 +134,43 @@ public class Server {
                                     client.getValue().write(message);
                                 }
                             }
+                            //TODO: molri will fix
+//                        } else if(message.getMessageType() == MessageType.YourCards) {
+//                            int id = message.getMessageBody().getClientID();
+//                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+//                                if (client.getKey() == id) {
+//                                    client.getValue().write(message);
+//                                }
+//                            }
+                        } else if(message.getMessageType() == MessageType.ShuffleCoding) {
+                            int id = message.getMessageBody().getClientID();
+                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                                if (client.getKey() == id) {
+                                    client.getValue().write(message);
+                                }
+                            }
+                            //TODO: molri will fix
+//                        } else if(message.getMessageType() == MessageType.CardsYouGotNow) {
+//                            int id = message.getMessageBody().getClientID();
+//                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+//                                if (client.getKey() == id) {
+//                                    client.getValue().write(message);
+//                                }
+//                            }
+                        } else if(message.getMessageType() == MessageType.DrawDamage) {
+                            int id = message.getMessageBody().getClientID();
+                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                                if (client.getKey() == id) {
+                                    client.getValue().write(message);
+                                }
+                            }
+                        } else if(message.getMessageType() == MessageType.PickDamage) {
+                            int id = message.getMessageBody().getClientID();
+                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                                if (client.getKey() == id) {
+                                    client.getValue().write(message);
+                                }
+                            }
                         }
                         //Changed group messages: will only be displayed to other clients, not to yourself
                         //added private message to work in chat
@@ -198,7 +235,6 @@ public class Server {
     }
 
     public void sendGameStarted(String jsonMap) {
-
         try {
             messages.put(messageCreator.generateGameStartedMessage(jsonMap));
         } catch (InterruptedException e) {
@@ -244,7 +280,7 @@ public class Server {
 
     public void sendShuffleCoding(Player player) {
         try {
-            CLIENTS.get(player.getId()).write(messageCreator.generateShuffleCodingMessage(player.getId()));
+            messages.put(messageCreator.generateShuffleCodingMessage(player.getId()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -322,7 +358,7 @@ public class Server {
 
     public void sendDrawDamage(Player player, String[] damageCards) {
         try {
-            CLIENTS.get(player.getId()).write(messageCreator.generateDrawDamageMessage(player.getId(), damageCards));
+            messages.put(messageCreator.generateDrawDamageMessage(player.getId(), damageCards));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -330,7 +366,7 @@ public class Server {
 
     public void sendPickDamage(Player player, String[] availablePiles) {
         try {
-            CLIENTS.get(player.getId()).write(messageCreator.generatePickDamage(player.getId(), availablePiles));
+            messages.put(messageCreator.generatePickDamage(player.getId(), availablePiles));
         } catch (Exception e) {
             e.printStackTrace();
         }
