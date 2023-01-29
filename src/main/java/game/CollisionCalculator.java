@@ -170,6 +170,7 @@ public class CollisionCalculator {
 
         Pair<Integer, Integer> target = new Pair<>(currentPosition.getValue0()+xMove,currentPosition.getValue1()+yMove);
         if(!checkFallFromMap(target)) {
+            System.out.println("aber hier bist du?");
             ArrayList<Tile> targetTile = board.getTile(target);
             for (Tile tile : targetTile) {
                 if (tile.getType().equals("ConveyorBelt")) {
@@ -207,16 +208,17 @@ public class CollisionCalculator {
                 }
                 moveRobot(robot, target);
                 result = true;
+            }else{
+                if(checkForRobot(target) == null){
+                    result = true;
+                    System.out.println("WIESO BEWEGST DU DIE SCHEI?E NICHT");
+                    moveRobot(robot, target);
+                }
             }
         }else if (checkFallFromMap(target)){
             game.reboot(playerList.getPlayerFromList(robot));
         }
-        else{
-            if(checkForRobot(target) == null){
-                result = true;
-                moveRobot(robot, target);
-            }
-        }
+
         return result;
     }
 
