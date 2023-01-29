@@ -24,7 +24,7 @@ public class Helper {
         for(int x = 0; x < board.getBoard().size(); x++){
             for(int y = 0; y < board.getBoard().get(x).size(); y++) {
                 if (board.getBoard().get(x).get(y).get(0) instanceof CheckpointTile ct){
-                    if(ct.getNumber() == currentObjective){
+                    if(ct.getCount() == currentObjective){
                         return new Pair<>(ct.getXCoordinate(), ct.getYCoordinate());
                     }
                 }
