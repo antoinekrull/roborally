@@ -680,7 +680,8 @@ public class ViewModelGameWindow {
             int clientID = gamemessage.getMessageBody().getClientID();
             if(clientID == modelUser.userIDProperty().get()) {
                 int counter = gamemessage.getMessageBody().getCount();
-                cardSelection.overlayDamagecards(gamemessage.getMessageBody().getCards(), counter);
+                String[] availablePiles = gamemessage.getMessageBody().getAvailablePiles();
+                cardSelection.overlayDamagecards(availablePiles, counter);
             }
         }
         if (gamemessage.getMessageType().equals(MessageType.Reboot)){
@@ -869,28 +870,22 @@ public class ViewModelGameWindow {
 
     public void fillHandCards() {
         //clear the handcards
-
         for (Node child : programmingGrid.getChildren()) {
             if (child instanceof Pane) {
                 Pane pane = (Pane) child;
                 pane.getChildren().clear();
             }
         }
-        for (Node child : handGrid.getChildren()) {
-            if (child instanceof Pane) {
-                Pane pane = (Pane) child;
-                pane.getChildren().clear();
-            }
-        }
-
         this.isClickable = true;
         logger.debug("VM - fillHandCards Start:");
         ArrayList<String> handCards = new ArrayList<>(modelGame.getMyHandCards());
         Platform.runLater(() -> {
             logger.debug("VM - handGrid children size: " + handGrid.getChildren().size());
-            for (int i = 0; i < 20; i++) {
-                if (handGrid.getChildren().get(i) instanceof Pane pane) {
-                    switch (handCards.get(i)) {
+            for (String card : handCards) {
+                int index = getFirstFreeSlot();
+                if (index == -1) break;
+                Pane pane = (Pane) handGrid.getChildren().get(index);
+                    switch (card) {
                         case "MoveI" -> {
                             InputStream input = getClass().getResourceAsStream(
                                 "/textures/cards/Move1.png");
@@ -1021,9 +1016,7 @@ public class ViewModelGameWindow {
                             imageView13.setPreserveRatio(true);
                             pane.getChildren().add(imageView13);
                         }
-                    }
-                } else {
-                    logger.debug("Element at index " + i + " is not a Pane");
+
                 }
             }
             logger.debug(" ");
@@ -1045,6 +1038,7 @@ public class ViewModelGameWindow {
         ImageView imgUpgrade = new ImageView(imUpgrade);
         imgUpgrade.setFitWidth(programcardsWidth);
         imgUpgrade.setPreserveRatio(true);
+
         upgradeDeck.getChildren().add(imgUpgrade);
 
         InputStream damageImg = getClass().getResourceAsStream("/textures/cards/damageDeck.png");
@@ -1279,6 +1273,14 @@ public class ViewModelGameWindow {
 
     public void setProgramcardsUnmovable () {
         this.isClickable = false;
+        Platform.runLater(()-> {
+            for (Node child : handGrid.getChildren()) {
+                if (child instanceof Pane) {
+                    Pane pane = (Pane) child;
+                    pane.getChildren().clear();
+                }
+            }
+        });
     }
 
     private void setShadowOnImage(int currentRegister) {
@@ -1350,6 +1352,17 @@ public class ViewModelGameWindow {
                         }
                     }
                 }
+                Timer timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                            for (Node node : pane.getChildren()) {
+                                Platform.runLater(() -> {
+                                    pane.getChildren().remove(node);
+                                });
+                            }
+                    }
+                }, 2000);
             }
         });
     }

@@ -4,6 +4,7 @@ import client.model.ModelGame;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -25,6 +26,7 @@ public class CardSelection {
 
   public void overlayDamagecards(String[] damagePiles, int counter) {
     //TODO: Logo für Damageauswahl
+    Platform.runLater(() -> {
     finalCounter = counter;
     StackPane overlay = new StackPane();
     overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.8);");
@@ -34,7 +36,7 @@ public class CardSelection {
     overlay.getChildren().add(grid);
     int column = 0;
     Label label = new Label("Damages to pick: " + counter);
-    overlay.getChildren().add(label);
+    grid.add(label, 0, 0);
     List<ImageView> imageViews = new ArrayList<>();
     for (int i=0;i<damagePiles.length;i++) {
       String card = damagePiles[i];
@@ -47,7 +49,7 @@ public class CardSelection {
           imageView2.setId("Virus");
           imageView2.setPreserveRatio(true);
           imageView2.setFitWidth(200);
-          grid.add(imageView2, column, 0);
+          grid.add(imageView2, column, 1);
           imageViews.add(imageView2);
           column++;
         }
@@ -58,7 +60,7 @@ public class CardSelection {
           imageView1.setId("Worm");
           imageView1.setPreserveRatio(true);
           imageView1.setFitWidth(200);
-          grid.add(imageView1, column, 0);
+          grid.add(imageView1, column, 1);
           imageViews.add(imageView1);
           column++;
         }
@@ -69,7 +71,7 @@ public class CardSelection {
           imageView3.setId("Trojan");
           imageView3.setPreserveRatio(true);
           imageView3.setFitWidth(200);
-          grid.add(imageView3, column, 0);
+          grid.add(imageView3, column, 1);
           imageViews.add(imageView3);
           column++;
         }
@@ -82,20 +84,23 @@ public class CardSelection {
           String selectedCard = imageView.getId();
           selectedCards.add(selectedCard);
           finalCounter--;
+          label.setText("Damages to pick: " + finalCounter);
           if (finalCounter == 0) {
             baseStackPane.getChildren().remove(overlay);
             for (String c : damagePiles) {
               overlay.getChildren().remove(c);
             }
-            // send the selected cards to the model
-            modelGame.sendReturnCards(selectedCards.toArray(new String[0]));
           }
         }
       });
+
     }
+    // send the selected cards to the model
+    modelGame.sendReturnCards(selectedCards.toArray(new String[0]));
+    });
   }
 
-  //Wenn Upgradephase aktiv, dann kann man auf den Kartenstapel für Upgradekarten klicken, damit sich Shop öffnet
+  //Wenn Upgradephase aktiv, dann Popup
   //In VMgameWindow wird Liste der kaufbaren Karten gepflegt (durch Messages refillshop und exchange shop), aktuelle Liste wird Übertragen
   public void upgradeShop (){
     //TODO: Grundstruktur - Stackpane mit einem Gridpane in der Mitte
@@ -107,6 +112,8 @@ public class CardSelection {
     //Wenn "UpgradeBought" zurückkommt, wird Karte aus Shop entfernt
     //Mit "Go Back" schließt sich der Shop wieder
   }
+
+  //Wenn auf Kartenstapel - sieht man gekaufte Upgradekarten
 }
 
 
