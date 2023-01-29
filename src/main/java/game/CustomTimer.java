@@ -33,8 +33,10 @@ public class CustomTimer {
                 @Override
                 public void run() {
                     logger.info("Time ran through");
+                    logger.debug("heißt das der kacker macht das hier alles?");
                     PlayerList unreadyPlayers = game.getPlayerList().getUnreadyPlayers();
                     for (int i = 0; i < unreadyPlayers.size(); i++) {
+                        logger.debug("ja das heißt es");
                         String[] placedCards = unreadyPlayers.get(i).fillRegisterWithRandomCards();
                         server.sendCardsYouGotNow(unreadyPlayers.get(i), placedCards);
                         unreadyPlayers.get(i).fillRegisterWithRandomCards();
@@ -43,6 +45,7 @@ public class CustomTimer {
                     }
                     game.getPlayerList().setPlayerReadiness(true);
                     server.sendTimerEnded(new PlayerList());
+                   game.setTimerIsRunning(false);
                 }
             };
             timer.schedule(timerTask, 30000);

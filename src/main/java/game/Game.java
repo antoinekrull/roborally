@@ -286,7 +286,7 @@ public class Game implements Runnable {
         }
     }
 
-    public void applyCardEffect(Player player, Card card) {
+    public void applyCardEffect(Player player, Card card) throws InterruptedException {
         String cardName = card.getCard();
         switch (cardName) {
             case "Again" -> {
@@ -319,11 +319,6 @@ public class Game implements Runnable {
                 for (int i = 0; i < card.getVelocity(); i++) {
                     Pair<Integer, Integer> newPosition = new Pair<>(player.getRobot().getCurrentPosition().getValue0(),
                             player.getRobot().getCurrentPosition().getValue1());
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
                     Pair<Integer, Integer> tempPosition;
                         switch (player.getRobot().getDirection()) {
                             case NORTH -> tempPosition = newPosition.setAt1(newPosition.getValue1() - 1);
@@ -336,6 +331,7 @@ public class Game implements Runnable {
                         newPosition = tempPosition;
 
                         collisionCalculator.moveRobot(player.getRobot(), newPosition);
+                    Thread.sleep(500);
                 }
             }
             case "PowerUp" -> {
@@ -356,12 +352,9 @@ public class Game implements Runnable {
             case "TurnLeft" -> player.getRobot().rotateRobot(Direction.LEFT);
             case "TurnRight" -> player.getRobot().rotateRobot(Direction.RIGHT);
             case "UTurn" -> {
-                switch (player.getRobot().getDirection()) {
-                    case NORTH -> player.getRobot().setDirection(Direction.SOUTH);
-                    case EAST -> player.getRobot().setDirection(Direction.WEST);
-                    case SOUTH -> player.getRobot().setDirection(Direction.NORTH);
-                    case WEST -> player.getRobot().setDirection(Direction.EAST);
-                    default -> logger.warn("Invalid Direction");
+                for(int i = 0; i < 2; i++) {
+                    player.getRobot().rotateRobot(Direction.LEFT);
+                    Thread.sleep(500);
                 }
             }
             case "Virus" -> {
@@ -489,11 +482,11 @@ public class Game implements Runnable {
             }
             if (timerIsRunning) {
                 customTimer.cancel();
+                timerIsRunning = false;
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        timerIsRunning = false;
         playerList.setPlayerReadiness(false);
     }
 
@@ -547,7 +540,11 @@ public class Game implements Runnable {
         if (player.getCardFromRegister(currentRegister) instanceof NullCard) {
             logger.debug("No card in register" + currentRegister);
         } else {
-            applyCardEffect(player, player.getCardFromRegister(currentRegister));
+            try {
+                applyCardEffect(player, player.getCardFromRegister(currentRegister));
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
