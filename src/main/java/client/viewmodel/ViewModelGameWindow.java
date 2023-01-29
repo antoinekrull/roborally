@@ -695,7 +695,7 @@ public class ViewModelGameWindow {
             int x = gamemessage.getMessageBody().getX();
             int y = gamemessage.getMessageBody().getY();
 
-            InputStream input = getClass().getResourceAsStream("/textures/gameboard/checkpoint" + checkpointID + ".png");
+            InputStream input = getClass().getResourceAsStream("/textures/gameboard/checkpoint" + checkpointID + "_noBackground.png");
             Image im = new Image(input);
             ImageView img = new ImageView(im);
             img.setFitWidth(gameboardTileWidth);
