@@ -96,7 +96,7 @@ public class Server {
                     }
 
                 } catch (Exception e) {
-                    System.out.println("Error here " + e.getMessage());
+                    logger.warn("Error here " + e.getMessage());
                 }
             }
         };
@@ -366,6 +366,14 @@ public class Server {
         }
     }
 
+    public void sendCheckPointMoved(int count, int xCoordinate, int yCoordinate) {
+        try {
+            messages.put(messageCreator.generateCheckpointMovedMessage(count, xCoordinate, yCoordinate));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void sendRefillShop(String[] cards){
         try{
             messages.put(messageCreator.generateRefillShopMessage(cards));
@@ -389,6 +397,14 @@ public class Server {
         }
     }
 
+    public void sendBuyUpgrade(Player player) {
+        try {
+            messages.put(messageCreator.generateBuyUpgradeMessage(player.isBuying(), player.getUpgradeToBuy()));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public synchronized int getUniqueID() {
         return uniqueID++;
     }
@@ -402,5 +418,6 @@ public class Server {
             serverSocket.close();
         }
     }
+
 }
 

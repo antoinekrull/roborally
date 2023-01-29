@@ -67,7 +67,7 @@
                                 <graphic>
                                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                         <image>
-                                            <Image url="@../textures/robots/Robot_1_bunt.png" />
+                                            <Image url="@../textures/robots/Robot_1_menu.png" />
                                         </image>
                                     </ImageView>
                                 </graphic>
@@ -76,7 +76,7 @@
                                 <graphic>
                                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                         <image>
-                                            <Image url="@../textures/robots/Robot_2_bunt.png" />
+                                            <Image url="@../textures/robots/Robot_2_menu.png" />
                                         </image>
                                         <cursor>
                                             <Cursor fx:constant="OPEN_HAND" />
@@ -88,7 +88,7 @@
                                 <graphic>
                                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                         <image>
-                                            <Image url="@../textures/robots/Robot_3_bunt.png" />
+                                            <Image url="@../textures/robots/Robot_3_menu.png" />
                                         </image>
                                     </ImageView>
                                 </graphic>
@@ -97,7 +97,7 @@
                                 <graphic>
                                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                         <image>
-                                            <Image url="@../textures/robots/Robot_4_bunt.png" />
+                                            <Image url="@../textures/robots/Robot_4_menu.png" />
                                         </image>
                                     </ImageView>
                                 </graphic>
@@ -106,7 +106,7 @@
                                 <graphic>
                                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                         <image>
-                                            <Image url="@../textures/robots/Robot_5_bunt.png" />
+                                            <Image url="@../textures/robots/Robot_5_menu.png" />
                                         </image>
                                     </ImageView>
                                 </graphic>
@@ -115,7 +115,7 @@
                                 <graphic>
                                     <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
                                         <image>
-                                            <Image url="@../textures/robots/Robot_6_bunt.png" />
+                                            <Image url="@../textures/robots/Robot_6_menu.png" />
                                         </image>
                                     </ImageView>
                                 </graphic>

@@ -54,27 +54,27 @@ public class PlayerListCell extends ListCell<ClientPlayer> {
                 if (item.getRobot() != null) {
                     int roboter = item.getRobot().getFigure();
                     if (roboter == 1) {
-                        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_1_bunt.png");
+                        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_1_menu.png");
                         robotImage.setImage(new Image(input));
                     }
                     if (roboter == 2) {
-                        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_2_bunt.png");
+                        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_2_menu.png");
                         robotImage.setImage(new Image(input));
                     }
                     if (roboter == 3) {
-                        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_3_bunt.png");
+                        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_3_menu.png");
                         robotImage.setImage(new Image(input));
                     }
                     if (roboter == 4) {
-                        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_4_bunt.png");
+                        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_4_menu.png");
                         robotImage.setImage(new Image(input));
                     }
                     if (roboter == 5) {
-                        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_5_bunt.png");
+                        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_5_menu.png");
                         robotImage.setImage(new Image(input));
                     }
                     if (roboter == 6) {
-                        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_6_bunt.png");
+                        InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_6_menu.png");
                         robotImage.setImage(new Image(input));
                     }
 

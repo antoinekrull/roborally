@@ -23,7 +23,6 @@ public class CustomTimer {
         timer = new Timer();
         game = Game.getInstance();
         this.server = server;
-        System.out.println("Timer initialized");
     }
 
     //runs necessary timer logic
@@ -60,7 +59,7 @@ public class CustomTimer {
     public void cancel() {
         timer.cancel();
         server.sendTimerEnded(new PlayerList());
-        logger.debug("Timer cancelled");
+        logger.info("Timer cancelled");
     }
 
 }

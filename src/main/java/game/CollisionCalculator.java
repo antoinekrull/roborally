@@ -47,6 +47,20 @@ public class CollisionCalculator {
         return canMove;
     }
 
+    public boolean moveTile(Tile tile, Pair<Integer, Integer> target) {
+        boolean canMove = false;
+        Pair<Integer, Integer> currentPosition = tile.getPosition();
+        Pair<Integer, Integer> movement = new Pair<>(target.getValue0()-currentPosition.getValue0(),target.getValue1()-currentPosition.getValue1());
+        int xMove = movement.getValue0();
+        int yMove = movement.getValue1();
+
+        if(!checkWallCollision(currentPosition,target)){
+            canMove=true;
+        }
+            tile.setPosition(target);
+        return canMove;
+    }
+
     private boolean checkWallCollision(Pair<Integer,Integer> currentPosition, Pair<Integer,Integer> target){
         boolean result = false;
         boolean onWall = false;
@@ -163,8 +177,6 @@ public class CollisionCalculator {
                     outTarget = tile.getDirectionOut();
                 }
             }
-
-
             if (conveyorBelt) {
                 if (outTarget != outCurrent) {
                     if (outTarget == Direction.NORTH) {
@@ -204,6 +216,58 @@ public class CollisionCalculator {
                 result = true;
                 moveRobot(robot, target);
             }
+        }
+        return result;
+    }
+
+    public boolean moveConveyorBelt(Tile tile){
+        boolean result = false;
+        boolean conveyorBelt = false;
+        int xMove = 0;
+        int yMove = 0;
+        Direction outCurrent = null;
+        Direction outTarget = null;
+
+        Pair<Integer, Integer> currentPosition = tile.getPosition();
+        ArrayList<Tile> currentTile = board.getTile(currentPosition);
+
+        for(int i = 0; i < currentTile.size(); i++){
+            if (currentTile.get(i).getType().equals("ConveyorBelt")){
+                outCurrent=currentTile.get(i).getDirectionOut();
+                switch (outCurrent) {
+                    case NORTH -> {
+                        xMove = 0;
+                        yMove = -1;
+                    }
+                    case EAST -> {
+                        xMove = 1;
+                        yMove = 0;
+                    }
+                    case SOUTH -> {
+                        xMove = 0;
+                        yMove = 1;
+                    }
+                    case WEST -> {
+                        xMove = -1;
+                        yMove = 0;
+                    }
+                }
+            }
+
+            Pair<Integer, Integer> target = new Pair<>(currentPosition.getValue0()+xMove,currentPosition.getValue1()+yMove);
+                ArrayList<Tile> targetTileList = board.getTile(target);
+                for (Tile targetTile : targetTileList) {
+                    if (targetTile.getType().equals("ConveyorBelt")) {
+                        conveyorBelt = true;
+                    }
+                }
+                if (conveyorBelt) {
+                    moveTile(tile, target);
+                    result = true;
+                }
+//            Pair<Integer, Integer> target = new Pair<>(currentPosition.getValue0()+xMove,currentPosition.getValue1()+yMove);
+//            result = true;
+//            moveTile(tile, target);
         }
         return result;
     }

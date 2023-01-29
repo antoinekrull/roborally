@@ -121,6 +121,21 @@ public class Game implements Runnable {
                     }
                 }
             }
+            if (currentMap.equals("Twister")) {
+                for (CheckpointTile checkpointTile : board.getCheckpointList()) {
+                    if (board.getTile(checkpointTile.getPosition()).get(0) instanceof ConveyorBeltTile) {
+                        Pair checkPointPosition = checkpointTile.getPosition();
+                        logger.warn("CHECKPOINT MOVING");
+                        logger.warn(checkpointTile.getPosition());
+                        collisionCalculator.moveConveyorBelt(checkpointTile);
+                        server.sendCheckPointMoved(checkpointTile.getCount(), checkpointTile.getXCoordinate()
+                                , checkpointTile.getYCoordinate());
+                        logger.warn(checkpointTile.getPosition());
+                    }
+                }
+            }
+
+
 
             Thread.sleep(500);
             applyPushPanelEffects();
@@ -198,14 +213,22 @@ public class Game implements Runnable {
             for(int i = 0; i < playerList.size(); i++){
                 upgradeShop.add(upgradeDeck.popCardFromDeck());
             }
+            server.sendExchangeShop(upgradeShopContent());
         } else {
             leftoverCards = playerList.size() - upgradeShop.size();
             for(int i = 0; i < leftoverCards; i++){
                 upgradeShop.add(upgradeDeck.popCardFromDeck());
             }
+            server.sendRefillShop(upgradeShopContent());
         }
     }
-
+    public String[] upgradeShopContent(){
+        String[] upgradesOnOffer = new String[playerList.size()];
+        for(int i = 0; i < playerList.size(); i++){
+            upgradesOnOffer[i] = upgradeShop.get(i).getCard();
+        }
+        return upgradesOnOffer;
+    }
     //method for applying damage to robot
     public void drawDamageCards(Player player) {
         try {
@@ -462,7 +485,7 @@ public class Game implements Runnable {
         logger.debug("all robots are set");
     }
 
-    private void runUpgradePhase(){
+    private void runUpgradePhase() {
         logger.info("This game is running the Upgrade Phase now");
         server.sendActivePhase(1);
         logger.debug("Server sent the active phase (value=1) to the players");
@@ -481,6 +504,7 @@ public class Game implements Runnable {
             }
         }
         if(activePlayer.isBuying()){
+            server.sendUpgradeBought(activePlayer, upgradeShop.get(cardIndex).getCard());
             activePlayer.purchaseUpgrade(cardIndex);
         }
 
@@ -715,10 +739,6 @@ public class Game implements Runnable {
 
     @Override
     public void run() {
-        logger.info("hi");
-        logger.warn("hi");
-        logger.error("ih");
-        logger.fatal("oh");
         logger.debug("This game is running");
         boolean readyToStart = false;
         while(gameIsRunning) {

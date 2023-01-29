@@ -20,6 +20,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * ViewModel for selecting a robot and choosing a name
@@ -49,6 +51,7 @@ public class ViewModelRobotSelection {
 
     private List<Node> robots;
     private ClientPlayerList clientPlayerList;
+    private final Logger logger = LogManager.getLogger(ViewModelRobotSelection.class);
 
     public ViewModelRobotSelection() {
         this.modelUser = ModelUser.getInstance();
@@ -69,37 +72,37 @@ public class ViewModelRobotSelection {
         robot1.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(1);
             applyStyle(robot1);
-            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_1_bunt.png");
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_1_menu.png");
             selectedRobot.setImage(new Image(input));
         });
         robot2.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(2);
             applyStyle(robot2);
-            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_2_bunt.png");
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_2_menu.png");
             selectedRobot.setImage(new Image(input));
         });
         robot3.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(3);
             applyStyle(robot3);
-            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_3_bunt.png");
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_3_menu.png");
             selectedRobot.setImage(new Image(input));
         });
         robot4.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(4);
             applyStyle(robot4);
-            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_4_bunt.png");
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_4_menu.png");
             selectedRobot.setImage(new Image(input));
         });
         robot5.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(5);
             applyStyle(robot5);
-            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_5_bunt.png");
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_5_menu.png");
             selectedRobot.setImage(new Image(input));
         });
         robot6.setOnMouseClicked(mouseevent -> {
             modelGame.setRobotProperty(6);
             applyStyle(robot6);
-            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_6_bunt.png");
+            InputStream input = getClass().getResourceAsStream("/textures/robots/Robot_6_menu.png");
             selectedRobot.setImage(new Image(input));
         });
     }
@@ -125,7 +128,7 @@ public class ViewModelRobotSelection {
     }
 
     public void robotAccepted() {
-        System.out.println("Selection accepted.");
+        logger.info("Selection accepted.");
         Timeline timeline = new Timeline(new KeyFrame(
                 Duration.millis(650),
                 event -> {

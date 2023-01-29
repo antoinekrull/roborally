@@ -61,6 +61,7 @@ public class Client {
     private StringProperty errorMessage;
     private ObjectProperty<Message> message;
     private ObjectProperty<Message> movement;
+    private StringProperty robotRotation;
     private ObjectProperty<Message> gameLogMessage;
     private ObjectProperty<Message> gameEventMessage;
     private BooleanProperty gameStarted;
@@ -72,7 +73,6 @@ public class Client {
     private ObservableList<String> myCards;
     private IntegerProperty energy;
     private ObservableList<String> maps;
-    private StringProperty roboterAlignment;
     private BooleanProperty timer;
 
 
@@ -95,10 +95,10 @@ public class Client {
         this.myCards = FXCollections.observableArrayList();
         this.energy = new SimpleIntegerProperty(5);
         this.movement = new SimpleObjectProperty<>();
+        this.robotRotation = new SimpleStringProperty("");
         this.gameLogMessage = new SimpleObjectProperty<>();
         this.gameEventMessage = new SimpleObjectProperty<>();
         this.timer = new SimpleBooleanProperty(false);
-        this.roboterAlignment = new SimpleStringProperty();
     }
 
     public static Client getInstance() {
@@ -236,6 +236,14 @@ public class Client {
         this.movement.set(movement);
     }
 
+    public StringProperty robotDirectionProperty() {
+        return robotRotation;
+    }
+
+    public void setRobotDirection(String robotDirection) {
+        this.robotRotation.set(robotDirection);
+    }
+
     public Message getGameEventMessage() {
         return gameEventMessage.get();
     }
@@ -258,14 +266,6 @@ public class Client {
 
     public void setTimer(boolean timer) {
         this.timer.set(timer);
-    }
-
-    public StringProperty roboterAlignmentProperty() {
-        return roboterAlignment;
-    }
-
-    public void setRoboterAlignment(String roboterAlignment) {
-        this.roboterAlignment.set(roboterAlignment);
     }
 
 
@@ -346,18 +346,20 @@ public class Client {
                             gameStarted.set(true);
                         }
                         if (message.getMessageType().equals(MessageType.CurrentPlayer)) {
+                            logger.debug("current player: " + message.getMessageBody().getClientID());
                             int clientID = message.getMessageBody().getClientID();
-                            if (userIDProperty().get() == clientID) {
+                            if (Client.this.userIDProperty().get() == clientID) {
+                                Client.this.setActivePlayer(true);
+                                Client.this.setCurrentPlayer("It's your turn");
                                 for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
                                     clientPlayerList.getPlayerList().get(i).setActivePlayer("");
                                 }
-                                Client.this.activePlayer.set(true);
-                                Platform.runLater(() -> Client.this.setCurrentPlayer("It's your turn"));
                             }
                             else {
-                                Client.this.activePlayer.set(false);
+                                Client.this.setActivePlayer(false);
+                                Client.this.setCurrentPlayer("");
                                 if (clientPlayerList.containsPlayer(clientID)) {
-                                    Platform.runLater(() -> clientPlayerList.getPlayer(clientID).setActivePlayer("It's their turn"));
+                                    clientPlayerList.getPlayer(clientID).setActivePlayer("It's their turn");
                                 }
                             }
                         }
@@ -398,9 +400,11 @@ public class Client {
                                 Platform.runLater(() -> Client.this.clientPlayerList.getPlayer(clientID).setCardsInHand(cardsInHand));
                             }
                         }
+                        /*
                         if (message.getMessageType().equals(MessageType.CardPlayed)) {
                             Client.this.setGameLogMessage(message);
                         }
+                         */
                         if (message.getMessageType().equals(MessageType.CardSelected)) {
                             logger.debug("card selected: " + message.getMessageBody().getCard());
                             int clientID = message.getMessageBody().getClientID();
@@ -418,7 +422,8 @@ public class Client {
                             Client.this.setGameEventMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.CardsYouGotNow)) {
-                            //TODO: after timer ended and register are not filled probably
+                            logger.debug("CardsYouGotNow: " + message.getMessageBody().getCards().toString() + message.getMessageBody().getCards().length);
+                            Platform.runLater(() -> Client.this.setGameEventMessage(message));
                         }
                         if (message.getMessageType().equals(MessageType.RegisterChosen)) {
                             Client.this.setGameLogMessage(message);
@@ -432,11 +437,15 @@ public class Client {
                             logger.debug("Movement message: " + message);
                         }
                         if (message.getMessageType().equals(MessageType.CheckpointMoved)) {
-                            //TODO: implement
+                            Platform.runLater(() -> Client.this.setGameEventMessage(message));
                         }
                         if (message.getMessageType().equals(MessageType.PlayerTurning)) {
-                            logger.debug("roboter alignment");
-                            Client.this.setRoboterAlignment(message.getMessageBody().getRotation());
+                            /*
+                            logger.debug("roboter turning");
+                            Client.this.setRobotDirection(message.getMessageBody().getRotation());
+                             */
+                            logger.debug("roboter turning");
+                            Client.this.setGameEventMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.TimerStarted)) {
                             logger.debug("timer started");
