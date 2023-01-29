@@ -30,13 +30,13 @@ public class Player {
     private String upgradeToBuy;
     private int adminRegister;
     private boolean[][] isUsingUpgrade = {{false, false, false},{false, false, false}};
-    private ArrayList<Card> hand;
+    protected ArrayList<Card> hand;
     private Card[] cardRegister = new Card[5];
     //private boolean[] statusRegister = new boolean[5];
     private ArrayBlockingQueue<Card> PermanentUpgradeSlots = new ArrayBlockingQueue<>(3);
     private ArrayBlockingQueue<Card> TemporaryUpgradeSlots = new ArrayBlockingQueue<>(3);
     private boolean[] statusRegister = new boolean[5];
-    private ProgrammingDeck personalDiscardPile;
+    protected ProgrammingDeck personalDiscardPile;
     private ArrayBlockingQueue<Card> cardsToSwap = new ArrayBlockingQueue<>(3); //meant for the use with the memory swap upgrade card
     private Boolean rearLaserOn = false;
     private Boolean hasAdminPrivilege = false;
@@ -256,9 +256,9 @@ public class Player {
             card = hand.get(getIndexOfCard(cardName));
         }
         if(index == 0 && card instanceof AgainCard) {
-            System.out.println("You cant play this card in the first register, please try again!");
+            logger.debug("You cant play this card in the first register, please try again!");
         } else if(index < 0 || index > cardRegister.length){
-            System.out.println("The register has not been addressed properly, please try again!");
+            logger.debug("The register has not been addressed properly, please try again!");
         } else {
             cardRegister[index] = card;
         }
