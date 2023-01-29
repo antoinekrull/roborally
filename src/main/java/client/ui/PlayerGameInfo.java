@@ -85,7 +85,7 @@ public class PlayerGameInfo {
 
 
                 //Label Your Score:
-                Label yourScore = new Label("Your Score: ");
+                Label yourScore = new Label("Score: ");
                 yourScore.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;");
 
                 //bind score of player to Label score
@@ -135,22 +135,20 @@ public class PlayerGameInfo {
 
 
 
-                /*
-                //ImageView for cards
+                //ImageView for enemy cards
                 //TODO: input stream must not be null (checking this out)
                 InputStream input = getClass().getResourceAsStream(
-                        "textures/cards/kartendeckGegner.png");
+                        "/textures/cards/kartendeckGegner.png");
                 Image deck = new Image(input);
                 ImageView enemyCards = new ImageView(deck);
-                enemyCards.setFitHeight(200);
+                enemyCards.setFitHeight(250);
                 enemyCards.setPreserveRatio(true);
-                 */
 
 
 
                 //adding playerInfo HBoxes to a VBox
                 VBox playerInfoVBox = new VBox();
-                playerInfoVBox.setSpacing(12);
+                playerInfoVBox.setSpacing(5);
                 playerInfoVBox.setPadding(new Insets(0, 0, 0, 10));
                 playerInfoVBox.getChildren().addAll(userHBox, scoreHBox, cardNumberHBox);
 
@@ -158,8 +156,10 @@ public class PlayerGameInfo {
                 StackPane playerInfoStackPane = new StackPane();
 
                 //adding image of cards and username/card amount
-                //playerInfoStackPane.getChildren().addAll(enemyCards, vBox);
-                playerInfoStackPane.getChildren().add(playerInfoVBox);
+                playerInfoStackPane.getChildren().addAll(enemyCards,  playerInfoVBox);
+                StackPane.setAlignment(enemyCards, Pos.CENTER_LEFT);
+                StackPane.setAlignment(playerInfoVBox, Pos.CENTER);
+                //playerInfoStackPane.getChildren().add(playerInfoVBox);
 
                 //adding everything into parent HBox
                 HBox hBox = new HBox();

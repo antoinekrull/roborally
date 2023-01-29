@@ -24,8 +24,6 @@ public class ClientPlayer {
     private IntegerProperty cardsInHand;
 
 
-    private ObservableList<RegisterInformation> registerInformations;
-
     public ClientPlayer(int id, String username, Robot robot) {
         this.id = id;
         this.username = username;
@@ -37,7 +35,6 @@ public class ClientPlayer {
         this.activePlayer = new SimpleStringProperty("");
         this.energyCubes = new SimpleDoubleProperty(5);
         this.cardsInHand = new SimpleIntegerProperty(9);
-        this.registerInformations = FXCollections.observableArrayList();
     }
 
     public String getUsername() {
@@ -142,14 +139,6 @@ public class ClientPlayer {
 
     public IntegerProperty cardsInHandProperty() {
         return cardsInHand;
-    }
-
-    public ObservableList<RegisterInformation> getRegisterInformations() {
-        return registerInformations;
-    }
-
-    public void setRegisterInformations(ObservableList<RegisterInformation> registerInformations) {
-        this.registerInformations = registerInformations;
     }
 
     public void addEnergy(int count) {

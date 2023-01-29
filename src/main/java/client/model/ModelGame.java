@@ -1,11 +1,10 @@
 package client.model;
 
-import client.connection.Client;
 import client.changesupport.NotifyChangeSupport;
+import client.connection.Client;
 import client.player.ClientPlayerList;
 import client.ui.RobotDirection;
 import client.viewmodel.ViewModelGameWindow;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import communication.Message;
 import game.Game;
@@ -14,10 +13,12 @@ import game.board.Tile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -42,7 +43,6 @@ public class ModelGame {
     private NotifyChangeSupport notifyChangeSupport;
     private SimpleIntegerProperty robotProperty;
     private RobotDirection robotDirection;
-    private SimpleStringProperty robotRotation;
     private SimpleIntegerProperty score;
     private SimpleStringProperty activePhase;
     private SimpleIntegerProperty energy;
@@ -59,6 +59,7 @@ public class ModelGame {
     private ObservableList<String> maps;
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
     private ObservableList<String> myHandCards;
+    private ObservableList<String> upgradeCards;
 
 
     private Game game;
@@ -95,6 +96,9 @@ public class ModelGame {
                 notifyChangeSupport.updateProgrammingHandCards();
             }
         });
+
+        this.upgradeCards = FXCollections.observableArrayList();
+
         this.PLAYER_MOVEMENTS = new LinkedBlockingQueue<>();
         readyToPlay.bind(client.gameStartedProperty());
         readyToPlay.addListener(new ChangeListener<Boolean>() {
@@ -124,48 +128,6 @@ public class ModelGame {
         });
 
         this.robotDirection = RobotDirection.EAST;
-        this.robotRotation = new SimpleStringProperty();
-        robotRotation.bind(client.robotDirectionProperty());
-        /*
-        robotRotation.addListener(new InvalidationListener() {
-            @Override
-            public void invalidated(Observable observable) {
-                if (robotDirection.get().equals(RobotDirection.EAST)) {
-                    if (robotRotation.get().equals("counterclockwise")) {
-                        setRobotDirection(RobotDirection.NORTH);
-                    }
-                    if (robotRotation.get().equals("clockwise")) {
-                        setRobotDirection(RobotDirection.SOUTH);
-                    }
-                }
-                if (robotDirection.get().equals(RobotDirection.SOUTH)) {
-                    if (robotRotation.get().equals("counterclockwise")) {
-                        setRobotDirection(RobotDirection.EAST);
-                    }
-                    if (robotRotation.get().equals("clockwise")) {
-                        setRobotDirection(RobotDirection.WEST);
-                    }
-                }
-                if (robotDirection.get().equals(RobotDirection.WEST)) {
-                    if (robotRotation.get().equals("counterclockwise")) {
-                        setRobotDirection(RobotDirection.NORTH);
-                    }
-                    if (robotRotation.get().equals("clockwise")) {
-                        setRobotDirection(RobotDirection.SOUTH);
-                    }
-                }
-                if (robotDirection.get().equals(RobotDirection.NORTH)) {
-                    if (robotRotation.get().equals("counterclockwise")) {
-                        setRobotDirection(RobotDirection.WEST);
-                    }
-                    if (robotRotation.get().equals("clockwise")) {
-                        setRobotDirection(RobotDirection.EAST);
-                    }
-                }
-            }
-        });
-
-         */
 
         this.GAME_EVENT_MESSAGES = new LinkedBlockingQueue<>();
         this.gameEvent = new SimpleObjectProperty<>();
@@ -269,6 +231,14 @@ public class ModelGame {
         return myHandCards;
     }
 
+    public ObservableList<String> getUpgradeCards() {
+        return upgradeCards;
+    }
+
+    public void setUpgradeCards(ObservableList<String> upgradeCards) {
+        this.upgradeCards = upgradeCards;
+    }
+
     public RobotDirection getRobotDirection() {
         return robotDirection;
     }
@@ -316,6 +286,10 @@ public class ModelGame {
         client.sendDiscardSome(discardSome);
     }
 
+    public void sendBuyUpgrade(boolean isBuying, String card) {
+        client.sendBuyUpgrade(isBuying, card);
+    }
+
     public void sendChooseRegister(int register) {
         client.sendChooseRegister(register);
     }
@@ -324,4 +298,7 @@ public class ModelGame {
         client.sendRebootDirection(direction);
     }
 
+    public void sendAIMessage(boolean AI) {
+        client.sendAIMessage(AI);
+    }
 }
