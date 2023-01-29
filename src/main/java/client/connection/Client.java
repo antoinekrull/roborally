@@ -15,14 +15,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Arrays;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
@@ -69,7 +62,7 @@ public class Client {
     private boolean prioPlayer = false;
     private IntegerProperty score;
     private ObservableList<String> myCards;
-    private IntegerProperty energy;
+    private DoubleProperty energy;
     private ObservableList<String> maps;
     private BooleanProperty timer;
 
@@ -91,7 +84,7 @@ public class Client {
         this.activePlayer = new SimpleBooleanProperty(false);
         this.score = new SimpleIntegerProperty(0);
         this.myCards = FXCollections.observableArrayList();
-        this.energy = new SimpleIntegerProperty(5);
+        this.energy = new SimpleDoubleProperty(5);
         this.movement = new SimpleObjectProperty<>();
         this.gameLogMessage = new SimpleObjectProperty<>();
         this.gameEventMessage = new SimpleObjectProperty<>();
@@ -213,11 +206,11 @@ public class Client {
         this.myCards = myCards;
     }
 
-    public IntegerProperty energyProperty() {
+    public DoubleProperty energyProperty() {
         return energy;
     }
 
-    public void setEnergy(int energy) {
+    public void setEnergy(double energy) {
         this.energy.set(energy);
     }
 
@@ -322,8 +315,8 @@ public class Client {
                             if (map.equals("DeathTrap")) {
                                 Client.this.setGameEventMessage(message);
                             }
-                            Message mapMessage = messageCreator.generateSendChatMessage("Selected map: " + map);
-                            Client.this.setMessage(mapMessage);
+                            Message mapMessage = messageCreator.generateMapSelectedMessage(map);
+                            Client.this.setGameLogMessage(mapMessage);
                         }
                         if (message.getMessageType().equals(MessageType.ReceivedChat)) {
                             Client.this.setMessage(message);
@@ -342,7 +335,7 @@ public class Client {
                             int clientID = message.getMessageBody().getClientID();
                             if (Client.this.userIDProperty().get() == clientID) {
                                 Client.this.setActivePlayer(true);
-                                Client.this.setCurrentPlayer("It's your turn");
+                                Platform.runLater(() -> Client.this.setCurrentPlayer("It's your turn"));
                                 for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
                                     clientPlayerList.getPlayerList().get(i).setActivePlayer("");
                                 }
@@ -351,7 +344,7 @@ public class Client {
                                 Client.this.setActivePlayer(false);
                                 Client.this.setCurrentPlayer("");
                                 if (clientPlayerList.containsPlayer(clientID)) {
-                                    clientPlayerList.getPlayer(clientID).setActivePlayer("It's their turn");
+                                    Platform.runLater(() -> clientPlayerList.getPlayer(clientID).setActivePlayer("It's their turn"));
                                 }
                             }
                         }
@@ -421,12 +414,20 @@ public class Client {
                             Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
+                            logger.debug("StartingPointTaken message: " + message.getMessageBody().getX() + " " + message.getMessageBody().getY());
                             Client.this.setMovement(message);
-                            logger.debug("StartingPointTaken message: " + message);
                         }
                         if (message.getMessageType().equals(MessageType.Movement)) {
                             Client.this.setMovement(message);
                             logger.debug("Movement message: " + message);
+                            Platform.runLater(() -> Client.this.setEnergy(energyProperty().get()+1));
+                            Platform.runLater(() -> Client.this.setScore(scoreProperty().get()+1));
+                            Platform.runLater(() -> {
+                                for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
+                                    clientPlayerList.getPlayerList().get(i).setEnergyCubes(clientPlayerList.getPlayerList().get(i).getEnergyCubes()+1);
+                                    clientPlayerList.getPlayerList().get(i).setScore(clientPlayerList.getPlayerList().get(i).scoreProperty().get()+1);
+                                }
+                            });
                         }
                         if (message.getMessageType().equals(MessageType.CheckpointMoved)) {
                             logger.debug("checkpointMoved: checkpoint: " + message.getMessageBody().getCheckpointID() + " " +  message.getMessageBody().getX() + " " +message.getMessageBody().getY());
@@ -538,7 +539,6 @@ public class Client {
     }
     public void sendStartingPoint(int x, int y) {
         sendMessageToServer(messageCreator.generateSetStartingPointMessage(x, y));
-        this.activePlayer.set(false);
     }
     public void sendSelectedCard(String card, int register) {
         logger.debug("Selected card: " + card + " and register: " + register);
