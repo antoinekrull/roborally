@@ -33,9 +33,11 @@ public class CardSelection {
     overlay.setAlignment(Pos.CENTER);
     baseStackPane.getChildren().add(overlay);
     GridPane grid = new GridPane();
+    grid.setAlignment(Pos.CENTER);
     overlay.getChildren().add(grid);
     int column = 0;
     Label label = new Label("Damages to pick: " + counter);
+    label.setStyle("-fx-font-size: 20; -fx-text-fill: yellow;");
     grid.add(label, 0, 0);
     List<ImageView> imageViews = new ArrayList<>();
     for (int i=0;i<damagePiles.length;i++) {

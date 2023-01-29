@@ -1038,7 +1038,7 @@ public class ViewModelGameWindow {
         ImageView imgUpgrade = new ImageView(imUpgrade);
         imgUpgrade.setFitWidth(programcardsWidth);
         imgUpgrade.setPreserveRatio(true);
-
+        imgUpgrade.getStyleClass().add("upgradeDeck");
         upgradeDeck.getChildren().add(imgUpgrade);
 
         InputStream damageImg = getClass().getResourceAsStream("/textures/cards/damageDeck.png");
@@ -1046,6 +1046,7 @@ public class ViewModelGameWindow {
         ImageView imgDamage = new ImageView(imDamage);
         imgDamage.setFitWidth(programcardsWidth);
         imgDamage.setPreserveRatio(true);
+        imgUpgrade.getStyleClass().add("damageDeck");
         damageDeck.getChildren().add(imgDamage);
     }
 
