@@ -232,7 +232,12 @@ public class Game implements Runnable {
                 }
             }
             player.getRobot().setDamageCount(0);
-            server.sendDrawDamage(player, drawnDamageCards);
+            if(!(player instanceof AI_Player)){
+                server.sendDrawDamage(player, drawnDamageCards);
+            }
+            else{
+                ((AI_Player) player).sendDrawDamage(player, drawnDamageCards);
+            }
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -259,7 +264,12 @@ public class Game implements Runnable {
                     }
                 }
             }
-            server.sendDrawDamage(player, drawnDamageCards);
+            if(!(player instanceof AI_Player)){
+                server.sendDrawDamage(player, drawnDamageCards);
+            }
+            else{
+                ((AI_Player) player).sendDrawDamage(player, drawnDamageCards);
+            }
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -422,13 +432,6 @@ public class Game implements Runnable {
         server.sendActivePhase(0);
         logger.debug("Server sent the active phase (value=0) to the players");
 
-        // testing ai player
-        playerList.add(new AI_Player(420, "robot ai", new Robot(findUnusedRobotId(), server.getUniqueID()), board));
-        playerList.getPlayerFromList(420).setIsAI(true);
-        addReady(420);
-        logger.debug("AI player was added");
-        // testing ai player
-
         setServerForPlayers();
         logger.debug("Server set the server for all players and robots");
         try {
@@ -515,7 +518,7 @@ public class Game implements Runnable {
                     }
                 }
             }
-            if (timerIsRunning == !(playerList.playersAreReady())) {
+            if (timerIsRunning) {
                 customTimer.cancel();
             }
         } catch (InterruptedException e) {
