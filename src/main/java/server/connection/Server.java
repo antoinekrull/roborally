@@ -182,6 +182,14 @@ public class Server {
                                 }
                             }
                         }
+                        else {
+                            int id = message.getMessageBody().getFrom();
+                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                                if (client.getKey() != id) {
+                                    client.getValue().write(message);
+                                }
+                            }
+                        }
                     } catch (Exception e) {
                             logger.warn("An Exception occured: " + e);
                     }
