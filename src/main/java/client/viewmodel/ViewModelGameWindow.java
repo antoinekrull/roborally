@@ -24,8 +24,6 @@ import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -121,7 +119,6 @@ public class ViewModelGameWindow {
     private CardSelection cardSelection;
 
     private Timeline timeline;
-    private ObjectProperty<RobotDirection> rotation;
     private double gameboardTileWidth;
     private double programcardsWidth;
     private int columnIndex;
@@ -184,7 +181,6 @@ public class ViewModelGameWindow {
         myEnergyBar.progressProperty().bind(modelGame.energyProperty().divide(22));
 
         myEnergyBar.progressProperty().addListener(new ChangeListener<Number>() {
-
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 FadeTransition transition = new FadeTransition(Duration.millis(1000), myEnergyBar);
@@ -203,18 +199,6 @@ public class ViewModelGameWindow {
 
         cardSelection = new CardSelection(baseStackPane);
 
-        rotation = new SimpleObjectProperty<>();
-        /*
-        rotation.bind(modelGame.robotDirectionProperty());
-        /*
-        rotation.addListener(new ChangeListener<RobotDirection>() {
-            @Override
-            public void changed(ObservableValue<? extends RobotDirection> observable, RobotDirection oldValue, RobotDirection newValue) {
-                rotateRobot();
-            }
-        });
-
-         */
 
         setOnDragDetected(programCard1);
         setOnDragDetected(programCard2);
@@ -299,6 +283,7 @@ public class ViewModelGameWindow {
         tutorial.loadGameWindowTutorial();
          */
 
+        // For Testing pickDamage-Message for GUI
 //        String[] damagePiles = {"Virus", "Worm","Trojan",};
 //        cardSelection.overlayDamagecards(damagePiles, 3);
     }
@@ -435,11 +420,13 @@ public class ViewModelGameWindow {
             logMessageStyling(MessageType.SelectionFinished, username, null, null, null, -1, false);
         }
         if (logMessage.getMessageType().equals(MessageType.CardPlayed)) {
+            /*
             int clientID = logMessage.getMessageBody().getClientID();
             String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
             String card = logMessage.getMessageBody().getCard();
 
             logMessageStyling(MessageType.CardPlayed, username, card, null, null, -1, false);
+             */
         }
         if (logMessage.getMessageType().equals(MessageType.CardSelected)) {
             int clientID = logMessage.getMessageBody().getClientID();
@@ -520,6 +507,7 @@ public class ViewModelGameWindow {
             int clientID = logMessage.getMessageBody().getClientID();
             //add message to logger
         }
+
     }
 
     public void logMessageStyling(MessageType messageType, String username, String card,
@@ -621,6 +609,12 @@ public class ViewModelGameWindow {
     }
 
     private void handleGameEvent(Message gamemessage) {
+        if (gamemessage.getMessageType().equals(MessageType.MapSelected)) {
+            modelGame.setRobotDirection(RobotDirection.WEST);
+            for (int i = 0; i < modelGame.getPlayerList().getPlayerList().size(); i++) {
+                modelGame.getPlayerList().getPlayerList().get(i).setRobotDirection(RobotDirection.WEST);
+            }
+        }
         if (gamemessage.getMessageType().equals(MessageType.SelectionFinished)) {
             int clientID = gamemessage.getMessageBody().getClientID();
             if (clientID == modelUser.userIDProperty().get()){
@@ -659,20 +653,14 @@ public class ViewModelGameWindow {
             String rotation = gamemessage.getMessageBody().getRotation();
             if (modelUser.userIDProperty().get() == clientID){
                 RobotDirection ownRobotDirection = modelGame.getRobotDirection();
-                logger.debug("RobotDirection from modelGame OWN: " + ownRobotDirection);
                 RobotDirection newRobotDirection = updateDirection(ownRobotDirection, rotation);
                 modelGame.setRobotDirection(newRobotDirection);
-                logger.debug("RobotDirection from modelGame OWN: " + ownRobotDirection);
-                logger.debug("RobotDirection new OWN in ModelGame: " + modelGame.getRobotDirection());
                 rotateRobot(modelGame.robotProperty().get(), newRobotDirection);
             }
             else {
                 RobotDirection otherRobotDirection = modelGame.getPlayerList().getPlayer(clientID).getRobotDirection();
                 RobotDirection newOtherRobotDirection = updateDirection(otherRobotDirection, rotation);
-                logger.debug("RobotDirection other player currently: " + otherRobotDirection);
-                logger.debug("RobotDirection other player new: " + otherRobotDirection);
                 modelGame.getPlayerList().getPlayer(clientID).setRobotDirection(newOtherRobotDirection);
-                logger.debug("RobotDirection for player NEW SET: " + modelGame.getPlayerList().getPlayer(clientID).getRobotDirection());
                 rotateRobot(modelGame.getPlayerList().getPlayer(clientID).getRobot().getFigure(), newOtherRobotDirection);
             }
         }
@@ -697,9 +685,38 @@ public class ViewModelGameWindow {
             });
         }
         if (gamemessage.getMessageType().equals(MessageType.CheckpointMoved)) {
-            //TODO: move checkpoint on board
-        }
+            int checkpointID = gamemessage.getMessageBody().getCheckpointID();
+            int x = gamemessage.getMessageBody().getX();
+            int y = gamemessage.getMessageBody().getY();
 
+            InputStream input = getClass().getResourceAsStream("/textures/gameboard/checkpoint" + checkpointID + "_noBackground.png");
+            Image im = new Image(input);
+            ImageView img = new ImageView(im);
+            img.setFitWidth(gameboardTileWidth);
+            img.setPreserveRatio(true);
+            img.setId("Checkpoint" + checkpointID);
+
+            //search for checkpoint and remove it
+            for (Node node : gameboard.getChildren()) {
+                if (node instanceof ImageView imageView) {
+                    if (imageView.getId() != null && imageView.getId().equals("Checkpoint" + checkpointID)) {
+                        gameboard.getChildren().remove(imageView);
+                        break;
+                    }
+                }
+            }
+
+            //adds checkpoint
+            gameboard.add(img, x, y);
+        }
+        if (gamemessage.getMessageType().equals(MessageType.RefillShop)){
+            String[] availableUpgrades = gamemessage.getMessageBody().getCards();
+            cardSelection.upgradeShop(availableUpgrades);
+        }
+        if (gamemessage.getMessageType().equals(MessageType.ExchangeShop)){
+            String[] availableUpgrades = gamemessage.getMessageBody().getCards();
+            cardSelection.upgradeShop(availableUpgrades);
+        }
     }
 
     public RobotDirection updateDirection(RobotDirection robotDirection, String rotation) {
@@ -829,7 +846,7 @@ public class ViewModelGameWindow {
 
 
     public void rotateRobot(int robotID, RobotDirection robotRotation) {
-        //Current robot image gets searched and then removed
+        //Current robot image gets searched and rotated depending on the robots new direction
         for (Node node : gameboard.getChildren()) {
             if (node instanceof ImageView imageView) {
                 if (imageView.getId() != null && imageView.getId().equals("Robot_" + robotID)) {
@@ -1029,7 +1046,6 @@ public class ViewModelGameWindow {
                 }
             }
         });
-
     }
 
     private void loadDecks (){
@@ -1038,7 +1054,7 @@ public class ViewModelGameWindow {
         ImageView imgUpgrade = new ImageView(imUpgrade);
         imgUpgrade.setFitWidth(programcardsWidth);
         imgUpgrade.setPreserveRatio(true);
-
+        imgUpgrade.getStyleClass().add("upgradeDeck");
         upgradeDeck.getChildren().add(imgUpgrade);
 
         InputStream damageImg = getClass().getResourceAsStream("/textures/cards/damageDeck.png");
@@ -1046,6 +1062,7 @@ public class ViewModelGameWindow {
         ImageView imgDamage = new ImageView(imDamage);
         imgDamage.setFitWidth(programcardsWidth);
         imgDamage.setPreserveRatio(true);
+        imgUpgrade.getStyleClass().add("damageDeck");
         damageDeck.getChildren().add(imgDamage);
     }
 
@@ -1188,8 +1205,6 @@ public class ViewModelGameWindow {
         target.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                //logger.debug("setOnDragOver");
-
                 //data is dragged over target
                 //accept it only if it is not dragged from the same node and if it hasImage
                 if (event.getGestureSource() != target && event.getDragboard().hasImage()) {
@@ -1205,7 +1220,6 @@ public class ViewModelGameWindow {
         target.setOnDragEntered(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                //logger.debug("setOnDragEntered");
                 //drag-and-drop gesture entered target
                 //Show entering visually
                 if (event.getGestureSource() != target && event.getDragboard().hasImage()) {
@@ -1220,7 +1234,6 @@ public class ViewModelGameWindow {
         target.setOnDragExited(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                //logger.debug("setOnDragExited");
                 //mouse moves out of enntered area
                 //remove visuals
                 target.setStyle("-fx-border-color: transparent;");
@@ -1234,7 +1247,6 @@ public class ViewModelGameWindow {
         target.setOnDragDropped(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                //logger.debug("setOnDragDropped");
                 //data dropped
                 isDroppedSuccessfully = true;
                 boolean success = false;
@@ -1289,7 +1301,6 @@ public class ViewModelGameWindow {
         source.setOnDragDone(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                //logger.debug("Drag done - completed in variable: " + event.isDropCompleted());
                 if (!isDroppedSuccessfully) {
                     // drag and drop failed, add the card back to the source pane
                     Dragboard db = event.getDragboard();

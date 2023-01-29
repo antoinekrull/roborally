@@ -119,13 +119,4 @@ public class NotifyChangeSupport {
             viewModelGameWindow.stopTimer();
         }
     }
-
-    public void rotateRobot() {
-        /*
-        if (gamewindow) {
-            viewModelGameWindow.rotateRobot(clientID, newRobotDirection, true);
-        }
-
-         */
-    }
 }

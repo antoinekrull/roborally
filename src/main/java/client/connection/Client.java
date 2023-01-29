@@ -13,9 +13,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.Arrays;
-
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -29,7 +27,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.javatuples.Pair;
 
 /**
  *
@@ -38,7 +35,7 @@ import org.javatuples.Pair;
  * Therefor putting incoming messages to LinkedBlockingQueue and reading from it.
  *
  * @author Antoine, Dominik, Tobias
- * @version 0.1
+ * @version 2.0
  *
  */
 
@@ -63,7 +60,6 @@ public class Client {
     private StringProperty errorMessage;
     private ObjectProperty<Message> message;
     private ObjectProperty<Message> movement;
-    private StringProperty robotRotation;
     private ObjectProperty<Message> gameLogMessage;
     private ObjectProperty<Message> gameEventMessage;
     private BooleanProperty gameStarted;
@@ -97,7 +93,6 @@ public class Client {
         this.myCards = FXCollections.observableArrayList();
         this.energy = new SimpleIntegerProperty(5);
         this.movement = new SimpleObjectProperty<>();
-        this.robotRotation = new SimpleStringProperty("");
         this.gameLogMessage = new SimpleObjectProperty<>();
         this.gameEventMessage = new SimpleObjectProperty<>();
         this.timer = new SimpleBooleanProperty(false);
@@ -238,14 +233,6 @@ public class Client {
         this.movement.set(movement);
     }
 
-    public StringProperty robotDirectionProperty() {
-        return robotRotation;
-    }
-
-    public void setRobotDirection(String robotDirection) {
-        this.robotRotation.set(robotDirection);
-    }
-
     public Message getGameEventMessage() {
         return gameEventMessage.get();
     }
@@ -332,6 +319,9 @@ public class Client {
                         }
                         if (message.getMessageType().equals(MessageType.MapSelected)) {
                             String map = message.getMessageBody().getMap();
+                            if (map.equals("DeathTrap")) {
+                                Client.this.setGameEventMessage(message);
+                            }
                             Message mapMessage = messageCreator.generateSendChatMessage("Selected map: " + map);
                             Client.this.setMessage(mapMessage);
                         }
@@ -439,13 +429,10 @@ public class Client {
                             logger.debug("Movement message: " + message);
                         }
                         if (message.getMessageType().equals(MessageType.CheckpointMoved)) {
+                            logger.debug("checkpointMoved: checkpoint: " + message.getMessageBody().getCheckpointID() + " " +  message.getMessageBody().getX() + " " +message.getMessageBody().getY());
                             Platform.runLater(() -> Client.this.setGameEventMessage(message));
                         }
                         if (message.getMessageType().equals(MessageType.PlayerTurning)) {
-                            /*
-                            logger.debug("roboter turning");
-                            Client.this.setRobotDirection(message.getMessageBody().getRotation());
-                             */
                             logger.debug("roboter turning");
                             Client.this.setGameEventMessage(message);
                         }
@@ -493,10 +480,10 @@ public class Client {
                             Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.RefillShop)){
-                            //TODO: display cards from the message
+                            Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageBody().equals(MessageType.ExchangeShop)){
-                            //TODO: no idea why there needs to be a distinction between a refill and a complete redraw
+                            Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.UpgradeBought)){
                             //TODO: receive purchase confirmation
