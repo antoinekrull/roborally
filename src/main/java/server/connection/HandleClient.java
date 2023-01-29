@@ -147,7 +147,17 @@ public class HandleClient implements Runnable{
                 Message incomingMessage = jsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
                 try {
                     if (incomingMessage.getMessageType() == MessageType.HelloServer) {
-                        if(incomingMessage.getMessageBody().getProtocol().equals(server.getProtocolVersion())){
+                        if(incomingMessage.getMessageBody().getProtocol().equals(server.getProtocolVersion()) &&
+                                incomingMessage.getMessageBody().isAI()){
+                            // creates an ai player
+                            int ai_id = server.getUniqueID();
+                            Game.playerList.add(new AI_Player(ai_id, "ai_player", new Robot(game.findUnusedRobotId(), server.getUniqueID()), game.board));
+                            Game.playerList.getPlayerFromList(ai_id).setIsAI(true);
+                            game.addReady(ai_id);
+                            logger.debug("AI player with the id " + ai_id + " was added");
+                        }
+                        else if (incomingMessage.getMessageBody().getProtocol().equals(server.getProtocolVersion()) &&
+                            !incomingMessage.getMessageBody().isAI()){
                             accepted = true;
                             //writeTo(clientID, messageCreator.generateWelcomeMessage(clientID));
                             write(messageCreator.generateWelcomeMessage(clientID));
