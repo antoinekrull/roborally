@@ -204,7 +204,7 @@ import java.util.ArrayList;
          */
         public Message generateCardsYouGotNowMessage(String[] cards){
             MessageBody messageBody = new MessageBody();
-            messageBody.setCardsInHand(cards);
+            messageBody.setCards(cards);
             return new Message(MessageType.CardsYouGotNow, messageBody);
         }
 

@@ -228,7 +228,6 @@ public class Server {
         }
         try {
             CLIENTS.get(player.getId()).write(messageCreator.generateYourCardsMessage(cardsInHand));
-            //TODO: Client side has to ignore this message if his id is identical to the one in the messageBody
             messages.put(messageCreator.generateNotYourCardsMessage(player.getId(), player.getHand().size()));
         } catch (Exception e){
             e.printStackTrace();
