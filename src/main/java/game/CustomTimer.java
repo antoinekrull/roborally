@@ -1,5 +1,7 @@
 package game;
 
+import game.player.AI_Player;
+import game.player.Player;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import server.connection.PlayerList;
@@ -34,12 +36,14 @@ public class CustomTimer {
                 public void run() {
                     logger.info("Time ran through");
                     PlayerList unreadyPlayers = game.getPlayerList().getUnreadyPlayers();
-                    for (int i = 0; i < unreadyPlayers.size(); i++) {
-                        String[] placedCards = unreadyPlayers.get(i).fillRegisterWithRandomCards();
-                        server.sendCardsYouGotNow(unreadyPlayers.get(i), placedCards);
-                        unreadyPlayers.get(i).fillRegisterWithRandomCards();
-                        //for testing purposes
-                        unreadyPlayers.get(i).printRegisters();
+                    for (Player unreadyPlayer : unreadyPlayers.getPlayerList()) {
+                        String[] placedCards = unreadyPlayer.fillRegisterWithRandomCards();
+                        if(!(unreadyPlayer instanceof AI_Player)) {
+                            server.sendCardsYouGotNow(unreadyPlayer, placedCards);
+                        }
+                        unreadyPlayer.fillRegisterWithRandomCards();
+                        game.getPlayerList().setPlayerReadiness(true);
+                        game.setTimerIsRunning(false);
                     }
                     game.getPlayerList().setPlayerReadiness(true);
                     server.sendTimerEnded(unreadyPlayers);

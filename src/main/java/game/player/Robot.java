@@ -2,7 +2,6 @@ package game.player;
 
 import game.Game;
 import game.board.Direction;
-import game.board.RebootTile;
 import game.card.ProgrammingDeck;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

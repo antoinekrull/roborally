@@ -127,6 +127,10 @@ public class Server {
                             for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
                                     client.getValue().write(message);
                             }
+                        } else if(message.getMessageType() == MessageType.PlayerAdded){
+                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+                                client.getValue().write(message);
+                            }
                         } else if (message.getMessageType() == MessageType.CurrentPlayer){
                             int id = message.getMessageBody().getClientID();
                             for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
@@ -275,7 +279,7 @@ public class Server {
         try {
             messages.put(messageCreator.generateSelectionFinishedMessage(id));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("An error occurred: " + e);
         }
     }
 
