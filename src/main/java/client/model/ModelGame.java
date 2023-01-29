@@ -81,15 +81,16 @@ public class ModelGame {
         currentPlayer.bind(client.currentPlayerProperty());
         this.activePlayer = new SimpleBooleanProperty();
         this.activePlayer.bind(client.activePlayerProperty());
-        activePlayer.addListener(new ChangeListener<Boolean>() {
-            @Override
-            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-                if (activePlayerProperty().get() && activePhaseProperty().get().equals("Upgrade Phase")) {
-                    logger.debug("true for activeplayer: " + activePlayerProperty().get() + " and Phase: " + activePhaseProperty().get());
-                    notifyChangeSupport.shopping();
-                }
-            }
-        });
+
+//        activePlayer.addListener(new ChangeListener<Boolean>() {
+//            @Override
+//            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+//                if (activePlayerProperty().get() && activePhaseProperty().get().equals("Upgrade Phase")) {
+//                    logger.debug("true for activeplayer: " + activePlayerProperty().get() + " and Phase: " + activePhaseProperty().get());
+//                    notifyChangeSupport.shopping();
+//                }
+//            }
+//        });
 
         //this.maps = FXCollections.observableArrayList(client.getMaps());
         this.errorMessage = new SimpleStringProperty();

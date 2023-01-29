@@ -1,6 +1,7 @@
 package client.ui;
 
 import client.model.ModelGame;
+import client.viewmodel.ViewModelGameWindow;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class CardSelection {
 
@@ -20,26 +23,34 @@ public class CardSelection {
   private ModelGame modelGame;
   private int finalCounter;
 
+  private final Logger logger = LogManager.getLogger(ViewModelGameWindow.class);
+
+
   public CardSelection(StackPane baseStackPane) {
     modelGame = ModelGame.getInstance();
     this.baseStackPane = baseStackPane;
   }
 
   public void overlayDamagecards(String[] damagePiles, int counter) {
-    //TODO: Logo für Damageauswahl
     Platform.runLater(() -> {
       finalCounter = counter;
+      InputStream pickdamageInput = getClass().getResourceAsStream("textures/designelements/pickDamageSign.png");
+      Image pickdamageImage = new Image(pickdamageInput);
+      ImageView pickdamageSign = new ImageView(pickdamageImage);
       StackPane overlay = new StackPane();
       overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.8);");
       overlay.setAlignment(Pos.CENTER);
       baseStackPane.getChildren().add(overlay);
       GridPane grid = new GridPane();
       grid.setAlignment(Pos.CENTER);
+      grid.setVgap(20);
       overlay.getChildren().add(grid);
       int column = 0;
       Label label = new Label("Damages to pick: " + counter);
       label.setStyle("-fx-font-size: 20; -fx-text-fill: yellow;");
-      grid.add(label, 0, 0);
+      pickdamageSign.setFitWidth(500);
+      grid.add(pickdamageSign, 0, 0);
+      grid.add(label, 0, 1);
       List<ImageView> imageViews = new ArrayList<>();
       for (int i = 0; i < damagePiles.length; i++) {
         String card = damagePiles[i];
@@ -52,7 +63,7 @@ public class CardSelection {
             imageView2.setId("Virus");
             imageView2.setPreserveRatio(true);
             imageView2.setFitWidth(200);
-            grid.add(imageView2, column, 1);
+            grid.add(imageView2, column, 2);
             imageViews.add(imageView2);
             column++;
           }
@@ -63,7 +74,7 @@ public class CardSelection {
             imageView1.setId("Worm");
             imageView1.setPreserveRatio(true);
             imageView1.setFitWidth(200);
-            grid.add(imageView1, column, 1);
+            grid.add(imageView1, column, 2);
             imageViews.add(imageView1);
             column++;
           }
@@ -74,7 +85,7 @@ public class CardSelection {
             imageView3.setId("Trojan");
             imageView3.setPreserveRatio(true);
             imageView3.setFitWidth(200);
-            grid.add(imageView3, column, 1);
+            grid.add(imageView3, column, 2);
             imageViews.add(imageView3);
             column++;
           }
@@ -106,21 +117,25 @@ public class CardSelection {
   //Wenn Upgradephase aktiv, dann Popup. VMgameWindow wird Liste der kaufbaren Karten gepflegt (durch Messages refillshop und exchange shop), aktuelle Liste wird Übertragen
   public void upgradeShop(String[] availableUpgrades) {
     Platform.runLater(() -> {
+      boolean activePlayer = modelGame.activePlayerProperty().get();
       StackPane overlay = new StackPane();
+      InputStream shopsignInput = getClass().getResourceAsStream("/textures/designelements/upgradeShop.png");
+      Image shopsignImage = new Image(shopsignInput);
       overlay.setStyle("-fx-background-color: rgba(0, 0, 0, 0.8);");
       overlay.setAlignment(Pos.CENTER);
       baseStackPane.getChildren().add(overlay);
       GridPane grid = new GridPane();
       grid.setAlignment(Pos.CENTER);
+      grid.setVgap(20);
       overlay.getChildren().add(grid);
       int column = 0;
       Button finish = new Button("Close Shop");
-      Label label = new Label("Upgrade-Shop");
+      ImageView shopsign = new ImageView(shopsignImage);
       Label energyLabel = new Label("My energy: " + modelGame.energyProperty().get());
-      label.setStyle("-fx-font-size: 20; -fx-text-fill: yellow;");
+      shopsign.setFitWidth(500);
       energyLabel.setStyle("-fx-font-size: 20; -fx-text-fill: yellow;");
       grid.add(energyLabel, 1, 0);
-      grid.add(label, 0, 0);
+      grid.add(shopsign, 0, 0);
       grid.add(finish,1,2);
       List<ImageView> imageViews = new ArrayList<>();
       for (int i = 0; i < availableUpgrades.length; i++) {
@@ -178,26 +193,38 @@ public class CardSelection {
       for (ImageView imageView : imageViews) {
         imageView.setOnMouseClicked(event -> {
           if (event.getButton() == MouseButton.PRIMARY) {
-            String selectedCard = imageView.getId();
-            //sendingBuyingMessage
-            modelGame.sendBuyUpgrade(true, selectedCard);
-            baseStackPane.getChildren().remove(overlay);
-            for (String u : availableUpgrades) {
-              overlay.getChildren().remove(u);
+            if (activePlayer) {
+              String selectedCard = imageView.getId();
+              //sendingBuyingMessage
+              modelGame.sendBuyUpgrade(true, selectedCard);
+              baseStackPane.getChildren().remove(overlay);
+              for (String u : availableUpgrades) {
+                overlay.getChildren().remove(u);
 
+              }
+            }
+            else {
+              logger.warn("Not your turn");
             }
           }
         });
       }
       finish.setOnAction(event -> {
-        modelGame.sendBuyUpgrade(false, "Null");
-        baseStackPane.getChildren().remove(overlay);
-        for (String u : availableUpgrades) {
-          overlay.getChildren().remove(u);
+        if(activePlayer) {
+          modelGame.sendBuyUpgrade(false, "Null");
+          baseStackPane.getChildren().remove(overlay);
+          for (String u : availableUpgrades) {
+            overlay.getChildren().remove(u);
 
+          }
+        }
+        else {
+          logger.warn("Not your turn");
         }
       });
+
     });
+
   }
 
   //Wenn auf Kartenstapel - sieht man gekaufte Upgradekarten
