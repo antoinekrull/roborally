@@ -270,6 +270,10 @@ public class ModelGame {
         client.sendDiscardSome(discardSome);
     }
 
+    public void sendBuyUpgrad(boolean isBuying, String card) {
+        client.sendBuyUpgrade(isBuying, card);
+    }
+
     public void sendChooseRegister(int register) {
         client.sendChooseRegister(register);
     }
