@@ -5,7 +5,6 @@ import client.changesupport.NotifyChangeSupport;
 import client.player.ClientPlayerList;
 import client.ui.RobotDirection;
 import client.viewmodel.ViewModelGameWindow;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import communication.Message;
 import game.Game;
@@ -15,8 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -324,4 +321,7 @@ public class ModelGame {
         client.sendRebootDirection(direction);
     }
 
+    public void sendAIMessage(boolean AI) {
+        client.sendAIMessage(AI);
+    }
 }

@@ -44,7 +44,7 @@ public class ViewModelLobby {
     @FXML
     private TextField chatTextfield;
     @FXML
-    private Button chatButton, readyButton, mapButton;
+    private Button chatButton, readyButton, mapButton, kiButton;
     @FXML
     private ListView<ClientPlayer> userList;
     @FXML
@@ -239,6 +239,10 @@ public class ViewModelLobby {
             //TODO: IF AT LEAST TWO PLAYERS ARE READY, START TIMER AND SWITCH SCENE
             //RoboRallyStart.switchScene("gamewindow.fxml");
         }
+    }
+
+    public void kiButtonOnAction() {
+        modelGame.sendAIMessage(true);
     }
 
     public void readyButtonOnAction() throws IOException {
