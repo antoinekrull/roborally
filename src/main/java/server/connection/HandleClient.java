@@ -318,6 +318,7 @@ public class HandleClient implements Runnable{
                             // choose a map because he wasn't the first one to be ready)
                             for(Player player: game.getPlayerList().getPlayerList()){
                                 if(player instanceof AI_Player && !player.isReady()){
+                                    player.setReady(true);
                                     game.addReady(player.getId());
                                     server.messages.put(messageCreator.generatePlayerStatusMessage(player.getId(), true));
                                 }
