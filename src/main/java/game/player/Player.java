@@ -211,8 +211,9 @@ public class Player {
         }
     }
 
-    public void purchaseUpgrade(int index){
+    public void purchaseUpgrade(int index) {
         if(upgradeShop.get(index).equals(null)){
+            server.sendBuyUpgrade(this);
             logger.log(Level.ERROR, "No card available at the selected index");
         }
         else {

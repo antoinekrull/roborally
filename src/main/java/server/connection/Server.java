@@ -393,6 +393,14 @@ public class Server {
         }
     }
 
+    public void sendBuyUpgrade(Player player) {
+        try {
+            messages.put(messageCreator.generateBuyUpgradeMessage(player.isBuying(), player.getUpgradeToBuy()));
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public synchronized int getUniqueID() {
         return uniqueID++;
     }

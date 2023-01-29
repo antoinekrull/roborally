@@ -441,7 +441,7 @@ public class Game implements Runnable {
         setUpDone = true;
     }
 
-    private void runUpgradePhase(){
+    private void runUpgradePhase() {
         logger.info("This game is running the Upgrade Phase now");
         server.sendActivePhase(1);
         setCurrentGamePhase(GamePhase.UPGRADE_PHASE);
@@ -459,6 +459,7 @@ public class Game implements Runnable {
             }
         }
         if(activePlayer.isBuying()){
+            server.sendUpgradeBought(activePlayer, upgradeShop.get(cardIndex).getCard());
             activePlayer.purchaseUpgrade(cardIndex);
         }
 
