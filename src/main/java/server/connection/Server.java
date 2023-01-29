@@ -164,13 +164,14 @@ public class Server {
                                     client.getValue().write(message);
                                 }
                             }
-                        } else if(message.getMessageType() == MessageType.PickDamage) {
-                            int id = message.getMessageBody().getClientID();
-                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
-                                if (client.getKey() == id) {
-                                    client.getValue().write(message);
-                                }
-                            }
+                            //TODO: molri will fix
+//                        } else if(message.getMessageType() == MessageType.PickDamage) {
+//                            int id = message.getMessageBody().getClientID();
+//                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+//                                if (client.getKey() == id) {
+//                                    client.getValue().write(message);
+//                                }
+//                            }
                         }
                         //Changed group messages: will only be displayed to other clients, not to yourself
                         //added private message to work in chat
@@ -366,7 +367,7 @@ public class Server {
 
     public void sendPickDamage(Player player, String[] availablePiles) {
         try {
-            messages.put(messageCreator.generatePickDamage(player.getId(), availablePiles));
+            CLIENTS.get(player.getId()).write(messageCreator.generatePickDamage(player.getId(), availablePiles));
         } catch (Exception e) {
             e.printStackTrace();
         }
