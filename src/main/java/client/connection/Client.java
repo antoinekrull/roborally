@@ -322,8 +322,8 @@ public class Client {
                             if (map.equals("DeathTrap")) {
                                 Client.this.setGameEventMessage(message);
                             }
-                            Message mapMessage = messageCreator.generateSendChatMessage("Selected map: " + map);
-                            Client.this.setMessage(mapMessage);
+                            Message mapMessage = messageCreator.generateMapSelectedMessage(map);
+                            Client.this.setGameLogMessage(mapMessage);
                         }
                         if (message.getMessageType().equals(MessageType.ReceivedChat)) {
                             Client.this.setMessage(message);
@@ -342,7 +342,7 @@ public class Client {
                             int clientID = message.getMessageBody().getClientID();
                             if (Client.this.userIDProperty().get() == clientID) {
                                 Client.this.setActivePlayer(true);
-                                Client.this.setCurrentPlayer("It's your turn");
+                                Platform.runLater(() -> Client.this.setCurrentPlayer("It's your turn"));
                                 for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
                                     clientPlayerList.getPlayerList().get(i).setActivePlayer("");
                                 }
@@ -351,7 +351,7 @@ public class Client {
                                 Client.this.setActivePlayer(false);
                                 Client.this.setCurrentPlayer("");
                                 if (clientPlayerList.containsPlayer(clientID)) {
-                                    clientPlayerList.getPlayer(clientID).setActivePlayer("It's their turn");
+                                    Platform.runLater(() -> clientPlayerList.getPlayer(clientID).setActivePlayer("It's their turn"));
                                 }
                             }
                         }
@@ -421,8 +421,8 @@ public class Client {
                             Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
+                            logger.debug("StartingPointTaken message: " + message.getMessageBody().getX() + " " + message.getMessageBody().getY());
                             Client.this.setMovement(message);
-                            logger.debug("StartingPointTaken message: " + message);
                         }
                         if (message.getMessageType().equals(MessageType.Movement)) {
                             Client.this.setMovement(message);
@@ -538,7 +538,6 @@ public class Client {
     }
     public void sendStartingPoint(int x, int y) {
         sendMessageToServer(messageCreator.generateSetStartingPointMessage(x, y));
-        this.activePlayer.set(false);
     }
     public void sendSelectedCard(String card, int register) {
         logger.debug("Selected card: " + card + " and register: " + register);
