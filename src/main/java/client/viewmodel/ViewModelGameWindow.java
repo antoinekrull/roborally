@@ -421,11 +421,13 @@ public class ViewModelGameWindow {
             logMessageStyling(MessageType.SelectionFinished, username, null, null, null, -1, false);
         }
         if (logMessage.getMessageType().equals(MessageType.CardPlayed)) {
+            /*
             int clientID = logMessage.getMessageBody().getClientID();
             String username = modelGame.getPlayerList().getPlayer(clientID).getUsername();
             String card = logMessage.getMessageBody().getCard();
 
             logMessageStyling(MessageType.CardPlayed, username, card, null, null, -1, false);
+             */
         }
         if (logMessage.getMessageType().equals(MessageType.CardSelected)) {
             int clientID = logMessage.getMessageBody().getClientID();
@@ -689,9 +691,30 @@ public class ViewModelGameWindow {
             });
         }
         if (gamemessage.getMessageType().equals(MessageType.CheckpointMoved)) {
+            int checkpointID = gamemessage.getMessageBody().getCheckpointID();
+            int x = gamemessage.getMessageBody().getX();
+            int y = gamemessage.getMessageBody().getY();
 
+            InputStream input = getClass().getResourceAsStream("/textures/gameboard/checkpoint" + checkpointID + ".png");
+            Image im = new Image(input);
+            ImageView img = new ImageView(im);
+            img.setFitWidth(gameboardTileWidth);
+            img.setPreserveRatio(true);
+            img.setId("Checkpoint" + checkpointID);
+
+            //search for checkpoint and remove it
+            for (Node node : gameboard.getChildren()) {
+                if (node instanceof ImageView imageView) {
+                    if (imageView.getId() != null && imageView.getId().equals("Checkpoint" + checkpointID)) {
+                        gameboard.getChildren().remove(imageView);
+                        break;
+                    }
+                }
+            }
+
+            //adds checkpoint
+            gameboard.add(img, x, y);
         }
-
     }
 
     public RobotDirection updateDirection(RobotDirection robotDirection, String rotation) {
@@ -821,7 +844,7 @@ public class ViewModelGameWindow {
 
 
     public void rotateRobot(int robotID, RobotDirection robotRotation) {
-        //Current robot image gets searched and then removed
+        //Current robot image gets searched and rotated depending on the robots new direction
         for (Node node : gameboard.getChildren()) {
             if (node instanceof ImageView imageView) {
                 if (imageView.getId() != null && imageView.getId().equals("Robot_" + robotID)) {

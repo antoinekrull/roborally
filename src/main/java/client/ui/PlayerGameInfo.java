@@ -85,7 +85,7 @@ public class PlayerGameInfo {
 
 
                 //Label Your Score:
-                Label yourScore = new Label("Your Score: ");
+                Label yourScore = new Label("Score: ");
                 yourScore.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;");
 
                 //bind score of player to Label score

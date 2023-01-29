@@ -432,6 +432,7 @@ public class Client {
                             logger.debug("Movement message: " + message);
                         }
                         if (message.getMessageType().equals(MessageType.CheckpointMoved)) {
+                            logger.debug("checkpointMoved: checkpoint: " + message.getMessageBody().getCheckpointID() + " " +  message.getMessageBody().getX() + " " +message.getMessageBody().getY());
                             Platform.runLater(() -> Client.this.setGameEventMessage(message));
                         }
                         if (message.getMessageType().equals(MessageType.PlayerTurning)) {
