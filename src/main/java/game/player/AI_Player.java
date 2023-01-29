@@ -5,15 +5,20 @@ import communication.MessageCreator;
 import game.Game;
 import game.board.Board;
 import game.board.StartTile;
+import game.card.AgainCard;
 import game.card.Card;
 import game.card.CardType;
 import org.javatuples.Pair;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class AI_Player extends Player {
     private Board board;
+    Random random = new Random();
     MessageCreator messageCreator;
     public AI_Player(int id, String username, Robot robot, Board board) {
         super(id, username, robot);
@@ -41,20 +46,33 @@ public class AI_Player extends Player {
         server.messages.put(playerAddedMessage);
     }
 
-    public void playTurn() throws InterruptedException {
-        //preparation
-        drawFullHand();
-        //UPGRADE PHASE
-        playUpgradePhase();
-        //PROGRAMMING PHASE
-        playProgrammingPhase();
-        //ACTIVATION PHASE
+    public void sendDrawDamage(Player player, String[] drawnDamageCards){
+        try {
+            server.messages.put(messageCreator.generateDrawDamageMessage(player.getId(), drawnDamageCards));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+    
     @Override
     public void drawFullHand(){
         for(int i = 0; i <= 9 - getHand().size(); i++){
             drawCard();
         }
+    }
+    @Override
+    public void drawCard() {
+        if(robot.getDeck().getSize() > 0) {
+            hand.add(robot.getDeck().popCardFromDeck());
+        } else {
+            refillDeck();
+            hand.add(robot.getDeck().popCardFromDeck());
+        }
+    }
+    @Override
+    public void refillDeck(){
+        robot.setDeck(personalDiscardPile);
+        robot.getDeck().shuffleDeck();
     }
     @Override
     public void playUpgradePhase(){
@@ -64,9 +82,14 @@ public class AI_Player extends Player {
         logger.debug("A KI Player starts his programming phase");
         logger.debug(getHand());
         TimeUnit.SECONDS.sleep(10);
+        // if the first card that would be played is an AgainCard, it is swapped to another place
+        if(hand.get(0) instanceof AgainCard){
+            Collections.swap(hand, 0, random.nextInt(3) + 1);
+        }
         //play cards in register
         for(int i = 0; i < 5; i++){
-            playCard(getHand().get(i).getCard(), i);
+            logger.debug("KI PLAYS: " + hand.get(i).getCard());
+            playCard(hand.get(i).getCard(), i);
         }
         //discard the rest of the programming cards
         for(Iterator<Card> iterator = getHand().iterator(); iterator.hasNext();){
