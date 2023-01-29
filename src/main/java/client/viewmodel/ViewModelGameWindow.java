@@ -1613,5 +1613,10 @@ public class ViewModelGameWindow {
         Platform.exit();
         System.exit(0);
     }
+
+    public void shopping() {
+        String[] availableUpgrades = modelGame.getUpgradeCards().toArray(new String[0]);
+        cardSelection.upgradeShop(availableUpgrades);
+    }
 }
 

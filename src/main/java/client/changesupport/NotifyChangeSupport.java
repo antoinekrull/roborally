@@ -115,4 +115,10 @@ public class NotifyChangeSupport {
             viewModelGameWindow.stopTimer();
         }
     }
+
+    public void shopping() {
+        if (gamewindow) {
+            viewModelGameWindow.shopping();
+        }
+    }
 }

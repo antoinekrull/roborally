@@ -65,6 +65,7 @@ public class Client {
     private DoubleProperty energy;
     private ObservableList<String> maps;
     private BooleanProperty timer;
+    private ObservableList<String> upgradeShop;
 
 
     private Client() {
@@ -89,6 +90,7 @@ public class Client {
         this.gameLogMessage = new SimpleObjectProperty<>();
         this.gameEventMessage = new SimpleObjectProperty<>();
         this.timer = new SimpleBooleanProperty(false);
+        this.upgradeShop = FXCollections.observableArrayList();
     }
 
     public static Client getInstance() {
@@ -250,6 +252,13 @@ public class Client {
         this.timer.set(timer);
     }
 
+    public ObservableList<String> getUpgradeShop() {
+        return upgradeShop;
+    }
+
+    public void setUpgradeShop(ObservableList<String> upgradShop) {
+        this.upgradeShop = upgradShop;
+    }
 
     private class ReadMessagesFromServer implements Runnable {
         DataInputStream in = null;
@@ -414,49 +423,35 @@ public class Client {
                             Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.StartingPointTaken)) {
-                            logger.debug("StartingPointTaken message: " + message.getMessageBody().getX() + " " + message.getMessageBody().getY());
                             Client.this.setMovement(message);
                         }
                         if (message.getMessageType().equals(MessageType.Movement)) {
                             Client.this.setMovement(message);
-                            logger.debug("Movement message: " + message);
-                            Platform.runLater(() -> Client.this.setEnergy(energyProperty().get()+1));
-                            Platform.runLater(() -> Client.this.setScore(scoreProperty().get()+1));
-                            Platform.runLater(() -> {
-                                for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
-                                    clientPlayerList.getPlayerList().get(i).setEnergyCubes(clientPlayerList.getPlayerList().get(i).getEnergyCubes()+1);
-                                    clientPlayerList.getPlayerList().get(i).setScore(clientPlayerList.getPlayerList().get(i).scoreProperty().get()+1);
-                                }
-                            });
                         }
                         if (message.getMessageType().equals(MessageType.CheckpointMoved)) {
                             logger.debug("checkpointMoved: checkpoint: " + message.getMessageBody().getCheckpointID() + " " +  message.getMessageBody().getX() + " " +message.getMessageBody().getY());
                             Platform.runLater(() -> Client.this.setGameEventMessage(message));
                         }
                         if (message.getMessageType().equals(MessageType.PlayerTurning)) {
-                            logger.debug("roboter turning");
                             Client.this.setGameEventMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.TimerStarted)) {
-                            logger.debug("timer started");
                             Client.this.setTimer(true);
                         }
                         if (message.getMessageType().equals(MessageType.TimerEnded)) {
-                            logger.debug("timer ended");
                             Client.this.setTimer(false);
                             Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.Energy)) {
-                            logger.debug("Energy gained");
                             int clientID = message.getMessageBody().getClientID();
                             int count = message.getMessageBody().getCount();
                             if (userIDProperty().get() == clientID) {
-                                Platform.runLater(() -> Client.this.addEnergy(count));
+                                Platform.runLater(() -> Client.this.setEnergy(energyProperty().get() + count));
                             }
                             else {
                                 for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
                                     if (clientPlayerList.getPlayer(clientID).getId() == clientID) {
-                                        Platform.runLater(() -> clientPlayerList.getPlayer(clientID).addEnergy(count));
+                                        Platform.runLater(() -> clientPlayerList.getPlayer(clientID).setEnergyCubes(count));
                                     }
                                 }
                             }
@@ -482,9 +477,31 @@ public class Client {
                         }
                         if (message.getMessageType().equals(MessageType.RefillShop)){
                             Client.this.setGameLogMessage(message);
+                            String[] refillCards = message.getMessageBody().getCards();
+                            Platform.runLater(() -> {
+                                Client.this.upgradeShop.addAll(refillCards);
+                                for(String card: refillCards){
+                                    logger.debug("Client - cardsInHand: " + card);
+                                }
+                            });
+                            for (int i = 0; i < myCards.size(); i++) {
+                                logger.debug("Client - refillCards: " + myCards.get(i));
+                            }
                         }
-                        if (message.getMessageBody().equals(MessageType.ExchangeShop)){
+                        if (message.getMessageType().equals(MessageType.ExchangeShop)){
                             Client.this.setGameLogMessage(message);
+                            String[] exchangeCards = message.getMessageBody().getCards();
+                            Platform.runLater(() -> {
+                                Client.this.upgradeShop.clear();
+                                Client.this.upgradeShop.addAll(exchangeCards);
+                                for(String card: exchangeCards){
+                                    logger.debug("Client - exchangeCards: " + card);
+                                }
+                            });
+                            for (int i = 0; i < myCards.size(); i++) {
+                                logger.debug("Client - myCards: " + myCards.get(i));
+                            }
+
                         }
                         if (message.getMessageType().equals(MessageType.UpgradeBought)){
                             //TODO: receive purchase confirmation
@@ -498,10 +515,6 @@ public class Client {
                 logger.warn("Lost connection to server " + e);
             }
         }
-    }
-
-    private void addEnergy(int count) {
-        this.energy.add(count);
     }
 
     //maybe are these methods redundant, but they are kept until everything is implemented for them to be there
