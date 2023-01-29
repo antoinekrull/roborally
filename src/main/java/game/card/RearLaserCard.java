@@ -5,7 +5,7 @@ import game.player.Player;
 public class RearLaserCard extends Card{
     public RearLaserCard(){
         cardType = CardType.UPGRADE_CARD;
-        setCard("Rear Laser");
+        setCard("RearLaser");
         setCost(2);
         setPermanent(true);
     }

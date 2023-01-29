@@ -250,7 +250,26 @@ public class HandleClient implements Runnable{
                         } else {
                             logger.warn("Card was changed during the" + game.getCurrentGamePhase() + "so it wasnt applied");
                         }
-                    } else if (incomingMessage.getMessageType() == MessageType.SelectedDamage) {
+                    } else if(incomingMessage.getMessageType().equals(MessageType.BuyUpgrade)) {
+                        logger.warn(incomingMessage.getMessageBody().isBuying());
+                        if(game.getActivePlayer().getId() == clientID) {
+                            if(!incomingMessage.getMessageBody().isBuying()) {
+                                game.setShopping(true);
+                            } else if(incomingMessage.getMessageBody().isBuying()) {
+                                game.getPlayerFromPlayerListById(clientID);
+                                game.setShopping(true);
+                                switch (incomingMessage.getMessageBody().getCard()) {
+                                    case "MemorySwap", "SpamBlocker" -> game.addTemporaryUpgradeToPlayer(game.getPlayerFromPlayerListById(clientID)
+                                            , incomingMessage.getMessageBody().getCard());
+                                    case "AdminPrivilege", "RearLaser" -> game.addPermanentUpgradeToPlayer(game.getPlayerFromPlayerListById(clientID)
+                                            , incomingMessage.getMessageBody().getCard());
+                                }
+                                server.messages.put(messageCreator.generateUpgradeBoughtMessage(clientID
+                                        , incomingMessage.getMessageBody().getCard()));
+                            }
+                        }
+                    }
+                    else if (incomingMessage.getMessageType() == MessageType.SelectedDamage) {
                         //Should be damage card
                         game.drawChosenDamageCards(game.getPlayerFromPlayerListById(getClientID())
                                 , incomingMessage.getMessageBody().getCards());
@@ -336,9 +355,6 @@ public class HandleClient implements Runnable{
                     }
                     else if (incomingMessage.getMessageType() == MessageType.ConnectionUpdate) {
 
-                    }
-                    else if (incomingMessage.getMessageType().equals(MessageType.BuyUpgrade)) {
-                        //TODO: handle purchase request
                     }
                 } catch (Exception e) {
                     logger.warn("An exception occurred: " + e);

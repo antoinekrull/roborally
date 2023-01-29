@@ -21,7 +21,6 @@ import static game.Game.upgradeShop;
 public class Player {
 
     protected String username;
-    private int score;
     private boolean isAI = false;
     protected int id;
     private boolean isPlaying;
@@ -53,8 +52,8 @@ public class Player {
             robot.setId(id);
         }
         //robot.setDirection(Direction.NORTH);
+        robot.setId(id);
         this.hand = new ArrayList<Card>();
-        this.score = 0;
         this.personalDiscardPile = new ProgrammingDeck();
         isPlaying = false;
         isReady = false;
@@ -100,18 +99,12 @@ public class Player {
     public String getUsername() {
         return username;
     }
-    public int getScore() {
-        return score;
-    }
 
     public boolean getIsAI() {
         return isAI;
     }
     public void setIsAI(boolean isAI) {
         this.isAI = isAI;
-    }
-    public void increaseScore() {
-        score++;
     }
     public boolean isPlaying() {
         return isPlaying;
@@ -222,7 +215,6 @@ public class Player {
             hand.add(robot.getDeck().popCardFromDeck());
         }
     }
-
     public void purchaseUpgrade(int index) {
         if(upgradeShop.get(index).equals(null)){
             server.sendBuyUpgrade(this);
@@ -246,10 +238,26 @@ public class Player {
             }
         }
     }
-
+    public void addTemporaryUpgrade(Card card) {
+        this.TemporaryUpgradeSlots.add(card);
+    }
+    public void addPermanentUpgrade(Card card) {
+        this.PermanentUpgradeSlots.add(card);
+    }
     private void useUpgrades(boolean[][] parameter){
         isUsingUpgrade = parameter;
     }
+    //TODO: Add GUI functionality / exceptions
+    public void playCard(Card card, int index) {
+        if(index == 0 && card instanceof AgainCard) {
+            logger.info("You cant play this card in the first register, please try again!");
+        } else if(index > 0 || index < cardRegister.length){
+            logger.info("The register has not been addressed properly, please try again!");
+        } else {
+            cardRegister[index] = card;
+        }
+    }
+
 
     public void playCard(String cardName, int index) {
         Card card = null;

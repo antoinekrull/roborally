@@ -35,6 +35,7 @@ public class Game implements Runnable {
     private final String[] maps = {"DizzyHighway", "ExtraCrispy", "DeathTrap", "LostBearings", "Twister"};
     private static Game INSTANCE;
     private boolean robotSet = false;
+    private boolean isShopping = false;
     private boolean setUpDone;
     private ArrayList<CheckpointTile> checkpointTileArrayList = null;
     private ArrayList<ArrayList<Pair<Integer, Integer>>> robotLaserList = new ArrayList<>();
@@ -96,6 +97,12 @@ public class Game implements Runnable {
     public void setTimerIsRunning(boolean timerIsRunning) {
         this.timerIsRunning = timerIsRunning;
     }
+    public boolean isShopping() {
+        return isShopping;
+    }
+    public void setShopping(boolean shopping) {
+        isShopping = shopping;
+    }
 
 
     private void applyAllTileEffects() throws Exception {
@@ -126,8 +133,10 @@ public class Game implements Runnable {
                     logger.warn("CHECKPOINT MOVING");
                     logger.warn(checkpointTile.getPosition());
                     collisionCalculator.moveConveyorBelt(checkpointTile);
-                    server.sendCheckPointMoved(checkpointTile.getCount(), checkpointTile.getXCoordinate()
-                            , checkpointTile.getYCoordinate());
+                    int x = checkpointTile.getPosition().getValue0();
+                    int y = checkpointTile.getPosition().getValue1();
+                    server.sendCheckPointMoved(checkpointTile.getCount(), x, y);
+                    Thread.sleep(100);
                     logger.warn(checkpointTile.getPosition());
                 }
             }
@@ -223,6 +232,59 @@ public class Game implements Runnable {
         }
         return upgradesOnOffer;
     }
+
+    public void addPermanentUpgradeToPlayer(Player player, String cardName) {
+        int energyCost = 0;
+        Card newUpgrade = new NullCard();
+        switch(cardName) {
+            case "MemorySwap" -> {
+                energyCost = 1;
+                newUpgrade = getCardFromUpgradeShop(cardName);
+            }
+            case "SpamBlocker" -> {
+                energyCost = 3;
+                newUpgrade = getCardFromUpgradeShop(cardName);
+            }
+        }
+        getPlayerFromPlayerListById(player.getId()).addTemporaryUpgrade(newUpgrade);
+        int currentCubes = getPlayerFromPlayerListById(player.getId()).getRobot().getEnergyCubes();
+        currentCubes = currentCubes - energyCost;
+        getPlayerFromPlayerListById(player.getId()).getRobot().setEnergyCubes(currentCubes);
+        server.sendEnergy(player.getId(), player.getRobot().getEnergyCubes(), "Upgrade");
+    }
+
+    public void addTemporaryUpgradeToPlayer(Player player, String cardName) {
+        int energyCost = 0;
+        Card newUpgrade = new NullCard();
+        switch(cardName) {
+            case "AdminPrivilege" -> {
+                energyCost = 3;
+                newUpgrade = getCardFromUpgradeShop(cardName);
+            }
+            case "RearLaser" -> {
+                energyCost = 2;
+                newUpgrade = getCardFromUpgradeShop(cardName);
+            }
+        }
+        getPlayerFromPlayerListById(player.getId()).addTemporaryUpgrade(newUpgrade);
+        int currentCubes = getPlayerFromPlayerListById(player.getId()).getRobot().getEnergyCubes();
+        currentCubes = currentCubes - energyCost;
+        getPlayerFromPlayerListById(player.getId()).getRobot().setEnergyCubes(currentCubes);
+        server.sendEnergy(player.getId(), player.getRobot().getEnergyCubes(), "Upgrade");
+    }
+
+    public Card getCardFromUpgradeShop(String cardName) {
+        Card result = null;
+        for(int i = 0; i < upgradeShop.size(); i++) {
+            if(upgradeShop.get(i).getCard().equals(cardName)) {
+                result = upgradeShop.get(i);
+                upgradeShop.remove(i);
+                return result;
+            }
+        }
+        return result;
+    }
+
     //method for applying damage to robot
     public void drawDamageCards(Player player) {
         try {
@@ -484,22 +546,22 @@ public class Game implements Runnable {
         playerList.determinePriority(board.getAntenna());
         try {
             Thread.sleep(100);
+            refreshUpgradeShop();
+            for (int i = 0; i < playerList.size(); i++) {
+                server.sendCurrentPlayer(playerList.get(i).getId());
+                Thread.sleep(100);
+                while (!isShopping) {
+                    Thread.sleep(100);
+                }
+            }
+            isShopping = false;
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        refreshUpgradeShop();
-        int cardIndex = -1;
-        for(int i= 0; i < upgradeShop.size(); i++){
-            if(!(activePlayer instanceof AI_Player) && activePlayer.getUpgradeToBuy().equals(upgradeShop.get(i).getCard())){
-                cardIndex = i;
-            }
-        }
-
-        if(!(activePlayer instanceof AI_Player) && activePlayer.isBuying()){
-            server.sendUpgradeBought(activePlayer, upgradeShop.get(cardIndex).getCard());
-            activePlayer.purchaseUpgrade(cardIndex);
-        }
-
+//        if(!(activePlayer instanceof AI_Player) && activePlayer.isBuying()){
+//            server.sendUpgradeBought(activePlayer, upgradeShop.get(cardIndex).getCard());
+//            activePlayer.purchaseUpgrade(cardIndex);
+//        }
     }
 
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
@@ -514,35 +576,39 @@ public class Game implements Runnable {
                 logger.debug("Player " + player.getUsername() + " draws now.");
                 player.drawFullHand();
                 logger.debug("Player " + player.getUsername() + " has drawn.");
-                Thread.sleep(100);
-                if(!(player instanceof AI_Player)){
-                    server.sendYourCards(player);
-                    logger.debug("Server sent hand cards to " + player.getUsername());
-                }
-            }
-            playerList.setPlayersPlaying(true);
-            while (!playerList.playersAreReady()) {
-                if (playerList.getAmountOfReadyPlayers() >= 1) {
-                    Thread.sleep(100);
-                    if (!timerIsRunning && !playerList.playersAreReady()) {
-                        customTimer.runTimer();
-                    }
-                }
-                for (Player player : playerList.getPlayerList()) {
-                    if(player instanceof AI_Player && !player.isReady()){
-                        ((AI_Player) player).playProgrammingPhase();
-                    }
-                }
-            }
-            if (timerIsRunning) {
-                customTimer.cancel();
-                timerIsRunning = false;
-            }
+                for (int i = 0; i < playerList.size(); i++) {
 
-        } catch (InterruptedException e) {
+                    playerList.get(i).drawFullHand();
+                    Thread.sleep(100);
+                    if (!(player instanceof AI_Player)) {
+                        server.sendYourCards(player);
+                        logger.debug("Server sent hand cards to " + player.getUsername());
+                    }
+                }
+                playerList.setPlayersPlaying(true);
+                while (!playerList.playersAreReady()) {
+                    if (playerList.getAmountOfReadyPlayers() >= 1) {
+                        Thread.sleep(100);
+                        if (!timerIsRunning && !playerList.playersAreReady()) {
+                            customTimer.runTimer();
+                        }
+                    }
+                    for (Player aiPlayer : playerList.getPlayerList()) {
+                        if (aiPlayer instanceof AI_Player && !aiPlayer.isReady()) {
+                            ((AI_Player) aiPlayer).playProgrammingPhase();
+                        }
+                    }
+                }
+                if (timerIsRunning) {
+                    customTimer.cancel();
+                    timerIsRunning = false;
+                }
+
+            }
+            playerList.setPlayerReadiness(false);
+        } catch(InterruptedException e){
             e.printStackTrace();
         }
-        playerList.setPlayerReadiness(false);
     }
 
     private void runActivationPhase() throws Exception {
@@ -565,13 +631,6 @@ public class Game implements Runnable {
             Thread.sleep(100);
             cardList.clear();
             Thread.sleep(1000);
-            if(playerList.robotNeedsReboot()) {
-                for(int i = 0; i < playerList.numberOfNeededReboots(); i++) {
-                    reboot(playerList.get(i));
-                    Thread.sleep(1000);
-                }
-            }
-
             //checks if all registers have been activated
             if(currentRegister == 4) {
                 for(int i = 0; i < playerList.size(); i++) {
@@ -760,8 +819,8 @@ public class Game implements Runnable {
             if(!setUpDone){
                 runSetupPhase();
             }
-            //runUpgradePhase();
             try {
+                runUpgradePhase();
                 runProgrammingPhase(playerList);
                 Thread.sleep(100);
                 runActivationPhase();
