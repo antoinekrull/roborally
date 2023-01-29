@@ -47,6 +47,7 @@ public class CustomTimer {
                     }
                     game.getPlayerList().setPlayerReadiness(true);
                     server.sendTimerEnded(new PlayerList());
+                   game.setTimerIsRunning(false);
                 }
             };
             timer.schedule(timerTask, 30000);

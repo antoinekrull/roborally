@@ -204,7 +204,7 @@ import java.util.ArrayList;
          */
         public Message generateCardsYouGotNowMessage(String[] cards){
             MessageBody messageBody = new MessageBody();
-            messageBody.setCardsInHand(cards);
+            messageBody.setCards(cards);
             return new Message(MessageType.CardsYouGotNow, messageBody);
         }
 
@@ -246,9 +246,8 @@ import java.util.ArrayList;
             messageBody.setCards(drawnCards);
             return new Message(MessageType.DrawDamage, messageBody);
         }
-        public Message generatePickDamage(int clientID, String[] availablePiles) {
+        public Message generatePickDamage(String[] availablePiles) {
             MessageBody messageBody = new MessageBody();
-            messageBody.setClientID(clientID);
             messageBody.setAvailablePiles(availablePiles);
             messageBody.setCount(availablePiles.length);
             return new Message(MessageType.PickDamage, messageBody);

@@ -1,9 +1,5 @@
 package communication;
 
-import game.card.Card;
-
-import java.util.ArrayList;
-
 /**
  * @author Antoine, Firas
  * @version 1.0
@@ -344,6 +340,10 @@ public class MessageBody {
     }
     public String[] getCards() {
         return cards;
+    }
+
+    public String[] getAvailablePiles() {
+        return availablePiles;
     }
 
     public void setAvailablePiles(String[] availablePiles) {
