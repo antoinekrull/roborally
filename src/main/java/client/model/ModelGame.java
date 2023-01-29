@@ -3,6 +3,7 @@ package client.model;
 import client.connection.Client;
 import client.changesupport.NotifyChangeSupport;
 import client.player.ClientPlayerList;
+import client.ui.RobotDirection;
 import client.viewmodel.ViewModelGameWindow;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -14,6 +15,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -38,7 +41,8 @@ public class ModelGame {
     private final Logger logger = LogManager.getLogger(ViewModelGameWindow.class);
     private NotifyChangeSupport notifyChangeSupport;
     private SimpleIntegerProperty robotProperty;
-    private SimpleStringProperty robotAlignment;
+    private RobotDirection robotDirection;
+    private SimpleStringProperty robotRotation;
     private SimpleIntegerProperty score;
     private SimpleStringProperty activePhase;
     private SimpleIntegerProperty energy;
@@ -119,6 +123,50 @@ public class ModelGame {
             }
         });
 
+        this.robotDirection = RobotDirection.EAST;
+        this.robotRotation = new SimpleStringProperty();
+        robotRotation.bind(client.robotDirectionProperty());
+        /*
+        robotRotation.addListener(new InvalidationListener() {
+            @Override
+            public void invalidated(Observable observable) {
+                if (robotDirection.get().equals(RobotDirection.EAST)) {
+                    if (robotRotation.get().equals("counterclockwise")) {
+                        setRobotDirection(RobotDirection.NORTH);
+                    }
+                    if (robotRotation.get().equals("clockwise")) {
+                        setRobotDirection(RobotDirection.SOUTH);
+                    }
+                }
+                if (robotDirection.get().equals(RobotDirection.SOUTH)) {
+                    if (robotRotation.get().equals("counterclockwise")) {
+                        setRobotDirection(RobotDirection.EAST);
+                    }
+                    if (robotRotation.get().equals("clockwise")) {
+                        setRobotDirection(RobotDirection.WEST);
+                    }
+                }
+                if (robotDirection.get().equals(RobotDirection.WEST)) {
+                    if (robotRotation.get().equals("counterclockwise")) {
+                        setRobotDirection(RobotDirection.NORTH);
+                    }
+                    if (robotRotation.get().equals("clockwise")) {
+                        setRobotDirection(RobotDirection.SOUTH);
+                    }
+                }
+                if (robotDirection.get().equals(RobotDirection.NORTH)) {
+                    if (robotRotation.get().equals("counterclockwise")) {
+                        setRobotDirection(RobotDirection.WEST);
+                    }
+                    if (robotRotation.get().equals("clockwise")) {
+                        setRobotDirection(RobotDirection.EAST);
+                    }
+                }
+            }
+        });
+
+         */
+
         this.GAME_EVENT_MESSAGES = new LinkedBlockingQueue<>();
         this.gameEvent = new SimpleObjectProperty<>();
         gameEvent.bind(client.gameEventMessageProperty());
@@ -141,20 +189,13 @@ public class ModelGame {
             public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
                 logger.debug("timer triggered");
                 if (client.timerProperty().get()) {
+                    logger.debug("client timerproperty POSITIVE: " + client.timerProperty().get());
                     notifyChangeSupport.startTimer();
                 }
                 else {
+                    logger.debug("client timerproperty NEGATIVE: " + client.timerProperty().get());
                     notifyChangeSupport.stopTimer();
                 }
-            }
-        });
-
-        this.robotAlignment = new SimpleStringProperty();
-        robotAlignment.bind(client.roboterAlignmentProperty());
-        robotAlignment.addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                notifyChangeSupport.setRobotAlignment();
             }
         });
     }
@@ -226,6 +267,14 @@ public class ModelGame {
 
     public ObservableList<String> getMyHandCards() {
         return myHandCards;
+    }
+
+    public RobotDirection getRobotDirection() {
+        return robotDirection;
+    }
+
+    public void setRobotDirection(RobotDirection robotDirection) {
+        this.robotDirection = robotDirection;
     }
 
     public LinkedBlockingQueue<Message> getPLAYER_MOVEMENTS() {

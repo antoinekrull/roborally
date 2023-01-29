@@ -108,20 +108,24 @@ public class NotifyChangeSupport {
 
     public void startTimer() {
         if (gamewindow) {
+            logger.debug("NotifyChangeSupport startTimer");
             viewModelGameWindow.startTimer();
         }
     }
 
     public void stopTimer() {
         if (gamewindow) {
+            logger.debug("NotifyChangeSupport stopTimer");
             viewModelGameWindow.stopTimer();
         }
     }
 
-
-    public void setRobotAlignment() {
+    public void rotateRobot() {
+        /*
         if (gamewindow) {
-            viewModelGameWindow.setRobotAlignment();
+            viewModelGameWindow.rotateRobot(clientID, newRobotDirection, true);
         }
+
+         */
     }
 }

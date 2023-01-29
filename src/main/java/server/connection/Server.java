@@ -362,6 +362,14 @@ public class Server {
         }
     }
 
+    public void sendCheckPointMoved(int count, int xCoordinate, int yCoordinate) {
+        try {
+            messages.put(messageCreator.generateCheckpointMovedMessage(count, xCoordinate, yCoordinate));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void sendRefillShop(String[] cards){
         try{
             messages.put(messageCreator.generateRefillShopMessage(cards));
@@ -398,5 +406,6 @@ public class Server {
             serverSocket.close();
         }
     }
+
 }
 

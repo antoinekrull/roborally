@@ -242,7 +242,7 @@
                               <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="ALWAYS" percentWidth="20.0" />
                             </columnConstraints>
                             <rowConstraints>
-                                          <RowConstraints fillHeight="false" percentHeight="45.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                          <RowConstraints fillHeight="false" percentHeight="47.0" valignment="CENTER" vgrow="SOMETIMES" />
                               <RowConstraints fx:id="programspace" fillHeight="false" percentHeight="40.0" valignment="CENTER" vgrow="SOMETIMES" />
                                           <RowConstraints fillHeight="false" percentHeight="5.0" valignment="CENTER" vgrow="SOMETIMES" />
                             </rowConstraints>
@@ -279,8 +279,8 @@
             </GridPane>
                   <GridPane GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" GridPane.vgrow="ALWAYS">
                      <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="25.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="55.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" percentWidth="22.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="58.0" />
                         <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="SOMETIMES" percentWidth="20.0" />
                      </columnConstraints>
                      <rowConstraints>
@@ -289,31 +289,53 @@
                      <children>
               <StackPane fx:id="handStackPane" prefHeight="131.0" prefWidth="1076.0" GridPane.columnIndex="1">
               <children>
-                <GridPane fx:id="handGrid" alignment="CENTER" maxHeight="140.0" maxWidth="850.0" nodeOrientation="RIGHT_TO_LEFT" HBox.hgrow="ALWAYS">
+                <GridPane fx:id="handGrid" alignment="CENTER" maxHeight="140.0" nodeOrientation="RIGHT_TO_LEFT" HBox.hgrow="ALWAYS">
                   <columnConstraints>
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
-                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+                                    <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
                   </columnConstraints>
                   <rowConstraints>
                     <RowConstraints minHeight="10.0" valignment="BOTTOM" vgrow="SOMETIMES" />
                   </rowConstraints>
                   <children>
-                              <Pane fx:id="programCard1" GridPane.columnIndex="0" />
-                              <Pane fx:id="programCard2" GridPane.columnIndex="1" />
-                              <Pane fx:id="programCard3" GridPane.columnIndex="2" />
-                              <Pane fx:id="programCard4" GridPane.columnIndex="3" />
-                              <Pane fx:id="programCard5" GridPane.columnIndex="4" />
-                              <Pane fx:id="programCard6" GridPane.columnIndex="5" />
-                              <Pane fx:id="programCard7" GridPane.columnIndex="6" />
-                              <Pane fx:id="programCard8" GridPane.columnIndex="7" />
-                              <Pane fx:id="programCard9" GridPane.columnIndex="8" />
+                              <Pane fx:id="programCard1" GridPane.columnIndex="0" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                              <Pane fx:id="programCard2" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                              <Pane fx:id="programCard3" GridPane.columnIndex="2" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                              <Pane fx:id="programCard4" GridPane.columnIndex="3" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                              <Pane fx:id="programCard5" GridPane.columnIndex="4" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                              <Pane fx:id="programCard6" GridPane.columnIndex="5" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                              <Pane fx:id="programCard7" GridPane.columnIndex="6" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                              <Pane fx:id="programCard8" GridPane.columnIndex="7" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                              <Pane fx:id="programCard9" GridPane.columnIndex="8" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                                    <Pane fx:id="programCard10" GridPane.columnIndex="9" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                                    <Pane fx:id="programCard11" GridPane.columnIndex="10" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                                    <Pane fx:id="programCard12" GridPane.columnIndex="11" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                                    <Pane fx:id="programCard13" GridPane.columnIndex="12" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                                    <Pane fx:id="programCard14" GridPane.columnIndex="13" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                                    <Pane fx:id="programCard15" GridPane.columnIndex="14" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                                    <Pane fx:id="programCard16" GridPane.columnIndex="15" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                                    <Pane fx:id="programCard17" GridPane.columnIndex="16" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                                    <Pane fx:id="programCard18" GridPane.columnIndex="17" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                                    <Pane fx:id="programCard19" GridPane.columnIndex="18" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
+                                    <Pane fx:id="programCard20" GridPane.columnIndex="19" GridPane.hgrow="NEVER" GridPane.vgrow="NEVER" />
                   </children>
                                  <padding>
                                     <Insets right="20.0" />

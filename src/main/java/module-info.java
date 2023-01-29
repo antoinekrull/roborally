@@ -35,4 +35,5 @@ module com.example.knorrigekorrelatehp {
     opens game.board to javafx.graphics;
     exports client.changesupport;
     opens client.changesupport to javafx.controls, javafx.fxml, javafx.graphics;
+    exports client.ui;
 }
