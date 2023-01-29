@@ -1,7 +1,7 @@
 package client.model;
 
-import client.connection.Client;
 import client.changesupport.NotifyChangeSupport;
+import client.connection.Client;
 import client.player.ClientPlayerList;
 import client.ui.RobotDirection;
 import client.viewmodel.ViewModelGameWindow;
@@ -13,13 +13,16 @@ import game.board.Tile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
-
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -283,7 +286,7 @@ public class ModelGame {
         client.sendDiscardSome(discardSome);
     }
 
-    public void sendBuyUpgrad(boolean isBuying, String card) {
+    public void sendBuyUpgrade(boolean isBuying, String card) {
         client.sendBuyUpgrade(isBuying, card);
     }
 

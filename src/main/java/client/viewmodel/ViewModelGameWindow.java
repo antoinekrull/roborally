@@ -24,8 +24,6 @@ import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -285,6 +283,7 @@ public class ViewModelGameWindow {
         tutorial.loadGameWindowTutorial();
          */
 
+        // For Testing pickDamage-Message for GUI
 //        String[] damagePiles = {"Virus", "Worm","Trojan",};
 //        cardSelection.overlayDamagecards(damagePiles, 3);
     }
@@ -508,6 +507,7 @@ public class ViewModelGameWindow {
             int clientID = logMessage.getMessageBody().getClientID();
             //add message to logger
         }
+
     }
 
     public void logMessageStyling(MessageType messageType, String username, String card,
@@ -708,6 +708,14 @@ public class ViewModelGameWindow {
 
             //adds checkpoint
             gameboard.add(img, x, y);
+        }
+        if (gamemessage.getMessageType().equals(MessageType.RefillShop)){
+            String[] availableUpgrades = gamemessage.getMessageBody().getCards();
+            cardSelection.upgradeShop(availableUpgrades);
+        }
+        if (gamemessage.getMessageType().equals(MessageType.ExchangeShop)){
+            String[] availableUpgrades = gamemessage.getMessageBody().getCards();
+            cardSelection.upgradeShop(availableUpgrades);
         }
     }
 
