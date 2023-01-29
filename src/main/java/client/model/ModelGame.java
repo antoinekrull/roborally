@@ -56,6 +56,7 @@ public class ModelGame {
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
     private ObservableList<String> myHandCards;
     private ObservableList<String> upgradeCards;
+    private ObservableList<String> upgradeShop;
 
 
     private Game game;
@@ -104,6 +105,8 @@ public class ModelGame {
         });
 
         this.upgradeCards = client.getUpgradeShop();
+
+        this.upgradeShop = FXCollections.observableArrayList();
 
         this.PLAYER_MOVEMENTS = new LinkedBlockingQueue<>();
         readyToPlay.bind(client.gameStartedProperty());

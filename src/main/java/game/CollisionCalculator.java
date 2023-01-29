@@ -286,8 +286,7 @@ public class CollisionCalculator {
         return result;
     }
     private Robot checkForRobot(Pair<Integer, Integer> target){
-        ArrayList<Robot> robots = playerList.getAllRobots();
-        for (Robot robot: robots){
+        for (Robot robot: playerList.getAllRobots()){
             if(robot.getCurrentPosition().equals(target)){
                 return robot;
             }

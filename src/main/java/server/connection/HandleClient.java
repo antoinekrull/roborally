@@ -6,6 +6,7 @@ import communication.MessageCreator;
 import communication.MessageType;
 import game.CollisionCalculator;
 import game.Game;
+import game.player.AI_Player;
 import game.GamePhase;
 import game.player.Player;
 import game.player.Robot;
@@ -42,6 +43,7 @@ public class HandleClient implements Runnable{
     //private ServerMain.Server serverMain;
 
     private Server server;
+    private int ai_id = 20;
 
     private MessageCreator messageCreator;
     private Game game;
@@ -146,7 +148,8 @@ public class HandleClient implements Runnable{
                 Message incomingMessage = jsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
                 try {
                     if (incomingMessage.getMessageType() == MessageType.HelloServer) {
-                        if(incomingMessage.getMessageBody().getProtocol().equals(server.getProtocolVersion())){
+                        logger.debug("HELLO SERVER MESSAGES: " + incomingMessage.getMessageBody().getProtocol());
+                        if (incomingMessage.getMessageBody().getProtocol().equals(server.getProtocolVersion())){
                             accepted = true;
                             //writeTo(clientID, messageCreator.generateWelcomeMessage(clientID));
                             write(messageCreator.generateWelcomeMessage(clientID));
@@ -187,6 +190,16 @@ public class HandleClient implements Runnable{
                 Message incomingMessage = jsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
                 chatMessage = incomingMessage.getMessageBody().getMessage();
                 try {
+                    if(incomingMessage.getMessageType() == MessageType.HelloServer &&
+                            incomingMessage.getMessageBody().getProtocol().equals(server.getProtocolVersion()) &&
+                            incomingMessage.getMessageBody().isAI()){
+                        // creates an ai player
+                        int ai_id = server.getUniqueID();
+                        Game.playerList.add(new AI_Player(ai_id, "ai_player", new Robot(game.findUnusedRobotId(), server.getUniqueID()), game.board));
+                        Game.playerList.getPlayerFromList(ai_id).setIsAI(true);
+                        logger.debug("AI player with the id " + ai_id + " was added");
+                    }
+                    //String changed to Message type (protocol, from: sender): added to linkedblockingqueue
                     if (incomingMessage.getMessageType() == MessageType.SendChat && incomingMessage.getMessageBody().getTo() == -1) {
                         int clientID = getClientID();
                         server.messages.put(messageCreator.generateReceivedChatMessage(chatMessage, clientID, false));
@@ -269,7 +282,7 @@ public class HandleClient implements Runnable{
                         else {
                             boolean taken = false;
                             for (int i = 0; i < game.playerList.size(); i++) {
-                                if (game.playerList.get(i).getRobot().getFigure() == figure) {
+                                if (game.playerList.get(i).getRobot() != null && game.playerList.get(i).getRobot().getFigure() == figure) {
                                     taken = true;
                                     write(messageCreator.generateErrorMessage("Your figure was already chosen. Choose another one."));
                                     break;
@@ -286,7 +299,7 @@ public class HandleClient implements Runnable{
                                 server.sendPlayerValuesToAll(getClientID(), playerAddedMessage);
 
                                 for(int i = 0; i < game.playerList.size(); i++) {
-                                    if(game.playerList.get(i).getId() != getClientID()) {
+                                    if(game.playerList.get(i).getRobot() != null && game.playerList.get(i).getId() != getClientID()) {
                                         Message addOtherPlayer = messageCreator.generatePlayerAddedMessage(game.playerList.get(i).getUsername(), game.playerList.get(i).getRobot().getFigure(), game.playerList.get(i).getId());
                                         write(addOtherPlayer);
                                     }
@@ -300,6 +313,15 @@ public class HandleClient implements Runnable{
                         boolean ready = incomingMessage.getMessageBody().isReady();
                         if(ready){
                             game.addReady(clientID);
+                            //sets all ais to ready when the first player is ready (to prevent that the player cant
+                            // choose a map because he wasn't the first one to be ready)
+                            for(Player player: game.getPlayerList().getPlayerList()){
+                                if(player instanceof AI_Player && !player.isReady()){
+                                    player.setReady(true);
+                                    game.addReady(player.getId());
+                                    server.messages.put(messageCreator.generatePlayerStatusMessage(player.getId(), true));
+                                }
+                            }
                             /*if(game.getFirstReadyID() == clientID){
                                 write(messageCreator.generateSelectMapMessage(game.getMaps()));
                             }
@@ -323,7 +345,7 @@ public class HandleClient implements Runnable{
                 }
             }
         } catch (Exception e) {
-            logger.warn("An exception occurred: " + e);
+            e.printStackTrace();
         }
     }
 

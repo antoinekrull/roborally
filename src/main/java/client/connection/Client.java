@@ -524,8 +524,8 @@ public class Client {
     public void sendHelloServerMessage(String group, boolean isAI, String protocolVersion){
         sendMessageToServer(messageCreator.generateHelloServerMessage(group, isAI, protocolVersion));
     }
-    public void sendAIMessage(boolean AI) {
-        sendMessageToServer(messageCreator.generateHelloServerMessage(group, AI, protocolVersion));
+    public void sendAIMessage(boolean isAI) {
+        sendMessageToServer(messageCreator.generateHelloServerMessage(group, isAI, protocolVersion));
     }
 
     public void sendPlayerValues(String name, int figure){

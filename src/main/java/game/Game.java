@@ -1,8 +1,11 @@
 package game;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import communication.JsonSerializer;
+import communication.Message;
 import game.board.*;
 import game.card.*;
+import game.player.AI_Player;
 import game.player.Player;
 import game.player.Robot;
 import org.apache.logging.log4j.LogManager;
@@ -250,7 +253,13 @@ public class Game implements Runnable {
                 }
 
             player.getRobot().setDamageCount(0);
-
+            if(!(player instanceof AI_Player)){
+                server.sendDrawDamage(player, drawnDamageCards);
+            }
+            else{
+                ((AI_Player) player).sendDrawDamage(player, drawnDamageCards);
+            }
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -276,7 +285,12 @@ public class Game implements Runnable {
                     }
                 }
             }
-            server.sendDrawDamage(player, drawnDamageCards);
+            if(!(player instanceof AI_Player)){
+                server.sendDrawDamage(player, drawnDamageCards);
+            }
+            else{
+                ((AI_Player) player).sendDrawDamage(player, drawnDamageCards);
+            }
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -408,15 +422,45 @@ public class Game implements Runnable {
         }
     }
 
+    /**
+     * Finds a robot id that is not used.
+     *
+     * @return Returns an int that describes an unused robot id
+     */
+    public int findUnusedRobotId() {
+        int unusedId = 1;
+        Set<Integer> set = new HashSet<>();
+        for(Player player: playerList.getPlayerList()){
+            set.add(player.getRobot().getFigure());
+        }
+        for (int i = 1; i <= 6; i++) {
+            if (!set.contains(i)) {
+                return i;
+            }
+        }
+        return unusedId;
+    }
+
     private void runSetupPhase() {
+        logger.debug("Setup phase starts");
         server.sendActivePhase(0);
+        logger.debug("Server sent the active phase (value=0) to the players");
+
         setServerForPlayers();
-        setCurrentGamePhase(GamePhase.SETUP_PHASE);
+        logger.debug("Server set the server for all players and robots");
         try {
             Thread.sleep(100);
             for (int i = 0; i < readyList.size(); i++) {
                 activePlayer = playerList.getPlayerFromList(readyList.get(i));
+                if(activePlayer instanceof AI_Player){
+                    ((AI_Player) activePlayer).sendPlayerAddedMessage();
+                    logger.debug("AI player choose starting point.");
+                    ((AI_Player) activePlayer).chooseStartingPoint(this);
+                    setRobotSet(true);
+                }
+                logger.debug("Get active player " + i);
                 server.sendCurrentPlayer(readyList.get(i));
+                logger.debug("Server sent currentPlayer message");
                 Thread.sleep(100);
                 while (!robotSet) {
                     Thread.sleep(100);
@@ -429,11 +473,13 @@ public class Game implements Runnable {
         }
         setStartDirectionForRobot(currentMap);
         setUpDone = true;
+        logger.debug("all robots are set");
     }
 
     private void runUpgradePhase() {
         logger.info("This game is running the Upgrade Phase now");
         server.sendActivePhase(1);
+        logger.debug("Server sent the active phase (value=1) to the players");
         setCurrentGamePhase(GamePhase.UPGRADE_PHASE);
         playerList.determinePriority(board.getAntenna());
         try {
@@ -444,11 +490,12 @@ public class Game implements Runnable {
         refreshUpgradeShop();
         int cardIndex = -1;
         for(int i= 0; i < upgradeShop.size(); i++){
-            if(activePlayer.getUpgradeToBuy().equals(upgradeShop.get(i).getCard())){
+            if(!(activePlayer instanceof AI_Player) && activePlayer.getUpgradeToBuy().equals(upgradeShop.get(i).getCard())){
                 cardIndex = i;
             }
         }
-        if(activePlayer.isBuying()){
+
+        if(!(activePlayer instanceof AI_Player) && activePlayer.isBuying()){
             server.sendUpgradeBought(activePlayer, upgradeShop.get(cardIndex).getCard());
             activePlayer.purchaseUpgrade(cardIndex);
         }
@@ -457,15 +504,21 @@ public class Game implements Runnable {
 
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
         server.sendActivePhase(2);
+        logger.debug("Server sent the active phase (value=2) to the players");
         timerIsRunning = false;
         setCurrentGamePhase(GamePhase.PROGRAMMING_PHASE);
         try {
             CustomTimer customTimer = new CustomTimer(server);
             Thread.sleep(100);
-            for (int i = 0; i < playerList.size(); i++) {
-                playerList.get(i).drawFullHand();
+            for (Player player : playerList.getPlayerList()) {
+                logger.debug("Player " + player.getUsername() + " draws now.");
+                player.drawFullHand();
+                logger.debug("Player " + player.getUsername() + " has drawn.");
                 Thread.sleep(100);
-                server.sendYourCards(playerList.get(i));
+                if(!(player instanceof AI_Player)){
+                    server.sendYourCards(player);
+                    logger.debug("Server sent hand cards to " + player.getUsername());
+                }
             }
             playerList.setPlayersPlaying(true);
             while (!playerList.playersAreReady()) {
@@ -473,6 +526,11 @@ public class Game implements Runnable {
                     Thread.sleep(100);
                     if (!timerIsRunning && !playerList.playersAreReady()) {
                         customTimer.runTimer();
+                    }
+                }
+                for (Player player : playerList.getPlayerList()) {
+                    if(player instanceof AI_Player && !player.isReady()){
+                        ((AI_Player) player).playProgrammingPhase();
                     }
                 }
             }
@@ -583,6 +641,40 @@ public class Game implements Runnable {
         }
     }
 
+    /**
+     * Checks every game round if a player has won the game.
+     *
+     * @param playerList The list of players who are playing the game at the moment
+     * @return returns if a Player has won the game
+     */
+    public boolean checkIfPlayerWon(PlayerList playerList){
+        int checkpointsInGame = board.getCheckPointCount();
+        for(int i = 0; i < playerList.size(); i++){
+            //checks if the current Obj. of the robot is higher than the checkpoints in game. This should happen
+            //when the robot gets to the last checkpoint
+            if(playerList.get(i).getRobot().getCurrentObjective() == checkpointsInGame){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Determines which player won the game.
+     *
+     * @param playerList The list of players who are playing the game at the moment
+     * @return returns the Player that has won the game
+     */
+    private Player determineWhichPlayerWon(PlayerList playerList){
+        int checkpointsInGame = board.getCheckPointCount();
+        for(int i = 0; i < playerList.size(); i++){
+            if(playerList.get(i).getRobot().getCurrentObjective() == checkpointsInGame){
+                return playerList.get(i);
+            }
+        }
+        return null;
+    }
+
     public void setJsonMap(String jsonMap) {
         this.jsonMap = jsonMap;
     }
@@ -596,6 +688,7 @@ public class Game implements Runnable {
     }
 
     public boolean checkIfStartTileIsTaken(int x, int y) {
+        logger.debug("Check if starttile (" + x + "," + y + ") is taken");
         boolean result = false;
         for(StartTile startTile: board.getStartTileList()) {
             if(startTile.getXCoordinate() == x && startTile.getYCoordinate() == y) {

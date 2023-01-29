@@ -20,36 +20,38 @@ import static game.Game.upgradeShop;
  */
 public class Player {
 
-    private String username;
+    protected String username;
     private int score;
-    private int id;
+    private boolean isAI = false;
+    protected int id;
     private boolean isPlaying;
     private boolean isReady;
     private boolean isBuying;
     private String upgradeToBuy;
     private int adminRegister;
     private boolean[][] isUsingUpgrade = {{false, false, false},{false, false, false}};
-    private ArrayList<Card> hand;
+    protected ArrayList<Card> hand;
     private Card[] cardRegister = new Card[5];
     //private boolean[] statusRegister = new boolean[5];
     private ArrayBlockingQueue<Card> PermanentUpgradeSlots = new ArrayBlockingQueue<>(3);
     private ArrayBlockingQueue<Card> TemporaryUpgradeSlots = new ArrayBlockingQueue<>(3);
     private boolean[] statusRegister = new boolean[5];
-    private ProgrammingDeck personalDiscardPile;
+    protected ProgrammingDeck personalDiscardPile;
     private ArrayBlockingQueue<Card> cardsToSwap = new ArrayBlockingQueue<>(3); //meant for the use with the memory swap upgrade card
     private Boolean rearLaserOn = false;
     private Boolean hasAdminPrivilege = false;
+    protected Robot robot;
+    protected final Logger logger = LogManager.getLogger(Player.class);
 
-    private Robot robot;
-    private final Logger logger = LogManager.getLogger(Player.class);
-
-    private Server server;
+    protected Server server;
 
     public Player(int id, String username, Robot robot) {
         this.id = id;
         this.username = username;
         this.robot = robot;
-        robot.setId(id);
+        if(robot != null) {
+            robot.setId(id);
+        }
         //robot.setDirection(Direction.NORTH);
         this.hand = new ArrayList<Card>();
         this.score = 0;
@@ -61,6 +63,9 @@ public class Player {
         setHasAdminPrivilege(false);
         setAdminRegister(-1);
         setRearLaserOn(false);
+    }
+    public void setRobot(Robot robot) {
+        this.robot = robot;
     }
 
     public void temporaryUpgradeUsed(){
@@ -97,6 +102,13 @@ public class Player {
     }
     public int getScore() {
         return score;
+    }
+
+    public boolean getIsAI() {
+        return isAI;
+    }
+    public void setIsAI(boolean isAI) {
+        this.isAI = isAI;
     }
     public void increaseScore() {
         score++;
@@ -172,7 +184,7 @@ public class Player {
     }
     public void playUpgradePhase(){
     }
-    public void playProgrammingPhase(){
+    public void playProgrammingPhase() throws InterruptedException {
         //user decides which cards to play from his hand
         //code needs input from the UI of each user to know which cards are played
         //playCard(getHand().get(i), i);
@@ -237,17 +249,6 @@ public class Player {
 
     private void useUpgrades(boolean[][] parameter){
         isUsingUpgrade = parameter;
-    }
-
-    //TODO: Add GUI functionality / exceptions
-    public void playCard(Card card, int index) {
-        if(index == 0 && card instanceof AgainCard) {
-            logger.info("You cant play this card in the first register, please try again!");
-        } else if(index > 0 || index < cardRegister.length){
-            logger.info("The register has not been addressed properly, please try again!");
-        } else {
-            cardRegister[index] = card;
-        }
     }
 
     public void playCard(String cardName, int index) {
