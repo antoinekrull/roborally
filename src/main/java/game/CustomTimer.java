@@ -41,7 +41,7 @@ public class CustomTimer {
                         if(!(unreadyPlayer instanceof AI_Player)) {
                             server.sendCardsYouGotNow(unreadyPlayer, placedCards);
                         }
-                        unreadyPlayer.fillRegisterWithRandomCards();
+                        //unreadyPlayer.fillRegisterWithRandomCards();
                         game.getPlayerList().setPlayerReadiness(true);
                         game.setTimerIsRunning(false);
                     }

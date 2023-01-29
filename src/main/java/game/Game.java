@@ -252,7 +252,8 @@ public class Game implements Runnable {
                     Thread.sleep(100);
                 }
 
-            player.getRobot().setDamageCount(0);
+                player.getRobot().setDamageCount(0);
+                player.discardEntireHand();
             if(!(player instanceof AI_Player)){
                 server.sendDrawDamage(player, drawnDamageCards);
             }
@@ -543,6 +544,7 @@ public class Game implements Runnable {
             e.printStackTrace();
         }
         playerList.setPlayerReadiness(false);
+        playerList.discardAllHands();
     }
 
     private void runActivationPhase() throws Exception {
@@ -715,7 +717,6 @@ public class Game implements Runnable {
         player.getRobot().increaseDamageCount();
         player.getRobot().increaseDamageCount();
         drawDamageCards(player);
-        player.discardEntireHand();
         player.emptyAllCardRegisters();
         player.getRobot().setCurrentPosition(board.getRebootTile().getPosition());
         try {
