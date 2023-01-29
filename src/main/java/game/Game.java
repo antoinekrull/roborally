@@ -224,11 +224,15 @@ public class Game implements Runnable {
     public void drawDamageCards(Player player) {
         try {
             String[] drawnDamageCards = new String[player.getRobot().getDamageCount()];
-            for(int i = 0; i < player.getRobot().getDamageCount(); i++) {
+
                 if(spamDeck.getSize() > 0) {
-                    player.addCardToHand(spamDeck.popCardFromDeck());
-                    drawnDamageCards[i] = "Spam";
-                    logger.info("Spam added");
+                    for(int i = 0; i < player.getRobot().getDamageCount() && spamDeck.getSize() > 0; i++) {
+                        player.addCardToHand(spamDeck.popCardFromDeck());
+                        drawnDamageCards[i] = "Spam";
+                        logger.info("Spam added");
+                    }
+                    server.sendDrawDamage(player, drawnDamageCards);
+                    Thread.sleep(100);
                 } else {
                     ArrayList<String> availableDecks = new ArrayList<>();
                     if(wormDeck.getSize() > 0) {
@@ -244,10 +248,9 @@ public class Game implements Runnable {
                     server.sendPickDamage(player, availablePiles);
                     Thread.sleep(100);
                 }
-            }
+
             player.getRobot().setDamageCount(0);
-            server.sendDrawDamage(player, drawnDamageCards);
-            Thread.sleep(100);
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -466,10 +469,9 @@ public class Game implements Runnable {
             }
             playerList.setPlayersPlaying(true);
             while (!playerList.playersAreReady()) {
-                Thread.sleep(3000);
                 if (playerList.getAmountOfReadyPlayers() >= 1) {
                     Thread.sleep(100);
-                    if (!timerIsRunning) {
+                    if (!timerIsRunning && !playerList.playersAreReady()) {
                         customTimer.runTimer();
                     }
                 }
@@ -478,6 +480,7 @@ public class Game implements Runnable {
                 customTimer.cancel();
                 timerIsRunning = false;
             }
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

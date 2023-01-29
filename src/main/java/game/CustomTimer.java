@@ -42,8 +42,8 @@ public class CustomTimer {
                         unreadyPlayers.get(i).printRegisters();
                     }
                     game.getPlayerList().setPlayerReadiness(true);
-                    server.sendTimerEnded(new PlayerList());
-                   game.setTimerIsRunning(false);
+                    server.sendTimerEnded(unreadyPlayers);
+                    game.setTimerIsRunning(false);
                 }
             };
             timer.schedule(timerTask, 30000);
@@ -55,7 +55,6 @@ public class CustomTimer {
     //cancels timer
     public void cancel() {
         timer.cancel();
-        server.sendTimerEnded(new PlayerList());
         logger.info("Timer cancelled");
     }
 

@@ -253,7 +253,7 @@ public class HandleClient implements Runnable{
                                 game.setStartPoint(x, y);
                                 server.messages.put(startingPointTakenMessage);
                                 game.setRobotSet(true);
-                                game.getPlayerFromPlayerListById(clientID).getRobot().setCurrentPosition(new Pair<>(x, y));
+                                game.getPlayerFromPlayerListById(clientID).getRobot().setStartPosition(new Pair<>(x, y));
                             }
                             else {
                                 write(messageCreator.generateErrorMessage("Starting point is already taken"));
