@@ -59,6 +59,7 @@ public class CustomTimer {
     //cancels timer
     public void cancel() {
         timer.cancel();
+        server.sendTimerEnded(new PlayerList());
         logger.info("Timer cancelled");
     }
 

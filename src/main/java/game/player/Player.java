@@ -149,7 +149,6 @@ public class Player {
     public void setRearLaserOn(Boolean rearLaserOn) {this.rearLaserOn = rearLaserOn;}
     public Boolean getHasAdminPrivilege() {return hasAdminPrivilege;}
     public void setHasAdminPrivilege(Boolean hasAdminPrivilege) {this.hasAdminPrivilege = hasAdminPrivilege;}
-    //TODO: Fix crash if reboot happened
     public Card getCardFromRegister(int index){
         if(cardRegister[index] == null) {
             return new NullCard();
