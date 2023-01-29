@@ -238,6 +238,11 @@ public class PlayerList extends ArrayList implements Iterator<Player> {
         }
         return result;
     }
+    public void discardAllHands() {
+        for (Player player : playerList){
+            player.discardEntireHand();
+        }
+    }
 
 
 }

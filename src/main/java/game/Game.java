@@ -314,7 +314,8 @@ public class Game implements Runnable {
                     Thread.sleep(100);
                 }
 
-            player.getRobot().setDamageCount(0);
+                player.getRobot().setDamageCount(0);
+                player.discardEntireHand();
             if(!(player instanceof AI_Player)){
                 server.sendDrawDamage(player, drawnDamageCards);
             }
@@ -577,15 +578,14 @@ public class Game implements Runnable {
                 logger.debug("Player " + player.getUsername() + " draws now.");
                 player.drawFullHand();
                 logger.debug("Player " + player.getUsername() + " has drawn.");
-                for (int i = 0; i < playerList.size(); i++) {
 
-                    playerList.get(i).drawFullHand();
-                    Thread.sleep(100);
-                    if (!(player instanceof AI_Player)) {
-                        server.sendYourCards(player);
-                        logger.debug("Server sent hand cards to " + player.getUsername());
-                    }
+                Thread.sleep(100);
+                if (!(player instanceof AI_Player)) {
+                    server.sendYourCards(player);
+                    logger.debug("Server sent hand cards to " + player.getUsername());
                 }
+            }
+
                 playerList.setPlayersPlaying(true);
                 while (!playerList.playersAreReady()) {
                     if (playerList.getAmountOfReadyPlayers() >= 1) {
@@ -605,11 +605,11 @@ public class Game implements Runnable {
                     timerIsRunning = false;
                 }
 
-            }
-            playerList.setPlayerReadiness(false);
-        } catch(InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        playerList.setPlayerReadiness(false);
+        playerList.discardAllHands();
     }
 
     private void runActivationPhase() throws Exception {
@@ -775,7 +775,6 @@ public class Game implements Runnable {
         player.getRobot().increaseDamageCount();
         player.getRobot().increaseDamageCount();
         drawDamageCards(player);
-        player.discardEntireHand();
         player.emptyAllCardRegisters();
         player.getRobot().setCurrentPosition(board.getRebootTile().getPosition());
         try {
