@@ -367,7 +367,7 @@ public class Server {
 
     public void sendPickDamage(Player player, String[] availablePiles) {
         try {
-            CLIENTS.get(player.getId()).write(messageCreator.generatePickDamage(player.getId(), availablePiles));
+            CLIENTS.get(player.getId()).write(messageCreator.generatePickDamage(availablePiles));
         } catch (Exception e) {
             e.printStackTrace();
         }
