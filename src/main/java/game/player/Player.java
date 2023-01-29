@@ -211,8 +211,9 @@ public class Player {
         }
     }
 
-    public void purchaseUpgrade(int index){
+    public void purchaseUpgrade(int index) {
         if(upgradeShop.get(index).equals(null)){
+            server.sendBuyUpgrade(this);
             logger.log(Level.ERROR, "No card available at the selected index");
         }
         else {
@@ -368,5 +369,29 @@ public class Player {
             }
         }
         return result;
+    }
+
+    public void activateTUpgrades() throws Exception{
+        //ArrayList<Card> pSlotContent = new ArrayList<>();
+        ArrayList<Card> tSlotContent = new ArrayList<>();
+        //scans the slots for cards
+        for(int i = 0; i < 3; i++){
+            /*pSlotContent.add(PermanentUpgradeSlots.peek());
+            PermanentUpgradeSlots.remove(PermanentUpgradeSlots.peek());
+            PermanentUpgradeSlots.add(pSlotContent.get(i));*/
+            tSlotContent.add(TemporaryUpgradeSlots.peek());
+            TemporaryUpgradeSlots.remove(TemporaryUpgradeSlots.peek());
+            TemporaryUpgradeSlots.add(tSlotContent.get(i));
+        }
+        for(int i = 0; i < 3; i++){
+            /*if(isUsingUpgrade[0][i]){
+                pSlotContent.get(i).applyEffect(this);
+                permanentUpgradeUsed();
+            }*/
+            if(isUsingUpgrade[1][i]){
+                tSlotContent.get(i).applyEffect(this);
+                temporaryUpgradeUsed();
+            }
+        }
     }
 }
