@@ -653,20 +653,14 @@ public class ViewModelGameWindow {
             String rotation = gamemessage.getMessageBody().getRotation();
             if (modelUser.userIDProperty().get() == clientID){
                 RobotDirection ownRobotDirection = modelGame.getRobotDirection();
-                logger.debug("RobotDirection from modelGame OWN: " + ownRobotDirection);
                 RobotDirection newRobotDirection = updateDirection(ownRobotDirection, rotation);
                 modelGame.setRobotDirection(newRobotDirection);
-                logger.debug("RobotDirection from modelGame OWN: " + ownRobotDirection);
-                logger.debug("RobotDirection new OWN in ModelGame: " + modelGame.getRobotDirection());
                 rotateRobot(modelGame.robotProperty().get(), newRobotDirection);
             }
             else {
                 RobotDirection otherRobotDirection = modelGame.getPlayerList().getPlayer(clientID).getRobotDirection();
                 RobotDirection newOtherRobotDirection = updateDirection(otherRobotDirection, rotation);
-                logger.debug("RobotDirection other player currently: " + otherRobotDirection);
-                logger.debug("RobotDirection other player new: " + otherRobotDirection);
                 modelGame.getPlayerList().getPlayer(clientID).setRobotDirection(newOtherRobotDirection);
-                logger.debug("RobotDirection for player NEW SET: " + modelGame.getPlayerList().getPlayer(clientID).getRobotDirection());
                 rotateRobot(modelGame.getPlayerList().getPlayer(clientID).getRobot().getFigure(), newOtherRobotDirection);
             }
         }
@@ -1203,8 +1197,6 @@ public class ViewModelGameWindow {
         target.setOnDragOver(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                //logger.debug("setOnDragOver");
-
                 //data is dragged over target
                 //accept it only if it is not dragged from the same node and if it hasImage
                 if (event.getGestureSource() != target && event.getDragboard().hasImage()) {
@@ -1220,7 +1212,6 @@ public class ViewModelGameWindow {
         target.setOnDragEntered(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                //logger.debug("setOnDragEntered");
                 //drag-and-drop gesture entered target
                 //Show entering visually
                 if (event.getGestureSource() != target && event.getDragboard().hasImage()) {
@@ -1235,7 +1226,6 @@ public class ViewModelGameWindow {
         target.setOnDragExited(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                //logger.debug("setOnDragExited");
                 //mouse moves out of enntered area
                 //remove visuals
                 target.setStyle("-fx-border-color: transparent;");
@@ -1249,7 +1239,6 @@ public class ViewModelGameWindow {
         target.setOnDragDropped(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                //logger.debug("setOnDragDropped");
                 //data dropped
                 isDroppedSuccessfully = true;
                 boolean success = false;
@@ -1304,7 +1293,6 @@ public class ViewModelGameWindow {
         source.setOnDragDone(new EventHandler<DragEvent>() {
             @Override
             public void handle(DragEvent event) {
-                //logger.debug("Drag done - completed in variable: " + event.isDropCompleted());
                 if (!isDroppedSuccessfully) {
                     // drag and drop failed, add the card back to the source pane
                     Dragboard db = event.getDragboard();

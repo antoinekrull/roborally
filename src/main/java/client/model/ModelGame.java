@@ -19,6 +19,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,6 +56,7 @@ public class ModelGame {
     private ObservableList<String> maps;
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
     private ObservableList<String> myHandCards;
+    private ObservableList<String> upgradeCards;
 
 
     private Game game;
@@ -91,6 +93,9 @@ public class ModelGame {
                 notifyChangeSupport.updateProgrammingHandCards();
             }
         });
+
+        this.upgradeCards = FXCollections.observableArrayList();
+
         this.PLAYER_MOVEMENTS = new LinkedBlockingQueue<>();
         readyToPlay.bind(client.gameStartedProperty());
         readyToPlay.addListener(new ChangeListener<Boolean>() {
@@ -221,6 +226,14 @@ public class ModelGame {
 
     public ObservableList<String> getMyHandCards() {
         return myHandCards;
+    }
+
+    public ObservableList<String> getUpgradeCards() {
+        return upgradeCards;
+    }
+
+    public void setUpgradeCards(ObservableList<String> upgradeCards) {
+        this.upgradeCards = upgradeCards;
     }
 
     public RobotDirection getRobotDirection() {
