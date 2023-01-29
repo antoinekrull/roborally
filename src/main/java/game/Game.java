@@ -577,15 +577,15 @@ public class Game implements Runnable {
                 logger.debug("Player " + player.getUsername() + " draws now.");
                 player.drawFullHand();
                 logger.debug("Player " + player.getUsername() + " has drawn.");
-                for (int i = 0; i < playerList.size(); i++) {
 
-                    playerList.get(i).drawFullHand();
-                    Thread.sleep(100);
-                    if (!(player instanceof AI_Player)) {
-                        server.sendYourCards(player);
-                        logger.debug("Server sent hand cards to " + player.getUsername());
-                    }
+                Thread.sleep(100);
+                if (!(player instanceof AI_Player)) {
+                    server.sendYourCards(player);
+                    System.out.println("ich bin kein robo du hurensohn");
+                    logger.debug("Server sent hand cards to " + player.getUsername());
                 }
+            }
+
                 playerList.setPlayersPlaying(true);
                 while (!playerList.playersAreReady()) {
                     if (playerList.getAmountOfReadyPlayers() >= 1) {
@@ -605,7 +605,6 @@ public class Game implements Runnable {
                     timerIsRunning = false;
                 }
 
-            }
             playerList.setPlayerReadiness(false);
         } catch(InterruptedException e){
             e.printStackTrace();
