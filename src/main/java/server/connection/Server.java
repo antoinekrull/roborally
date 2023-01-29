@@ -243,7 +243,7 @@ public class Server {
         try {
             messages.put(messageCreator.generateSelectionFinishedMessage(id));
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.warn("An error occurred: " + e);
         }
     }
 
