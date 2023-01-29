@@ -5,7 +5,7 @@ import game.player.Player;
 public class AdminPrivilegeCard extends Card{
     public AdminPrivilegeCard(){
         cardType = CardType.UPGRADE_CARD;
-        setCard("Admin Privilege");
+        setCard("AdminPrivilege");
         setCost(3);
         setPermanent(true);
     }

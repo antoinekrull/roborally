@@ -9,7 +9,7 @@ import static game.Game.spamDeck;
 public class SpamBlockerCard extends Card{
     public SpamBlockerCard(){
         cardType = CardType.UPGRADE_CARD;
-        setCard("Spam Blocker");
+        setCard("SpamBlocker");
         setCost(3);
     }
 

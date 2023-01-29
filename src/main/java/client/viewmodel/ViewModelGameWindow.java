@@ -710,10 +710,12 @@ public class ViewModelGameWindow {
             gameboard.add(img, x, y);
         }
         if (gamemessage.getMessageType().equals(MessageType.RefillShop)){
+            logger.warn("Hi Refill");
             String[] availableUpgrades = gamemessage.getMessageBody().getCards();
             cardSelection.upgradeShop(availableUpgrades);
         }
         if (gamemessage.getMessageType().equals(MessageType.ExchangeShop)){
+            logger.warn("Hi Exchange");
             String[] availableUpgrades = gamemessage.getMessageBody().getCards();
             cardSelection.upgradeShop(availableUpgrades);
         }

@@ -480,10 +480,12 @@ public class Client {
                             Client.this.setGameLogMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.RefillShop)){
-                            Client.this.setGameLogMessage(message);
+                            Client.this.setGameEventMessage(message);
+                            logger.warn("Refill");
                         }
                         if (message.getMessageBody().equals(MessageType.ExchangeShop)){
-                            Client.this.setGameLogMessage(message);
+                            Client.this.setGameEventMessage(message);
+                            logger.warn("Exchange");
                         }
                         if (message.getMessageType().equals(MessageType.UpgradeBought)){
                             //TODO: receive purchase confirmation
