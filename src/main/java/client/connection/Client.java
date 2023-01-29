@@ -15,14 +15,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.Arrays;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.apache.logging.log4j.LogManager;
@@ -69,7 +62,7 @@ public class Client {
     private boolean prioPlayer = false;
     private IntegerProperty score;
     private ObservableList<String> myCards;
-    private IntegerProperty energy;
+    private DoubleProperty energy;
     private ObservableList<String> maps;
     private BooleanProperty timer;
 
@@ -91,7 +84,7 @@ public class Client {
         this.activePlayer = new SimpleBooleanProperty(false);
         this.score = new SimpleIntegerProperty(0);
         this.myCards = FXCollections.observableArrayList();
-        this.energy = new SimpleIntegerProperty(5);
+        this.energy = new SimpleDoubleProperty(5);
         this.movement = new SimpleObjectProperty<>();
         this.gameLogMessage = new SimpleObjectProperty<>();
         this.gameEventMessage = new SimpleObjectProperty<>();
@@ -213,11 +206,11 @@ public class Client {
         this.myCards = myCards;
     }
 
-    public IntegerProperty energyProperty() {
+    public DoubleProperty energyProperty() {
         return energy;
     }
 
-    public void setEnergy(int energy) {
+    public void setEnergy(double energy) {
         this.energy.set(energy);
     }
 
@@ -427,6 +420,14 @@ public class Client {
                         if (message.getMessageType().equals(MessageType.Movement)) {
                             Client.this.setMovement(message);
                             logger.debug("Movement message: " + message);
+                            Platform.runLater(() -> Client.this.setEnergy(energyProperty().get()+1));
+                            Platform.runLater(() -> Client.this.setScore(scoreProperty().get()+1));
+                            Platform.runLater(() -> {
+                                for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
+                                    clientPlayerList.getPlayerList().get(i).setEnergyCubes(clientPlayerList.getPlayerList().get(i).getEnergyCubes()+1);
+                                    clientPlayerList.getPlayerList().get(i).setScore(clientPlayerList.getPlayerList().get(i).scoreProperty().get()+1);
+                                }
+                            });
                         }
                         if (message.getMessageType().equals(MessageType.CheckpointMoved)) {
                             logger.debug("checkpointMoved: checkpoint: " + message.getMessageBody().getCheckpointID() + " " +  message.getMessageBody().getX() + " " +message.getMessageBody().getY());

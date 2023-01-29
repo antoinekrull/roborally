@@ -13,12 +13,8 @@ import game.board.Tile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+
+import javafx.beans.property.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -45,7 +41,7 @@ public class ModelGame {
     private RobotDirection robotDirection;
     private SimpleIntegerProperty score;
     private SimpleStringProperty activePhase;
-    private SimpleIntegerProperty energy;
+    private SimpleDoubleProperty energy;
     private BooleanProperty readyToPlay;
     private SimpleStringProperty currentPlayer;
     private BooleanProperty activePlayer;
@@ -76,7 +72,7 @@ public class ModelGame {
         this.robotProperty = new SimpleIntegerProperty();
         this.score = new SimpleIntegerProperty();
         score.bind(client.scoreProperty());
-        this.energy = new SimpleIntegerProperty();
+        this.energy = new SimpleDoubleProperty();
         energy.bind(client.energyProperty());
         this.activePhase = new SimpleStringProperty();
         activePhase.bind(client.activePhaseProperty());
@@ -223,7 +219,7 @@ public class ModelGame {
         this.maps = maps;
     }
 
-    public SimpleIntegerProperty energyProperty() {
+    public SimpleDoubleProperty energyProperty() {
         return energy;
     }
 

@@ -52,12 +52,11 @@ public class PlayerGameInfo {
                     @Override
                     public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                         FadeTransition transition = new FadeTransition(Duration.millis(1000), energyCubesBar);
-                        transition.setFromValue(oldValue.doubleValue());
-                        transition.setToValue(newValue.doubleValue());
+                        transition.setFromValue(0.7);
+                        transition.setToValue(1.0);
                         transition.play();
                     }
                 });
-                logger.debug("Progressbar Value: " + energyCubesBar.progressProperty());
 
                 //shows amount of energycubes as String
                 Label energy = new Label();

@@ -80,7 +80,6 @@ public class NotifyChangeSupport {
 
     public void updateProgrammingHandCards() {
         if (gamewindow) {
-            logger.debug("programmingHandCards");
             viewModelGameWindow.fillHandCards();
         }
     }
@@ -89,7 +88,6 @@ public class NotifyChangeSupport {
         Platform.runLater(() -> {
             if (gamewindow) {
                 viewModelGameWindow.robotSetPosition();
-                logger.debug("RobotID in robotSetPosition: ");
             }
         });
     }
@@ -102,20 +100,18 @@ public class NotifyChangeSupport {
 
     public void gameEventMessageArrived() {
         if (gamewindow) {
-            viewModelGameWindow.reveivedGameEventMessage();
+            viewModelGameWindow.receivedGameEventMessage();
         }
     }
 
     public void startTimer() {
         if (gamewindow) {
-            logger.debug("NotifyChangeSupport startTimer");
             viewModelGameWindow.startTimer();
         }
     }
 
     public void stopTimer() {
         if (gamewindow) {
-            logger.debug("NotifyChangeSupport stopTimer");
             viewModelGameWindow.stopTimer();
         }
     }
