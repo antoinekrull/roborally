@@ -486,11 +486,12 @@ public class Game implements Runnable {
         refreshUpgradeShop();
         int cardIndex = -1;
         for(int i= 0; i < upgradeShop.size(); i++){
-            if(activePlayer.getUpgradeToBuy().equals(upgradeShop.get(i).getCard())){
+            if(!(activePlayer instanceof AI_Player) && activePlayer.getUpgradeToBuy().equals(upgradeShop.get(i).getCard())){
                 cardIndex = i;
             }
         }
-        if(activePlayer.isBuying()){
+
+        if(!(activePlayer instanceof AI_Player) && activePlayer.isBuying()){
             server.sendUpgradeBought(activePlayer, upgradeShop.get(cardIndex).getCard());
             activePlayer.purchaseUpgrade(cardIndex);
         }
