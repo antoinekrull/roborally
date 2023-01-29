@@ -39,7 +39,6 @@ public class ModelGame {
     private NotifyChangeSupport notifyChangeSupport;
     private SimpleIntegerProperty robotProperty;
     private RobotDirection robotDirection;
-    private SimpleStringProperty robotRotation;
     private SimpleIntegerProperty score;
     private SimpleStringProperty activePhase;
     private SimpleIntegerProperty energy;
@@ -121,48 +120,6 @@ public class ModelGame {
         });
 
         this.robotDirection = RobotDirection.EAST;
-        this.robotRotation = new SimpleStringProperty();
-        robotRotation.bind(client.robotDirectionProperty());
-        /*
-        robotRotation.addListener(new InvalidationListener() {
-            @Override
-            public void invalidated(Observable observable) {
-                if (robotDirection.get().equals(RobotDirection.EAST)) {
-                    if (robotRotation.get().equals("counterclockwise")) {
-                        setRobotDirection(RobotDirection.NORTH);
-                    }
-                    if (robotRotation.get().equals("clockwise")) {
-                        setRobotDirection(RobotDirection.SOUTH);
-                    }
-                }
-                if (robotDirection.get().equals(RobotDirection.SOUTH)) {
-                    if (robotRotation.get().equals("counterclockwise")) {
-                        setRobotDirection(RobotDirection.EAST);
-                    }
-                    if (robotRotation.get().equals("clockwise")) {
-                        setRobotDirection(RobotDirection.WEST);
-                    }
-                }
-                if (robotDirection.get().equals(RobotDirection.WEST)) {
-                    if (robotRotation.get().equals("counterclockwise")) {
-                        setRobotDirection(RobotDirection.NORTH);
-                    }
-                    if (robotRotation.get().equals("clockwise")) {
-                        setRobotDirection(RobotDirection.SOUTH);
-                    }
-                }
-                if (robotDirection.get().equals(RobotDirection.NORTH)) {
-                    if (robotRotation.get().equals("counterclockwise")) {
-                        setRobotDirection(RobotDirection.WEST);
-                    }
-                    if (robotRotation.get().equals("clockwise")) {
-                        setRobotDirection(RobotDirection.EAST);
-                    }
-                }
-            }
-        });
-
-         */
 
         this.GAME_EVENT_MESSAGES = new LinkedBlockingQueue<>();
         this.gameEvent = new SimpleObjectProperty<>();

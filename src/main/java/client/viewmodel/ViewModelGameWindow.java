@@ -121,7 +121,6 @@ public class ViewModelGameWindow {
     private CardSelection cardSelection;
 
     private Timeline timeline;
-    private ObjectProperty<RobotDirection> rotation;
     private double gameboardTileWidth;
     private double programcardsWidth;
     private int columnIndex;
@@ -184,7 +183,6 @@ public class ViewModelGameWindow {
         myEnergyBar.progressProperty().bind(modelGame.energyProperty().divide(22));
 
         myEnergyBar.progressProperty().addListener(new ChangeListener<Number>() {
-
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 FadeTransition transition = new FadeTransition(Duration.millis(1000), myEnergyBar);
@@ -203,18 +201,6 @@ public class ViewModelGameWindow {
 
         cardSelection = new CardSelection(baseStackPane);
 
-        rotation = new SimpleObjectProperty<>();
-        /*
-        rotation.bind(modelGame.robotDirectionProperty());
-        /*
-        rotation.addListener(new ChangeListener<RobotDirection>() {
-            @Override
-            public void changed(ObservableValue<? extends RobotDirection> observable, RobotDirection oldValue, RobotDirection newValue) {
-                rotateRobot();
-            }
-        });
-
-         */
 
         setOnDragDetected(programCard1);
         setOnDragDetected(programCard2);
@@ -621,6 +607,12 @@ public class ViewModelGameWindow {
     }
 
     private void handleGameEvent(Message gamemessage) {
+        if (gamemessage.getMessageType().equals(MessageType.MapSelected)) {
+            modelGame.setRobotDirection(RobotDirection.WEST);
+            for (int i = 0; i < modelGame.getPlayerList().getPlayerList().size(); i++) {
+                modelGame.getPlayerList().getPlayerList().get(i).setRobotDirection(RobotDirection.WEST);
+            }
+        }
         if (gamemessage.getMessageType().equals(MessageType.SelectionFinished)) {
             int clientID = gamemessage.getMessageBody().getClientID();
             if (clientID == modelUser.userIDProperty().get()){
@@ -697,7 +689,7 @@ public class ViewModelGameWindow {
             });
         }
         if (gamemessage.getMessageType().equals(MessageType.CheckpointMoved)) {
-            //TODO: move checkpoint on board
+
         }
 
     }
@@ -1029,7 +1021,6 @@ public class ViewModelGameWindow {
                 }
             }
         });
-
     }
 
     private void loadDecks (){
