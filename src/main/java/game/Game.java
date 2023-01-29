@@ -123,8 +123,10 @@ public class Game implements Runnable {
                     logger.warn("CHECKPOINT MOVING");
                     logger.warn(checkpointTile.getPosition());
                     collisionCalculator.moveConveyorBelt(checkpointTile);
-                    server.sendCheckPointMoved(checkpointTile.getCount(), checkpointTile.getXCoordinate()
-                            , checkpointTile.getYCoordinate());
+                    int x = checkpointTile.getPosition().getValue0();
+                    int y = checkpointTile.getPosition().getValue1();
+                    server.sendCheckPointMoved(checkpointTile.getCount(), x, y);
+                    Thread.sleep(100);
                     logger.warn(checkpointTile.getPosition());
                 }
             }
@@ -507,12 +509,15 @@ public class Game implements Runnable {
             Thread.sleep(100);
             cardList.clear();
             Thread.sleep(1000);
-            if(playerList.robotNeedsReboot()) {
-                for(int i = 0; i < playerList.numberOfNeededReboots(); i++) {
-                    reboot(playerList.get(i));
-                    Thread.sleep(1000);
-                }
-            }
+
+            //nicht notwendig????
+//            if(playerList.robotNeedsReboot()) {
+//                for(int i = 0; i < playerList.numberOfNeededReboots(); i++) {
+//                    logger.debug("macht dieses ding hier überhaupt was?");
+//                    reboot(playerList.get(i));
+//                    Thread.sleep(1000);
+//                }
+//            }
 
             //checks if all registers have been activated
             if(currentRegister == 4) {
