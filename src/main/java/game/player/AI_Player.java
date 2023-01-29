@@ -32,6 +32,7 @@ public class AI_Player extends Player {
             if(!startTile.isTaken()) {
                 aiStartTilePosition = startTile.getPosition();
                 startTile.setTaken(true);
+                break;
             }
         }
         robot.setCurrentPosition(aiStartTilePosition);
