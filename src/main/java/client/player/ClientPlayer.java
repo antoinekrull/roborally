@@ -3,8 +3,7 @@ package client.player;
 import client.ui.RobotDirection;
 import game.player.Robot;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.value.ObservableValue;
 
 /**
  * @author Moritz, Dominic, Antoine, Firas
@@ -143,6 +142,9 @@ public class ClientPlayer {
 
     public void addEnergy(int count) {
         this.energyCubes.add(count);
+    }
+    public StringProperty activePlayerProperty() {
+        return activePlayer;
     }
 
     public void setActivePlayer(String activePlayer) {

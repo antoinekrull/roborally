@@ -142,7 +142,6 @@ public class Player {
     public void setRearLaserOn(Boolean rearLaserOn) {this.rearLaserOn = rearLaserOn;}
     public Boolean getHasAdminPrivilege() {return hasAdminPrivilege;}
     public void setHasAdminPrivilege(Boolean hasAdminPrivilege) {this.hasAdminPrivilege = hasAdminPrivilege;}
-    //TODO: Fix crash if reboot happened
     public Card getCardFromRegister(int index){
         if(cardRegister[index] == null) {
             return new NullCard();
@@ -286,12 +285,10 @@ public class Player {
         int iterator = 0;
         for(int y = 0; y < cardRegister.length; y++) {
             if (cardRegister[y] == null) {
-                if (hand.size() > 0) {
                     drawCard();
                     cardRegister[y] = discard(0);
                     cardNames[iterator++] = cardRegister[y].getCard();
 
-                }
             }
         }
         return cardNames;
@@ -310,17 +307,9 @@ public class Player {
     public void emptyAllCardRegisters() {
         for(int i = 0; i < cardRegister.length; i++) {
             if(cardRegister[i] != null) {
-                if(cardRegister[i].isDamageCard()) {
-                    switch (cardRegister[i].getCard()) {
-                        case "Trojan" -> Game.trojanDeck.addCard(cardRegister[i]);
-                        case "Worm" -> Game.wormDeck.addCard(cardRegister[i]);
-                        case "Spam" -> Game.spamDeck.addCard(cardRegister[i]);
-                        case "Virus" -> Game.virusDeck.addCard(cardRegister[i]);
-                    }
-                } else {
-                    personalDiscardPile.addCard(cardRegister[i]);
-                    cardRegister[i] = null;
-                }
+                personalDiscardPile.addCard(cardRegister[i]);
+                cardRegister[i] = null;
+
             }
         }
     }

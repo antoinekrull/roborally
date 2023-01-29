@@ -141,7 +141,8 @@ public class HandleClient implements Runnable{
 
         try {
 
-            String line;
+            String chatMessage;
+
             //Accept client if his protocol version is correct
             while(!accepted) {
                 Message incomingMessage = jsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
@@ -187,8 +188,7 @@ public class HandleClient implements Runnable{
 
             while (accepted) {
                 Message incomingMessage = jsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
-                line = incomingMessage.getMessageBody().getMessage();
-                String line_formatted = this.username + ": " + line;
+                chatMessage = incomingMessage.getMessageBody().getMessage();
                 try {
                     if(incomingMessage.getMessageType() == MessageType.HelloServer &&
                             incomingMessage.getMessageBody().getProtocol().equals(server.getProtocolVersion()) &&
@@ -202,12 +202,11 @@ public class HandleClient implements Runnable{
                     //String changed to Message type (protocol, from: sender): added to linkedblockingqueue
                     if (incomingMessage.getMessageType() == MessageType.SendChat && incomingMessage.getMessageBody().getTo() == -1) {
                         int clientID = getClientID();
-                        server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, clientID, false));
+                        server.messages.put(messageCreator.generateReceivedChatMessage(chatMessage, clientID, false));
                     } else if (incomingMessage.getMessageType() == MessageType.SendChat) {
                         if (server.CLIENTS.containsKey(incomingMessage.getMessageBody().getTo())) {
-                            //String changed to Message type (protocol, from: to send): added to linkedblockingqueue
                             int toUser = incomingMessage.getMessageBody().getTo();
-                            server.messages.put(messageCreator.generateReceivedChatMessage(line_formatted, toUser, true));
+                            server.sendPrivateMessage(toUser, messageCreator.generateReceivedChatMessage(chatMessage, getClientID(), true));
                         }
                     } else if (incomingMessage.getMessageType() == MessageType.Alive) {
                         setAlive(true);

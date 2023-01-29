@@ -314,7 +314,8 @@ public class Game implements Runnable {
                     Thread.sleep(100);
                 }
 
-            player.getRobot().setDamageCount(0);
+                player.getRobot().setDamageCount(0);
+                player.discardEntireHand();
             if(!(player instanceof AI_Player)){
                 server.sendDrawDamage(player, drawnDamageCards);
             }
@@ -581,7 +582,6 @@ public class Game implements Runnable {
                 Thread.sleep(100);
                 if (!(player instanceof AI_Player)) {
                     server.sendYourCards(player);
-                    System.out.println("ich bin kein robo du hurensohn");
                     logger.debug("Server sent hand cards to " + player.getUsername());
                 }
             }
@@ -605,10 +605,11 @@ public class Game implements Runnable {
                     timerIsRunning = false;
                 }
 
-            playerList.setPlayerReadiness(false);
-        } catch(InterruptedException e){
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        playerList.setPlayerReadiness(false);
+        playerList.discardAllHands();
     }
 
     private void runActivationPhase() throws Exception {
@@ -774,7 +775,6 @@ public class Game implements Runnable {
         player.getRobot().increaseDamageCount();
         player.getRobot().increaseDamageCount();
         drawDamageCards(player);
-        player.discardEntireHand();
         player.emptyAllCardRegisters();
         player.getRobot().setCurrentPosition(board.getRebootTile().getPosition());
         try {

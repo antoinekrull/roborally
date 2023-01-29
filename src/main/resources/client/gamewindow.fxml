@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -20,7 +21,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 <StackPane fx:id="baseStackPane" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.viewmodel.ViewModelGameWindow">
   <children>
@@ -356,7 +356,7 @@
                         </GridPane>
                         <HBox fx:id="myPlayerInfoHBox" alignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
                            <children>
-                              <VBox fx:id="myPlayerInfoVBox" alignment="CENTER_LEFT" fillWidth="false" spacing="12.0">
+                              <VBox fx:id="myPlayerInfoVBox" alignment="CENTER_LEFT" fillWidth="false" spacing="6.0">
                                  <children>
                                     <Label fx:id="timerLabel" styleClass="playerInfoLabel" text="" />
                                     <Label fx:id="currentActivePlayerLabel" styleClass="playerInfoLabel" text="" />
@@ -459,7 +459,7 @@
                         </ScrollPane>
                       </children>
                     </Pane>
-                              <GridPane GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+                              <GridPane prefHeight="26.0" prefWidth="434.0" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
                                  <columnConstraints>
                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="80.0" />
                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
@@ -468,30 +468,13 @@
                                     <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                      <Button fx:id="chatButton" mnemonicParsing="false" onAction="#chatButtonOnAction" text="Send" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                        <opaqueInsets>
-                          <Insets />
-                        </opaqueInsets>
-                        <graphic>
-                          <Label fx:id="sendLabel">
-                            <font>
-                              <Font name="Hiragino Sans W2" size="11.0" />
-                            </font>
-                          </Label>
-                        </graphic>
-                                       <GridPane.margin>
-                                          <Insets left="10.0" />
-                                       </GridPane.margin>
-                      </Button>
-                                    <Pane fx:id="textFieldPane">
+                                    <HBox alignment="TOP_CENTER">
                                        <children>
-                            <TextField fx:id="chatTextfield" focusTraversable="false" prefWidth="${textFieldPane.width}" promptText="Type here...">
-                              <font>
-                                <Font name="Hiragino Sans W2" size="13.0" />
-                              </font>
-                            </TextField>
+                                          <ChoiceBox fx:id="usersChoiceBox" prefHeight="26.0" prefWidth="113.0" />
+                                          <TextField fx:id="chatTextfield" maxWidth="400.0" prefHeight="26.0" prefWidth="243.0" HBox.hgrow="ALWAYS" />
                                        </children>
-                                    </Pane>
+                                    </HBox>
+                                    <Button fx:id="chatButton" mnemonicParsing="false" onAction="#chatButtonOnAction" prefHeight="26.0" prefWidth="75.0" text="Send" GridPane.columnIndex="1" />
                                  </children>
                               </GridPane>
                            </children>
