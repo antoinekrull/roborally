@@ -466,10 +466,9 @@ public class Game implements Runnable {
             }
             playerList.setPlayersPlaying(true);
             while (!playerList.playersAreReady()) {
-                Thread.sleep(3000);
                 if (playerList.getAmountOfReadyPlayers() >= 1) {
                     Thread.sleep(100);
-                    if (!timerIsRunning) {
+                    if (!timerIsRunning && !playerList.playersAreReady()) {
                         customTimer.runTimer();
                     }
                 }
@@ -478,6 +477,7 @@ public class Game implements Runnable {
                 customTimer.cancel();
                 timerIsRunning = false;
             }
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
