@@ -688,6 +688,7 @@ public class Game implements Runnable {
     }
 
     public boolean checkIfStartTileIsTaken(int x, int y) {
+        logger.debug("Check if starttile (" + x + "," + y + ") is taken");
         boolean result = false;
         for(StartTile startTile: board.getStartTileList()) {
             if(startTile.getXCoordinate() == x && startTile.getYCoordinate() == y) {
