@@ -147,17 +147,8 @@ public class HandleClient implements Runnable{
                 Message incomingMessage = jsonSerializer.deserializeJson(this.in.readUTF(), Message.class);
                 try {
                     if (incomingMessage.getMessageType() == MessageType.HelloServer) {
-                        if(incomingMessage.getMessageBody().getProtocol().equals(server.getProtocolVersion()) &&
-                                incomingMessage.getMessageBody().isAI()){
-                            // creates an ai player
-                            int ai_id = server.getUniqueID();
-                            Game.playerList.add(new AI_Player(ai_id, "ai_player", new Robot(game.findUnusedRobotId(), server.getUniqueID()), game.board));
-                            Game.playerList.getPlayerFromList(ai_id).setIsAI(true);
-                            game.addReady(ai_id);
-                            logger.debug("AI player with the id " + ai_id + " was added");
-                        }
-                        else if (incomingMessage.getMessageBody().getProtocol().equals(server.getProtocolVersion()) &&
-                            !incomingMessage.getMessageBody().isAI()){
+                        logger.debug("HELLO SERVER MESSAGES: " + incomingMessage.getMessageBody().getProtocol());
+                        if (incomingMessage.getMessageBody().getProtocol().equals(server.getProtocolVersion())){
                             accepted = true;
                             //writeTo(clientID, messageCreator.generateWelcomeMessage(clientID));
                             write(messageCreator.generateWelcomeMessage(clientID));
@@ -199,6 +190,15 @@ public class HandleClient implements Runnable{
                 line = incomingMessage.getMessageBody().getMessage();
                 String line_formatted = this.username + ": " + line;
                 try {
+                    if(incomingMessage.getMessageType() == MessageType.HelloServer &&
+                            incomingMessage.getMessageBody().getProtocol().equals(server.getProtocolVersion()) &&
+                            incomingMessage.getMessageBody().isAI()){
+                        // creates an ai player
+                        int ai_id = server.getUniqueID();
+                        Game.playerList.add(new AI_Player(ai_id, "ai_player", new Robot(game.findUnusedRobotId(), server.getUniqueID()), game.board));
+                        Game.playerList.getPlayerFromList(ai_id).setIsAI(true);
+                        logger.debug("AI player with the id " + ai_id + " was added");
+                    }
                     //String changed to Message type (protocol, from: sender): added to linkedblockingqueue
                     if (incomingMessage.getMessageType() == MessageType.SendChat && incomingMessage.getMessageBody().getTo() == -1) {
                         int clientID = getClientID();
@@ -314,6 +314,14 @@ public class HandleClient implements Runnable{
                         boolean ready = incomingMessage.getMessageBody().isReady();
                         if(ready){
                             game.addReady(clientID);
+                            //sets all ais to ready when the first player is ready (to prevent that the player cant
+                            // choose a map because he wasn't the first one to be ready)
+                            for(Player player: game.getPlayerList().getPlayerList()){
+                                if(player instanceof AI_Player && !player.isReady()){
+                                    game.addReady(player.getId());
+                                    server.messages.put(messageCreator.generatePlayerStatusMessage(player.getId(), true));
+                                }
+                            }
                             /*if(game.getFirstReadyID() == clientID){
                                 write(messageCreator.generateSelectMapMessage(game.getMaps()));
                             }
@@ -337,7 +345,7 @@ public class HandleClient implements Runnable{
                 }
             }
         } catch (Exception e) {
-            logger.warn("An exception occurred: " + e);
+            e.printStackTrace();
         }
     }
 
