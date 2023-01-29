@@ -118,6 +118,21 @@ public class Game implements Runnable {
                     }
                 }
             }
+            if (currentMap.equals("Twister")) {
+                for (CheckpointTile checkpointTile : board.getCheckpointList()) {
+                    if (board.getTile(checkpointTile.getPosition()).get(0) instanceof ConveyorBeltTile) {
+                        Pair checkPointPosition = checkpointTile.getPosition();
+                        logger.warn("CHECKPOINT MOVING");
+                        logger.warn(checkpointTile.getPosition());
+                        collisionCalculator.moveConveyorBelt(checkpointTile);
+                        server.sendCheckPointMoved(checkpointTile.getCount(), checkpointTile.getXCoordinate()
+                                , checkpointTile.getYCoordinate());
+                        logger.warn(checkpointTile.getPosition());
+                    }
+                }
+            }
+
+
 
             Thread.sleep(500);
             applyPushPanelEffects();
