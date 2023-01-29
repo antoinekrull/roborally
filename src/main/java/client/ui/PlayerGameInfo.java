@@ -61,7 +61,7 @@ public class PlayerGameInfo {
 
                 //shows amount of energycubes as String
                 Label energy = new Label();
-                energy.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;");
+                energy.setStyle("-fx-text-fill: #9b0303;" + "-fx-font-weight: bold;");
                 Platform.runLater(() -> energy.textProperty().bind(energyCubesBar.progressProperty().multiply(22).asString()));
 
 
@@ -69,13 +69,13 @@ public class PlayerGameInfo {
 
                 //Label for User:
                 Label user = new Label("User: ");
-                user.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;");
+                user.setStyle("-fx-text-fill: #9b0303;" + "-fx-font-weight: bold;");
 
                 //username for this player
                 Label name = new Label();
                 String username = clientPlayerList.getPlayerList().get(i).getUsername();
                 name.setText(username);
-                name.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;");
+                name.setStyle("-fx-text-fill: #9b0303;" + "-fx-font-weight: bold;");
 
                 //adding user + name Label to HBox
                 HBox userHBox = new HBox();
@@ -86,12 +86,12 @@ public class PlayerGameInfo {
 
                 //Label Your Score:
                 Label yourScore = new Label("Score: ");
-                yourScore.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;");
+                yourScore.setStyle("-fx-text-fill: #9b0303;" + "-fx-font-weight: bold;");
 
                 //bind score of player to Label score
                 Label score = new Label();
                 score.textProperty().bind(clientPlayerList.getPlayerList().get(i).scoreProperty().asString());
-                score.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;");
+                score.setStyle("-fx-text-fill: #9b0303;" + "-fx-font-weight: bold;");
 
                 //wrapping yourScore and score into HBox
                 HBox scoreHBox = new HBox();
@@ -102,12 +102,12 @@ public class PlayerGameInfo {
 
                 //Label Cards in Hand:
                 Label cardsInHand = new Label("Cards in hand: ");
-                cardsInHand.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;");
+                cardsInHand.setStyle("-fx-text-fill: #9b0303;" + "-fx-font-weight: bold;");
 
                 //amount of cards the user currently has
                 Label cardAmount = new Label();
                 cardAmount.textProperty().bind(clientPlayerList.getPlayerList().get(i).cardsInHandProperty().asString());
-                cardAmount.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;");
+                cardAmount.setStyle("-fx-text-fill: #9b0303;" + "-fx-font-weight: bold;");
 
                 //adding cardsInHand and cardAmount to HBox
                 HBox cardNumberHBox = new HBox();
@@ -116,9 +116,16 @@ public class PlayerGameInfo {
 
 
 
+                //Turn Label
+                Label turnLabel = new Label();
+                turnLabel.textProperty().bind(clientPlayerList.getPlayerList().get(i).activePlayerProperty());
+                turnLabel.setStyle("-fx-text-fill: #9b0303;" + "-fx-font-weight: bold;");
+
+
+
                 //Label Energymeter
                 Label energyMeter = new Label("Energymeter");
-                energyMeter.setStyle("-fx-text-fill: red;" + "-fx-font-weight: bold;");
+                energyMeter.setStyle("-fx-text-fill: #9b0303;" + "-fx-font-weight: bold;");
 
                 //adds energybar and its label to stackpane
                 StackPane energyBarStackPane = new StackPane();
@@ -136,7 +143,6 @@ public class PlayerGameInfo {
 
 
                 //ImageView for enemy cards
-                //TODO: input stream must not be null (checking this out)
                 InputStream input = getClass().getResourceAsStream(
                         "/textures/cards/kartendeckGegner.png");
                 Image deck = new Image(input);
@@ -148,16 +154,16 @@ public class PlayerGameInfo {
 
                 //adding playerInfo HBoxes to a VBox
                 VBox playerInfoVBox = new VBox();
-                playerInfoVBox.setSpacing(5);
-                playerInfoVBox.setPadding(new Insets(0, 0, 0, 10));
-                playerInfoVBox.getChildren().addAll(userHBox, scoreHBox, cardNumberHBox);
+                playerInfoVBox.setSpacing(15);
+                //playerInfoVBox.setPadding(new Insets(0, 0, 0, 0));
+                playerInfoVBox.getChildren().addAll(userHBox, scoreHBox, cardNumberHBox, turnLabel);
 
                 //StackPane for PlayerInfomation
                 StackPane playerInfoStackPane = new StackPane();
 
                 //adding image of cards and username/card amount
                 playerInfoStackPane.getChildren().addAll(enemyCards,  playerInfoVBox);
-                StackPane.setAlignment(enemyCards, Pos.CENTER_LEFT);
+                StackPane.setAlignment(enemyCards, Pos.TOP_CENTER);
                 StackPane.setAlignment(playerInfoVBox, Pos.CENTER);
                 //playerInfoStackPane.getChildren().add(playerInfoVBox);
 

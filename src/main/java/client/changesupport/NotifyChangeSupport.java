@@ -60,7 +60,7 @@ public class NotifyChangeSupport {
 
     public void chatMessageArrived() {
         if (lobby) {
-            viewModelLobby.receivedMessage();
+            viewModelLobby.receivedChatMessage();
         }
         if (gamewindow) {
             viewModelGameWindow.receivedChatMessage();

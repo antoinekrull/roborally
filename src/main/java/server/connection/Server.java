@@ -173,18 +173,8 @@ public class Server {
 //                                }
 //                            }
                         }
-                        //Changed group messages: will only be displayed to other clients, not to yourself
-                        //added private message to work in chat
-                        //still need other players clientID to send message
-                        else if (isPrivate) {
-                            int toUser = message.getMessageBody().getFrom();
-                            for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
-                                if (client.getKey() == toUser) {
-                                    client.getValue().write(message);
-                                }
-                            }
-                        }
-                        else {
+                        //group message
+                        else if (message.getMessageType().equals(MessageType.ReceivedChat) && !isPrivate) {
                             int id = message.getMessageBody().getFrom();
                             for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
                                 if (client.getKey() != id) {
@@ -434,6 +424,14 @@ public class Server {
             messages.put(messageCreator.generateBuyUpgradeMessage(player.isBuying(), player.getUpgradeToBuy()));
         } catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    public void sendPrivateMessage(int toUser, Message message) {
+        for (Map.Entry<Integer, HandleClient> client : CLIENTS.entrySet()) {
+            if (client.getKey() == toUser) {
+                client.getValue().write(message);
+            }
         }
     }
 

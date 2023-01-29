@@ -141,7 +141,8 @@ public class ViewModelLobby {
         });
     }
 
-    public void receivedMessage() {
+
+    public void receivedChatMessage() {
         Message message = null;
         try {
             message = modelChat.getCHAT_MESSSAGES().take();
@@ -149,14 +150,42 @@ public class ViewModelLobby {
             e.printStackTrace();
         }
         assert message != null;
+        receivedChatMessageToChat(message);
+    }
+
+    public void receivedChatMessageToChat(Message message) {
+        int from = message.getMessageBody().getFrom();
+        String user = modelGame.getPlayerList().getPlayer(from).getUsername();
+        String chat = message.getMessageBody().getMessage();
+
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER_LEFT);
+        hBox.setPadding(new Insets(5, 5, 5, 10));
+        Text username = new Text(user);
+        Text text = new Text(" :  " + chat);
+
+        TextFlow textFlow = new TextFlow(username, text);
+
         if (message.getMessageBody().isPrivate()) {
-            String privateMessage = message.getMessageBody().getMessage();
-            privateMessageToChat(privateMessage, true);
+            textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(213,170,16);" +
+                    "fx-background-radius: 40px; -fx-opacity: 100;");
         }
         else {
-            String groupMessage = message.getMessageBody().getMessage();
-            groupMessageToChat(groupMessage, true);
+            textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
+                    "fx-background-radius: 40px; -fx-opacity: 100;");
         }
+
+        textFlow.setPadding(new Insets(5, 10, 5, 10));
+        text.setFill(Color.color(0.934, 0.945, 0.996));
+        username.setStyle("-fx-text-fill: #000000;" + "-fx-font-weight: bold;");
+
+        hBox.getChildren().add(textFlow);
+        Platform.runLater(new Runnable() {
+              @Override
+              public void run() {
+                    chatVBox.getChildren().add(hBox);
+                }
+        });
     }
 
     public void chatButtonOnAction() {
@@ -164,73 +193,49 @@ public class ViewModelLobby {
 
         if(user.equals("Group")) {
             modelChat.sendGroupMessage();
-            groupMessageToChat(chatTextfield.getText(), false);
+            textfieldChatMessageToChat(chatTextfield.getText(), false);
         }
         else {
             int userNumber = usersChoiceBox.getSelectionModel().getSelectedIndex();
             int userID = modelGame.getPlayerList().getPlayerList().get(userNumber).getId();
             modelChat.sendPrivateMessage(userID);
-            privateMessageToChat(chatTextfield.getText(), false);
+            textfieldChatMessageToChat(chatTextfield.getText(), true);
         }
     }
 
-    public void groupMessageToChat(String groupMessage, boolean received) {
+    public void textfieldChatMessageToChat(String textFieldMessage, boolean isPrivate)  {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.setPadding(new Insets(5, 5, 5, 10));
+        Text text = new Text(textFieldMessage);
 
-        Text text = new Text(groupMessage);
         TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
-                "fx-background-radius: 40px; -fx-opacity: 100;");
+
+        if (isPrivate) {
+            textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(213,170,16);" +
+                    "fx-background-radius: 40px; -fx-opacity: 100;");
+        }
+        else {
+            textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(46,119,204);" +
+                    "fx-background-radius: 40px; -fx-opacity: 100;");
+        }
+
         textFlow.setPadding(new Insets(5, 10, 5, 10));
         text.setFill(Color.color(0.934, 0.945, 0.996));
 
         hBox.getChildren().add(textFlow);
-        if (!received) {
-            chatVBox.getChildren().add(hBox);
 
-            chatTextfield.clear();
-            chatTextfield.requestFocus();
-        }
-        else {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    chatVBox.getChildren().add(hBox);
-                }
-            });
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                chatVBox.getChildren().add(hBox);
+                chatTextfield.clear();
+                chatTextfield.requestFocus();
+            }
+        });
     }
 
-    public void privateMessageToChat(String privateMessage, boolean received) {
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new Insets(5, 5, 5, 10));
 
-        Text text = new Text(privateMessage);
-        TextFlow textFlow = new TextFlow(text);
-        textFlow.setStyle("-fx-color: rgb(255,255,255);" + "-fx-background-color: rgb(213,170,16);" +
-                "fx-background-radius: 40px; -fx-opacity: 100;");
-        textFlow.setPadding(new Insets(5, 10, 5, 10));
-        text.setFill(Color.color(0.934, 0.945, 0.996));
-
-        hBox.getChildren().add(textFlow);
-        if (!received) {
-            chatVBox.getChildren().add(hBox);
-
-            chatTextfield.clear();
-            chatTextfield.requestFocus();
-        }
-        else {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    chatVBox.getChildren().add(hBox);
-                }
-            });
-        }
-    }
     public void mapButtonOnAction() throws IOException{
 
         String map = mapsChoiceBox.getSelectionModel().getSelectedItem();
