@@ -1059,8 +1059,108 @@ public class ViewModelGameWindow {
         int counter = 0;
         for (int i = 0; i < programmingGrid.getChildren().size(); i++) {
             if (programmingGrid.getChildren() instanceof Pane pane && programmingGrid.getChildren().isEmpty()) {
-                //TODO: maybe dropping handcards
-                //TODO: add card to pane with the counter
+                String card = cardsIGotNow[counter];
+                switch (card) {
+                    case "MoveI" -> {
+                        InputStream input = getClass().getResourceAsStream(
+                                "/textures/cards/Move1.png");
+                        Image image = new Image(input);
+                        ImageView imageView = new ImageView(image);
+                        imageView.setId("MoveI");
+                        imageView.setFitWidth(programcardsWidth);
+                        imageView.setPreserveRatio(true);
+                        pane.getChildren().add(imageView);
+                        counter++;
+                    }
+                    case "MoveII" -> {
+                        InputStream input2 = getClass().getResourceAsStream(
+                                "/textures/cards/Move2.png");
+                        Image image2 = new Image(input2);
+                        ImageView imageView2 = new ImageView(image2);
+                        imageView2.setId("MoveII");
+                        imageView2.setFitWidth(programcardsWidth);
+                        imageView2.setPreserveRatio(true);
+                        pane.getChildren().add(imageView2);
+                        counter++;
+                    }
+                    case "MoveIII" -> {
+                        InputStream input3 = getClass().getResourceAsStream(
+                                "/textures/cards/Move3.png");
+                        Image image3 = new Image(input3);
+                        ImageView imageView3 = new ImageView(image3);
+                        imageView3.setId("MoveIII");
+                        imageView3.setFitWidth(programcardsWidth);
+                        imageView3.setPreserveRatio(true);
+                        pane.getChildren().add(imageView3);
+                        counter++;
+                    }
+                    case "TurnLeft" -> {
+                        InputStream input4 = getClass().getResourceAsStream(
+                                "/textures/cards/leftTurn.png");
+                        Image image4 = new Image(input4);
+                        ImageView imageView4 = new ImageView(image4);
+                        imageView4.setId("TurnLeft");
+                        imageView4.setFitWidth(programcardsWidth);
+                        imageView4.setPreserveRatio(true);
+                        pane.getChildren().add(imageView4);
+                        counter++;
+                    }
+                    case "TurnRight" -> {
+                        InputStream input5 = getClass().getResourceAsStream(
+                                "/textures/cards/rightTurn.png");
+                        Image image5 = new Image(input5);
+                        ImageView imageView5 = new ImageView(image5);
+                        imageView5.setId("TurnRight");
+                        imageView5.setFitWidth(programcardsWidth);
+                        imageView5.setPreserveRatio(true);
+                        pane.getChildren().add(imageView5);
+                        counter++;
+                    }
+                    case "UTurn" -> {
+                        InputStream input6 = getClass().getResourceAsStream(
+                                "/textures/cards/uTurn.png");
+                        Image image6 = new Image(input6);
+                        ImageView imageView6 = new ImageView(image6);
+                        imageView6.setId("UTurn");
+                        imageView6.setFitWidth(programcardsWidth);
+                        imageView6.setPreserveRatio(true);
+                        pane.getChildren().add(imageView6);
+                        counter++;
+                    }
+                    case "BackUp" -> {
+                        InputStream input7 = getClass().getResourceAsStream(
+                                "/textures/cards/moveBack.png");
+                        Image image7 = new Image(input7);
+                        ImageView imageView7 = new ImageView(image7);
+                        imageView7.setId("BackUp");
+                        imageView7.setFitWidth(programcardsWidth);
+                        imageView7.setPreserveRatio(true);
+                        pane.getChildren().add(imageView7);
+                        counter++;
+                    }
+                    case "PowerUp" -> {
+                        InputStream input8 = getClass().getResourceAsStream(
+                                "/textures/cards/powerUp.png");
+                        Image image8 = new Image(input8);
+                        ImageView imageView8 = new ImageView(image8);
+                        imageView8.setId("PowerUp");
+                        imageView8.setFitWidth(programcardsWidth);
+                        imageView8.setPreserveRatio(true);
+                        pane.getChildren().add(imageView8);
+                        counter++;
+                    }
+                    case "Again" -> {
+                        InputStream input9 = getClass().getResourceAsStream(
+                                "/textures/cards/Again.png");
+                        Image image9 = new Image(input9);
+                        ImageView imageView9 = new ImageView(image9);
+                        imageView9.setId("Again");
+                        imageView9.setFitWidth(programcardsWidth);
+                        imageView9.setPreserveRatio(true);
+                        pane.getChildren().add(imageView9);
+                        counter++;
+                    }
+                }
             }
         }
     }

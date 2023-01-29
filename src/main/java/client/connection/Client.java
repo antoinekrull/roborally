@@ -14,6 +14,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
@@ -422,7 +424,7 @@ public class Client {
                             Client.this.setGameEventMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.CardsYouGotNow)) {
-                            logger.debug("CardsYouGotNow: " + message.getMessageBody().getCards().toString() + message.getMessageBody().getCards().length);
+                            logger.debug("CardsYouGotNow: " + Arrays.toString(message.getMessageBody().getCards()) + message.getMessageBody().getCards().length);
                             Platform.runLater(() -> Client.this.setGameEventMessage(message));
                         }
                         if (message.getMessageType().equals(MessageType.RegisterChosen)) {
@@ -521,6 +523,10 @@ public class Client {
     public void sendHelloServerMessage(String group, boolean isAI, String protocolVersion){
         sendMessageToServer(messageCreator.generateHelloServerMessage(group, isAI, protocolVersion));
     }
+    public void sendAIMessage(boolean AI) {
+        sendMessageToServer(messageCreator.generateHelloServerMessage(group, AI, protocolVersion));
+    }
+
     public void sendPlayerValues(String name, int figure){
         sendMessageToServer(messageCreator.generatePlayerValuesMessage(name, figure));
     }

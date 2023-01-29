@@ -33,12 +33,12 @@
                   <Insets bottom="20.0" />
                </BorderPane.margin>
                <children>
+                  <Label fx:id="timeLabel" />
                           <Button fx:id="readyButton" mnemonicParsing="false" onAction="#readyButtonOnAction" prefHeight="26.0" prefWidth="150.0" text="READY">
                      <font>
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Button>
-                  <Label fx:id="timeLabel" />
                </children>
             </VBox>
             </bottom>
@@ -96,6 +96,11 @@
                         </ScrollPane>
                      </children>
                   </Pane>
+                  <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <children>
+                        <Button fx:id="kiButton" mnemonicParsing="false" onAction="#kiButtonOnAction" text="Add KI" />
+                     </children>
+                  </StackPane>
                     </children>
                 </GridPane>
             </center>
