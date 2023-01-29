@@ -661,6 +661,7 @@ public class ViewModelGameWindow {
             //TODO: length says null
             String[] cardsIGotNow = Arrays.copyOf(gamemessage.getMessageBody().getCards(), gamemessage.getMessageBody().getCards().length);
             setBlindCards(cardsIGotNow);
+            setProgramcardsUnmovable();
         }
         if (gamemessage.getMessageType().equals(MessageType.DrawDamage)) {
             drawDamage(gamemessage.getMessageBody().getCards());
