@@ -558,6 +558,9 @@ public class Game implements Runnable {
                 server.sendCurrentPlayer(playerList.get(i).getId());
                 Thread.sleep(100);
                 while (!isShopping) {
+                    if(playerList.get(i) instanceof AI_Player) {
+                        isShopping = true;
+                    }
                     Thread.sleep(100);
                 }
             }
