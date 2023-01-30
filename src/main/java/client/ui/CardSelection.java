@@ -119,7 +119,7 @@ public class CardSelection {
   //Wenn Upgradephase aktiv, dann Popup. VMgameWindow wird Liste der kaufbaren Karten gepflegt (durch Messages refillshop und exchange shop), aktuelle Liste wird Übertragen
   public void upgradeShop(String[] availableUpgrades) {
     Platform.runLater(() -> {
-      boolean active = modelGame.currentPlayerProperty().get();
+      boolean active = true; //modelGame.currentPlayerProperty().get();
       StackPane overlay = new StackPane();
       InputStream shopsignInput = getClass().getResourceAsStream("/textures/designelements/upgradeShop.png");
       Image shopsignImage = new Image(shopsignInput);
