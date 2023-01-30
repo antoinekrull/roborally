@@ -554,6 +554,12 @@ public class Game implements Runnable {
     }
 
     private void runUpgradePhase() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e){
+            e.printStackTrace();
+        }
+
         logger.info("This game is running the Upgrade Phase now");
         server.sendActivePhase(1);
         logger.debug("Server sent the active phase (value=1) to the players");
@@ -564,16 +570,21 @@ public class Game implements Runnable {
             refreshUpgradeShop();
             for (int i = 0; i < playerList.size(); i++) {
                 Thread.sleep(100);
+                activePlayer = playerList.getPlayerFromList(readyList.get(i));
                 server.sendCurrentPlayer(playerList.get(i).getId());
                 Thread.sleep(100);
+
                 while (!isShopping) {
                     if(playerList.get(i) instanceof AI_Player) {
                         isShopping = true;
                     }
                     Thread.sleep(100);
                 }
+                isShopping = false;
+                System.out.println("Nasdfasdfasfasdfasdfasdfasdfasdfsdfsdf");
             }
-            isShopping = false;
+
+
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

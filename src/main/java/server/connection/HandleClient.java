@@ -194,8 +194,9 @@ public class HandleClient implements Runnable{
                             incomingMessage.getMessageBody().getProtocol().equals(server.getProtocolVersion()) &&
                             incomingMessage.getMessageBody().isAI()){
                         // creates an ai player
+                        server.sendServerMessage("A KI player joined the game!");
                         int ai_id = server.getUniqueID();
-                        Game.playerList.add(new AI_Player(ai_id, "ai_player", new Robot(game.findUnusedRobotId(), server.getUniqueID()), game.board));
+                        Game.playerList.add(new AI_Player(ai_id, "ai_player", new Robot(game.findUnusedRobotId(), ai_id), game.board));
                         Game.playerList.getPlayerFromList(ai_id).setIsAI(true);
                         logger.debug("AI player with the id " + ai_id + " was added");
                     }
@@ -251,6 +252,7 @@ public class HandleClient implements Runnable{
                             logger.warn("Card was changed during the" + game.getCurrentGamePhase() + "so it wasnt applied");
                         }
                     } else if(incomingMessage.getMessageType().equals(MessageType.BuyUpgrade)) {
+                        System.out.println(game.getActivePlayer());
                         logger.warn(incomingMessage.getMessageBody().isBuying());
                         if(game.getActivePlayer().getId() == clientID) {
                             if(!incomingMessage.getMessageBody().isBuying()) {

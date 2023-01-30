@@ -280,6 +280,13 @@ public class Server {
             logger.warn("An error occurred: " + e);
         }
     }
+    public void sendServerMessage(String message){
+        try {
+            messages.put(messageCreator.generateReceivedChatMessage(message, 0, false));
+        } catch (Exception e){
+            logger.warn("An error occurred: " + e);
+        }
+    }
 
     public void sendShuffleCoding(Player player) {
         try {

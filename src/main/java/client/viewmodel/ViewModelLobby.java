@@ -155,8 +155,13 @@ public class ViewModelLobby {
 
     public void receivedChatMessageToChat(Message message) {
         int from = message.getMessageBody().getFrom();
-        String user = modelGame.getPlayerList().getPlayer(from).getUsername();
-        String chat = message.getMessageBody().getMessage();
+        String user;
+        if (from == 0){
+            user = "Server";
+        }else {
+            user = modelGame.getPlayerList().getPlayer(from).getUsername();
+        }
+            String chat = message.getMessageBody().getMessage();
 
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
