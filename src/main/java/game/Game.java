@@ -1,22 +1,31 @@
 package game;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import communication.JsonSerializer;
-import communication.Message;
-import game.board.*;
-import game.card.*;
+import game.board.Board;
+import game.board.CheckpointTile;
+import game.board.Direction;
+import game.board.PushPanelTile;
+import game.board.StartTile;
+import game.card.Card;
+import game.card.NullCard;
+import game.card.SpamCard;
+import game.card.SpamDeck;
+import game.card.TrojanDeck;
+import game.card.UpgradeDeck;
+import game.card.VirusDeck;
+import game.card.WormDeck;
 import game.player.AI_Player;
 import game.player.Player;
 import game.player.Robot;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.javatuples.Pair;
 import server.connection.PlayerList;
 import server.connection.Server;
-
-import java.util.*;
-
-import java.util.ArrayList;
 
 public class Game implements Runnable {
     private GamePhase currentGamePhase;
@@ -814,7 +823,7 @@ public class Game implements Runnable {
                     Thread.sleep(100);
                     //if condition checks if at least two players are ready and a map was selected and if every joined player is ready
                     //TODO: ZU DEBUG ZWECKEN WURDE DIE MINDESTANZAHL AUF 1 GESETZT! MUSS WIEDER AUF 2
-                    if (readyList.size() >= 1 && this.jsonMap != null && readyList.size()==playerList.size()) {
+                    if (readyList.size() >= 2 && this.jsonMap != null && readyList.size()==playerList.size()) {
                         server.sendGameStarted(jsonMap);
                         Thread.sleep(100);
                         readyToStart = true;

@@ -785,7 +785,8 @@ public class ViewModelGameWindow {
 
     public void selectStarttile() {
         gameboard.setOnMouseClicked(event -> {
-            if (modelGame.currentPlayerProperty().get()){
+            logger.debug("Current phase" + modelGame.activePhaseProperty());
+            if (modelGame.currentPlayerProperty().get() && modelGame.activePhaseProperty().get() == "Construction Phase"){
                 Node target = event.getPickResult().getIntersectedNode();
                 Integer colIndex = GridPane.getColumnIndex(target);
                 Integer rowIndex = GridPane.getRowIndex(target);
