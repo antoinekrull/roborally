@@ -48,7 +48,8 @@ public class CardSelection {
       int column = 0;
       Label label = new Label("Damages to pick: " + counter);
       label.setStyle("-fx-font-size: 20; -fx-text-fill: yellow;");
-      pickdamageSign.setFitWidth(500);
+      pickdamageSign.setFitWidth(400);
+      pickdamageSign.setPreserveRatio(true);
       grid.add(pickdamageSign, 0, 0);
       grid.add(label, 0, 1);
       List<ImageView> imageViews = new ArrayList<>();
@@ -101,6 +102,7 @@ public class CardSelection {
             label.setText("Damages to pick: " + finalCounter);
             if (finalCounter == 0) {
               baseStackPane.getChildren().remove(overlay);
+              grid.getChildren().remove(pickdamageSign);
               for (String c : damagePiles) {
                 overlay.getChildren().remove(c);
               }
@@ -131,12 +133,13 @@ public class CardSelection {
       int column = 0;
       Button finish = new Button("Close Shop");
       ImageView shopsign = new ImageView(shopsignImage);
+      shopsign.setPreserveRatio(true);
       Label energyLabel = new Label("My energy: " + modelGame.energyProperty().get());
-      shopsign.setFitWidth(500);
+      shopsign.setFitWidth(400);
       energyLabel.setStyle("-fx-font-size: 20; -fx-text-fill: yellow;");
-      grid.add(energyLabel, 1, 0);
+      grid.add(energyLabel, 0, 1);
       grid.add(shopsign, 0, 0);
-      grid.add(finish,1,2);
+      grid.add(finish,0,3);
       List<ImageView> imageViews = new ArrayList<>();
       for (int i = 0; i < availableUpgrades.length; i++) {
         String card = availableUpgrades[i];
@@ -148,7 +151,7 @@ public class CardSelection {
             imageView2.setId("AdminPrivilege");
             imageView2.setPreserveRatio(true);
             imageView2.setFitWidth(200);
-            grid.add(imageView2, column, 1);
+            grid.add(imageView2, column, 2);
             imageViews.add(imageView2);
             column++;
           }
@@ -160,7 +163,7 @@ public class CardSelection {
             imageView1.setId("RearLaser");
             imageView1.setPreserveRatio(true);
             imageView1.setFitWidth(200);
-            grid.add(imageView1, column, 1);
+            grid.add(imageView1, column, 2);
             imageViews.add(imageView1);
             column++;
           }
@@ -172,7 +175,7 @@ public class CardSelection {
             imageView3.setId("MemorySwap");
             imageView3.setPreserveRatio(true);
             imageView3.setFitWidth(200);
-            grid.add(imageView3, column, 1);
+            grid.add(imageView3, column, 2);
             imageViews.add(imageView3);
             column++;
           }
@@ -184,7 +187,7 @@ public class CardSelection {
             imageView4.setId("SpamBlocker");
             imageView4.setPreserveRatio(true);
             imageView4.setFitWidth(200);
-            grid.add(imageView4, column, 1);
+            grid.add(imageView4, column, 2);
             imageViews.add(imageView4);
             column++;
           }
@@ -213,6 +216,8 @@ public class CardSelection {
         if(active) {
           modelGame.sendBuyUpgrade(false, "Null");
           baseStackPane.getChildren().remove(overlay);
+          grid.getChildren().remove(energyLabel);
+          grid.getChildren().remove(shopsign);
           for (String u : availableUpgrades) {
             overlay.getChildren().remove(u);
 

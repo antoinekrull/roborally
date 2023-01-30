@@ -1,0 +1,77 @@
+1 01:43:08.458 4304 [INFO ] [Thread-3] client.viewmodel.ViewModelRobotSelection.robotAccepted(ViewModelRobotSelection.java:131) - Selection accepted.
+3 01:43:11.225 7071 [DEBUG] [Thread-3] game.board.Board.createBoard(Board.java:86) - Board mit größe (13, 10) erstellt!
+5 01:43:11.347 7193 [INFO ] [Thread-3] client.ui.PlayerGameInfo.loadPlayerInfo(PlayerGameInfo.java:40) - 1
+7 01:43:11.876 7722 [DEBUG] [Thread-3] client.connection.Client$ReadMessagesFromServer.run(Client.java:360) - active Phase: 0
+9 01:43:11.877 7723 [DEBUG] [Thread-3] client.connection.Client$ReadMessagesFromServer.run(Client.java:343) - current player: 1
+11 01:43:13.219 9065 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$robotSetPosition$5(ViewModelGameWindow.java:814) - In viewModel - X: 1 | Y: 5
+13 01:43:13.219 9065 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$robotSetPosition$5(ViewModelGameWindow.java:827) - direction: EAST
+15 01:43:13.219 9065 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$robotSetPosition$5(ViewModelGameWindow.java:828) - RobotID in viewModel: 3
+17 01:43:13.409 9255 [DEBUG] [Thread-3] client.connection.Client$ReadMessagesFromServer.run(Client.java:360) - active Phase: 1
+19 01:43:13.510 9356 [DEBUG] [Thread-3] client.connection.Client$ReadMessagesFromServer.run(Client.java:479) - refill shop
+21 01:43:13.511 9357 [DEBUG] [JavaFX Application Thread] client.connection.Client$ReadMessagesFromServer.lambda$run$17(Client.java:485) - Client - refillCards: SpamBlocker
+23 01:43:13.610 9456 [DEBUG] [Thread-3] client.connection.Client$ReadMessagesFromServer.run(Client.java:343) - current player: 1
+25 01:43:24.445 20291 [DEBUG] [Thread-3] client.connection.Client$ReadMessagesFromServer.run(Client.java:360) - active Phase: 2
+27 01:43:24.650 20496 [DEBUG] [Thread-3] client.connection.Client$ReadMessagesFromServer.run(Client.java:390) - NotYourCards: -Amount of cards: 0
+29 01:43:24.652 20498 [DEBUG] [JavaFX Application Thread] client.model.ModelGame$1.onChanged(ModelGame.java:104) - changed list
+31 01:43:24.652 20498 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.fillHandCards(ViewModelGameWindow.java:913) - VM - fillHandCards Start:
+33 01:43:24.653 20499 [DEBUG] [JavaFX Application Thread] client.connection.Client$ReadMessagesFromServe41 01:43:27.028 27357 [WARN ] [pool-3-thread-1] server.connection.HandleClient.aliveMessage(HandleClient.java:118) - Client 1 couldn't be reached
+An exception occurred: java.net.SocketException: Connection reset by peer
+and: MoveII
+37 01:43:24.653 20499 [DEBUG] [JavaFX Application Thread] client.connection.Client$ReadMessagesFromServer.lambda$run$9(Client.java:382) - Client - cardsInHand: TurnLeft
+39 01:43:24.653 20499 [DEBUG] [JavaFX Application Thread] client.connection.Client$ReadMessagesFromServer.lambda$run$9(Client.java:382) - Client - cardsInHand: Again
+41 01:43:24.653 20499 [DEBUG] [JavaFX Application Thread] client.connection.Client$ReadMessagesFromServer.lambda$run$9(Client.java:382) - Client - cardsInHand: BackUp
+43 01:43:24.653 20499 [DEBUG] [JavaFX Application Thread] client.connection.Client$ReadMessagesFromServer.lambda$run$9(Client.java:382) - Client - cardsInHand: TurnRight
+45 01:43:24.653 20499 [DEBUG] [JavaFX Application Thread] client.connection.Client$ReadMessagesFromServer.lambda$run$9(Client.java:382) - Client - cardsInHand: MoveI
+47 01:43:24.653 20499 [DEBUG] [JavaFX Application Thread] client.connection.Client$ReadMessagesFromServer.lambda$run$9(Client.java:382) - Client - cardsInHand: MoveIII
+49 01:43:24.654 20500 [DEBUG] [JavaFX Application Thread] client.connection.Client$ReadMessagesFromServer.lambda$run$9(Client.java:382) - Client - cardsInHand: TurnRight
+51 01:43:24.654 20500 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:916) - VM - handGrid children size: 20
+53 01:43:24.654 20500 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.getFirstFreeSlot(ViewModelGameWindow.java:896) - Slot 0 is empty
+55 01:43:24.661 20507 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.getFirstFreeSlot(ViewModelGameWindow.java:896) - Slot 1 is empty
+57 01:43:24.668 20514 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.getFirstFreeSlot(ViewModelGameWindow.java:896) - Slot 2 is empty
+59 01:43:24.674 20520 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.getFirstFreeSlot(ViewModelGameWindow.java:896) - Slot 3 is empty
+61 01:43:24.681 20527 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.getFirstFreeSlot(ViewModelGameWindow.java:896) - Slot 4 is empty
+63 01:43:24.687 20533 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.getFirstFreeSlot(ViewModelGameWindow.java:896) - Slot 5 is empty
+65 01:43:24.694 20540 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.getFirstFreeSlot(ViewModelGameWindow.java:896) - Slot 6 is empty
+67 01:43:24.703 20549 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.getFirstFreeSlot(ViewModelGameWindow.java:896) - Slot 7 is empty
+69 01:43:24.709 20555 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.getFirstFreeSlot(ViewModelGameWindow.java:896) - Slot 8 is empty
+71 01:43:24.716 20562 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1055) -  
+73 01:43:24.716 20562 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard1]
+75 01:43:24.716 20562 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: [ImageView[id=TurnLeft, styleClass=image-view]]
+77 01:43:24.716 20562 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard2]
+79 01:43:24.717 20563 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: [ImageView[id=MoveII, styleClass=image-view]]
+81 01:43:24.717 20563 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard3]
+83 01:43:24.717 20563 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: [ImageView[id=TurnLeft, styleClass=image-view]]
+85 01:43:24.717 20563 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard4]
+87 01:43:24.717 20563 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: [ImageView[id=Again, styleClass=image-view]]
+89 01:43:24.717 20563 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard5]
+91 01:43:24.717 20563 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: [ImageView[id=BackUp, styleClass=image-view]]
+93 01:43:24.717 20563 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard6]
+95 01:43:24.717 20563 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: [ImageView[id=TurnRight, styleClass=image-view]]
+97 01:43:24.718 20564 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard7]
+99 01:43:24.718 20564 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: [ImageView[id=MoveI, styleClass=image-view]]
+101 01:43:24.718 20564 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard8]
+103 01:43:24.718 20564 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: [ImageView[id=MoveIII, styleClass=image-view]]
+105 01:43:24.718 20564 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard9]
+107 01:43:24.718 20564 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: [ImageView[id=TurnRight, styleClass=image-view]]
+109 01:43:24.718 20564 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard10]
+111 01:43:24.718 20564 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: []
+113 01:43:24.718 20564 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard11]
+115 01:43:24.719 20565 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: []
+117 01:43:24.719 20565 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard12]
+119 01:43:24.719 20565 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: []
+121 01:43:24.719 20565 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard13]
+123 01:43:24.719 20565 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: []
+125 01:43:24.719 20565 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard14]
+127 01:43:24.719 20565 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: []
+129 01:43:24.719 20565 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard15]
+131 01:43:24.719 20565 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: []
+133 01:43:24.719 20565 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard16]
+135 01:43:24.720 20566 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: []
+137 01:43:24.720 20566 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard17]
+139 01:43:24.720 20566 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: []
+141 01:43:24.720 20566 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard18]
+143 01:43:24.720 20566 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: []
+145 01:43:24.720 20566 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard19]
+147 01:43:24.720 20566 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: []
+149 01:43:24.720 20566 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1058) - Pane[id=programCard20]
+151 01:43:24.720 20566 [DEBUG] [JavaFX Application Thread] client.viewmodel.ViewModelGameWindow.lambda$fillHandCards$6(ViewModelGameWindow.java:1061) - VM - handpane now contains: []
