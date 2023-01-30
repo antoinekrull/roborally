@@ -368,6 +368,7 @@ public class Game implements Runnable {
                 } else {
                     int previousRegister = player.getCurrentRegister(card) - 1;
                     applyCardEffect(player, player.getCardFromRegister(previousRegister));
+                    Thread.sleep(500);
                 }
             }
             case "BackUp" -> {
@@ -385,6 +386,7 @@ public class Game implements Runnable {
                         }
                         newPosition = tempPosition;
                         collisionCalculator.moveRobot(player.getRobot(), newPosition);
+                    Thread.sleep(500);
 
                 }
             }
@@ -410,6 +412,7 @@ public class Game implements Runnable {
             }
             case "PowerUp" -> {
                 player.getRobot().increaseEnergyCubes("PowerUpCard");
+                Thread.sleep(500);
             }
             case "Spam" -> {
                 Card topProgrammingCard = player.getRobot().getDeck().popCardFromDeck();
@@ -417,11 +420,13 @@ public class Game implements Runnable {
                 player.setCardRegister(topProgrammingCard, currentRegister);
                 server.sendReplaceCard(player);
                 player.getCardFromRegister(currentRegister);
+                Thread.sleep(500);
             }
             case "Trojan" -> {
                 player.getRobot().increaseDamageCount();
                 player.getRobot().increaseDamageCount();
                 drawDamageCards(player);
+                Thread.sleep(500);
             }
             case "TurnLeft" -> player.getRobot().rotateRobot(Direction.LEFT);
             case "TurnRight" -> player.getRobot().rotateRobot(Direction.RIGHT);
@@ -436,7 +441,7 @@ public class Game implements Runnable {
                     if (isInRangeOfVirus(player.getRobot(), Game.playerList.get(i).getRobot())) {
                         Game.playerList.get(i).addCardToHand(Game.virusDeck.popCardFromDeck());
                     }
-                }
+                }Thread.sleep(500);
             }
             case "Worm" -> reboot(player);
         }
