@@ -252,7 +252,6 @@ public class HandleClient implements Runnable{
                             logger.warn("Card was changed during the" + game.getCurrentGamePhase() + "so it wasnt applied");
                         }
                     } else if(incomingMessage.getMessageType().equals(MessageType.BuyUpgrade)) {
-                        System.out.println(game.getActivePlayer());
                         logger.warn(incomingMessage.getMessageBody().isBuying());
                         if(game.getActivePlayer().getId() == clientID) {
                             if(!incomingMessage.getMessageBody().isBuying()) {

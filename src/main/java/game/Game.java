@@ -581,7 +581,6 @@ public class Game implements Runnable {
                     Thread.sleep(100);
                 }
                 isShopping = false;
-                System.out.println("Nasdfasdfasfasdfasdfasdfasdfasdfsdfsdf");
             }
 
 
@@ -595,6 +594,7 @@ public class Game implements Runnable {
     }
 
     private void runProgrammingPhase(PlayerList playerList) throws InterruptedException {
+        Thread.sleep(500);
         server.sendActivePhase(2);
         logger.debug("Server sent the active phase (value=2) to the players");
         timerIsRunning = false;
