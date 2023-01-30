@@ -15,6 +15,7 @@ RoboRally ist ein Brettspiel, bei dem Spieler gegeneinander antreten, indem sie 
 ### Bekannte Probleme
 - Wenn ein Roboter während einer MoveII oder MoveIII bereits beim ersten Zug rebootet wird, läuft er nach dem reboot den Zug noch zuende.
 - Upgradekarten können gleichzeitig gekauft werden.
+- GUI bekommt keine Fehlermeldung, wenn Again-Karte in das erste Register gelegt wird.
 
 Viel Spaß beim Spielen - Team Knorrige Korrelate
 

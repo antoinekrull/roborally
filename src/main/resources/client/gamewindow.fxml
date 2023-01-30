@@ -271,6 +271,7 @@
                                  <children>
                                     <Pane fx:id="upgradeDeck" GridPane.columnIndex="0" />
                                     <Pane fx:id="damageDeck" GridPane.columnIndex="1" />
+                                    <Pane fx:id="myRobot" GridPane.columnIndex="2" />
                                  </children>
                               </GridPane>
                            </children>

@@ -88,7 +88,7 @@ public class ViewModelGameWindow {
     @FXML
     private GridPane handGrid, playerInfoGrid;
     @FXML
-    private Pane upgradeDeck, damageDeck;
+    private Pane upgradeDeck, damageDeck, myRobot;
     @FXML
     private Label timerLabel, currentPhaseLabel, currentActivePlayerLabel, myEnergyLabel, scoreLabel;
     @FXML
@@ -140,6 +140,8 @@ public class ViewModelGameWindow {
         selectStarttile();
 
         loadDecks();
+
+        loadMyRobot ();
 
         usersChoiceBox.setValue(modelGame.getPlayerList().getPlayerList().get(0));
         usersChoiceBox.setItems(modelGame.getPlayerList().getPlayerList());
@@ -1080,6 +1082,17 @@ public class ViewModelGameWindow {
         imgDamage.setPreserveRatio(true);
         imgUpgrade.getStyleClass().add("damageDeck");
         damageDeck.getChildren().add(imgDamage);
+    }
+
+    private void loadMyRobot (){
+        int figure = modelGame.robotProperty().get();
+        InputStream roboInput = getClass().getResourceAsStream("/textures/robots/Robot_" + figure + "_menu.png");
+        Image roboIm = new Image(roboInput);
+        ImageView imgRobo = new ImageView(roboIm);
+        imgRobo.setFitWidth(programcardsWidth);
+        imgRobo.setPreserveRatio(true);
+        imgRobo.getStyleClass().add("myRobot");
+        myRobot.getChildren().add(imgRobo);
     }
 
     private void setBlindCards(String[] cardsIGotNow) {
