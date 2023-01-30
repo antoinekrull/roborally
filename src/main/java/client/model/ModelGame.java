@@ -43,8 +43,7 @@ public class ModelGame {
     private SimpleStringProperty activePhase;
     private SimpleDoubleProperty energy;
     private BooleanProperty readyToPlay;
-    private SimpleStringProperty currentPlayer;
-    private BooleanProperty activePlayer;
+    private SimpleBooleanProperty currentPlayer;
     private ObservableList<Integer> readyList;
     private LinkedBlockingQueue<Message> PLAYER_MOVEMENTS;
     private ObjectProperty<Message> movement;
@@ -55,8 +54,8 @@ public class ModelGame {
     private ObservableList<String> maps;
     private ArrayList<ArrayList<ArrayList<Tile>>> gameMap;
     private ObservableList<String> myHandCards;
-    private ObservableList<String> upgradeCards;
     private ObservableList<String> upgradeShop;
+    private BooleanProperty startShop;
 
 
     private Game game;
@@ -77,20 +76,22 @@ public class ModelGame {
         energy.bind(client.energyProperty());
         this.activePhase = new SimpleStringProperty();
         activePhase.bind(client.activePhaseProperty());
-        this.currentPlayer = new SimpleStringProperty();
+        this.currentPlayer = new SimpleBooleanProperty();
         currentPlayer.bind(client.currentPlayerProperty());
-        this.activePlayer = new SimpleBooleanProperty();
-        this.activePlayer.bind(client.activePlayerProperty());
 
-//        activePlayer.addListener(new ChangeListener<Boolean>() {
-//            @Override
-//            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-//                if (activePlayerProperty().get() && activePhaseProperty().get().equals("Upgrade Phase")) {
-//                    logger.debug("true for activeplayer: " + activePlayerProperty().get() + " and Phase: " + activePhaseProperty().get());
-//                    notifyChangeSupport.shopping();
-//                }
-//            }
-//        });
+        /*
+        this.startShop = new SimpleBooleanProperty();
+        startShop.bind(client.startShopProperty());
+        startShop.addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                if (startShop.get()) {
+                    notifyChangeSupport.shopping();
+                }
+            }
+        });
+
+         */
 
         //this.maps = FXCollections.observableArrayList(client.getMaps());
         this.errorMessage = new SimpleStringProperty();
@@ -105,9 +106,10 @@ public class ModelGame {
             }
         });
 
-        this.upgradeCards = client.getUpgradeShop();
-
+        /*
         this.upgradeShop = FXCollections.observableArrayList();
+        upgradeShop = client.getUpgradeShop();
+         */
 
         this.PLAYER_MOVEMENTS = new LinkedBlockingQueue<>();
         readyToPlay.bind(client.gameStartedProperty());
@@ -209,16 +211,16 @@ public class ModelGame {
         return activePhase;
     }
 
-    public SimpleStringProperty currentPlayerProperty() {
+    public boolean isCurrentPlayer() {
+        return currentPlayer.get();
+    }
+
+    public SimpleBooleanProperty currentPlayerProperty() {
         return currentPlayer;
     }
 
     public ObservableList<Integer> getReadyList() {
         return readyList;
-    }
-
-    public BooleanProperty activePlayerProperty() {
-        return activePlayer;
     }
 
     public BooleanProperty readyToPlayProperty() {
@@ -241,12 +243,12 @@ public class ModelGame {
         return myHandCards;
     }
 
-    public ObservableList<String> getUpgradeCards() {
-        return upgradeCards;
+    public ObservableList<String> getUpgradeShop() {
+        return upgradeShop;
     }
 
-    public void setUpgradeCards(ObservableList<String> upgradeCards) {
-        this.upgradeCards = upgradeCards;
+    public void setUpgradeShop(ObservableList<String> upgradeShop) {
+        this.upgradeShop = upgradeShop;
     }
 
     public RobotDirection getRobotDirection() {

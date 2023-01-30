@@ -117,7 +117,7 @@ public class CardSelection {
   //Wenn Upgradephase aktiv, dann Popup. VMgameWindow wird Liste der kaufbaren Karten gepflegt (durch Messages refillshop und exchange shop), aktuelle Liste wird Übertragen
   public void upgradeShop(String[] availableUpgrades) {
     Platform.runLater(() -> {
-      boolean activePlayer = modelGame.activePlayerProperty().get();
+      boolean active = modelGame.currentPlayerProperty().get();
       StackPane overlay = new StackPane();
       InputStream shopsignInput = getClass().getResourceAsStream("/textures/designelements/upgradeShop.png");
       Image shopsignImage = new Image(shopsignInput);
@@ -193,7 +193,7 @@ public class CardSelection {
       for (ImageView imageView : imageViews) {
         imageView.setOnMouseClicked(event -> {
           if (event.getButton() == MouseButton.PRIMARY) {
-            if (activePlayer) {
+            if (active) {
               String selectedCard = imageView.getId();
               //sendingBuyingMessage
               modelGame.sendBuyUpgrade(true, selectedCard);
@@ -210,7 +210,7 @@ public class CardSelection {
         });
       }
       finish.setOnAction(event -> {
-        if(activePlayer) {
+        if(active) {
           modelGame.sendBuyUpgrade(false, "Null");
           baseStackPane.getChildren().remove(overlay);
           for (String u : availableUpgrades) {

@@ -56,8 +56,7 @@ public class Client {
     private ObjectProperty<Message> gameLogMessage;
     private ObjectProperty<Message> gameEventMessage;
     private BooleanProperty gameStarted;
-    private StringProperty currentPlayer;
-    private BooleanProperty activePlayer;
+    private BooleanProperty currentPlayer;
     private SimpleStringProperty activePhase;
     private boolean prioPlayer = false;
     private IntegerProperty score;
@@ -66,6 +65,7 @@ public class Client {
     private ObservableList<String> maps;
     private BooleanProperty timer;
     private ObservableList<String> upgradeShop;
+    private BooleanProperty startShop;
 
 
     private Client() {
@@ -80,9 +80,8 @@ public class Client {
         this.maps = FXCollections.observableArrayList();
         this.errorMessage = new SimpleStringProperty("");
         this.gameStarted = new SimpleBooleanProperty();
-        this.currentPlayer = new SimpleStringProperty("");
+        this.currentPlayer = new SimpleBooleanProperty(false);
         this.activePhase = new SimpleStringProperty("Construction Phase");
-        this.activePlayer = new SimpleBooleanProperty(false);
         this.score = new SimpleIntegerProperty(0);
         this.myCards = FXCollections.observableArrayList();
         this.energy = new SimpleDoubleProperty(5);
@@ -91,6 +90,7 @@ public class Client {
         this.gameEventMessage = new SimpleObjectProperty<>();
         this.timer = new SimpleBooleanProperty(false);
         this.upgradeShop = FXCollections.observableArrayList();
+        this.startShop = new SimpleBooleanProperty(false);
     }
 
     public static Client getInstance() {
@@ -184,20 +184,12 @@ public class Client {
         this.activePhase.set(activePhase);
     }
 
-    public StringProperty currentPlayerProperty() {
+    public BooleanProperty currentPlayerProperty() {
         return currentPlayer;
     }
 
-    public void setCurrentPlayer(String currentPlayer) {
+    public void setCurrentPlayer(boolean currentPlayer) {
         this.currentPlayer.set(currentPlayer);
-    }
-
-    public BooleanProperty activePlayerProperty() {
-        return activePlayer;
-    }
-
-    public void setActivePlayer(boolean activePlayer) {
-        this.activePlayer.set(activePlayer);
     }
 
     public ObservableList<String> getMyCards() {
@@ -258,6 +250,14 @@ public class Client {
 
     public void setUpgradeShop(ObservableList<String> upgradShop) {
         this.upgradeShop = upgradShop;
+    }
+
+    public BooleanProperty startShopProperty() {
+        return startShop;
+    }
+
+    public void setStartShop(boolean startShop) {
+        this.startShop.set(startShop);
     }
 
     private class ReadMessagesFromServer implements Runnable {
@@ -343,17 +343,16 @@ public class Client {
                             logger.debug("current player: " + message.getMessageBody().getClientID());
                             int clientID = message.getMessageBody().getClientID();
                             if (Client.this.userIDProperty().get() == clientID) {
-                                Client.this.setActivePlayer(true);
-                                Platform.runLater(() -> Client.this.setCurrentPlayer("It's your turn"));
-                                for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
-                                    clientPlayerList.getPlayerList().get(i).setActivePlayer("");
-                                }
+                                Platform.runLater(() -> {
+                                    Client.this.setCurrentPlayer(true);
+                                    for (int i = 0; i < clientPlayerList.getPlayerList().size(); i++) {
+                                    clientPlayerList.getPlayerList().get(i).setActivePlayer("It is not their turn");
+                                }});
                             }
                             else {
-                                Client.this.setActivePlayer(false);
-                                Client.this.setCurrentPlayer("");
+                                Client.this.setCurrentPlayer(false);
                                 if (clientPlayerList.containsPlayer(clientID)) {
-                                    Platform.runLater(() -> clientPlayerList.getPlayer(clientID).setActivePlayer("It's their turn"));
+                                    Platform.runLater(() -> clientPlayerList.getPlayer(clientID).setActivePlayer("It is their turn"));
                                 }
                             }
                         }
@@ -368,6 +367,7 @@ public class Client {
                             }
                             if (activePhase == 2) {
                                 Platform.runLater(() -> Client.this.setActivePhase("Programming Phase"));
+                                //Client.this.startShop.set(false);
                             }
                             if (activePhase == 3) {
                                 Platform.runLater(() -> Client.this.setActivePhase("Activation Phase"));
@@ -488,6 +488,7 @@ public class Client {
                             for (int i = 0; i < myCards.size(); i++) {
                                 logger.debug("Client - refillCards: " + myCards.get(i));
                             }
+                            Client.this.setGameEventMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.ExchangeShop)){
                             logger.debug("exchange shop started");
@@ -503,6 +504,7 @@ public class Client {
                             for (int i = 0; i < myCards.size(); i++) {
                                 logger.debug("Client - myCards: " + myCards.get(i));
                             }
+                            Client.this.setGameEventMessage(message);
                         }
                         if (message.getMessageType().equals(MessageType.UpgradeBought)){
                             //TODO: receive purchase confirmation

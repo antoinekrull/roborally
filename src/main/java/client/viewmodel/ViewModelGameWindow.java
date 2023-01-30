@@ -175,7 +175,7 @@ public class ViewModelGameWindow {
 
         currentPhaseLabel.textProperty().bind(modelGame.activePhaseProperty());
 
-        currentActivePlayerLabel.textProperty().bind(modelGame.currentPlayerProperty());
+       // currentActivePlayerLabel.textProperty().bind(modelGame.currentPlayerProperty());
 
         scoreLabel.textProperty().bind(modelGame.scoreProperty().asString());
 
@@ -689,6 +689,14 @@ public class ViewModelGameWindow {
                 cardSelection.overlayDamagecards(availablePiles, counter);
             }
         }
+        if (gamemessage.getMessageType().equals(MessageType.RefillShop)) {
+            String[] refillCards = gamemessage.getMessageBody().getCards();
+            cardSelection.upgradeShop(refillCards);
+        }
+        if (gamemessage.getMessageType().equals(MessageType.ExchangeShop)) {
+            String[] exchangeCards = gamemessage.getMessageBody().getCards();
+            cardSelection.upgradeShop(exchangeCards);
+        }
         if (gamemessage.getMessageType().equals(MessageType.Reboot)){
             int clientID = gamemessage.getMessageBody().getClientID();
             Platform.runLater(() -> {
@@ -722,19 +730,8 @@ public class ViewModelGameWindow {
                     }
                 }
             }
-
             //adds checkpoint
             gameboard.add(img, x, y);
-        }
-        if (gamemessage.getMessageType().equals(MessageType.RefillShop)){
-            logger.warn("Hi Refill");
-            String[] availableUpgrades = gamemessage.getMessageBody().getCards();
-            cardSelection.upgradeShop(availableUpgrades);
-        }
-        if (gamemessage.getMessageType().equals(MessageType.ExchangeShop)){
-            logger.warn("Hi Exchange");
-            String[] availableUpgrades = gamemessage.getMessageBody().getCards();
-            cardSelection.upgradeShop(availableUpgrades);
         }
     }
 
@@ -786,7 +783,7 @@ public class ViewModelGameWindow {
 
     public void selectStarttile() {
         gameboard.setOnMouseClicked(event -> {
-            if (modelGame.activePlayerProperty().get()){
+            if (modelGame.currentPlayerProperty().get()){
                 Node target = event.getPickResult().getIntersectedNode();
                 Integer colIndex = GridPane.getColumnIndex(target);
                 Integer rowIndex = GridPane.getRowIndex(target);
@@ -1617,8 +1614,12 @@ public class ViewModelGameWindow {
     }
 
     public void shopping() {
-        String[] availableUpgrades = modelGame.getUpgradeCards().toArray(new String[0]);
+        String[] availableUpgrades = modelGame.getUpgradeShop().toArray(new String[0]);
+        for (int i = 0; i < availableUpgrades.length; i++) {
+            logger.debug("hehe");
+        }
         cardSelection.upgradeShop(availableUpgrades);
+        logger.debug("angekommen");
     }
 }
 
